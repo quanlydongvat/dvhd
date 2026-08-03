@@ -1,0 +1,590 @@
+import React, { useState, useMemo } from 'react';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  ArcElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler,
+} from 'chart.js';
+import { Line, Bar, Doughnut } from 'react-chartjs-2';
+import { TrendingUp, TrendingDown, Calendar, Filter, MapPin, Feather, Download, Award, BarChart3, PieChart, Activity } from 'lucide-react';
+import * as XLSX from 'xlsx';
+import { isBirdSpecies, getFacilityCategory, computeLogbookTable } from '../utils/calculations';
+
+// Register Chart.js modules
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  ArcElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler
+);
+
+export default function AnalyticsView({ facilitiesList = [] }) {
+  const [timeMode, setTimeMode] = useState('YEAR'); // 'YEAR' | 'H1' | 'H2' | 'MONTH'
+  const [selectedMonth, setSelectedMonth] = useState(3); // 1-12
+  const [selectedYear, setSelectedYear] = useState(2026);
+  const [selectedCommune, setSelectedCommune] = useState('ALL');
+  const [selectedCategory, setSelectedCategory] = useState('ALL'); // 'ALL' | 'MAMMAL_REPTILE' | 'BIRD'
+  const [selectedFacilityId, setSelectedFacilityId] = useState('ALL');
+
+  const COMMUNES = ['xã Hòa Sơn', 'xã Yang Mao', 'xã Cư Pui', 'Xã Krông Bông', 'Xã Dang Kang'];
+
+  // Filter facilities
+  const filteredFacilities = useMemo(() => {
+    return facilitiesList.filter((fac) => {
+      const matchCommune = selectedCommune === 'ALL' || fac.commune === selectedCommune;
+      const matchFac = selectedFacilityId === 'ALL' || fac.id === selectedFacilityId;
+
+      const cat = getFacilityCategory(fac);
+      let matchCategory = true;
+      if (selectedCategory === 'BIRD') {
+        matchCategory = cat === 'BIRD' || cat === 'MIXED';
+      } else if (selectedCategory === 'MAMMAL_REPTILE') {
+        matchCategory = cat === 'MAMMAL_REPTILE' || cat === 'MIXED';
+      }
+
+      return matchCommune && matchFac && matchCategory;
+    });
+  }, [facilitiesList, selectedCommune, selectedCategory, selectedFacilityId]);
+
+  // Build Time Series Data (Monthly for the Year 2026, or breakdown by days if MONTH mode)
+  const chartData = useMemo(() => {
+    // 12 Months baseline
+    const monthlyStats = Array.from({ length: 12 }, (_, idx) => ({
+      month: idx + 1,
+      monthLabel: `Tháng ${idx + 1}`,
+      inc: 0,
+      dec: 0,
+      net: 0,
+      totalEnd: 0,
+    }));
+
+    // Initial total stock across filtered facilities
+    let initialTotal = 0;
+
+    filteredFacilities.forEach((fac) => {
+      fac.speciesList.forEach((sp) => {
+        const b = sp.baseline || {};
+        const baselineTotal =
+          (Number(b.father) || 0) +
+          (Number(b.mother) || 0) +
+          (Number(b.otherMale) || 0) +
+          (Number(b.otherFemale) || 0) +
+          (Number(b.otherUnknown) || 0);
+
+        initialTotal += baselineTotal;
+
+        // Process fluctuations
+        const processedRows = computeLogbookTable(b, sp.fluctuations || []);
+
+        processedRows.forEach((row) => {
+          if (row.isBaseline || !row.date) return;
+          const rowDate = new Date(row.date);
+          const monthIdx = rowDate.getMonth(); // 0 - 11
+          const year = rowDate.getFullYear();
+
+          if (year === selectedYear && monthIdx >= 0 && monthIdx < 12) {
+            const inc =
+              (row.incFather || 0) +
+              (row.incMother || 0) +
+              (row.incOtherMale || 0) +
+              (row.incOtherFemale || 0) +
+              (row.incOtherUnknown || 0);
+
+            const dec =
+              (row.decFather || 0) +
+              (row.decMother || 0) +
+              (row.decOtherMale || 0) +
+              (row.decOtherFemale || 0) +
+              (row.decOtherUnknown || 0);
+
+            monthlyStats[monthIdx].inc += inc;
+            monthlyStats[monthIdx].dec += dec;
+          }
+        });
+      });
+    });
+
+    // Compute cumulative running total at end of each month
+    let runningTotal = initialTotal;
+    monthlyStats.forEach((st) => {
+      st.net = st.inc - st.dec;
+      runningTotal += st.net;
+      st.totalEnd = runningTotal;
+    });
+
+    // Slice based on time mode
+    let targetStats = monthlyStats;
+    if (timeMode === 'H1') {
+      targetStats = monthlyStats.slice(0, 6);
+    } else if (timeMode === 'H2') {
+      targetStats = monthlyStats.slice(6, 12);
+    } else if (timeMode === 'MONTH') {
+      targetStats = [monthlyStats[selectedMonth - 1]];
+    }
+
+    return {
+      monthlyStats,
+      targetStats,
+      initialTotal,
+      finalTotal: runningTotal,
+    };
+  }, [filteredFacilities, timeMode, selectedMonth, selectedYear]);
+
+  // Aggregate Period Totals for KPIs
+  const kpiStats = useMemo(() => {
+    let totalInc = 0;
+    let totalDec = 0;
+
+    chartData.targetStats.forEach((st) => {
+      totalInc += st.inc;
+      totalDec += st.dec;
+    });
+
+    const netGrowth = totalInc - totalDec;
+    return { totalInc, totalDec, netGrowth };
+  }, [chartData]);
+
+  // Commune Distribution Data for Doughnut Chart
+  const communeDistribution = useMemo(() => {
+    const communeTotals = COMMUNES.map((cName) => {
+      let total = 0;
+      let facCount = 0;
+
+      facilitiesList.forEach((fac) => {
+        if ((fac.commune || '') === cName) {
+          facCount++;
+          fac.speciesList.forEach((sp) => {
+            const b = sp.baseline || {};
+            total +=
+              (Number(b.father) || 0) +
+              (Number(b.mother) || 0) +
+              (Number(b.otherMale) || 0) +
+              (Number(b.otherFemale) || 0) +
+              (Number(b.otherUnknown) || 0);
+          });
+        }
+      });
+
+      return { communeName: cName, total, facCount };
+    });
+
+    return communeTotals;
+  }, [facilitiesList]);
+
+  // Species Breakdown Data
+  const speciesBreakdown = useMemo(() => {
+    const speciesMap = {};
+
+    filteredFacilities.forEach((fac) => {
+      fac.speciesList.forEach((sp) => {
+        const name = sp.vietnameseName;
+        const b = sp.baseline || {};
+        const total =
+          (Number(b.father) || 0) +
+          (Number(b.mother) || 0) +
+          (Number(b.otherMale) || 0) +
+          (Number(b.otherFemale) || 0) +
+          (Number(b.otherUnknown) || 0);
+
+        if (!speciesMap[name]) {
+          speciesMap[name] = { name, total: 0, isBird: isBirdSpecies(sp) };
+        }
+        speciesMap[name].total += total;
+      });
+    });
+
+    return Object.values(speciesMap).sort((a, b) => b.total - a.total);
+  }, [filteredFacilities]);
+
+  // Combo Chart Configurations (Bar + Line)
+  const mainChartDataConfig = {
+    labels: chartData.targetStats.map((s) => s.monthLabel),
+    datasets: [
+      {
+        type: 'line',
+        label: 'Quy mô tổng đàn (Con)',
+        data: chartData.targetStats.map((s) => s.totalEnd),
+        borderColor: '#0284c7', // Sky Blue
+        backgroundColor: 'rgba(2, 132, 199, 0.1)',
+        borderWidth: 3,
+        tension: 0.3,
+        fill: true,
+        yAxisID: 'y1',
+        pointRadius: 5,
+        pointHoverRadius: 7,
+      },
+      {
+        type: 'bar',
+        label: 'Số lượng Tăng đàn (+)',
+        data: chartData.targetStats.map((s) => s.inc),
+        backgroundColor: '#10b981', // Emerald Green
+        borderRadius: 8,
+        yAxisID: 'y',
+      },
+      {
+        type: 'bar',
+        label: 'Số lượng Giảm đàn (-)',
+        data: chartData.targetStats.map((s) => s.dec),
+        backgroundColor: '#f43f5e', // Rose Red
+        borderRadius: 8,
+        yAxisID: 'y',
+      },
+    ],
+  };
+
+  const mainChartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'top',
+        labels: {
+          font: { family: 'Plus Jakarta Sans', size: 12, weight: 'bold' },
+          usePointStyle: true,
+          padding: 15,
+        },
+      },
+      tooltip: {
+        backgroundColor: '#0f172a',
+        titleFont: { size: 13, weight: 'bold' },
+        bodyFont: { size: 12 },
+        padding: 12,
+        cornerRadius: 10,
+      },
+    },
+    scales: {
+      x: {
+        grid: { display: false },
+        ticks: { font: { family: 'Plus Jakarta Sans', size: 11, weight: 'bold' } },
+      },
+      y: {
+        type: 'linear',
+        display: true,
+        position: 'left',
+        title: { display: true, text: 'Số biến động (con)', font: { size: 11, weight: 'bold' } },
+        grid: { color: '#f1f5f9' },
+      },
+      y1: {
+        type: 'linear',
+        display: true,
+        position: 'right',
+        title: { display: true, text: 'Tổng đàn (con)', font: { size: 11, weight: 'bold' } },
+        grid: { drawOnChartArea: false },
+      },
+    },
+  };
+
+  // Doughnut Chart Configuration (Distribution by Commune)
+  const doughnutChartConfig = {
+    labels: communeDistribution.map((c) => c.communeName),
+    datasets: [
+      {
+        label: 'Số lượng cá thể',
+        data: communeDistribution.map((c) => c.total),
+        backgroundColor: ['#10b981', '#06b6d4', '#6366f1', '#f59e0b', '#ec4899'],
+        borderWidth: 2,
+        borderColor: '#ffffff',
+      },
+    ],
+  };
+
+  // Export Analytics to Excel
+  const handleExportAnalyticsExcel = () => {
+    const sheetData = [];
+    sheetData.push([`BẢNG THỐNG KÊ PHÁT TRIỂN & BIẾN ĐỘNG ĐÀN CƠ SỞ NUÔI NĂM ${selectedYear}`]);
+    sheetData.push([`Kỳ thống kê: ${timeMode === 'YEAR' ? 'Cả năm' : timeMode === 'H1' ? '6 tháng đầu năm (H1)' : timeMode === 'H2' ? '6 tháng cuối năm (H2)' : `Tháng ${selectedMonth}`}`]);
+    sheetData.push([]);
+
+    sheetData.push(['Tháng', 'Tổng cá thể Tăng đàn (+)', 'Tổng cá thể Giảm đàn (-)', 'Tăng trưởng ròng (Net)', 'Quy mô tổng đàn cuối tháng']);
+
+    chartData.targetStats.forEach((st) => {
+      sheetData.push([st.monthLabel, st.inc, st.dec, st.net, st.totalEnd]);
+    });
+
+    sheetData.push([]);
+    sheetData.push(['THỐNG KÊ THEO XÃ']);
+    sheetData.push(['Tên Xã', 'Số lượng cơ sở', 'Tổng cá thể hiện có']);
+    communeDistribution.forEach((c) => {
+      sheetData.push([c.communeName, c.facCount, c.total]);
+    });
+
+    const ws = XLSX.utils.aoa_to_sheet(sheetData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Thong_Ke_Phat_Trien');
+    XLSX.writeFile(wb, `Bao_Cao_Thong_Ke_Phat_Trien_${selectedYear}_${new Date().toISOString().slice(0, 10)}.xlsx`);
+  };
+
+  return (
+    <div className="space-y-6 animate-in fade-in duration-300">
+      {/* Analytics Banner Header */}
+      <div className="bg-gradient-to-r from-emerald-600 via-teal-600 to-indigo-700 rounded-2xl p-6 shadow-lg text-white flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+        <div>
+          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-emerald-200">
+            <Activity className="w-4 h-4 text-emerald-200" />
+            <span>Biểu Đồ Trực Quan & Phân Tích Tăng Trưởng</span>
+          </div>
+          <h2 className="text-2xl font-extrabold text-white mt-1">
+            Báo Cáo Thống Kê Sự Phát Triển Đàn Vật Nuôi
+          </h2>
+          <p className="text-xs text-emerald-100 mt-1">
+            Theo dõi tốc độ sinh sản, tăng giảm số lượng cá thể theo Từng tháng, 6 tháng (H1/H2) và Cả năm 2026
+          </p>
+        </div>
+
+        <button
+          onClick={handleExportAnalyticsExcel}
+          className="flex items-center gap-2 bg-white text-emerald-800 hover:bg-emerald-50 px-4 py-2.5 rounded-xl text-xs font-extrabold transition-all shadow-md hover:scale-[1.02] active:scale-[0.98] self-start lg:self-auto"
+        >
+          <Download className="w-4 h-4 text-emerald-600" />
+          <span>Xuất Báo Cáo Thống Kê Excel</span>
+        </button>
+      </div>
+
+      {/* KPI Cards (Key Performance Indicators) */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Total Animals Card */}
+        <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm flex items-center justify-between">
+          <div>
+            <span className="text-xs font-bold text-slate-500 block uppercase">Quy mô hiện tại</span>
+            <div className="text-2xl font-extrabold text-slate-900 mt-1 font-mono">{chartData.finalTotal} <span className="text-xs font-sans font-normal text-slate-500">con</span></div>
+            <span className="text-[11px] text-slate-500 font-medium">Toàn bộ các cơ sở</span>
+          </div>
+          <div className="p-3 bg-sky-50 text-sky-600 rounded-2xl border border-sky-200">
+            <BarChart3 className="w-6 h-6" />
+          </div>
+        </div>
+
+        {/* Total Increase Card */}
+        <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm flex items-center justify-between">
+          <div>
+            <span className="text-xs font-bold text-teal-700 block uppercase">Tổng Tăng Đàn</span>
+            <div className="text-2xl font-extrabold text-teal-700 mt-1 font-mono">+{kpiStats.totalInc} <span className="text-xs font-sans font-normal text-slate-500">con</span></div>
+            <span className="text-[11px] text-slate-500 font-medium">Sinh sản & Nhập đàn</span>
+          </div>
+          <div className="p-3 bg-teal-50 text-teal-600 rounded-2xl border border-teal-200">
+            <TrendingUp className="w-6 h-6" />
+          </div>
+        </div>
+
+        {/* Total Decrease Card */}
+        <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm flex items-center justify-between">
+          <div>
+            <span className="text-xs font-bold text-rose-700 block uppercase">Tổng Giảm Đàn</span>
+            <div className="text-2xl font-extrabold text-rose-700 mt-1 font-mono">-{kpiStats.totalDec} <span className="text-xs font-sans font-normal text-slate-500">con</span></div>
+            <span className="text-[11px] text-slate-500 font-medium">Xuất bán & Chết</span>
+          </div>
+          <div className="p-3 bg-rose-50 text-rose-600 rounded-2xl border border-rose-200">
+            <TrendingDown className="w-6 h-6" />
+          </div>
+        </div>
+
+        {/* Net Growth Card */}
+        <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm flex items-center justify-between">
+          <div>
+            <span className="text-xs font-bold text-indigo-700 block uppercase">Tăng trưởng ròng</span>
+            <div className={`text-2xl font-extrabold mt-1 font-mono ${kpiStats.netGrowth >= 0 ? 'text-emerald-700' : 'text-rose-700'}`}>
+              {kpiStats.netGrowth >= 0 ? `+${kpiStats.netGrowth}` : kpiStats.netGrowth} <span className="text-xs font-sans font-normal text-slate-500">con</span>
+            </div>
+            <span className="text-[11px] text-slate-500 font-medium">Số cá thể tăng nét</span>
+          </div>
+          <div className="p-3 bg-indigo-50 text-indigo-600 rounded-2xl border border-indigo-200">
+            <Award className="w-6 h-6" />
+          </div>
+        </div>
+      </div>
+
+      {/* Filter and Time Mode Controls Bar */}
+      <div className="bg-white border border-slate-200 rounded-2xl p-4 flex flex-col md:flex-row items-center justify-between gap-4 shadow-sm">
+        {/* Time Mode Segmented Switcher */}
+        <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs font-bold w-full md:w-auto">
+          <button
+            onClick={() => setTimeMode('YEAR')}
+            className={`px-3 py-1.5 rounded-lg transition-all ${
+              timeMode === 'YEAR' ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-700 hover:bg-white/80'
+            }`}
+          >
+            🗓️ Cả năm 2026
+          </button>
+          <button
+            onClick={() => setTimeMode('H1')}
+            className={`px-3 py-1.5 rounded-lg transition-all ${
+              timeMode === 'H1' ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-700 hover:bg-white/80'
+            }`}
+          >
+            📊 6 tháng đầu năm (H1)
+          </button>
+          <button
+            onClick={() => setTimeMode('H2')}
+            className={`px-3 py-1.5 rounded-lg transition-all ${
+              timeMode === 'H2' ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-700 hover:bg-white/80'
+            }`}
+          >
+            📈 6 tháng cuối năm (H2)
+          </button>
+          <button
+            onClick={() => setTimeMode('MONTH')}
+            className={`px-3 py-1.5 rounded-lg transition-all ${
+              timeMode === 'MONTH' ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-700 hover:bg-white/80'
+            }`}
+          >
+            📅 Theo từng Tháng
+          </button>
+        </div>
+
+        {/* Month Selector Dropdown if MONTH mode */}
+        {timeMode === 'MONTH' && (
+          <div className="flex items-center gap-2 text-xs">
+            <Calendar className="w-4 h-4 text-emerald-600" />
+            <select
+              value={selectedMonth}
+              onChange={(e) => setSelectedMonth(Number(e.target.value))}
+              className="bg-slate-50 border border-slate-300 rounded-xl px-3 py-1.5 text-xs text-slate-900 font-bold focus:outline-none focus:border-emerald-500 cursor-pointer shadow-xs"
+            >
+              {Array.from({ length: 12 }, (_, i) => (
+                <option key={i + 1} value={i + 1}>
+                  Tháng {i + 1} / {selectedYear}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+
+        {/* Geographic & Category Filters */}
+        <div className="flex flex-wrap items-center gap-2 text-xs w-full md:w-auto">
+          {/* Commune Filter */}
+          <select
+            value={selectedCommune}
+            onChange={(e) => setSelectedCommune(e.target.value)}
+            className="bg-slate-50 border border-slate-300 rounded-xl px-3 py-1.5 text-xs text-slate-900 font-bold focus:outline-none focus:border-emerald-500 cursor-pointer shadow-xs"
+          >
+            <option value="ALL">📍 Tất cả 5 Xã</option>
+            {COMMUNES.map((c) => (
+              <option key={c} value={c}>
+                📍 {c}
+              </option>
+            ))}
+          </select>
+
+          {/* Category Filter */}
+          <select
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            className="bg-slate-50 border border-slate-300 rounded-xl px-3 py-1.5 text-xs text-slate-900 font-bold focus:outline-none focus:border-emerald-500 cursor-pointer shadow-xs"
+          >
+            <option value="ALL">🐾 Tất cả nhóm loài</option>
+            <option value="MAMMAL_REPTILE">🦔 Thú & Bò sát</option>
+            <option value="BIRD">🦜 Nhóm Chim</option>
+          </select>
+        </div>
+      </div>
+
+      {/* Main Charts Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        {/* Main Growth Trend Combo Chart (8 cols) */}
+        <div className="lg:col-span-8 bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-4">
+          <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div>
+              <h3 className="text-sm font-extrabold text-slate-900 flex items-center gap-2">
+                <BarChart3 className="w-4 h-4 text-emerald-600" />
+                <span>Biểu Đồ Diễn Biến Tăng / Giảm & Tổng Đàn Theo Thời Gian</span>
+              </h3>
+              <p className="text-[11px] text-slate-500 font-medium">
+                Cột xanh (Tăng) / Cột đỏ (Giảm) & Đường tổng quy mô đàn qua các kỳ
+              </p>
+            </div>
+          </div>
+
+          <div className="h-[320px] w-full">
+            <Line data={mainChartDataConfig} options={mainChartOptions} />
+          </div>
+        </div>
+
+        {/* Commune Distribution Doughnut Chart (4 cols) */}
+        <div className="lg:col-span-4 bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-4">
+          <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div>
+              <h3 className="text-sm font-extrabold text-slate-900 flex items-center gap-2">
+                <PieChart className="w-4 h-4 text-indigo-600" />
+                <span>Tỷ Lệ Phân Bố Theo Xã</span>
+              </h3>
+              <p className="text-[11px] text-slate-500 font-medium">
+                Số lượng cá thể phân bố trên địa bàn 5 Xã
+              </p>
+            </div>
+          </div>
+
+          <div className="h-[220px] w-full flex items-center justify-center">
+            <Doughnut
+              data={doughnutChartConfig}
+              options={{
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom', labels: { font: { size: 10, weight: 'bold' } } } },
+              }}
+            />
+          </div>
+
+          {/* Commune Subtotals List */}
+          <div className="space-y-1.5 pt-2 border-t border-slate-100 text-xs">
+            {communeDistribution.map((c) => (
+              <div key={c.communeName} className="flex items-center justify-between text-slate-700 font-medium">
+                <span className="flex items-center gap-1">
+                  <MapPin className="w-3 h-3 text-emerald-600" />
+                  {c.communeName} ({c.facCount} CS):
+                </span>
+                <strong className="font-mono text-slate-900 font-bold">{c.total} con</strong>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Breakdown by Species Table */}
+      <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-4">
+        <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+          <div>
+            <h3 className="text-sm font-extrabold text-slate-900 flex items-center gap-2">
+              <Award className="w-4 h-4 text-amber-500" />
+              <span>Thống Kê Cơ Cấu Quy Mô Các Loài Nuôi Chủ Lực</span>
+            </h3>
+            <p className="text-[11px] text-slate-500 font-medium">
+              Sắp xếp theo tổng số lượng cá thể hiện có tại các cơ sở
+            </p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          {speciesBreakdown.map((sp, idx) => (
+            <div
+              key={sp.name}
+              className="bg-slate-50 border border-slate-200 rounded-xl p-3 flex items-center justify-between shadow-2xs"
+            >
+              <div className="space-y-0.5">
+                <span className="text-[10px] font-bold text-slate-400 font-mono">#0{idx + 1}</span>
+                <h4 className="text-xs font-extrabold text-slate-900 flex items-center gap-1">
+                  {sp.isBird ? '🦜' : '🦔'} {sp.name}
+                </h4>
+              </div>
+              <span className="text-lg font-extrabold font-mono text-emerald-800 bg-emerald-100 px-2.5 py-0.5 rounded-lg border border-emerald-300">
+                {sp.total}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
