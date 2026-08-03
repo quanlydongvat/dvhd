@@ -1,10 +1,9 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics, isSupported } from "firebase/analytics";
-import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "firebase/firestore";
+import { getFirestore, doc, setDoc, onSnapshot } from "firebase/firestore";
 
 // Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyDadtc8c1SltdQqa-aPKmm-pLmd1gO2tlA",
   authDomain: "dvhd-52ebb.firebaseapp.com",
@@ -15,20 +14,30 @@ const firebaseConfig = {
   measurementId: "G-6MKGD9KZ0C"
 };
 
-// Initialize Firebase
-export const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app);
+let app = null;
+let db = null;
+let analytics = null;
 
-export let analytics = null;
-isSupported().then((supported) => {
-  if (supported) {
-    analytics = getAnalytics(app);
+try {
+  app = initializeApp(firebaseConfig);
+  db = getFirestore(app);
+  if (typeof window !== 'undefined') {
+    isSupported().then((supported) => {
+      if (supported && app) {
+        analytics = getAnalytics(app);
+      }
+    }).catch(() => {});
   }
-});
+} catch (e) {
+  console.warn("Firebase initialization warning:", e);
+}
+
+export { app, db, analytics };
 
 // Helper function to sync app data to Firebase Cloud Firestore
 export async function syncAppDataToCloud(appState) {
   try {
+    if (!db || !appState) return false;
     const docRef = doc(db, "wildlife_data", "app_state");
     await setDoc(docRef, {
       ...appState,
@@ -36,20 +45,25 @@ export async function syncAppDataToCloud(appState) {
     });
     return true;
   } catch (error) {
-    console.error("Error syncing to Firebase Cloud:", error);
+    console.warn("Error syncing to Firebase Cloud:", error);
     return false;
   }
 }
 
 // Helper function to listen for real-time Firebase Cloud changes
 export function subscribeToCloudChanges(callback) {
-  const docRef = doc(db, "wildlife_data", "app_state");
-  return onSnapshot(docRef, (docSnap) => {
-    if (docSnap.exists()) {
-      const data = docSnap.data();
-      callback(data);
-    }
-  }, (err) => {
-    console.warn("Firestore snapshot listener error:", err);
-  });
+  try {
+    if (!db) return () => {};
+    const docRef = doc(db, "wildlife_data", "app_state");
+    return onSnapshot(docRef, (docSnap) => {
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        callback(data);
+      }
+    }, (err) => {
+      console.warn("Firestore snapshot listener error:", err);
+    });
+  } catch (e) {
+    return () => {};
+  }
 }
