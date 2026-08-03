@@ -6,10 +6,12 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
   base: './',
   build: {
-    target: 'es2015',
+    rollupOptions: {
+      output: {
+        entryFileNames: 'assets/app.js',
+        assetFileNames: 'assets/app.[ext]',
+      },
+    },
   },
   plugins: [react(), tailwindcss()],
 });
-
-
-
