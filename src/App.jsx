@@ -17,6 +17,8 @@ import PrintView from './components/PrintView';
 import { computeLogbookTable } from './utils/calculations';
 import { loadAppData, saveAppData, clearAppData, resetToDemoData, REAL_FACILITIES_DATA } from './utils/storage';
 import { exportToExcel } from './utils/exportExcel';
+import { syncAppDataToCloud } from './firebase';
+
 
 export default function App() {
   const [appState, setAppState] = useState(() => loadAppData());
@@ -65,10 +67,12 @@ export default function App() {
   const [isBackupModalOpen, setIsBackupModalOpen] = useState(false);
   const [isPrintViewOpen, setIsPrintViewOpen] = useState(false);
 
-  // Sync state to LocalStorage on change
+  // Sync state to LocalStorage and Firebase Cloud Firestore on change
   useEffect(() => {
     saveAppData(appState);
+    syncAppDataToCloud(appState);
   }, [appState]);
+
 
   // Global Desktop Keyboard Shortcuts Listener
   useEffect(() => {

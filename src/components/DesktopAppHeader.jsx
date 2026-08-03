@@ -56,11 +56,16 @@ export default function DesktopAppHeader({
             <span className="text-emerald-400 font-bold">ONLINE</span>
           </span>
           <span className="text-slate-600">|</span>
+          <span className="flex items-center gap-1 text-amber-400 font-bold" title="Tích hợp Firebase Cloud Firestore dvhd-52ebb">
+            <span>🔥 Firebase Cloud Sync</span>
+          </span>
+          <span className="text-slate-600">|</span>
           <span className="flex items-center gap-1">
             <HardDrive className="w-3.5 h-3.5 text-indigo-400" />
-            <span>Auto-Saved LocalStorage</span>
+            <span>Auto-Saved</span>
           </span>
         </div>
+
       </div>
 
       {/* Right Desktop Quick Controls */}
