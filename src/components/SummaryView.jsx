@@ -627,27 +627,63 @@ export default function SummaryView({
         </div>
       </div>
 
-      {/* Main Data Table Grouped by Commune (Accordion Show/Hide) */}
-      <div className="space-y-6">
-        {groupedByCommune.map((communeGroup) => {
-          // If commune has no matching facilities after filter, skip
-          if (communeGroup.facilities.length === 0) return null;
+      {/* Main Data Table Grouped by Commune (Shown ONLY when a Commune is selected) */}
+      {selectedCommune === 'ALL' ? (
+        <div className="bg-gradient-to-br from-emerald-50 via-teal-50 to-slate-50 border border-emerald-200/80 rounded-3xl p-8 sm:p-10 text-center space-y-4 shadow-sm my-4">
+          <div className="w-16 h-16 bg-emerald-600 text-white rounded-2xl flex items-center justify-center mx-auto shadow-md">
+            <MapPin className="w-8 h-8" />
+          </div>
 
-          const isExpanded = expandedCommunes[communeGroup.communeName] !== false;
-          let communeRunningStt = 1;
+          <div className="space-y-1.5 max-w-xl mx-auto">
+            <h3 className="text-xl font-extrabold text-slate-900">
+              Nhấp Chọn 01 Xã Để Xem Danh Sách Chi Tiết Cơ Sở Nuôi
+            </h3>
+            <p className="text-xs text-slate-600 leading-relaxed font-medium">
+              Trang chủ hiện đang hiển thị thống kê tổng quan của 5 Xã. Hãy chọn 1 trong 5 xã bên dưới để hiển thị các cơ sở nuôi thuộc xã đó.
+            </p>
+          </div>
 
-          return (
-            <div
-              key={communeGroup.communeName}
-              className="bg-white border border-slate-200 rounded-2xl shadow-lg overflow-hidden animate-in fade-in duration-200"
-            >
-              {/* Commune Group Section Header (Interactive Accordion Toggle) */}
-              <div
-                onClick={() => toggleCommuneExpand(communeGroup.communeName)}
-                className="bg-slate-100/90 hover:bg-slate-200/90 border-b border-slate-200 px-6 py-3 flex flex-wrap items-center justify-between gap-3 cursor-pointer transition-colors select-none"
-              >
-                <div className="flex items-center gap-3">
-                  <span className="p-2 bg-emerald-600 text-white rounded-xl font-bold shadow-xs">
+          <div className="flex flex-wrap items-center justify-center gap-2.5 pt-2">
+            {COMMUNES.map((cName) => {
+              const count = facilitiesList.filter((f) => (f.commune || '') === cName).length;
+              return (
+                <button
+                  key={cName}
+                  onClick={() => handleCommuneSelect(cName)}
+                  className="px-4 py-2.5 rounded-2xl bg-white hover:bg-emerald-600 hover:text-white border border-slate-300 text-slate-800 text-xs font-extrabold transition-all shadow-xs flex items-center gap-2 hover:scale-[1.03] active:scale-[0.97]"
+                >
+                  <MapPin className="w-4 h-4 text-emerald-600" />
+                  <span>{cName}</span>
+                  <span className="bg-emerald-100 text-emerald-900 text-[10px] px-2 py-0.5 rounded-full font-mono">
+                    {count} cơ sở
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      ) : (
+        <div className="space-y-6">
+          {groupedByCommune
+            .filter((group) => group.communeName === selectedCommune)
+            .map((communeGroup) => {
+              if (communeGroup.facilities.length === 0) return null;
+
+              const isExpanded = expandedCommunes[communeGroup.communeName] !== false;
+              let communeRunningStt = 1;
+
+              return (
+                <div
+                  key={communeGroup.communeName}
+                  className="bg-white border border-slate-200 rounded-2xl shadow-lg overflow-hidden animate-in fade-in duration-200"
+                >
+                  {/* Commune Group Section Header (Interactive Accordion Toggle) */}
+                  <div
+                    onClick={() => toggleCommuneExpand(communeGroup.communeName)}
+                    className="bg-slate-100/90 hover:bg-slate-200/90 border-b border-slate-200 px-6 py-3 flex flex-wrap items-center justify-between gap-3 cursor-pointer transition-colors select-none"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="p-2 bg-emerald-600 text-white rounded-xl font-bold shadow-xs">
                     {isExpanded ? <ChevronDown className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
                   </span>
                   <div>
@@ -912,7 +948,8 @@ export default function SummaryView({
             </div>
           );
         })}
-      </div>
+        </div>
+      )}
 
         </>
       )}
