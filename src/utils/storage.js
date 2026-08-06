@@ -2,7 +2,30 @@
  * LocalStorage manager and sample demo data for Wildlife Monitoring Application
  */
 
-const STORAGE_KEY = 'wildlife_manager_data_v1';
+const STORAGE_KEY = 'wildlife_manager_data_v5';
+
+export async function forceClearAllCache() {
+  try {
+    localStorage.clear();
+    sessionStorage.clear();
+
+    if ('caches' in window) {
+      const keys = await caches.keys();
+      await Promise.all(keys.map((key) => caches.delete(key)));
+    }
+
+    if ('serviceWorker' in navigator) {
+      const registrations = await navigator.serviceWorker.getRegistrations();
+      for (const reg of registrations) {
+        await reg.unregister();
+      }
+    }
+  } catch (err) {
+    console.warn('Error clearing browser cache:', err);
+  }
+
+  window.location.href = window.location.origin + window.location.pathname + '?resetCache=' + Date.now();
+}
 
 export const INITIAL_FACILITY_INFO = {
   facilityName: 'Cơ sở Nuôi Sinh sản Động vật Hoang dã Xanh',

@@ -92,109 +92,109 @@ export default function TableView({
       {/* Main 19-Column Table Container */}
       <div className="bg-white border border-slate-200 rounded-2xl shadow-xl overflow-hidden">
         <div className="overflow-x-auto scrollbar-thin">
-          <table className="w-full text-xs text-left border-collapse min-w-[1550px]">
+          <table className="w-full text-xs text-left border-collapse min-w-[960px]">
             {/* Table Header matching official 19-column government standard */}
             <thead>
               {/* Row 1 Header */}
               <tr className="bg-slate-100 text-slate-800 text-center font-bold border-b border-slate-200">
-                <th rowSpan={4} className="p-3 border-r border-slate-200 w-14 bg-slate-200/60">
+                <th rowSpan={4} className="px-1 py-1 border-r border-slate-200 w-8 bg-slate-200/60 whitespace-nowrap text-center">
                   Dòng
                 </th>
-                <th rowSpan={4} className="p-3 border-r border-slate-200 w-28 bg-slate-200/60">
-                  Ngày/ tháng/ năm
+                <th rowSpan={4} className="px-1 py-1 border-r border-slate-200 w-20 bg-slate-200/60 whitespace-nowrap text-center">
+                  Ngày/tháng
                 </th>
-                <th colSpan={6} className="p-3 border-r border-slate-200 bg-emerald-100/80 text-emerald-950 font-extrabold text-sm">
+                <th colSpan={6} className="px-1.5 py-1 border-r border-slate-200 bg-emerald-100/80 text-emerald-950 font-extrabold text-[11px]">
                   Hiện trạng nuôi
                 </th>
-                <th colSpan={10} className="p-3 border-r border-slate-200 bg-indigo-100/80 text-indigo-950 font-extrabold text-sm">
+                <th colSpan={10} className="px-1.5 py-1 border-r border-slate-200 bg-indigo-100/80 text-indigo-950 font-extrabold text-[11px]">
                   Biến động
                 </th>
-                <th rowSpan={4} className="p-3 border-r border-slate-200 min-w-[260px] text-slate-900 bg-slate-100 text-xs">
+                <th rowSpan={4} className="px-1.5 py-1 border-r border-slate-200 min-w-[120px] max-w-[150px] text-slate-900 bg-slate-100 text-[11px]">
                   Nguyên nhân biến động<br />
-                  <span className="font-normal text-[10px] text-slate-500">
-                    (sinh sản F1, F2..., khai thác, mua, bán, tặng, chết, v.v)
+                  <span className="font-normal text-[9px] text-slate-500">
+                    (sinh sản, mua, bán, chết...)
                   </span>
                 </th>
-                <th rowSpan={4} className="p-3 min-w-[220px] text-slate-900 border-r border-slate-200 bg-slate-100 text-xs">
-                  Xác nhận của cơ quan kiểm lâm sở tại/Thủy sản
+                <th rowSpan={4} className="px-1.5 py-1 min-w-[100px] max-w-[130px] text-slate-900 border-r border-slate-200 bg-slate-100 text-[11px]">
+                  Xác nhận Kiểm lâm / Thủy sản
                 </th>
-                <th rowSpan={4} className="p-2 w-20 no-print bg-slate-100">
-                  Thao tác
+                <th rowSpan={4} className="px-1 py-1 w-14 no-print bg-slate-100 text-center">
+                  #
                 </th>
               </tr>
 
               {/* Row 2 Header */}
               <tr className="bg-slate-100 text-slate-800 text-center font-bold border-b border-slate-200">
-                <th rowSpan={3} className="p-2.5 border-r border-slate-200 bg-emerald-200/60 text-emerald-950 font-black w-20 text-xs">
-                  Tổng số cá thể
+                <th rowSpan={3} className="px-1 py-0.5 border-r border-slate-200 bg-emerald-200/60 text-emerald-950 font-black w-12 text-[11px] whitespace-nowrap">
+                  Tổng số
                 </th>
-                <th colSpan={2} className="p-2 border-r border-slate-200 bg-emerald-100/40 text-emerald-900 font-bold">
+                <th colSpan={2} className="px-0.5 py-0.5 border-r border-slate-200 bg-emerald-100/40 text-emerald-900 font-bold text-[11px]">
                   Bố mẹ
                 </th>
-                <th colSpan={3} className="p-2 border-r border-slate-200 bg-emerald-100/40 text-emerald-900 font-bold">
-                  Các cá thể khác
+                <th colSpan={3} className="px-0.5 py-0.5 border-r border-slate-200 bg-emerald-100/40 text-emerald-900 font-bold text-[11px]">
+                  Cá thể khác
                 </th>
-                <th colSpan={5} className="p-2 border-r border-slate-200 bg-teal-100/70 text-teal-950 font-extrabold">
+                <th colSpan={5} className="px-0.5 py-0.5 border-r border-slate-200 bg-teal-100/70 text-teal-950 font-extrabold text-[11px]">
                   Tăng đàn
                 </th>
-                <th colSpan={5} className="p-2 border-r border-slate-200 bg-rose-100/70 text-rose-950 font-extrabold">
+                <th colSpan={5} className="px-0.5 py-0.5 border-r border-slate-200 bg-rose-100/70 text-rose-950 font-extrabold text-[11px]">
                   Giảm đàn
                 </th>
               </tr>
 
               {/* Row 3 Header */}
-              <tr className="bg-slate-50 text-slate-700 text-center font-semibold border-b border-slate-200">
-                <th rowSpan={2} className="p-2 border-r border-slate-200 w-12">Bố</th>
-                <th rowSpan={2} className="p-2 border-r border-slate-200 w-12">Mẹ</th>
-                <th rowSpan={2} className="p-2 border-r border-slate-200 w-12">Đực</th>
-                <th rowSpan={2} className="p-2 border-r border-slate-200 w-12">Cái</th>
-                <th rowSpan={2} className="p-2 border-r border-slate-200 w-20">Chưa xác định giới tính</th>
+              <tr className="bg-slate-50 text-slate-700 text-center font-semibold border-b border-slate-200 text-[11px]">
+                <th rowSpan={2} className="px-0.5 py-0.5 border-r border-slate-200 w-8">Bố</th>
+                <th rowSpan={2} className="px-0.5 py-0.5 border-r border-slate-200 w-8">Mẹ</th>
+                <th rowSpan={2} className="px-0.5 py-0.5 border-r border-slate-200 w-8">Đực</th>
+                <th rowSpan={2} className="px-0.5 py-0.5 border-r border-slate-200 w-8">Cái</th>
+                <th rowSpan={2} className="px-0.5 py-0.5 border-r border-slate-200 w-10 text-[10px]">Chưa XĐ</th>
 
-                <th colSpan={2} className="p-1.5 border-r border-slate-200 bg-teal-50 text-teal-900 font-semibold">Bố mẹ</th>
-                <th colSpan={3} className="p-1.5 border-r border-slate-200 bg-teal-50 text-teal-900 font-semibold">Cá thể khác</th>
+                <th colSpan={2} className="px-0.5 py-0.5 border-r border-slate-200 bg-teal-50 text-teal-900 font-semibold text-[10px]">Bố mẹ</th>
+                <th colSpan={3} className="px-0.5 py-0.5 border-r border-slate-200 bg-teal-50 text-teal-900 font-semibold text-[10px]">Cá thể khác</th>
 
-                <th colSpan={2} className="p-1.5 border-r border-slate-200 bg-rose-50 text-rose-900 font-semibold">Bố mẹ</th>
-                <th colSpan={3} className="p-1.5 border-r border-slate-200 bg-rose-50 text-rose-900 font-semibold">Cá thể khác</th>
+                <th colSpan={2} className="px-0.5 py-0.5 border-r border-slate-200 bg-rose-50 text-rose-900 font-semibold text-[10px]">Bố mẹ</th>
+                <th colSpan={3} className="px-0.5 py-0.5 border-r border-slate-200 bg-rose-50 text-rose-900 font-semibold text-[10px]">Cá thể khác</th>
               </tr>
 
               {/* Row 4 Header */}
-              <tr className="bg-slate-50 text-slate-700 text-center font-semibold border-b border-slate-200">
-                <th className="p-1.5 border-r border-slate-200 w-12 bg-teal-50 text-teal-900">Bố</th>
-                <th className="p-1.5 border-r border-slate-200 w-12 bg-teal-50 text-teal-900">Mẹ</th>
-                <th className="p-1.5 border-r border-slate-200 w-12 bg-teal-50 text-teal-900">Đực</th>
-                <th className="p-1.5 border-r border-slate-200 w-12 bg-teal-50 text-teal-900">Cái</th>
-                <th className="p-1.5 border-r border-slate-200 w-16 bg-teal-50 text-teal-900">Chưa XĐ</th>
+              <tr className="bg-slate-50 text-slate-700 text-center font-semibold border-b border-slate-200 text-[10px]">
+                <th className="px-0.5 py-0.5 border-r border-slate-200 w-8 bg-teal-50 text-teal-900">Bố</th>
+                <th className="px-0.5 py-0.5 border-r border-slate-200 w-8 bg-teal-50 text-teal-900">Mẹ</th>
+                <th className="px-0.5 py-0.5 border-r border-slate-200 w-8 bg-teal-50 text-teal-900">Đực</th>
+                <th className="px-0.5 py-0.5 border-r border-slate-200 w-8 bg-teal-50 text-teal-900">Cái</th>
+                <th className="px-0.5 py-0.5 border-r border-slate-200 w-9 bg-teal-50 text-teal-900 text-[9px]">Chưa XĐ</th>
 
-                <th className="p-1.5 border-r border-slate-200 w-12 bg-rose-50 text-rose-900">Bố</th>
-                <th className="p-1.5 border-r border-slate-200 w-12 bg-rose-50 text-rose-900">Mẹ</th>
-                <th className="p-1.5 border-r border-slate-200 w-12 bg-rose-50 text-rose-900">Đực</th>
-                <th className="p-1.5 border-r border-slate-200 w-12 bg-rose-50 text-rose-900">Cái</th>
-                <th className="p-1.5 border-r border-slate-200 w-16 bg-rose-50 text-rose-900">Chưa XĐ</th>
+                <th className="px-0.5 py-0.5 border-r border-slate-200 w-8 bg-rose-50 text-rose-900">Bố</th>
+                <th className="px-0.5 py-0.5 border-r border-slate-200 w-8 bg-rose-50 text-rose-900">Mẹ</th>
+                <th className="px-0.5 py-0.5 border-r border-slate-200 w-8 bg-rose-50 text-rose-900">Đực</th>
+                <th className="px-0.5 py-0.5 border-r border-slate-200 w-8 bg-rose-50 text-rose-900">Cái</th>
+                <th className="px-0.5 py-0.5 border-r border-slate-200 w-9 bg-rose-50 text-rose-900 text-[9px]">Chưa XĐ</th>
               </tr>
 
               {/* Row 5: Official Column Numbers 1 to 19 (Underlined & Smaller Font Size) */}
-              <tr className="bg-slate-200/90 text-slate-600 text-center font-mono text-[10px] italic font-semibold border-b-2 border-slate-300">
-                <th className="py-1.5 border-r border-slate-300 font-normal">STT</th>
-                <th className="py-1.5 border-r border-slate-300 text-emerald-900 underline"><u>1</u></th>
-                <th className="py-1.5 border-r border-slate-300 font-extrabold text-emerald-900 bg-emerald-100/80 underline"><u>2</u></th>
-                <th className="py-1.5 border-r border-slate-300 underline"><u>3</u></th>
-                <th className="py-1.5 border-r border-slate-300 underline"><u>4</u></th>
-                <th className="py-1.5 border-r border-slate-300 underline"><u>5</u></th>
-                <th className="py-1.5 border-r border-slate-300 underline"><u>6</u></th>
-                <th className="py-1.5 border-r border-slate-300 underline"><u>7</u></th>
-                <th className="py-1.5 border-r border-slate-300 text-teal-800 underline"><u>8</u></th>
-                <th className="py-1.5 border-r border-slate-300 text-teal-800 underline"><u>9</u></th>
-                <th className="py-1.5 border-r border-slate-300 text-teal-800 underline"><u>10</u></th>
-                <th className="py-1.5 border-r border-slate-300 text-teal-800 underline"><u>11</u></th>
-                <th className="py-1.5 border-r border-slate-300 text-teal-800 underline"><u>12</u></th>
-                <th className="py-1.5 border-r border-slate-300 text-rose-800 underline"><u>13</u></th>
-                <th className="py-1.5 border-r border-slate-300 text-rose-800 underline"><u>14</u></th>
-                <th className="py-1.5 border-r border-slate-300 text-rose-800 underline"><u>15</u></th>
-                <th className="py-1.5 border-r border-slate-300 text-rose-800 underline"><u>16</u></th>
-                <th className="py-1.5 border-r border-slate-300 text-rose-800 underline"><u>17</u></th>
-                <th className="py-1.5 border-r border-slate-300 underline"><u>18</u></th>
-                <th className="py-1.5 border-r border-slate-300 underline"><u>19</u></th>
-                <th className="py-1.5 no-print">#</th>
+              <tr className="bg-slate-200/90 text-slate-600 text-center font-mono text-[9px] italic font-semibold border-b-2 border-slate-300">
+                <th className="py-0.5 border-r border-slate-300 font-normal">STT</th>
+                <th className="py-0.5 border-r border-slate-300 text-emerald-900 underline"><u>1</u></th>
+                <th className="py-0.5 border-r border-slate-300 font-extrabold text-emerald-900 bg-emerald-100/80 underline"><u>2</u></th>
+                <th className="py-0.5 border-r border-slate-300 underline"><u>3</u></th>
+                <th className="py-0.5 border-r border-slate-300 underline"><u>4</u></th>
+                <th className="py-0.5 border-r border-slate-300 underline"><u>5</u></th>
+                <th className="py-0.5 border-r border-slate-300 underline"><u>6</u></th>
+                <th className="py-0.5 border-r border-slate-300 underline"><u>7</u></th>
+                <th className="py-0.5 border-r border-slate-300 text-teal-800 underline"><u>8</u></th>
+                <th className="py-0.5 border-r border-slate-300 text-teal-800 underline"><u>9</u></th>
+                <th className="py-0.5 border-r border-slate-300 text-teal-800 underline"><u>10</u></th>
+                <th className="py-0.5 border-r border-slate-300 text-teal-800 underline"><u>11</u></th>
+                <th className="py-0.5 border-r border-slate-300 text-teal-800 underline"><u>12</u></th>
+                <th className="py-0.5 border-r border-slate-300 text-rose-800 underline"><u>13</u></th>
+                <th className="py-0.5 border-r border-slate-300 text-rose-800 underline"><u>14</u></th>
+                <th className="py-0.5 border-r border-slate-300 text-rose-800 underline"><u>15</u></th>
+                <th className="py-0.5 border-r border-slate-300 text-rose-800 underline"><u>16</u></th>
+                <th className="py-0.5 border-r border-slate-300 text-rose-800 underline"><u>17</u></th>
+                <th className="py-0.5 border-r border-slate-300 underline"><u>18</u></th>
+                <th className="py-0.5 border-r border-slate-300 underline"><u>19</u></th>
+                <th className="py-0.5 no-print">#</th>
               </tr>
 
             </thead>
@@ -224,104 +224,104 @@ export default function TableView({
                     }`}
                   >
                     {/* Row Label (A, B, C...) */}
-                    <td className="p-3 font-bold border-r border-slate-200 text-slate-800">
-                      <span className={`px-2.5 py-1 rounded-md font-sans text-xs shadow-2xs ${isBaseline ? 'bg-indigo-600 text-white font-bold' : 'bg-slate-200 text-slate-800'}`}>
+                    <td className="px-0.5 py-0.5 font-bold border-r border-slate-200 text-slate-800 text-center">
+                      <span className={`px-1.5 py-0.5 rounded font-sans text-xs shadow-2xs ${isBaseline ? 'bg-indigo-600 text-white font-bold' : 'bg-slate-200 text-slate-800'}`}>
                         {row.label}
                       </span>
                     </td>
 
                     {/* Col 1: Date */}
-                    <td className="p-3 border-r border-slate-200 whitespace-nowrap text-slate-800 font-sans text-xs font-bold">
+                    <td className="px-1 py-0.5 border-r border-slate-200 whitespace-nowrap text-slate-800 font-sans text-[11px] font-bold text-center">
                       {formatDateVN(row.date)}
-                      {row.time && <span className="text-[11px] text-slate-500 block font-mono font-normal mt-0.5">{row.time}</span>}
+                      {row.time && <span className="text-[9px] text-slate-500 block font-mono font-normal mt-0.5">{row.time}</span>}
                     </td>
 
                     {/* Col 2: Total (Computed = 3 + 4 + 5 + 6 + 7) */}
-                    <td className="p-3 border-r border-slate-200 font-black text-base text-emerald-800 bg-emerald-50/90 font-mono">
+                    <td className="px-1 py-0.5 border-r border-slate-200 font-black text-xs text-emerald-800 bg-emerald-50/90 font-mono text-center">
                       {row.total}
                       {row.hasWarning && (
-                        <AlertTriangle className="w-4 h-4 text-amber-500 inline ml-1" title="Cảnh báo: Có chỉ số hiện trạng bị âm!" />
+                        <AlertTriangle className="w-3 h-3 text-amber-500 inline ml-0.5" title="Cảnh báo: Có chỉ số hiện trạng bị âm!" />
                       )}
                     </td>
 
                     {/* Cols 3-7: Current status */}
-                    <td className="p-2.5 border-r border-slate-200 font-bold text-slate-900 text-sm">{row.father}</td>
-                    <td className="p-2.5 border-r border-slate-200 font-bold text-slate-900 text-sm">{row.mother}</td>
-                    <td className="p-2.5 border-r border-slate-200 text-slate-800 text-sm">{row.otherMale}</td>
-                    <td className="p-2.5 border-r border-slate-200 text-slate-800 text-sm">{row.otherFemale}</td>
-                    <td className="p-2.5 border-r border-slate-200 text-slate-800 text-sm">{row.otherUnknown}</td>
+                    <td className="px-0.5 py-0.5 border-r border-slate-200 font-bold text-slate-900 text-xs text-center">{row.father}</td>
+                    <td className="px-0.5 py-0.5 border-r border-slate-200 font-bold text-slate-900 text-xs text-center">{row.mother}</td>
+                    <td className="px-0.5 py-0.5 border-r border-slate-200 text-slate-800 text-xs text-center">{row.otherMale}</td>
+                    <td className="px-0.5 py-0.5 border-r border-slate-200 text-slate-800 text-xs text-center">{row.otherFemale}</td>
+                    <td className="px-0.5 py-0.5 border-r border-slate-200 text-slate-800 text-xs text-center">{row.otherUnknown}</td>
 
                     {/* Cols 8-12: Increases */}
-                    <td className={`p-2.5 border-r border-slate-200 text-sm ${row.incFather > 0 ? 'text-teal-700 font-black bg-teal-100/70' : 'text-slate-400'}`}>
+                    <td className={`px-0.5 py-0.5 border-r border-slate-200 text-xs text-center ${row.incFather > 0 ? 'text-teal-700 font-black bg-teal-100/70' : 'text-slate-400'}`}>
                       {isBaseline ? '-' : row.incFather || '-'}
                     </td>
-                    <td className={`p-2.5 border-r border-slate-200 text-sm ${row.incMother > 0 ? 'text-teal-700 font-black bg-teal-100/70' : 'text-slate-400'}`}>
+                    <td className={`px-0.5 py-0.5 border-r border-slate-200 text-xs text-center ${row.incMother > 0 ? 'text-teal-700 font-black bg-teal-100/70' : 'text-slate-400'}`}>
                       {isBaseline ? '-' : row.incMother || '-'}
                     </td>
-                    <td className={`p-2.5 border-r border-slate-200 text-sm ${row.incOtherMale > 0 ? 'text-teal-700 font-black bg-teal-100/70' : 'text-slate-400'}`}>
+                    <td className={`px-0.5 py-0.5 border-r border-slate-200 text-xs text-center ${row.incOtherMale > 0 ? 'text-teal-700 font-black bg-teal-100/70' : 'text-slate-400'}`}>
                       {isBaseline ? '-' : row.incOtherMale || '-'}
                     </td>
-                    <td className={`p-2.5 border-r border-slate-200 text-sm ${row.incOtherFemale > 0 ? 'text-teal-700 font-black bg-teal-100/70' : 'text-slate-400'}`}>
+                    <td className={`px-0.5 py-0.5 border-r border-slate-200 text-xs text-center ${row.incOtherFemale > 0 ? 'text-teal-700 font-black bg-teal-100/70' : 'text-slate-400'}`}>
                       {isBaseline ? '-' : row.incOtherFemale || '-'}
                     </td>
-                    <td className={`p-2.5 border-r border-slate-200 text-sm ${row.incOtherUnknown > 0 ? 'text-teal-700 font-black bg-teal-100/70' : 'text-slate-400'}`}>
+                    <td className={`px-0.5 py-0.5 border-r border-slate-200 text-xs text-center ${row.incOtherUnknown > 0 ? 'text-teal-700 font-black bg-teal-100/70' : 'text-slate-400'}`}>
                       {isBaseline ? '-' : row.incOtherUnknown || '-'}
                     </td>
 
                     {/* Cols 13-17: Decreases */}
-                    <td className={`p-2.5 border-r border-slate-200 text-sm ${row.decFather > 0 ? 'text-rose-700 font-black bg-rose-100/70' : 'text-slate-400'}`}>
+                    <td className={`px-0.5 py-0.5 border-r border-slate-200 text-xs text-center ${row.decFather > 0 ? 'text-rose-700 font-black bg-rose-100/70' : 'text-slate-400'}`}>
                       {isBaseline ? '-' : row.decFather || '-'}
                     </td>
-                    <td className={`p-2.5 border-r border-slate-200 text-sm ${row.decMother > 0 ? 'text-rose-700 font-black bg-rose-100/70' : 'text-slate-400'}`}>
+                    <td className={`px-0.5 py-0.5 border-r border-slate-200 text-xs text-center ${row.decMother > 0 ? 'text-rose-700 font-black bg-rose-100/70' : 'text-slate-400'}`}>
                       {isBaseline ? '-' : row.decMother || '-'}
                     </td>
-                    <td className={`p-2.5 border-r border-slate-200 text-sm ${row.decOtherMale > 0 ? 'text-rose-700 font-black bg-rose-100/70' : 'text-slate-400'}`}>
+                    <td className={`px-0.5 py-0.5 border-r border-slate-200 text-xs text-center ${row.decOtherMale > 0 ? 'text-rose-700 font-black bg-rose-100/70' : 'text-slate-400'}`}>
                       {isBaseline ? '-' : row.decOtherMale || '-'}
                     </td>
-                    <td className={`p-2.5 border-r border-slate-200 text-sm ${row.decOtherFemale > 0 ? 'text-rose-700 font-black bg-rose-100/70' : 'text-slate-400'}`}>
+                    <td className={`px-0.5 py-0.5 border-r border-slate-200 text-xs text-center ${row.decOtherFemale > 0 ? 'text-rose-700 font-black bg-rose-100/70' : 'text-slate-400'}`}>
                       {isBaseline ? '-' : row.decOtherFemale || '-'}
                     </td>
-                    <td className={`p-2.5 border-r border-slate-200 text-sm ${row.decOtherUnknown > 0 ? 'text-rose-700 font-black bg-rose-100/70' : 'text-slate-400'}`}>
+                    <td className={`px-0.5 py-0.5 border-r border-slate-200 text-xs text-center ${row.decOtherUnknown > 0 ? 'text-rose-700 font-black bg-rose-100/70' : 'text-slate-400'}`}>
                       {isBaseline ? '-' : row.decOtherUnknown || '-'}
                     </td>
 
                     {/* Col 18: Reason */}
-                    <td className="p-3 border-r border-slate-200 text-left font-sans text-xs text-slate-900 font-medium leading-relaxed whitespace-normal min-w-[260px]" title={row.reason}>
+                    <td className="px-1.5 py-0.5 border-r border-slate-200 text-left font-sans text-[11px] text-slate-900 font-medium leading-tight whitespace-normal min-w-[120px] max-w-[150px]" title={row.reason}>
                       {row.reason}
                     </td>
 
                     {/* Col 19: Verifier */}
-                    <td className="p-3 border-r border-slate-200 text-left font-sans text-xs text-slate-800 font-semibold leading-relaxed whitespace-normal min-w-[220px]" title={row.verifier}>
+                    <td className="px-1.5 py-0.5 border-r border-slate-200 text-left font-sans text-[11px] text-slate-800 font-semibold leading-tight whitespace-normal min-w-[100px] max-w-[130px]" title={row.verifier}>
                       {row.verifier || '---'}
                     </td>
 
 
                     {/* Actions */}
-                    <td className="p-2 no-print">
-                      <div className="flex items-center justify-center gap-1">
+                    <td className="px-0.5 py-0.5 no-print text-center">
+                      <div className="flex items-center justify-center gap-0.5">
                         {isBaseline ? (
                           <button
                             onClick={onEditBaseline}
-                            className="p-1.5 text-indigo-600 hover:bg-indigo-100 rounded-lg transition-colors"
+                            className="p-1 text-indigo-600 hover:bg-indigo-100 rounded transition-colors"
                             title="Sửa dòng A (Số liệu ban đầu)"
                           >
-                            <Edit2 className="w-4 h-4" />
+                            <Edit2 className="w-3.5 h-3.5" />
                           </button>
                         ) : (
                           <>
                             <button
                               onClick={() => onEditRow(row)}
-                              className="p-1.5 text-emerald-600 hover:bg-emerald-100 rounded-lg transition-colors"
+                              className="p-1 text-emerald-600 hover:bg-emerald-100 rounded transition-colors"
                               title="Sửa thông tin dòng này"
                             >
-                              <Edit2 className="w-4 h-4" />
+                              <Edit2 className="w-3.5 h-3.5" />
                             </button>
                             <button
                               onClick={() => onDeleteRow(row.rowId)}
-                              className="p-1.5 text-rose-600 hover:bg-rose-100 rounded-lg transition-colors"
+                              className="p-1 text-rose-600 hover:bg-rose-100 rounded transition-colors"
                               title="Xóa biến động này"
                             >
-                              <Trash2 className="w-4 h-4" />
+                              <Trash2 className="w-3.5 h-3.5" />
                             </button>
                           </>
                         )}
@@ -343,7 +343,7 @@ export default function TableView({
         >
           <div className="flex items-center gap-2">
             <Info className="w-4 h-4 text-emerald-600" />
-            <span>GHI CHÚ HƯỚNG DẪN ĐIỀN NỘI DUNG (Trích Thông tư Kiểm lâm / Sổ Mẫu II)</span>
+            <span>GHI CHÚ HƯỚNG DẪN ĐIỀN NỘI DUNG (Trích Thông tư số 85/2025/TT-BNNMT / Sổ Mẫu II)</span>
           </div>
           {showNotes ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
         </button>

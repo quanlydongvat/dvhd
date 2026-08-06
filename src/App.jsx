@@ -499,10 +499,13 @@ export default function App() {
           </main>
 
           {/* App Footer */}
-          <footer className="bg-white border-t border-slate-200/80 py-3.5 text-center text-xs text-slate-500 no-print shadow-2xs mb-12 lg:mb-0 mt-auto">
-            <div className="max-w-7xl mx-auto px-4">
-              <p className="font-medium">
-                Phần mềm Quản lý Sổ theo dõi Động vật Hoang dã (Mẫu II - Nuôi sinh sản) © 2026. Tuân thủ Quy định Kiểm lâm & Thủy sản.
+          <footer className="bg-white border-t border-slate-200/80 py-3 text-center text-xs text-slate-600 no-print shadow-2xs mb-12 lg:mb-0 mt-auto">
+            <div className="max-w-7xl mx-auto px-4 space-y-0.5">
+              <p className="font-semibold text-slate-800 text-xs">
+                Ứng dụng sổ theo dõi quản lý động vật hoang dã điện tử - Nuôi sinh sản
+              </p>
+              <p className="text-[11px] text-slate-500 font-medium">
+                © Y Thái Niê – Liên hệ: <a href="tel:0326014014" className="text-emerald-700 font-bold hover:underline">0326.014.014</a>
               </p>
             </div>
           </footer>

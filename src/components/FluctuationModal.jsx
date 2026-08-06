@@ -29,6 +29,7 @@ export default function FluctuationModal({
   });
 
   const QUICK_REASONS = [
+    'Mua từ cơ sở nuôi sinh sản khác',
     ...INTERNAL_TRANSFER_REASONS,
     'Sinh sản lứa F1 mới nở/sinh',
     'Sinh sản lứa F2 mới nở/sinh',
@@ -38,6 +39,17 @@ export default function FluctuationModal({
     'Chết do thời tiết/bệnh lý',
     'Xác định giới tính thế hệ F1',
   ];
+
+  const isPurchaseFromOutside = (reasonStr) => {
+    if (!reasonStr) return false;
+    const lower = reasonStr.toLowerCase();
+    return (
+      lower.includes('mua từ cơ sở') ||
+      lower.includes('mua bố mẹ') ||
+      lower.includes('nhập mua từ cơ sở') ||
+      lower.includes('mua con giống')
+    );
+  };
 
   useEffect(() => {
     if (editData) {
@@ -108,16 +120,17 @@ export default function FluctuationModal({
   const newTotal = newF + newM + newOM + newOF + newOU;
 
   const totalInc = incF + incM + incOM + incOF + incOU;
-  const totalDec = decF + decM + decOM + decOF + decOU;
+  const totalDec = decF + decM + decOF + decOU;
 
   // Circular 85/2025 validation state
-  const isTransferringParents = incF > 0 || incM > 0;
+  const isPurchasingOutside = isPurchaseFromOutside(formData.reason);
+  const isTransferringParents = (incF > 0 || incM > 0) && !isPurchasingOutside;
   const isTransferMismatch = isTransferringParents && (incF !== decOM || incM !== decOF);
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Check Circular 85/2025 rule: B8 = B15 and B9 = B16
+    // Check Circular 85/2025 rule: B8 = B15 and B9 = B16 (unless purchasing from outside)
     const validation = validateInternalTransfer(formData);
     if (!validation.isValid) {
       alert(`⚠️ ${validation.message}`);
@@ -142,27 +155,30 @@ export default function FluctuationModal({
     
     setFormData((prev) => {
       const updated = { ...prev, [field]: num };
+      const purchasingOutside = isPurchaseFromOutside(updated.reason);
 
-      // Rule 5: If user inputs B8 = X => auto-assign B15 = X
-      if (field === 'incFather') {
-        updated.decOtherMale = num;
-        if (!updated.reason || INTERNAL_TRANSFER_REASONS.includes(updated.reason)) {
-          if (num > 0 && updated.incMother > 0) {
-            updated.reason = 'Chuyển cá thể đực và cái đủ tuổi vào đàn bố mẹ.';
-          } else if (num > 0) {
-            updated.reason = 'Chuyển cá thể đực đủ tuổi vào đàn bố mẹ.';
+      if (!purchasingOutside) {
+        // Rule 5: Internal transfer B8 => auto-assign B15 = num
+        if (field === 'incFather') {
+          updated.decOtherMale = num;
+          if (!updated.reason || INTERNAL_TRANSFER_REASONS.includes(updated.reason)) {
+            if (num > 0 && updated.incMother > 0) {
+              updated.reason = 'Chuyển cá thể đực và cái đủ tuổi vào đàn bố mẹ.';
+            } else if (num > 0) {
+              updated.reason = 'Chuyển cá thể đực đủ tuổi vào đàn bố mẹ.';
+            }
           }
         }
-      }
 
-      // Rule 5: If user inputs B9 = Y => auto-assign B16 = Y
-      if (field === 'incMother') {
-        updated.decOtherFemale = num;
-        if (!updated.reason || INTERNAL_TRANSFER_REASONS.includes(updated.reason)) {
-          if (num > 0 && updated.incFather > 0) {
-            updated.reason = 'Chuyển cá thể đực và cái đủ tuổi vào đàn bố mẹ.';
-          } else if (num > 0) {
-            updated.reason = 'Chuyển cá thể cái đủ tuổi vào đàn bố mẹ.';
+        // Rule 5: Internal transfer B9 => auto-assign B16 = num
+        if (field === 'incMother') {
+          updated.decOtherFemale = num;
+          if (!updated.reason || INTERNAL_TRANSFER_REASONS.includes(updated.reason)) {
+            if (num > 0 && updated.incFather > 0) {
+              updated.reason = 'Chuyển cá thể đực và cái đủ tuổi vào đàn bố mẹ.';
+            } else if (num > 0) {
+              updated.reason = 'Chuyển cá thể cái đủ tuổi vào đàn bố mẹ.';
+            }
           }
         }
       }
@@ -171,7 +187,7 @@ export default function FluctuationModal({
     });
   };
 
-  // Quick Action Button: Auto-Fill Internal Transfer
+  // Quick Action Button: Auto-Fill Internal Transfer & Outside Purchase
   const handleAutoFillTransfer = (type) => {
     if (type === 'MALE') {
       const count = prevOM > 0 ? 1 : 0;
@@ -199,6 +215,13 @@ export default function FluctuationModal({
         incMother: countF,
         decOtherFemale: countF,
         reason: 'Chuyển cá thể đực và cái đủ tuổi vào đàn bố mẹ.',
+      }));
+    } else if (type === 'PURCHASE_PARENTS') {
+      setFormData((prev) => ({
+        ...prev,
+        decOtherMale: 0,
+        decOtherFemale: 0,
+        reason: 'Mua từ cơ sở nuôi sinh sản khác',
       }));
     }
   };
@@ -236,32 +259,39 @@ export default function FluctuationModal({
             <div className="flex items-center justify-between">
               <div className="font-extrabold text-emerald-900 flex items-center gap-2">
                 <RefreshCw className="w-4 h-4 text-emerald-600" />
-                <span>CHUYỂN NHÓM NỘI BỘ SANG ĐÀN BỐ MẸ (Thông tư 85/2025/TT-BNNMT):</span>
+                <span>CÁC HÌNH THỨC TĂNG ĐÀN BỐ MẸ (Thông tư 85/2025/TT-BNNMT):</span>
               </div>
               <span className="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold border border-emerald-300">
-                Không đổi tổng đàn
+                Lựa chọn quy tắc
               </span>
             </div>
             <p className="text-[11px] text-slate-600 font-medium">
-              Tự động gán tăng Bố mẹ đực/cái (Cột B8/B9) và giảm Cá thể khác đực/cái (Cột B15/B16) khi cá thể đủ tuổi sinh sản.
+              Chuyển nội bộ (bắt buộc B8=B15, B9=B16 không đổi tổng đàn) HOẶC Mua từ cơ sở khác (cộng trực tiếp Bố/Mẹ, không giảm cá thể khác).
             </p>
             <div className="flex flex-wrap gap-2 pt-1">
               <button
                 type="button"
+                onClick={() => handleAutoFillTransfer('PURCHASE_PARENTS')}
+                className="bg-indigo-600 hover:bg-indigo-700 text-white border border-indigo-700 px-3 py-1 rounded-lg font-bold transition-all shadow-xs"
+              >
+                + 🛒 Mua từ cơ sở nuôi sinh sản khác (Không giảm B15/B16)
+              </button>
+              <button
+                type="button"
                 onClick={() => handleAutoFillTransfer('MALE')}
-                className="bg-white hover:bg-emerald-100 text-emerald-900 border border-emerald-300 px-3 py-1 rounded-lg font-bold transition-all shadow-2xs"
+                className="bg-white hover:bg-emerald-100 text-emerald-900 border border-emerald-300 px-2.5 py-1 rounded-lg font-bold transition-all shadow-2xs"
               >
                 + 🔄 Chuyển 01 Đực vào Bố (B8=1, B15=1)
               </button>
               <button
                 type="button"
                 onClick={() => handleAutoFillTransfer('FEMALE')}
-                className="bg-white hover:bg-emerald-100 text-emerald-900 border border-emerald-300 px-3 py-1 rounded-lg font-bold transition-all shadow-2xs"
+                className="bg-white hover:bg-emerald-100 text-emerald-900 border border-emerald-300 px-2.5 py-1 rounded-lg font-bold transition-all shadow-2xs"
               >
                 + 🔄 Chuyển 01 Cái vào Mẹ (B9=1, B16=1)
               </button>
-              <button
-                type="button"
+            </div>
+          </div>  type="button"
                 onClick={() => handleAutoFillTransfer('BOTH')}
                 className="bg-white hover:bg-emerald-100 text-emerald-900 border border-emerald-300 px-3 py-1 rounded-lg font-bold transition-all shadow-2xs"
               >

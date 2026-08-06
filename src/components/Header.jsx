@@ -56,9 +56,12 @@ export default function Header({
               <h2 className="text-base sm:text-lg font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
                 <span>{activeViewObj.title}</span>
                 <span className="text-[10px] bg-emerald-100/90 text-emerald-800 border border-emerald-200 font-bold px-2 py-0.5 rounded-full">
-                  Thông tư 85/2025/TT-BNNMT
+                  TT 85/2025/TT-BNNMT
                 </span>
               </h2>
+              <p className="text-xs text-slate-500 mt-0.5 font-medium">
+                Ứng dụng tự động tính toán hiện trạng & biến động tăng giảm đàn theo Thông tư số 85/2025/TT-BNNMT
+              </p>
             </div>
           </div>
 

@@ -1,45 +1,35 @@
-const CACHE_NAME = 'dvhd-pwa-v1.0.2';
-const ASSETS_TO_CACHE = [
-  './',
-  './index.html',
-  './app.js',
-  './app.css',
-  './manifest.json'
-];
+const CACHE_NAME = 'dvhd-pwa-v' + Date.now();
 
-// Install Event
+// Install Event - skip waiting immediately
 self.addEventListener('install', (event) => {
   self.skipWaiting();
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      console.log('[PWA Service Worker] Caching App Shell...');
-      return cache.addAll(ASSETS_TO_CACHE).catch((err) => {
-        console.warn('[PWA Service Worker] Asset caching note:', err);
-      });
-    })
-  );
 });
 
-// Activate Event
+// Activate Event - clear ALL old caches immediately
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keyList) => {
       return Promise.all(
         keyList.map((key) => {
-          if (key !== CACHE_NAME) {
-            console.log('[PWA Service Worker] Removing old cache:', key);
-            return caches.delete(key);
-          }
+          console.log('[PWA Service Worker] Deleting cache key:', key);
+          return caches.delete(key);
         })
       );
     }).then(() => self.clients.claim())
   );
 });
 
-// Fetch Event - Network First with Cache Fallback
+// Fetch Event - Always Network First for development & localhost
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
   if (!event.request.url.startsWith('http')) return;
+
+  const url = new URL(event.request.url);
+  if (url.hostname === 'localhost' || url.hostname === '127.0.0.1') {
+    // Force direct network fetch for localhost to prevent stale UI
+    event.respondWith(fetch(event.request));
+    return;
+  }
 
   event.respondWith(
     fetch(event.request)
@@ -53,14 +43,7 @@ self.addEventListener('fetch', (event) => {
         return networkResponse;
       })
       .catch(() => {
-        return caches.match(event.request).then((cachedResponse) => {
-          if (cachedResponse) {
-            return cachedResponse;
-          }
-          if (event.request.headers.get('accept')?.includes('text/html')) {
-            return caches.match('./index.html');
-          }
-        });
+        return caches.match(event.request);
       })
   );
 });

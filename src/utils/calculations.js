@@ -98,13 +98,25 @@ export function validateInternalTransfer(formData) {
   const iM = Math.max(0, parseInt(formData.incMother) || 0);
   const dOM = Math.max(0, parseInt(formData.decOtherMale) || 0);
   const dOF = Math.max(0, parseInt(formData.decOtherFemale) || 0);
+  const reason = (formData.reason || '').toLowerCase();
+
+  // If purchasing breeding stock from outside facility (Mua từ cơ sở nuôi sinh sản khác)
+  const isPurchaseOutside =
+    reason.includes('mua từ cơ sở') ||
+    reason.includes('mua bố mẹ') ||
+    reason.includes('nhập mua từ cơ sở') ||
+    reason.includes('mua con giống');
+
+  if (isPurchaseOutside) {
+    return { isValid: true, message: '' };
+  }
 
   // If user is adding to breeding stock from internal stock
   if (iF > 0 || iM > 0) {
     if (iF !== dOM || iM !== dOF) {
       return {
         isValid: false,
-        message: 'Chuyển cá thể từ đàn khác sang đàn bố mẹ phải ghi đồng thời: B8 = B15 và B9 = B16.',
+        message: 'Chuyển cá thể từ đàn khác sang đàn bố mẹ phải ghi đồng thời: B8 = B15 và B9 = B16. (Nếu mua từ cơ sở khác, vui lòng chọn nguyên nhân "Mua từ cơ sở nuôi sinh sản khác").',
       };
     }
   }

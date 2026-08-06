@@ -12,8 +12,10 @@ import {
   ShieldAlert,
   Sparkles,
   Cloud,
-  ChevronRight
+  ChevronRight,
+  RefreshCw
 } from 'lucide-react';
+import { forceClearAllCache } from '../utils/storage';
 
 export default function LeftSidebar({
   currentView = 'SUMMARY',
@@ -255,6 +257,25 @@ export default function LeftSidebar({
                 <span>Cài đặt giao diện</span>
               </div>
               <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+            </button>
+
+            {/* Xóa Cache & Tải Lại Dữ Liệu Gốc */}
+            <button
+              onClick={() => {
+                if (window.confirm('Bạn có chắc chắn muốn xóa bộ nhớ cache và tải lại dữ liệu mới nhất không?')) {
+                  forceClearAllCache();
+                }
+              }}
+              className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold text-amber-900 bg-amber-50 hover:bg-amber-100 border border-amber-200 transition-all shadow-2xs mt-2"
+              title="Xóa toàn bộ bộ nhớ tạm (Cache/LocalStorage) và làm mới trình duyệt"
+            >
+              <div className="flex items-center gap-2.5">
+                <RefreshCw className="w-4 h-4 text-amber-600 animate-spin-slow" />
+                <span>Xóa Cache & Tải Lại Dữ Liệu</span>
+              </div>
+              <span className="text-[10px] bg-amber-200 text-amber-900 px-1.5 py-0.5 rounded font-mono font-bold">
+                Reset
+              </span>
             </button>
           </div>
         </div>

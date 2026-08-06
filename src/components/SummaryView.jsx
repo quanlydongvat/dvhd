@@ -239,7 +239,7 @@ export default function SummaryView({
             <span>Quản Lý Tổng Hợp Các Cơ Sở Nuôi Động Vật Hoang Dã Phân Theo Xã</span>
           </div>
           <p className="text-xs text-emerald-100 mt-1">
-            Quản lý tổng số 31 cơ sở (21 cơ sở Thú/Bò sát & 10 cơ sở Chim cảnh) thuộc 5 Xã địa bàn Huyện Krông Bông
+            Quản lý tổng số 31 cơ sở (21 cơ sở Thú/Bò sát & 10 cơ sở Chim cảnh) thuộc 5 Xã địa bàn Hạt Kiểm lâm khu vực Krông Bông quản lý
           </p>
         </div>
 
@@ -295,7 +295,7 @@ export default function SummaryView({
         <div className="text-xs text-slate-500 font-medium px-2">
           {summarySubTab === 'TABLE_1_1'
             ? '📌 Hiển thị bảng chi tiết danh sách cơ sở nuôi nhóm theo 5 xã'
-            : '📌 Hiển thị mẫu tổng hợp loài nguy cấp/CITES & thông thường theo chuẩn Kiểm lâm'}
+            : '📌 Hiển thị mẫu tổng hợp loài nguy cấp/CITES & thông thường theo chuẩn Thông tư số 85/2025/TT-BNNMT'}
         </div>
       </div>
 
@@ -621,53 +621,51 @@ export default function SummaryView({
               {/* Table Body for this Commune (Shown if Expanded) */}
               {isExpanded && (
                 <div className="overflow-x-auto scrollbar-thin animate-in fade-in duration-200">
-                  <table className="w-full text-xs text-left border-collapse min-w-[1500px]">
+                  <table className="w-full text-xs text-left border-collapse min-w-[880px]">
 
                     <thead>
                       <tr className="bg-slate-50 text-slate-800 text-center font-bold border-b border-slate-200">
-                        <th rowSpan={2} className="p-3 border-r border-slate-200 w-12 bg-slate-100">STT</th>
-                        <th rowSpan={2} className="p-3 border-r border-slate-200 w-32 bg-slate-100">Phân nhóm</th>
-                        <th rowSpan={2} className="p-3 border-r border-slate-200 w-56 text-left">Họ tên & Địa chỉ chủ nuôi</th>
-                        <th rowSpan={2} className="p-3 border-r border-slate-200 w-32">Tên tiếng Việt</th>
-                        <th rowSpan={2} className="p-3 border-r border-slate-200 w-40 italic">Tên khoa học</th>
-                        <th rowSpan={2} className="p-3 border-r border-slate-200 w-16 bg-emerald-100/80 text-emerald-950 font-extrabold">
+                        <th rowSpan={2} className="px-1 py-2 border-r border-slate-200 w-8 bg-slate-100 whitespace-nowrap">STT</th>
+                        <th rowSpan={2} className="px-1.5 py-2 border-r border-slate-200 w-20 bg-slate-100 whitespace-nowrap">Phân nhóm</th>
+                        <th rowSpan={2} className="px-1.5 py-2 border-r border-slate-200 min-w-[125px] max-w-[145px] text-left">Họ tên & Địa chỉ chủ nuôi</th>
+                        <th rowSpan={2} className="px-1.5 py-2 border-r border-slate-200 min-w-[110px] max-w-[130px] text-left">Tên tiếng Việt & Khoa học</th>
+                        <th rowSpan={2} className="px-1 py-2 border-r border-slate-200 w-12 bg-emerald-100/80 text-emerald-950 font-extrabold whitespace-nowrap">
                           Tổng số<br />
-                          <span className="font-mono text-[10px] text-emerald-800">(5=6+7+8+9+10)</span>
+                          <span className="font-mono text-[8px] text-emerald-800">(5=6+..+10)</span>
                         </th>
-                        <th colSpan={2} className="p-2 border-r border-slate-200 bg-teal-100/70 text-teal-950 font-extrabold">Đàn bố mẹ</th>
-                        <th colSpan={3} className="p-2 border-r border-slate-200 bg-indigo-100/70 text-indigo-950 font-extrabold">Cá thể khác</th>
-                        <th rowSpan={2} className="p-3 border-r border-slate-200 w-36">Mã số cơ sở BTĐDSH</th>
-                        <th rowSpan={2} className="p-3 border-r border-slate-200 w-28">Ngày cấp mã số</th>
-                        <th rowSpan={2} className="p-3 border-r border-slate-200 w-16">Mục đích nuôi</th>
-                        <th rowSpan={2} className="p-3 border-r border-slate-200 w-28">Ghi chú</th>
-                        <th rowSpan={2} className="p-3 w-28 text-center">Thao tác</th>
+                        <th colSpan={2} className="px-1 py-1 border-r border-slate-200 bg-teal-100/70 text-teal-950 font-extrabold whitespace-nowrap text-[11px]">Đàn bố mẹ</th>
+                        <th colSpan={3} className="px-1 py-1 border-r border-slate-200 bg-indigo-100/70 text-indigo-950 font-extrabold whitespace-nowrap text-[11px]">Cá thể khác</th>
+                        <th rowSpan={2} className="px-1.5 py-2 border-r border-slate-200 w-20 text-center">Mã số cơ sở</th>
+                        <th rowSpan={2} className="px-1 py-2 border-r border-slate-200 w-16 text-center">Ngày cấp mã số</th>
+                        <th rowSpan={2} className="px-0.5 py-2 border-r border-slate-200 w-10 text-center">Mục đích</th>
+                        <th rowSpan={2} className="px-1 py-2 border-r border-slate-200 w-16 text-center">Ghi chú</th>
+                        <th rowSpan={2} className="px-1 py-2 w-20 text-center whitespace-nowrap">Thao tác</th>
                       </tr>
                       <tr className="bg-slate-50/50 text-slate-700 text-center font-bold border-b border-slate-200">
-                        <th className="p-1.5 border-r border-slate-200 w-12 bg-teal-50 text-teal-900">Đực (6)</th>
-                        <th className="p-1.5 border-r border-slate-200 w-12 bg-teal-50 text-teal-900">Cái (7)</th>
-                        <th className="p-1.5 border-r border-slate-200 w-12 bg-indigo-50 text-indigo-900">Đực (8)</th>
-                        <th className="p-1.5 border-r border-slate-200 w-12 bg-indigo-50 text-indigo-900">Cái (9)</th>
-                        <th className="p-1.5 border-r border-slate-200 w-16 bg-indigo-50 text-indigo-900">Chưa XĐ (10)</th>
+                        <th className="px-0.5 py-1 border-r border-slate-200 w-8 bg-teal-50 text-teal-900 text-[10px]">Đực (6)</th>
+                        <th className="px-0.5 py-1 border-r border-slate-200 w-8 bg-teal-50 text-teal-900 text-[10px]">Cái (7)</th>
+                        <th className="px-0.5 py-1 border-r border-slate-200 w-8 bg-indigo-50 text-indigo-900 text-[10px]">Đực (8)</th>
+                        <th className="px-0.5 py-1 border-r border-slate-200 w-8 bg-indigo-50 text-indigo-900 text-[10px]">Cái (9)</th>
+                        <th className="px-0.5 py-1 border-r border-slate-200 w-9 bg-indigo-50 text-indigo-900 text-[9px]">Chưa XĐ (10)</th>
                       </tr>
 
                       {/* Underlined Column Numbers Row */}
-                      <tr className="bg-slate-100/90 text-slate-600 text-center font-mono text-[10px] italic border-b border-slate-300">
-                        <td className="p-1 border-r border-slate-300 font-normal">STT</td>
-                        <td className="p-1 border-r border-slate-300"><u>1</u></td>
-                        <td className="p-1 border-r border-slate-300"><u>2</u></td>
-                        <td className="p-1 border-r border-slate-300"><u>3</u></td>
-                        <td className="p-1 border-r border-slate-300"><u>4</u></td>
-                        <td className="p-1 border-r border-slate-300 font-bold"><u>5=6+7+8+9+10</u></td>
-                        <td className="p-1 border-r border-slate-300 font-bold"><u>6</u></td>
-                        <td className="p-1 border-r border-slate-300 font-bold"><u>7</u></td>
-                        <td className="p-1 border-r border-slate-300 font-bold"><u>8</u></td>
-                        <td className="p-1 border-r border-slate-300 font-bold"><u>9</u></td>
-                        <td className="p-1 border-r border-slate-300 font-bold"><u>10</u></td>
-                        <td className="p-1 border-r border-slate-300"><u>11</u></td>
-                        <td className="p-1 border-r border-slate-300"><u>12</u></td>
-                        <td className="p-1 border-r border-slate-300"><u>13</u></td>
-                        <td className="p-1 border-r border-slate-300"><u>14</u></td>
-                        <td className="p-1">#</td>
+                      <tr className="bg-slate-100/90 text-slate-600 text-center font-mono text-[9px] italic border-b border-slate-300">
+                        <td className="py-0.5 border-r border-slate-300 font-normal">STT</td>
+                        <td className="py-0.5 border-r border-slate-300"><u>1</u></td>
+                        <td className="py-0.5 border-r border-slate-300"><u>2</u></td>
+                        <td className="py-0.5 border-r border-slate-300"><u>3 & 4</u></td>
+                        <td className="py-0.5 border-r border-slate-300 font-bold"><u>5=6..10</u></td>
+                        <td className="py-0.5 border-r border-slate-300 font-bold"><u>6</u></td>
+                        <td className="py-0.5 border-r border-slate-300 font-bold"><u>7</u></td>
+                        <td className="py-0.5 border-r border-slate-300 font-bold"><u>8</u></td>
+                        <td className="py-0.5 border-r border-slate-300 font-bold"><u>9</u></td>
+                        <td className="py-0.5 border-r border-slate-300 font-bold"><u>10</u></td>
+                        <td className="py-0.5 border-r border-slate-300"><u>11</u></td>
+                        <td className="py-0.5 border-r border-slate-300"><u>12</u></td>
+                        <td className="py-0.5 border-r border-slate-300"><u>13</u></td>
+                        <td className="py-0.5 border-r border-slate-300"><u>14</u></td>
+                        <td className="py-0.5">#</td>
                       </tr>
                     </thead>
 
@@ -702,7 +700,7 @@ export default function SummaryView({
                             {isFirstSpeciesRow && (
                               <td
                                 rowSpan={fac.speciesList.length}
-                                className="p-3 text-center font-mono font-bold border-r border-slate-200 text-slate-700 bg-slate-50/80"
+                                className="px-1 py-1.5 text-center font-mono font-bold border-r border-slate-200 text-slate-700 bg-slate-50/80 text-xs"
                               >
                                 {sttForThisFac}
                               </td>
@@ -712,15 +710,15 @@ export default function SummaryView({
                             {isFirstSpeciesRow && (
                               <td
                                 rowSpan={fac.speciesList.length}
-                                className="p-3 text-center font-bold border-r border-slate-200 bg-slate-50/50"
+                                className="px-1 py-1.5 text-center font-bold border-r border-slate-200 bg-slate-50/50"
                               >
                                 {isBirdFac ? (
-                                  <span className="bg-amber-100 text-amber-900 border border-amber-300 px-2 py-1 rounded-lg text-[10px] font-extrabold inline-flex items-center gap-1 shadow-2xs">
-                                    🦜 Nhóm Chim
+                                  <span className="bg-amber-100 text-amber-900 border border-amber-300 px-1 py-0.5 rounded text-[9px] font-extrabold inline-flex items-center gap-0.5 shadow-2xs whitespace-nowrap">
+                                    🦜 Chim
                                   </span>
                                 ) : (
-                                  <span className="bg-teal-100 text-teal-900 border border-teal-300 px-2 py-1 rounded-lg text-[10px] font-extrabold inline-flex items-center gap-1 shadow-2xs">
-                                    🦔 Thú / Bò sát
+                                  <span className="bg-teal-100 text-teal-900 border border-teal-300 px-1 py-0.5 rounded text-[9px] font-extrabold inline-flex items-center gap-0.5 shadow-2xs whitespace-nowrap">
+                                    🦔 Thú/Bò sát
                                   </span>
                                 )}
                               </td>
@@ -730,60 +728,56 @@ export default function SummaryView({
                             {isFirstSpeciesRow && (
                               <td
                                 rowSpan={fac.speciesList.length}
-                                className="p-3 border-r border-slate-200 bg-slate-50/30"
+                                className="px-1.5 py-1.5 border-r border-slate-200 bg-slate-50/30 min-w-[125px] max-w-[145px]"
                               >
-                                <div className="font-extrabold text-slate-900 text-sm">{fac.ownerName}</div>
-                                <div className="text-[11px] text-slate-500 mt-0.5 font-medium">{fac.address}</div>
+                                <div className="font-extrabold text-slate-900 text-xs leading-snug">{fac.ownerName}</div>
+                                <div className="text-[9px] text-slate-500 mt-0.5 font-medium leading-tight">{fac.address}</div>
                               </td>
                             )}
 
-                            {/* Tên tiếng Việt */}
-                            <td className="p-3 font-bold border-r border-slate-200 text-slate-900">
-                              {sp.vietnameseName}
-                            </td>
-
-                            {/* Tên khoa học */}
-                            <td className="p-3 italic border-r border-slate-200 text-slate-600 font-mono text-[11px]">
-                              {sp.scientificName}
+                            {/* Tên tiếng Việt & Tên khoa học gộp chung */}
+                            <td className="px-1.5 py-1.5 border-r border-slate-200 min-w-[110px] max-w-[130px]">
+                              <div className="font-bold text-slate-900 text-xs leading-snug">{sp.vietnameseName}</div>
+                              <div className="text-[9px] italic text-slate-500 font-mono mt-0.5 leading-tight">{sp.scientificName}</div>
                             </td>
 
                             {/* Tổng số */}
-                            <td className="p-3 text-center font-mono font-extrabold text-sm border-r border-slate-200 text-emerald-800 bg-emerald-50/80">
+                            <td className="px-1 py-1.5 text-center font-mono font-extrabold text-xs border-r border-slate-200 text-emerald-800 bg-emerald-50/80">
                               {total}
                             </td>
 
                             {/* Bố */}
-                            <td className="p-3 text-center font-mono border-r border-slate-200 font-bold text-slate-900">
+                            <td className="px-0.5 py-1.5 text-center font-mono border-r border-slate-200 font-bold text-slate-900 text-xs">
                               {father}
                             </td>
 
                             {/* Mẹ */}
-                            <td className="p-3 text-center font-mono border-r border-slate-200 font-bold text-slate-900">
+                            <td className="px-0.5 py-1.5 text-center font-mono border-r border-slate-200 font-bold text-slate-900 text-xs">
                               {mother}
                             </td>
 
                             {/* Đực */}
-                            <td className="p-3 text-center font-mono border-r border-slate-200 text-slate-700">
+                            <td className="px-0.5 py-1.5 text-center font-mono border-r border-slate-200 text-slate-700 text-xs">
                               {otherMale || ''}
                             </td>
 
                             {/* Cái */}
-                            <td className="p-3 text-center font-mono border-r border-slate-200 text-slate-700">
+                            <td className="px-0.5 py-1.5 text-center font-mono border-r border-slate-200 text-slate-700 text-xs">
                               {otherFemale || ''}
                             </td>
 
                             {/* Chưa XĐ */}
-                            <td className="p-3 text-center font-mono border-r border-slate-200 text-slate-700">
+                            <td className="px-0.5 py-1.5 text-center font-mono border-r border-slate-200 text-slate-700 text-xs">
                               {otherUnknown || ''}
                             </td>
 
-                            {/* Mã số CS BTĐDSH */}
+                            {/* Mã số CS */}
                             {isFirstSpeciesRow && (
                               <td
                                 rowSpan={fac.speciesList.length}
-                                className="p-3 font-mono font-bold border-r border-slate-200 text-indigo-700"
+                                className="px-1.5 py-1.5 font-mono font-bold border-r border-slate-200 text-indigo-700 text-[11px] text-center"
                               >
-                                {fac.registrationCode || 'Chưa có mã số'}
+                                {fac.registrationCode || 'Chưa có'}
                               </td>
                             )}
 
@@ -791,14 +785,14 @@ export default function SummaryView({
                             {isFirstSpeciesRow && (
                               <td
                                 rowSpan={fac.speciesList.length}
-                                className="p-3 font-mono border-r border-slate-200 text-slate-600 whitespace-nowrap text-center font-semibold"
+                                className="px-1 py-1.5 font-mono border-r border-slate-200 text-slate-600 whitespace-nowrap text-center font-semibold text-[10px]"
                               >
                                 {fac.registrationDate ? fac.registrationDate.split('-').reverse().join('/') : '---'}
                               </td>
                             )}
 
                             {/* Mục đích nuôi */}
-                            <td className="p-3 text-center font-mono font-bold border-r border-slate-200 text-teal-800">
+                            <td className="px-1 py-1.5 text-center font-mono font-bold border-r border-slate-200 text-teal-800 text-xs">
                               {sp.purposeCode || fac.purposeCode || 'T'}
                             </td>
 
@@ -806,10 +800,10 @@ export default function SummaryView({
                             {isFirstSpeciesRow && (
                               <td
                                 rowSpan={fac.speciesList.length}
-                                className="p-3 border-r border-slate-200 text-slate-700"
+                                className="px-1.5 py-1.5 border-r border-slate-200 text-slate-700 text-[11px]"
                               >
                                 {fac.note ? (
-                                  <span className="bg-amber-50 text-amber-800 border border-amber-200 px-2 py-0.5 rounded text-[11px] font-bold">
+                                  <span className="bg-amber-50 text-amber-800 border border-amber-200 px-1.5 py-0.5 rounded text-[10px] font-bold">
                                     {fac.note}
                                   </span>
                                 ) : (
@@ -822,28 +816,28 @@ export default function SummaryView({
                             {isFirstSpeciesRow && (
                               <td
                                 rowSpan={fac.speciesList.length}
-                                className="p-3 text-center"
+                                className="px-1.5 py-1.5 text-center"
                               >
-                                <div className="flex flex-col gap-1.5 w-full">
+                                <div className="flex flex-col gap-1 w-full">
                                   <button
                                     onClick={() => onSelectFacility(fac.id)}
-                                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1 w-full shadow-xs ${
+                                    className={`px-2 py-1 rounded-lg text-[11px] font-bold transition-all flex items-center justify-center gap-1 w-full shadow-2xs ${
                                       isCurrentActive
-                                        ? 'bg-emerald-600 text-white shadow-md'
+                                        ? 'bg-emerald-600 text-white shadow-xs'
                                         : 'bg-white hover:bg-slate-100 text-slate-800 border border-slate-300'
                                     }`}
                                   >
-                                    <span>{isCurrentActive ? 'Đang chọn' : 'Xem sổ Mẫu II'}</span>
-                                    <ArrowRight className="w-3.5 h-3.5" />
+                                    <span>{isCurrentActive ? 'Đang chọn' : 'Sổ Mẫu II'}</span>
+                                    <ArrowRight className="w-3 h-3" />
                                   </button>
 
                                   {onOpenMapFacility && (
                                     <button
                                       onClick={() => onOpenMapFacility(fac.id)}
-                                      className="px-2.5 py-1 rounded-lg text-[11px] font-bold text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200 transition-all flex items-center justify-center gap-1 w-full"
+                                      className="px-1.5 py-0.5 rounded-lg text-[10px] font-bold text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200 transition-all flex items-center justify-center gap-0.5 w-full"
                                       title="Bay tới vị trí cơ sở trên bản đồ Google Hybrid"
                                     >
-                                      <MapPin className="w-3.5 h-3.5 text-rose-600" />
+                                      <MapPin className="w-3 h-3 text-rose-600" />
                                       <span>Định vị GIS</span>
                                     </button>
                                   )}
