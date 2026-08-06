@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import Header from './components/Header';
+import LeftSidebar from './components/LeftSidebar';
 import TableView from './components/TableView';
 import SummaryView from './components/SummaryView';
 import AnalyticsView from './components/AnalyticsView';
 import MapView from './components/MapView';
 import DesktopAppHeader from './components/DesktopAppHeader';
+
 import DesktopShortcutsModal from './components/DesktopShortcutsModal';
 import MobileBottomNav from './components/MobileBottomNav';
 import UISettingsModal, { DEFAULT_UI_SETTINGS } from './components/UISettingsModal';
@@ -369,7 +371,6 @@ export default function App() {
   };
 
   return (
-
     <div className="min-h-screen bg-slate-50 text-slate-800 flex flex-col font-sans antialiased selection:bg-emerald-500 selection:text-white pb-16 lg:pb-0">
       {/* Desktop App Header Bar */}
       <DesktopAppHeader
@@ -381,116 +382,128 @@ export default function App() {
         onOpenUISettings={() => setIsUISettingsModalOpen(true)}
       />
 
+      {/* Main Flex Wrapper with Fixed Left Sidebar + Main Workspace */}
+      <div className="flex-1 flex flex-col lg:flex-row min-h-0">
+        {/* Left Sidebar Column (Desktop Vertical Tools Menu) */}
+        <div className="hidden lg:block">
+          <LeftSidebar
+            currentView={currentView}
+            onChangeView={setCurrentView}
+            facilitiesCount={facilitiesList.length}
+            onOpenAddFluctuation={() => {
+              setEditingFluctuation(null);
+              setIsFluctuationModalOpen(true);
+            }}
+            onExportExcel={handleExportExcel}
+            onOpenPrintView={() => setIsPrintViewOpen(true)}
+            onOpenBackupModal={() => setIsBackupModalOpen(true)}
+            onOpenUISettings={() => setIsUISettingsModalOpen(true)}
+            activeSpecies={activeSpecies}
+          />
+        </div>
 
-      {/* Top Header */}
-      <Header
-        facilitiesList={facilitiesList}
-        activeFacilityId={activeFacilityId}
-        onSelectFacility={handleSelectFacility}
-        facilityInfo={facilityInfo}
-        speciesList={speciesList}
-        activeSpecies={activeSpecies}
-        onSelectSpecies={handleSelectSpecies}
-        onOpenAddFluctuation={() => {
-          setEditingFluctuation(null);
-          setIsFluctuationModalOpen(true);
-        }}
-        onOpenAddSpecies={() => {
-          setEditingSpecies(null);
-          setIsSpeciesModalOpen(true);
-        }}
-        onOpenEditSpecies={() => {
-          setEditingSpecies(activeSpecies);
-          setIsSpeciesModalOpen(true);
-        }}
-        onOpenEditFacility={() => setIsFacilityModalOpen(true)}
-        onExportExcel={handleExportExcel}
-        onOpenPrintView={() => setIsPrintViewOpen(true)}
-        onOpenBackupModal={() => setIsBackupModalOpen(true)}
-        onOpenUISettings={() => setIsUISettingsModalOpen(true)}
-        currentView={currentView}
-        onChangeView={setCurrentView}
-      />
-
-
-      {/* Main Content Area */}
-      <main className="flex-1 max-w-[1720px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
-
-        {currentView === 'SUMMARY' ? (
-          <SummaryView
+        {/* Right Main Workspace Column */}
+        <div className="flex-1 flex flex-col min-w-0">
+          {/* Top Header Bar */}
+          <Header
             facilitiesList={facilitiesList}
             activeFacilityId={activeFacilityId}
-            onSelectFacility={(facId) => {
-              handleSelectFacility(facId);
-              setCurrentView('LOGBOOK');
-            }}
-            onOpenMapFacility={(facId) => {
-              setTargetFacilityId(facId);
-              setCurrentView('MAP');
-            }}
-          />
-
-        ) : currentView === 'ANALYTICS' ? (
-          <AnalyticsView facilitiesList={facilitiesList} />
-        ) : currentView === 'MAP' ? (
-          <MapView
-            facilitiesList={facilitiesList}
-            activeFacilityId={activeFacilityId}
-            targetFacilityId={targetFacilityId}
-            onSelectFacility={(facId) => {
-              handleSelectFacility(facId);
-              setCurrentView('LOGBOOK');
-            }}
-            onUpdateFacilityCoords={(facId, newLat, newLng) => {
-              const updatedFacilitiesList = facilitiesList.map((fac) =>
-                fac.id === facId ? { ...fac, lat: newLat, lng: newLng } : fac
-              );
-              setAppState((prev) => ({
-                ...prev,
-                facilitiesList: updatedFacilitiesList,
-                facilityInfo:
-                  prev.facilityInfo?.id === facId
-                    ? { ...prev.facilityInfo, lat: newLat, lng: newLng }
-                    : prev.facilityInfo,
-              }));
-            }}
-          />
-
-        ) : (
-          <TableView
-            rows={rows}
-            species={activeSpecies}
+            onSelectFacility={handleSelectFacility}
             facilityInfo={facilityInfo}
-            onEditRow={(row) => {
-              const rawFluctuation = activeSpecies?.fluctuations?.find((item) => item.id === row.rowId);
-              if (rawFluctuation) {
-                setEditingFluctuation(rawFluctuation);
-                setIsFluctuationModalOpen(true);
-              }
-            }}
-            onDeleteRow={handleDeleteFluctuation}
-            onEditBaseline={() => {
-              setEditingSpecies(activeSpecies);
-              setIsSpeciesModalOpen(true);
-            }}
+            speciesList={speciesList}
+            activeSpecies={activeSpecies}
+            onSelectSpecies={handleSelectSpecies}
             onOpenAddSpecies={() => {
               setEditingSpecies(null);
               setIsSpeciesModalOpen(true);
             }}
+            onOpenEditSpecies={() => {
+              setEditingSpecies(activeSpecies);
+              setIsSpeciesModalOpen(true);
+            }}
             onOpenEditFacility={() => setIsFacilityModalOpen(true)}
-            onOpenBackupModal={() => setIsBackupModalOpen(true)}
+            currentView={currentView}
+            onChangeView={setCurrentView}
           />
-        )}
-      </main>
 
-      {/* App Footer */}
-      <footer className="bg-white border-t border-slate-200/80 py-4 text-center text-xs text-slate-500 no-print shadow-xs mb-12 lg:mb-0">
-        <div className="max-w-7xl mx-auto px-4">
-          <p className="font-medium">
-            Phần mềm Quản lý Sổ theo dõi Động vật Hoang dã (Mẫu II - Nuôi sinh sản) © 2026. Tuân thủ Quy định Kiểm lâm & Thủy sản.
-          </p>
+          {/* Main Content Area */}
+          <main className="flex-1 max-w-[1720px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-5">
+            {currentView === 'SUMMARY' ? (
+              <SummaryView
+                facilitiesList={facilitiesList}
+                activeFacilityId={activeFacilityId}
+                onSelectFacility={(facId) => {
+                  handleSelectFacility(facId);
+                  setCurrentView('LOGBOOK');
+                }}
+                onOpenMapFacility={(facId) => {
+                  setTargetFacilityId(facId);
+                  setCurrentView('MAP');
+                }}
+              />
+            ) : currentView === 'ANALYTICS' ? (
+              <AnalyticsView facilitiesList={facilitiesList} />
+            ) : currentView === 'MAP' ? (
+              <MapView
+                facilitiesList={facilitiesList}
+                activeFacilityId={activeFacilityId}
+                targetFacilityId={targetFacilityId}
+                onSelectFacility={(facId) => {
+                  handleSelectFacility(facId);
+                  setCurrentView('LOGBOOK');
+                }}
+                onUpdateFacilityCoords={(facId, newLat, newLng) => {
+                  const updatedFacilitiesList = facilitiesList.map((fac) =>
+                    fac.id === facId ? { ...fac, lat: newLat, lng: newLng } : fac
+                  );
+                  setAppState((prev) => ({
+                    ...prev,
+                    facilitiesList: updatedFacilitiesList,
+                    facilityInfo:
+                      prev.facilityInfo?.id === facId
+                        ? { ...prev.facilityInfo, lat: newLat, lng: newLng }
+                        : prev.facilityInfo,
+                  }));
+                }}
+              />
+            ) : (
+              <TableView
+                rows={rows}
+                species={activeSpecies}
+                facilityInfo={facilityInfo}
+                onEditRow={(row) => {
+                  const rawFluctuation = activeSpecies?.fluctuations?.find((item) => item.id === row.rowId);
+                  if (rawFluctuation) {
+                    setEditingFluctuation(rawFluctuation);
+                    setIsFluctuationModalOpen(true);
+                  }
+                }}
+                onDeleteRow={handleDeleteFluctuation}
+                onEditBaseline={() => {
+                  setEditingSpecies(activeSpecies);
+                  setIsSpeciesModalOpen(true);
+                }}
+                onOpenAddSpecies={() => {
+                  setEditingSpecies(null);
+                  setIsSpeciesModalOpen(true);
+                }}
+                onOpenEditFacility={() => setIsFacilityModalOpen(true)}
+                onOpenBackupModal={() => setIsBackupModalOpen(true)}
+              />
+            )}
+          </main>
+
+          {/* App Footer */}
+          <footer className="bg-white border-t border-slate-200/80 py-3.5 text-center text-xs text-slate-500 no-print shadow-2xs mb-12 lg:mb-0 mt-auto">
+            <div className="max-w-7xl mx-auto px-4">
+              <p className="font-medium">
+                Phần mềm Quản lý Sổ theo dõi Động vật Hoang dã (Mẫu II - Nuôi sinh sản) © 2026. Tuân thủ Quy định Kiểm lâm & Thủy sản.
+              </p>
+            </div>
+          </footer>
         </div>
-      </footer>
+      </div>
+
 
       {/* Smart Mobile Bottom Navigation Bar */}
       <MobileBottomNav
