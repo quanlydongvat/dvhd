@@ -116,13 +116,13 @@ export function validateInternalTransfer(formData) {
   const dOM = Math.max(0, parseInt(formData.decOtherMale) || 0);
   const dOF = Math.max(0, parseInt(formData.decOtherFemale) || 0);
 
-  // If explicit purchasing mode is selected OR reason matches outside purchase
-  if (formData.isPurchaseMode || isPurchaseFromOutside(formData.reason)) {
+  // If explicit purchasing mode is selected OR reason matches outside purchase OR reductions are 0
+  if (formData.isPurchaseMode || isPurchaseFromOutside(formData.reason) || (dOM === 0 && dOF === 0)) {
     return { isValid: true, message: '' };
   }
 
-  // If user is adding to breeding stock from internal stock
-  if (iF > 0 || iM > 0) {
+  // Only if reductions in B15 or B16 are explicitly entered for internal transfer
+  if ((iF > 0 || iM > 0) && (dOM > 0 || dOF > 0)) {
     if (iF !== dOM || iM !== dOF) {
       return {
         isValid: false,

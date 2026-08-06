@@ -190,59 +190,60 @@ export default function FluctuationModal({
     onClose();
   };
 
-  // Handler for number changes
+  // Handler for number changes (Pure, no side-effect auto assignment!)
   const handleNumChange = (field, val) => {
     const num = Math.max(0, parseInt(val) || 0);
+    setFormData((prev) => ({
+      ...prev,
+      [field]: num,
+    }));
+  };
 
+  // Explicit action: Apply Internal Transfer matching B15=B8, B16=B9
+  const handleApplyInternalTransfer = () => {
     setFormData((prev) => {
-      const updated = { ...prev, [field]: num };
-      const purchasingOutside = updated.isPurchaseMode || isPurchaseFromOutside(updated.reason);
-
-      if (!purchasingOutside) {
-        // Internal transfer B8 => auto-assign B15 = num
-        if (field === 'incFather') {
-          updated.decOtherMale = num;
-          if (!updated.reason || INTERNAL_TRANSFER_REASONS.includes(updated.reason)) {
-            if (num > 0 && updated.incMother > 0) {
-              updated.reason = 'Chuyển cá thể đực và cái đủ tuổi vào đàn bố mẹ.';
-            } else if (num > 0) {
-              updated.reason = 'Chuyển cá thể đực đủ tuổi vào đàn bố mẹ.';
-            }
-          }
-        }
-
-        // Internal transfer B9 => auto-assign B16 = num
-        if (field === 'incMother') {
-          updated.decOtherFemale = num;
-          if (!updated.reason || INTERNAL_TRANSFER_REASONS.includes(updated.reason)) {
-            if (num > 0 && updated.incFather > 0) {
-              updated.reason = 'Chuyển cá thể đực và cái đủ tuổi vào đàn bố mẹ.';
-            } else if (num > 0) {
-              updated.reason = 'Chuyển cá thể cái đủ tuổi vào đàn bố mẹ.';
-            }
-          }
-        }
-      } else {
-        // In purchase mode, B15 and B16 are kept at 0 when B8 or B9 are entered
-        if (field === 'incFather' || field === 'incMother') {
-          updated.decOtherMale = 0;
-          updated.decOtherFemale = 0;
-        }
+      const incF = prev.incFather;
+      const incM = prev.incMother;
+      let reasonStr = 'Chuyển cá thể đủ tuổi vào đàn bố mẹ.';
+      if (incF > 0 && incM > 0) {
+        reasonStr = 'Chuyển cá thể đực và cái đủ tuổi vào đàn bố mẹ.';
+      } else if (incF > 0) {
+        reasonStr = 'Chuyển cá thể đực đủ tuổi vào đàn bố mẹ.';
+      } else if (incM > 0) {
+        reasonStr = 'Chuyển cá thể cái đủ tuổi vào đàn bố mẹ.';
       }
-
-      return updated;
+      return {
+        ...prev,
+        decOtherMale: incF,
+        decOtherFemale: incM,
+        reason: reasonStr,
+        isPurchaseMode: false,
+      };
     });
+  };
+
+  // Explicit action: Apply External Purchase (Zero out B15 & B16)
+  const handleApplyPurchase = () => {
+    setFormData((prev) => ({
+      ...prev,
+      decOtherMale: 0,
+      decOtherFemale: 0,
+      reason: 'Mua từ cơ sở nuôi sinh sản khác',
+      isPurchaseMode: true,
+    }));
   };
 
   // Select Quick Reason Chip
   const handleSelectReason = (reasonStr) => {
     const isPurchase = isPurchaseFromOutside(reasonStr);
+    const isInternal = INTERNAL_TRANSFER_REASONS.includes(reasonStr);
+
     setFormData((prev) => ({
       ...prev,
       reason: reasonStr,
       isPurchaseMode: isPurchase,
-      decOtherMale: isPurchase ? 0 : prev.decOtherMale,
-      decOtherFemale: isPurchase ? 0 : prev.decOtherFemale,
+      decOtherMale: isInternal ? prev.incFather : isPurchase ? 0 : prev.decOtherMale,
+      decOtherFemale: isInternal ? prev.incMother : isPurchase ? 0 : prev.decOtherFemale,
     }));
   };
 
@@ -282,7 +283,42 @@ export default function FluctuationModal({
             </h4>
           </div>
 
-          {/* Warning Banner if B8 != B15 or B9 != B16 */}
+          {/* Quick Fluctuation Type Selector Bar */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+            <button
+              type="button"
+              onClick={handleApplyPurchase}
+              className={`p-3 rounded-xl border text-left font-extrabold transition-all flex items-center gap-2.5 shadow-sm ${
+                isPurchasingOutside
+                  ? 'bg-emerald-600 text-white border-emerald-700 shadow-md ring-2 ring-emerald-400'
+                  : 'bg-white hover:bg-emerald-50 text-slate-800 border-slate-300'
+              }`}
+            >
+              <ShoppingCart className="w-5 h-5 flex-shrink-0" />
+              <div>
+                <span className="block text-xs uppercase tracking-wide">1. Mua Từ Bên Ngoài / Nhập Giống</span>
+                <span className="text-[10px] opacity-90 block font-normal">+ Tăng tổng đàn cá thể (B15, B16 = 0)</span>
+              </div>
+            </button>
+
+            <button
+              type="button"
+              onClick={handleApplyInternalTransfer}
+              className={`p-3 rounded-xl border text-left font-extrabold transition-all flex items-center gap-2.5 shadow-sm ${
+                !isPurchasingOutside && (incF > 0 || incM > 0)
+                  ? 'bg-indigo-600 text-white border-indigo-700 shadow-md ring-2 ring-indigo-400'
+                  : 'bg-white hover:bg-indigo-50 text-slate-800 border-slate-300'
+              }`}
+            >
+              <RefreshCw className="w-5 h-5 flex-shrink-0" />
+              <div>
+                <span className="block text-xs uppercase tracking-wide">2. Chuyển Nhóm Nội Bộ Sang Bố Mẹ</span>
+                <span className="text-[10px] opacity-90 block font-normal">Giữ nguyên tổng đàn (Tự khớp B15=B8, B16=B9)</span>
+              </div>
+            </button>
+          </div>
+
+          {/* Warning Banner if B8 != B15 or B9 != B16 during internal transfer */}
           {isTransferMismatch && (
             <div className="bg-amber-50 border border-amber-300 rounded-xl p-3 flex items-start gap-2 text-xs text-amber-900 font-bold shadow-2xs">
               <AlertTriangle className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
