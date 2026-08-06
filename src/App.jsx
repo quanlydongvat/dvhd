@@ -423,6 +423,10 @@ export default function App() {
               setIsSpeciesModalOpen(true);
             }}
             onOpenEditFacility={() => setIsFacilityModalOpen(true)}
+            onExportExcel={handleExportExcel}
+            onOpenPrintView={() => setIsPrintViewOpen(true)}
+            onOpenBackupModal={() => setIsBackupModalOpen(true)}
+            onOpenUISettings={() => setIsUISettingsModalOpen(true)}
             currentView={currentView}
             onChangeView={setCurrentView}
           />

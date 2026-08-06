@@ -1,5 +1,5 @@
 import React from 'react';
-import { Settings, Edit3, FolderPlus, Table, LayoutList, BarChart3, MapPin, Building2 } from 'lucide-react';
+import { Settings, Edit3, FolderPlus, Table, LayoutList, BarChart3, MapPin, Building2, Download, Printer, Database } from 'lucide-react';
 import { PURPOSE_CODES } from '../utils/calculations';
 
 export default function Header({
@@ -13,6 +13,10 @@ export default function Header({
   onOpenAddSpecies,
   onOpenEditSpecies,
   onOpenEditFacility,
+  onExportExcel,
+  onOpenPrintView,
+  onOpenBackupModal,
+  onOpenUISettings,
   currentView = 'SUMMARY', // 'LOGBOOK' | 'SUMMARY' | 'ANALYTICS' | 'MAP'
   onChangeView,
 }) {
@@ -40,7 +44,7 @@ export default function Header({
   const IconComponent = activeViewObj.icon;
 
   return (
-    <header className="bg-white/95 backdrop-blur-md text-slate-800 shadow-xs border-b border-slate-200/80 sticky top-0 z-10 transition-colors">
+    <header className="bg-white/95 backdrop-blur-md text-slate-800 shadow-2xs border-b border-slate-200/80 sticky top-0 z-10 transition-colors">
       <div className="max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-8 py-3">
         {/* Top View Header Title & Quick View Badges for Mobile */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-slate-100">
@@ -58,40 +62,67 @@ export default function Header({
             </div>
           </div>
 
-          {/* Quick View Bar for Mobile (screen width below lg) */}
-          <div className="flex lg:hidden items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200/80 overflow-x-auto">
-            <button
-              onClick={() => onChangeView && onChangeView('LOGBOOK')}
-              className={`px-2.5 py-1 rounded-lg text-xs font-bold whitespace-nowrap ${
-                currentView === 'LOGBOOK' ? 'bg-white text-emerald-700 shadow-xs' : 'text-slate-600'
-              }`}
-            >
-              Sổ Mẫu II
-            </button>
-            <button
-              onClick={() => onChangeView && onChangeView('SUMMARY')}
-              className={`px-2.5 py-1 rounded-lg text-xs font-bold whitespace-nowrap ${
-                currentView === 'SUMMARY' ? 'bg-white text-emerald-700 shadow-xs' : 'text-slate-600'
-              }`}
-            >
-              Tổng hợp ({facilitiesList.length})
-            </button>
-            <button
-              onClick={() => onChangeView && onChangeView('ANALYTICS')}
-              className={`px-2.5 py-1 rounded-lg text-xs font-bold whitespace-nowrap ${
-                currentView === 'ANALYTICS' ? 'bg-white text-indigo-700 shadow-xs' : 'text-slate-600'
-              }`}
-            >
-              Thống kê
-            </button>
-            <button
-              onClick={() => onChangeView && onChangeView('MAP')}
-              className={`px-2.5 py-1 rounded-lg text-xs font-bold whitespace-nowrap ${
-                currentView === 'MAP' ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-600'
-              }`}
-            >
-              Bản đồ
-            </button>
+          {/* Quick Tools & View Bar for Mobile Devices */}
+          <div className="flex lg:hidden items-center justify-between gap-1.5 overflow-x-auto pb-1">
+            <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200/80">
+              <button
+                onClick={() => onChangeView && onChangeView('LOGBOOK')}
+                className={`px-2.5 py-1 rounded-lg text-xs font-bold whitespace-nowrap ${
+                  currentView === 'LOGBOOK' ? 'bg-white text-emerald-700 shadow-xs' : 'text-slate-600'
+                }`}
+              >
+                Sổ Mẫu II
+              </button>
+              <button
+                onClick={() => onChangeView && onChangeView('SUMMARY')}
+                className={`px-2.5 py-1 rounded-lg text-xs font-bold whitespace-nowrap ${
+                  currentView === 'SUMMARY' ? 'bg-white text-emerald-700 shadow-xs' : 'text-slate-600'
+                }`}
+              >
+                Tổng hợp ({facilitiesList.length})
+              </button>
+              <button
+                onClick={() => onChangeView && onChangeView('ANALYTICS')}
+                className={`px-2.5 py-1 rounded-lg text-xs font-bold whitespace-nowrap ${
+                  currentView === 'ANALYTICS' ? 'bg-white text-indigo-700 shadow-xs' : 'text-slate-600'
+                }`}
+              >
+                Thống kê
+              </button>
+              <button
+                onClick={() => onChangeView && onChangeView('MAP')}
+                className={`px-2.5 py-1 rounded-lg text-xs font-bold whitespace-nowrap ${
+                  currentView === 'MAP' ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-600'
+                }`}
+              >
+                Bản đồ
+              </button>
+            </div>
+
+            {/* Quick Action Icons for Mobile */}
+            <div className="flex items-center gap-1">
+              <button
+                onClick={onExportExcel}
+                className="p-2 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-lg text-xs font-bold shadow-xs active:scale-95"
+                title="Xuất Excel"
+              >
+                <Download className="w-4 h-4" />
+              </button>
+              <button
+                onClick={onOpenPrintView}
+                className="p-2 bg-slate-100 text-slate-700 border border-slate-200 rounded-lg text-xs font-bold shadow-xs active:scale-95"
+                title="In Sổ A4"
+              >
+                <Printer className="w-4 h-4" />
+              </button>
+              <button
+                onClick={onOpenBackupModal}
+                className="p-2 bg-indigo-50 text-indigo-700 border border-indigo-200 rounded-lg text-xs font-bold shadow-xs active:scale-95"
+                title="Sao lưu dữ liệu"
+              >
+                <Database className="w-4 h-4" />
+              </button>
+            </div>
           </div>
         </div>
 
