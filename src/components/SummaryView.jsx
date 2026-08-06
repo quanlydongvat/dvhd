@@ -20,10 +20,10 @@ export default function SummaryView({
 
   const COMMUNES = ['xã Hòa Sơn', 'xã Yang Mao', 'xã Cư Pui', 'Xã Krông Bông', 'Xã Dang Kang'];
 
-  // State: Expanded state for each Commune accordion (default: all expanded)
+  // State: Expanded state for each Commune accordion (default: ALL COLLAPSED so main page is clean & summarized)
   const [expandedCommunes, setExpandedCommunes] = useState(() => {
     const init = {};
-    COMMUNES.forEach((c) => (init[c] = true));
+    COMMUNES.forEach((c) => (init[c] = false));
     return init;
   });
 
@@ -32,7 +32,24 @@ export default function SummaryView({
   const [isFacilityPickerOpen, setIsFacilityPickerOpen] = useState(false);
   const [facilitySearchTerm, setFacilitySearchTerm] = useState('');
 
-  // Toggle Commune Expand/Collapse
+  // Handle Commune Selection Click
+  const handleCommuneSelect = (communeName) => {
+    if (selectedCommune === communeName) {
+      // Toggle off -> collapse all & show summary overview
+      setSelectedCommune('ALL');
+      const next = {};
+      COMMUNES.forEach((c) => (next[c] = false));
+      setExpandedCommunes(next);
+    } else {
+      // Select commune -> expand ONLY this commune
+      setSelectedCommune(communeName);
+      const next = {};
+      COMMUNES.forEach((c) => (next[c] = c === communeName));
+      setExpandedCommunes(next);
+    }
+  };
+
+  // Toggle Commune Expand/Collapse manually
   const toggleCommuneExpand = (communeName) => {
     setExpandedCommunes((prev) => ({
       ...prev,
@@ -306,8 +323,8 @@ export default function SummaryView({
         <>
 
 
-      {/* 5 Communes Overview Cards (Gom cơ sở theo từng xã) */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+      {/* 5 Communes Overview Cards (Gom cơ sở theo từng xã - Redesigned for ultra visual appeal) */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
         {COMMUNES.map((communeName) => {
           const communeFacsAll = facilitiesList.filter((f) => (f.commune || '') === communeName);
           const isSelected = selectedCommune === communeName;
@@ -329,31 +346,69 @@ export default function SummaryView({
           return (
             <button
               key={communeName}
-              onClick={() => setSelectedCommune(isSelected ? 'ALL' : communeName)}
-              className={`p-3.5 rounded-2xl border text-left transition-all shadow-xs flex flex-col justify-between ${
+              onClick={() => handleCommuneSelect(communeName)}
+              className={`p-4 rounded-2xl border text-left transition-all duration-300 relative overflow-hidden group shadow-md flex flex-col justify-between ${
                 isSelected
-                  ? 'bg-emerald-600 text-white border-emerald-700 shadow-md ring-2 ring-emerald-500 scale-[1.02]'
-                  : 'bg-white hover:bg-slate-50 border-slate-200 text-slate-800'
+                  ? 'bg-gradient-to-br from-emerald-600 via-teal-600 to-indigo-700 text-white border-emerald-400 shadow-xl ring-2 ring-emerald-400 scale-[1.03]'
+                  : 'bg-gradient-to-br from-white to-slate-50 hover:to-emerald-50/40 border-slate-200 text-slate-800 hover:border-emerald-400 hover:shadow-xl hover:scale-[1.02]'
               }`}
             >
-              <div>
+              {/* Background Decorative Glow */}
+              <div
+                className={`absolute -right-6 -bottom-6 w-24 h-24 rounded-full blur-2xl transition-all ${
+                  isSelected ? 'bg-amber-300/30' : 'bg-emerald-500/10 group-hover:bg-emerald-500/20'
+                }`}
+              />
+
+              <div className="relative z-10 space-y-2 w-full">
                 <div className="flex items-center justify-between">
-                  <span className={`text-[11px] font-extrabold uppercase tracking-wider ${isSelected ? 'text-emerald-100' : 'text-emerald-700'}`}>
-                    <MapPin className="w-3.5 h-3.5 inline mr-1" />
-                    {communeName}
+                  <span
+                    className={`text-[11px] font-black uppercase tracking-wider flex items-center gap-1 ${
+                      isSelected ? 'text-emerald-100' : 'text-emerald-800'
+                    }`}
+                  >
+                    <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
+                    <span>{communeName}</span>
                   </span>
-                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${isSelected ? 'bg-emerald-800 text-white' : 'bg-slate-100 text-slate-700'}`}>
+
+                  <span
+                    className={`text-[10px] font-extrabold px-2.5 py-0.5 rounded-full shadow-2xs ${
+                      isSelected
+                        ? 'bg-white/20 text-white border border-white/30 backdrop-blur-sm'
+                        : 'bg-emerald-100 text-emerald-900 border border-emerald-200'
+                    }`}
+                  >
                     {communeFacsAll.length} CS
                   </span>
                 </div>
-                <div className={`text-lg font-extrabold mt-1 font-mono ${isSelected ? 'text-amber-300' : 'text-slate-900'}`}>
-                  {cTotalAnimals} <span className="text-xs font-normal">cá thể</span>
-                </div>
-              </div>
 
-              <div className={`mt-3 pt-2 border-t text-[11px] flex items-center justify-between ${isSelected ? 'border-emerald-500 text-emerald-100' : 'border-slate-100 text-slate-500'}`}>
-                <span>🦔 Thú/Bò sát: <strong>{cMammals}</strong></span>
-                <span>🦜 Chim: <strong>{cBirds}</strong></span>
+                <div className="flex items-baseline justify-between pt-1">
+                  <div
+                    className={`text-2xl font-black font-mono tracking-tight ${
+                      isSelected ? 'text-amber-300' : 'text-slate-900'
+                    }`}
+                  >
+                    {cTotalAnimals}{' '}
+                    <span className={`text-xs font-sans font-semibold ${isSelected ? 'text-emerald-100' : 'text-slate-500'}`}>
+                      cá thể
+                    </span>
+                  </div>
+
+                  {isSelected && (
+                    <span className="text-[9px] bg-amber-400 text-slate-950 font-black px-1.5 py-0.5 rounded uppercase tracking-wider shadow-2xs">
+                      Đang xem
+                    </span>
+                  )}
+                </div>
+
+                <div
+                  className={`pt-2.5 border-t text-[11px] flex items-center justify-between font-bold ${
+                    isSelected ? 'border-white/20 text-emerald-100' : 'border-slate-200/80 text-slate-600'
+                  }`}
+                >
+                  <span className="flex items-center gap-1">🦔 Thú/Bò sát: <strong className={isSelected ? 'text-white' : 'text-slate-900'}>{cMammals}</strong></span>
+                  <span className="flex items-center gap-1">🦜 Chim: <strong className={isSelected ? 'text-amber-300' : 'text-slate-900'}>{cBirds}</strong></span>
+                </div>
               </div>
             </button>
           );
