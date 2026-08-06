@@ -16,6 +16,7 @@ import SpeciesModal from './components/SpeciesModal';
 import FacilityModal from './components/FacilityModal';
 import ExportImportModal from './components/ExportImportModal';
 import PrintView from './components/PrintView';
+import PWAInstallPrompt from './components/PWAInstallPrompt';
 import { computeLogbookTable } from './utils/calculations';
 import { loadAppData, saveAppData, clearAppData, resetToDemoData, REAL_FACILITIES_DATA } from './utils/storage';
 import { exportToExcel } from './utils/exportExcel';
@@ -570,6 +571,9 @@ export default function App() {
         rows={rows}
         facilityInfo={facilityInfo}
       />
+
+      {/* PWA Installation Floating Banner */}
+      <PWAInstallPrompt />
     </div>
   );
 }
