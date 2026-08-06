@@ -251,8 +251,8 @@ export default function SummaryView({
       {/* Header Banner */}
       <div className="bg-gradient-to-r from-emerald-600 via-teal-600 to-indigo-700 rounded-2xl p-6 shadow-lg text-white flex flex-col lg:flex-row lg:items-center justify-between gap-6">
         <div>
-          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-emerald-200">
-            <Building2 className="w-4 h-4 text-emerald-200" />
+          <div className="flex items-center gap-2.5 text-base sm:text-lg font-black uppercase tracking-wide text-white">
+            <Building2 className="w-5 h-5 text-emerald-200 flex-shrink-0" />
             <span>Quản Lý Tổng Hợp Các Cơ Sở Nuôi Động Vật Hoang Dã Phân Theo Xã</span>
           </div>
           <p className="text-xs text-emerald-100 mt-1">
