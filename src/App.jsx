@@ -7,6 +7,7 @@ import AnalyticsView from './components/AnalyticsView';
 import MapView from './components/MapView';
 import WildlifeHeroBanner from './components/WildlifeHeroBanner';
 
+import DesktopAppHeader from './components/DesktopAppHeader';
 import DesktopShortcutsModal from './components/DesktopShortcutsModal';
 import MobileBottomNav from './components/MobileBottomNav';
 import UISettingsModal, { DEFAULT_UI_SETTINGS } from './components/UISettingsModal';
@@ -18,7 +19,7 @@ import ExportImportModal from './components/ExportImportModal';
 import PrintView from './components/PrintView';
 import PWAInstallPrompt from './components/PWAInstallPrompt';
 import { computeLogbookTable } from './utils/calculations';
-import { loadAppData, saveAppData, clearAppData, resetToDemoData, REAL_FACILITIES_DATA } from './utils/storage';
+import { loadAppData, saveAppData, clearAppData, resetToDemoData, REAL_FACILITIES_DATA, EMPTY_FACILITY_INFO } from './utils/storage';
 import { exportToExcel } from './utils/exportExcel';
 import { syncAppDataToCloud } from './firebase';
 
