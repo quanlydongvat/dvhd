@@ -238,9 +238,6 @@ export default function SummaryView({
             <Building2 className="w-4 h-4 text-emerald-200" />
             <span>Quản Lý Tổng Hợp Các Cơ Sở Nuôi Động Vật Hoang Dã Phân Theo Xã</span>
           </div>
-          <h2 className="text-2xl font-extrabold text-white mt-1">
-            Bảng Thống Kê Dữ Liệu 5 Xã & Tách Riêng Nhóm Chim
-          </h2>
           <p className="text-xs text-emerald-100 mt-1">
             Quản lý tổng số 31 cơ sở (21 cơ sở Thú/Bò sát & 10 cơ sở Chim cảnh) thuộc 5 Xã địa bàn Huyện Krông Bông
           </p>
