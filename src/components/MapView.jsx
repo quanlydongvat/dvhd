@@ -95,6 +95,9 @@ export default function MapView({
   const [selectedFacility, setSelectedFacility] = useState(null);
   const [currentZoomLevel, setCurrentZoomLevel] = useState(13);
 
+  // Smart Mobile Sub-Tab State ('MAP' | 'LIST')
+  const [mobileTab, setMobileTab] = useState('MAP');
+
   // Edit Location Mode State
   const [isEditMode, setIsEditMode] = useState(false);
   const [editingFacility, setEditingFacility] = useState(null);
@@ -309,7 +312,7 @@ export default function MapView({
         .join('');
 
       const popupHTML = `
-        <div class="p-3 min-w-[270px] font-sans">
+        <div class="p-3 min-w-[275px] max-w-[320px] font-sans">
           <div class="flex items-center justify-between gap-2 border-b border-slate-200 pb-2 mb-2">
             <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300">
               📍 ${fac.commune}
@@ -334,36 +337,42 @@ export default function MapView({
           </div>
 
           <div class="space-y-1.5 pt-2 border-t border-slate-200">
-            <div class="grid grid-cols-2 gap-2">
+            <div class="grid grid-cols-2 gap-1.5">
               <button
                 id="btn-zoom-${fac.id}"
                 class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-[11px] py-1.5 px-2 rounded-lg transition-colors flex items-center justify-center gap-1 shadow-xs"
               >
-                🔍 Zoom cận cảnh (18x)
+                🔍 Zoom (18x)
               </button>
               <button
                 id="btn-edit-location-${fac.id}"
                 class="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold text-[11px] py-1.5 px-2 rounded-lg transition-colors flex items-center justify-center gap-1 shadow-xs"
               >
-                ✏️ Cập nhật vị trí
+                ✏️ Vị trí mới
               </button>
             </div>
 
-            <div class="grid grid-cols-2 gap-2">
+            <button
+              id="btn-logbook-${fac.id}"
+              class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-[11px] py-1.5 px-2 rounded-lg transition-colors flex items-center justify-center gap-1 shadow-xs"
+            >
+              📖 Mở Sổ Theo Dõi Mẫu II
+            </button>
+
+            {/* Smart Navigation App Launcher Buttons */}
+            <div class="grid grid-cols-2 gap-1 pt-0.5">
               <button
-                id="btn-logbook-${fac.id}"
-                class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[11px] py-1.5 px-2 rounded-lg transition-colors flex items-center justify-center gap-1 shadow-xs"
+                id="btn-google-nav-${fac.id}"
+                class="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 font-bold text-[10px] py-1.5 px-1 rounded-lg transition-colors text-center flex items-center justify-center gap-1"
               >
-                📖 Xem Sổ Mẫu II
+                🗺️ Google Maps
               </button>
-              <a
-                href="https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 font-bold text-[11px] py-1.5 px-2 rounded-lg transition-colors flex items-center justify-center gap-1 text-center"
+              <button
+                id="btn-apple-nav-${fac.id}"
+                class="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 font-bold text-[10px] py-1.5 px-1 rounded-lg transition-colors text-center flex items-center justify-center gap-1"
               >
-                🧭 Dẫn đường Google
-              </a>
+                🍏 Apple (iPhone)
+              </button>
             </div>
           </div>
         </div>
@@ -384,6 +393,18 @@ export default function MapView({
 
           const btnEditLoc = document.getElementById(`btn-edit-location-${fac.id}`);
           if (btnEditLoc) btnEditLoc.onclick = () => startEditMode(fac);
+
+          const btnGNav = document.getElementById(`btn-google-nav-${fac.id}`);
+          if (btnGNav) {
+            btnGNav.onclick = () =>
+              window.open(`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`, '_blank');
+          }
+
+          const btnANav = document.getElementById(`btn-apple-nav-${fac.id}`);
+          if (btnANav) {
+            btnANav.onclick = () =>
+              window.open(`https://maps.apple.com/?daddr=${lat},${lng}&q=${encodeURIComponent(fac.ownerName)}`, '_blank');
+          }
         }, 100);
       });
 
@@ -399,6 +420,7 @@ export default function MapView({
 
   // Zoom to facility with specified zoom level
   const zoomToFacility = (fac, zoomLevel = 18) => {
+    setMobileTab('MAP'); // Automatically switch to Map view on smart mobile!
     setSelectedFacility(fac);
     const map = mapInstanceRef.current;
     if (!map) return;
@@ -469,160 +491,191 @@ export default function MapView({
   }, [targetFacilityId]);
 
   return (
-    <div className="flex flex-col lg:flex-row gap-4 h-[calc(100vh-140px)] min-h-[660px]">
-      {/* Sidebar Controls & Facility Directory */}
-      <div className="lg:w-96 bg-white border border-slate-200 rounded-2xl shadow-xl flex flex-col overflow-hidden flex-shrink-0">
-        {/* Header */}
-        <div className="p-4 bg-slate-50 border-b border-slate-200">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <div className="p-2 bg-emerald-100 text-emerald-700 rounded-xl">
-                <Navigation className="w-5 h-5" />
-              </div>
-              <div>
-                <h3 className="font-extrabold text-slate-900 text-base">Bản Đồ Định Vị GIS</h3>
-                <p className="text-xs text-slate-500 font-medium">Google Hybrid Satellite Navigation</p>
-              </div>
-            </div>
-            <span className="bg-emerald-100 text-emerald-800 text-xs font-mono font-bold px-2.5 py-1 rounded-full border border-emerald-300">
-              {filteredFacilities.length}/{facilitiesList.length} CS
-            </span>
-          </div>
-
-          {/* Search Box */}
-          <div className="relative mb-3">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-            <input
-              type="text"
-              placeholder="Tìm chủ cơ sở, mã số, địa chỉ..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-white border border-slate-300 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-900 font-medium focus:outline-none focus:border-emerald-500 shadow-xs"
-            />
-          </div>
-
-          {/* Filters */}
-          <div className="grid grid-cols-2 gap-2">
-            <div>
-              <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">
-                Lọc Theo Xã
-              </label>
-              <select
-                value={selectedCommune}
-                onChange={(e) => setSelectedCommune(e.target.value)}
-                className="w-full bg-white border border-slate-300 rounded-lg px-2 py-1 text-xs text-slate-800 font-bold focus:outline-none focus:border-emerald-500 shadow-xs cursor-pointer"
-              >
-                <option value="ALL">📍 Tất cả 5 xã</option>
-                <option value="xã Hòa Sơn">xã Hòa Sơn</option>
-                <option value="xã Yang Mao">xã Yang Mao</option>
-                <option value="xã Cư Pui">xã Cư Pui</option>
-                <option value="Xã Krông Bông">Xã Krông Bông</option>
-                <option value="Xã Dang Kang">Xã Dang Kang</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">
-                Phân Loại Loài
-              </label>
-              <select
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-                className="w-full bg-white border border-slate-300 rounded-lg px-2 py-1 text-xs text-slate-800 font-bold focus:outline-none focus:border-emerald-500 shadow-xs cursor-pointer"
-              >
-                <option value="ALL">🐾 Tất cả loài</option>
-                <option value="MAMMAL">🦔 Thú / Bò sát</option>
-                <option value="BIRD">🦜 Nhóm Chim</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        {/* Directory Facility List */}
-        <div className="flex-1 overflow-y-auto divide-y divide-slate-100 p-2 scrollbar-thin">
-          {filteredFacilities.length === 0 ? (
-            <div className="p-8 text-center text-slate-400">
-              <MapPin className="w-8 h-8 mx-auto mb-2 opacity-50" />
-              <p className="text-xs font-semibold">Không tìm thấy cơ sở nuôi phù hợp</p>
-            </div>
-          ) : (
-            filteredFacilities.map((fac) => {
-              const isSelected = selectedFacility?.id === fac.id;
-              const isCurrentActiveLogbook = activeFacilityId === fac.id;
-
-              return (
-                <div
-                  key={fac.id}
-                  onClick={() => zoomToFacility(fac, 18)}
-                  className={`p-3 rounded-xl cursor-pointer transition-all mb-1 border ${
-                    isSelected
-                      ? 'bg-emerald-50/90 border-emerald-400 shadow-sm'
-                      : isCurrentActiveLogbook
-                      ? 'bg-slate-50 border-indigo-300'
-                      : 'hover:bg-slate-50/80 border-transparent'
-                  }`}
-                >
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-1.5 mb-1">
-                        <span className="font-extrabold text-slate-900 text-sm truncate">
-                          {fac.ownerName}
-                        </span>
-                        {fac.catType === 'BIRD' ? (
-                          <span className="text-[10px] bg-amber-100 text-amber-900 font-extrabold px-1.5 py-0.2 rounded border border-amber-200">
-                            🦜 Chim
-                          </span>
-                        ) : (
-                          <span className="text-[10px] bg-teal-100 text-teal-900 font-extrabold px-1.5 py-0.2 rounded border border-teal-200">
-                            🦔 Thú
-                          </span>
-                        )}
-                      </div>
-                      <p className="text-xs text-slate-500 truncate font-medium">📍 {fac.address}</p>
-                      <div className="flex items-center gap-2 mt-1.5 text-[11px]">
-                        <span className="font-mono text-indigo-700 font-bold">
-                          {fac.registrationCode || 'Chưa mã số'}
-                        </span>
-                        <span className="text-slate-300">•</span>
-                        <span className="font-mono font-black text-emerald-700">
-                          {fac.totalAnimals} cá thể
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="flex flex-col gap-1 flex-shrink-0">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          zoomToFacility(fac, 18);
-                        }}
-                        className="p-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold transition-transform active:scale-95 shadow-sm flex items-center justify-center"
-                        title="Phóng to cận cảnh vị trí cơ sở (Zoom 18x)"
-                      >
-                        <ZoomIn className="w-3.5 h-3.5" />
-                      </button>
-
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          startEditMode(fac);
-                        }}
-                        className="p-1.5 bg-amber-500 hover:bg-amber-600 text-white rounded-lg text-xs font-bold transition-transform active:scale-95 shadow-sm flex items-center justify-center"
-                        title="Chỉnh sửa cập nhật vị trí tọa độ cơ sở"
-                      >
-                        <Edit3 className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              );
-            })
-          )}
-        </div>
+    <div className="flex flex-col h-[calc(100vh-140px)] min-h-[600px] gap-2 sm:gap-4">
+      {/* Smart Mobile Sub-Tab Switcher (Visible only on < lg screens) */}
+      <div className="flex lg:hidden items-center justify-center p-1 bg-slate-200/90 rounded-2xl gap-1 font-bold text-xs shadow-inner">
+        <button
+          onClick={() => setMobileTab('MAP')}
+          className={`flex-1 py-2 rounded-xl transition-all flex items-center justify-center gap-1.5 ${
+            mobileTab === 'MAP' ? 'bg-emerald-600 text-white shadow-md font-extrabold' : 'text-slate-700 hover:bg-white/60'
+          }`}
+        >
+          <Navigation className="w-4 h-4" />
+          <span>🗺️ Bản Đồ Vệ Tinh</span>
+        </button>
+        <button
+          onClick={() => setMobileTab('LIST')}
+          className={`flex-1 py-2 rounded-xl transition-all flex items-center justify-center gap-1.5 ${
+            mobileTab === 'LIST' ? 'bg-emerald-600 text-white shadow-md font-extrabold' : 'text-slate-700 hover:bg-white/60'
+          }`}
+        >
+          <Building2 className="w-4 h-4" />
+          <span>📋 Danh Sách ({filteredFacilities.length} CS)</span>
+        </button>
       </div>
 
-      {/* Main Google Hybrid Leaflet Map Display */}
-      <div className="flex-1 bg-slate-900 border border-slate-200 rounded-2xl shadow-xl overflow-hidden relative flex flex-col">
+      <div className="flex-1 flex flex-col lg:flex-row gap-4 min-h-0">
+        {/* Sidebar Controls & Facility Directory */}
+        <div
+          className={`lg:w-96 bg-white border border-slate-200 rounded-2xl shadow-xl flex flex-col overflow-hidden flex-shrink-0 ${
+            mobileTab === 'LIST' ? 'flex flex-1' : 'hidden lg:flex'
+          }`}
+        >
+          {/* Header */}
+          <div className="p-3 sm:p-4 bg-slate-50 border-b border-slate-200">
+            <div className="flex items-center justify-between mb-2 sm:mb-3">
+              <div className="flex items-center gap-2">
+                <div className="p-1.5 sm:p-2 bg-emerald-100 text-emerald-700 rounded-xl">
+                  <Navigation className="w-4 h-4 sm:w-5 sm:h-5" />
+                </div>
+                <div>
+                  <h3 className="font-extrabold text-slate-900 text-sm sm:text-base">Bản Đồ Định Vị GIS</h3>
+                  <p className="text-[10px] sm:text-xs text-slate-500 font-medium">Google Hybrid Satellite Navigation</p>
+                </div>
+              </div>
+              <span className="bg-emerald-100 text-emerald-800 text-[10px] sm:text-xs font-mono font-bold px-2 py-0.5 rounded-full border border-emerald-300">
+                {filteredFacilities.length}/{facilitiesList.length} CS
+              </span>
+            </div>
+
+            {/* Search Box */}
+            <div className="relative mb-2.5">
+              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                placeholder="Tìm chủ cơ sở, mã số, địa chỉ..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full bg-white border border-slate-300 rounded-xl pl-9 pr-3 py-1.5 sm:py-2 text-xs text-slate-900 font-medium focus:outline-none focus:border-emerald-500 shadow-xs"
+              />
+            </div>
+
+            {/* Filters */}
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <label className="block text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-0.5 sm:mb-1">
+                  Lọc Theo Xã
+                </label>
+                <select
+                  value={selectedCommune}
+                  onChange={(e) => setSelectedCommune(e.target.value)}
+                  className="w-full bg-white border border-slate-300 rounded-lg px-2 py-1 text-xs text-slate-800 font-bold focus:outline-none focus:border-emerald-500 shadow-xs cursor-pointer"
+                >
+                  <option value="ALL">📍 Tất cả 5 xã</option>
+                  <option value="xã Hòa Sơn">xã Hòa Sơn</option>
+                  <option value="xã Yang Mao">xã Yang Mao</option>
+                  <option value="xã Cư Pui">xã Cư Pui</option>
+                  <option value="Xã Krông Bông">Xã Krông Bông</option>
+                  <option value="Xã Dang Kang">Xã Dang Kang</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-0.5 sm:mb-1">
+                  Phân Loại Loài
+                </label>
+                <select
+                  value={selectedCategory}
+                  onChange={(e) => setSelectedCategory(e.target.value)}
+                  className="w-full bg-white border border-slate-300 rounded-lg px-2 py-1 text-xs text-slate-800 font-bold focus:outline-none focus:border-emerald-500 shadow-xs cursor-pointer"
+                >
+                  <option value="ALL">🐾 Tất cả loài</option>
+                  <option value="MAMMAL">🦔 Thú / Bò sát</option>
+                  <option value="BIRD">🦜 Nhóm Chim</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          {/* Directory Facility List */}
+          <div className="flex-1 overflow-y-auto divide-y divide-slate-100 p-2 scrollbar-thin">
+            {filteredFacilities.length === 0 ? (
+              <div className="p-8 text-center text-slate-400">
+                <MapPin className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                <p className="text-xs font-semibold">Không tìm thấy cơ sở nuôi phù hợp</p>
+              </div>
+            ) : (
+              filteredFacilities.map((fac) => {
+                const isSelected = selectedFacility?.id === fac.id;
+                const isCurrentActiveLogbook = activeFacilityId === fac.id;
+
+                return (
+                  <div
+                    key={fac.id}
+                    onClick={() => zoomToFacility(fac, 18)}
+                    className={`p-2.5 sm:p-3 rounded-xl cursor-pointer transition-all mb-1 border ${
+                      isSelected
+                        ? 'bg-emerald-50/90 border-emerald-400 shadow-sm'
+                        : isCurrentActiveLogbook
+                        ? 'bg-slate-50 border-indigo-300'
+                        : 'hover:bg-slate-50/80 border-transparent'
+                    }`}
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-1.5 mb-1">
+                          <span className="font-extrabold text-slate-900 text-xs sm:text-sm truncate">
+                            {fac.ownerName}
+                          </span>
+                          {fac.catType === 'BIRD' ? (
+                            <span className="text-[9px] sm:text-[10px] bg-amber-100 text-amber-900 font-extrabold px-1.5 py-0.2 rounded border border-amber-200">
+                              🦜 Chim
+                            </span>
+                          ) : (
+                            <span className="text-[9px] sm:text-[10px] bg-teal-100 text-teal-900 font-extrabold px-1.5 py-0.2 rounded border border-teal-200">
+                              🦔 Thú
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-[11px] sm:text-xs text-slate-500 truncate font-medium">📍 {fac.address}</p>
+                        <div className="flex items-center gap-2 mt-1 text-[10px] sm:text-[11px]">
+                          <span className="font-mono text-indigo-700 font-bold">
+                            {fac.registrationCode || 'Chưa mã số'}
+                          </span>
+                          <span className="text-slate-300">•</span>
+                          <span className="font-mono font-black text-emerald-700">
+                            {fac.totalAnimals} cá thể
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col gap-1 flex-shrink-0">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            zoomToFacility(fac, 18);
+                          }}
+                          className="p-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold transition-transform active:scale-95 shadow-sm flex items-center justify-center"
+                          title="Phóng to cận cảnh vị trí cơ sở trên bản đồ (Zoom 18x)"
+                        >
+                          <ZoomIn className="w-3.5 h-3.5" />
+                        </button>
+
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            startEditMode(fac);
+                          }}
+                          className="p-1.5 bg-amber-500 hover:bg-amber-600 text-white rounded-lg text-xs font-bold transition-transform active:scale-95 shadow-sm flex items-center justify-center"
+                          title="Chỉnh sửa cập nhật vị trí tọa độ cơ sở"
+                        >
+                          <Edit3 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })
+            )}
+          </div>
+        </div>
+
+        {/* Main Google Hybrid Leaflet Map Display */}
+        <div
+          className={`flex-1 bg-slate-900 border border-slate-200 rounded-2xl shadow-xl overflow-hidden relative flex flex-col ${
+            mobileTab === 'MAP' ? 'flex flex-1' : 'hidden lg:flex'
+          }`}
+        >
         {/* Top Control Bar: Tile Layer Switcher & Zoom Presets */}
         <div className="absolute top-4 left-4 right-4 z-[400] flex flex-wrap items-center justify-between gap-2 pointer-events-none">
           {/* Tile Layer Switcher */}
@@ -754,6 +807,7 @@ export default function MapView({
         {/* Leaflet Map DOM Element */}
         <div ref={mapContainerRef} className="w-full h-full z-10 min-h-[500px]" />
       </div>
+    </div>
 
       {/* Manual Coordinates Input Modal */}
       {isCoordModalOpen && editingFacility && (
