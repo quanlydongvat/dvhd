@@ -5,7 +5,7 @@ import TableView from './components/TableView';
 import SummaryView from './components/SummaryView';
 import AnalyticsView from './components/AnalyticsView';
 import MapView from './components/MapView';
-import DesktopAppHeader from './components/DesktopAppHeader';
+import WildlifeHeroBanner from './components/WildlifeHeroBanner';
 
 import DesktopShortcutsModal from './components/DesktopShortcutsModal';
 import MobileBottomNav from './components/MobileBottomNav';
@@ -52,6 +52,15 @@ export default function App() {
 
 
   const { facilitiesList = REAL_FACILITIES_DATA, activeFacilityId, facilityInfo, speciesList = [], activeSpeciesId } = appState;
+
+  // Compute total animals across all 31 facilities
+  let grandTotalAnimals = 0;
+  facilitiesList.forEach((fac) => {
+    fac.speciesList?.forEach((sp) => {
+      const b = sp.baseline || {};
+      grandTotalAnimals += (b.father || 0) + (b.mother || 0) + (b.otherMale || 0) + (b.otherFemale || 0) + (b.otherUnknown || 0);
+    });
+  });
 
   // Active species object
   const activeSpecies = speciesList.find((s) => s.id === activeSpeciesId) || speciesList[0] || null;
@@ -433,6 +442,18 @@ export default function App() {
 
           {/* Main Content Area */}
           <main className="flex-1 max-w-[1720px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-5">
+            {/* Wildlife Hero Banner featuring wild animals & quick KPIs */}
+            <WildlifeHeroBanner
+              facilitiesCount={facilitiesList.length}
+              totalAnimals={grandTotalAnimals}
+              currentView={currentView}
+              onChangeView={setCurrentView}
+              onOpenAddFluctuation={() => {
+                setEditingFluctuation(null);
+                setIsFluctuationModalOpen(true);
+              }}
+            />
+
             {currentView === 'SUMMARY' ? (
               <SummaryView
                 facilitiesList={facilitiesList}

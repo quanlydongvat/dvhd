@@ -14,6 +14,7 @@ export default function TableView({
   onOpenBackupModal,
 }) {
   const [showNotes, setShowNotes] = useState(true);
+  const [mobileViewMode, setMobileViewMode] = useState('CARDS'); // 'CARDS' | 'TABLE'
 
   if (!species) {
     return (
@@ -89,8 +90,174 @@ export default function TableView({
         </div>
       </div>
 
-      {/* Main 19-Column Table Container */}
-      <div className="bg-white border border-slate-200 rounded-2xl shadow-xl overflow-hidden">
+      {/* Mobile Display Mode Switcher (Chế độ Thẻ di động vs Bảng 19 cột A4) */}
+      <div className="flex sm:hidden items-center justify-between bg-slate-100 p-2 rounded-2xl border border-slate-200 shadow-inner text-xs">
+        <span className="font-extrabold text-slate-700">Chế độ xem Sổ di động:</span>
+        <div className="flex items-center gap-1.5">
+          <button
+            onClick={() => setMobileViewMode('CARDS')}
+            className={`px-3 py-1.5 rounded-xl font-extrabold transition-all ${
+              mobileViewMode === 'CARDS'
+                ? 'bg-emerald-600 text-white shadow-md'
+                : 'bg-white text-slate-700 border border-slate-200'
+            }`}
+          >
+            📋 Thẻ di động
+          </button>
+          <button
+            onClick={() => setMobileViewMode('TABLE')}
+            className={`px-3 py-1.5 rounded-xl font-extrabold transition-all ${
+              mobileViewMode === 'TABLE'
+                ? 'bg-emerald-600 text-white shadow-md'
+                : 'bg-white text-slate-700 border border-slate-200'
+            }`}
+          >
+            📊 Bảng A4
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile Card List View (Shown on small viewports when mobileViewMode === 'CARDS') */}
+      {mobileViewMode === 'CARDS' && (
+        <div className="sm:hidden space-y-3">
+          {rows.map((row) => {
+            const isBaseline = row.isBaseline;
+            const incTotal = (row.incFather || 0) + (row.incMother || 0) + (row.incOtherMale || 0) + (row.incOtherFemale || 0) + (row.incOtherUnknown || 0);
+            const decTotal = (row.decFather || 0) + (row.decMother || 0) + (row.decOtherMale || 0) + (row.decOtherFemale || 0) + (row.decOtherUnknown || 0);
+
+            return (
+              <div
+                key={row.rowId}
+                className={`p-4 rounded-2xl border shadow-md space-y-3 transition-all ${
+                  isBaseline
+                    ? 'bg-gradient-to-r from-indigo-50 to-slate-50 border-indigo-300'
+                    : incTotal > 0 && decTotal > 0
+                    ? 'bg-white border-amber-300'
+                    : incTotal > 0
+                    ? 'bg-gradient-to-r from-teal-50/80 to-white border-teal-300'
+                    : decTotal > 0
+                    ? 'bg-gradient-to-r from-rose-50/80 to-white border-rose-300'
+                    : 'bg-white border-slate-200'
+                }`}
+              >
+                {/* Header Row: Label & Date */}
+                <div className="flex items-center justify-between border-b border-slate-200/80 pb-2">
+                  <div className="flex items-center gap-2">
+                    <span className={`px-2.5 py-1 rounded-lg text-xs font-mono font-black ${isBaseline ? 'bg-indigo-600 text-white' : 'bg-slate-800 text-white'}`}>
+                      Dòng {row.label}
+                    </span>
+                    <span className="text-xs font-extrabold text-slate-800">
+                      {formatDateVN(row.date)} {row.time && <span className="text-[10px] text-slate-500 font-mono font-normal">({row.time})</span>}
+                    </span>
+                  </div>
+
+                  <span className="text-xs font-black font-mono bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-xl border border-emerald-300">
+                    Tổng = {row.total} cá thể
+                  </span>
+                </div>
+
+                {/* Current Status Numbers Grid */}
+                <div className="grid grid-cols-5 gap-1.5 text-center font-mono text-xs">
+                  <div className="bg-slate-100 p-1.5 rounded-lg border border-slate-200">
+                    <span className="text-[9px] text-slate-500 block font-sans">Bố (col 3)</span>
+                    <strong className="text-slate-900">{row.father}</strong>
+                  </div>
+                  <div className="bg-slate-100 p-1.5 rounded-lg border border-slate-200">
+                    <span className="text-[9px] text-slate-500 block font-sans">Mẹ (col 4)</span>
+                    <strong className="text-slate-900">{row.mother}</strong>
+                  </div>
+                  <div className="bg-slate-100 p-1.5 rounded-lg border border-slate-200">
+                    <span className="text-[9px] text-slate-500 block font-sans">Đực (col 5)</span>
+                    <span className="text-slate-700 font-bold">{row.otherMale}</span>
+                  </div>
+                  <div className="bg-slate-100 p-1.5 rounded-lg border border-slate-200">
+                    <span className="text-[9px] text-slate-500 block font-sans">Cái (col 6)</span>
+                    <span className="text-slate-700 font-bold">{row.otherFemale}</span>
+                  </div>
+                  <div className="bg-slate-100 p-1.5 rounded-lg border border-slate-200">
+                    <span className="text-[9px] text-slate-500 block font-sans">Chưa XĐ</span>
+                    <span className="text-slate-700 font-bold">{row.otherUnknown}</span>
+                  </div>
+                </div>
+
+                {/* Fluctuation Badges (Increase vs Decrease) */}
+                {!isBaseline && (incTotal > 0 || decTotal > 0) && (
+                  <div className="space-y-1.5 text-xs pt-1 border-t border-slate-100">
+                    {incTotal > 0 && (
+                      <div className="flex items-center gap-1.5 text-teal-800 bg-teal-100/70 p-2 rounded-xl border border-teal-200 font-bold">
+                        <ArrowUpRight className="w-4 h-4 text-teal-600 flex-shrink-0" />
+                        <span>TĂNG ĐÀN (+{incTotal}):</span>
+                        <span className="font-mono text-[11px] font-normal">
+                          {[
+                            row.incFather > 0 && `Bố:${row.incFather}`,
+                            row.incMother > 0 && `Mẹ:${row.incMother}`,
+                            row.incOtherMale > 0 && `Đực:${row.incOtherMale}`,
+                            row.incOtherFemale > 0 && `Cái:${row.incOtherFemale}`,
+                            row.incOtherUnknown > 0 && `Chưa XĐ:${row.incOtherUnknown}`,
+                          ].filter(Boolean).join(', ')}
+                        </span>
+                      </div>
+                    )}
+
+                    {decTotal > 0 && (
+                      <div className="flex items-center gap-1.5 text-rose-800 bg-rose-100/70 p-2 rounded-xl border border-rose-200 font-bold">
+                        <ArrowDownRight className="w-4 h-4 text-rose-600 flex-shrink-0" />
+                        <span>GIẢM ĐÀN (-{decTotal}):</span>
+                        <span className="font-mono text-[11px] font-normal">
+                          {[
+                            row.decFather > 0 && `Bố:${row.decFather}`,
+                            row.decMother > 0 && `Mẹ:${row.decMother}`,
+                            row.decOtherMale > 0 && `Đực:${row.decOtherMale}`,
+                            row.decOtherFemale > 0 && `Cái:${row.decOtherFemale}`,
+                            row.decOtherUnknown > 0 && `Chưa XĐ:${row.decOtherUnknown}`,
+                          ].filter(Boolean).join(', ')}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Reason & Action Buttons */}
+                <div className="flex items-center justify-between pt-2 border-t border-slate-200/80 text-xs">
+                  <div className="min-w-0 pr-2">
+                    <span className="text-slate-500 text-[10px] block">Nguyên nhân:</span>
+                    <span className="font-semibold text-slate-900 truncate block">{row.reason}</span>
+                  </div>
+
+                  <div className="flex items-center gap-1 flex-shrink-0">
+                    {isBaseline ? (
+                      <button
+                        onClick={onEditBaseline}
+                        className="px-2.5 py-1 bg-indigo-100 hover:bg-indigo-200 text-indigo-800 rounded-lg text-xs font-bold border border-indigo-300"
+                      >
+                        Sửa Dòng A
+                      </button>
+                    ) : (
+                      <>
+                        <button
+                          onClick={() => onEditRow(row)}
+                          className="px-2.5 py-1 bg-emerald-100 hover:bg-emerald-200 text-emerald-800 rounded-lg text-xs font-bold border border-emerald-300"
+                        >
+                          Sửa
+                        </button>
+                        <button
+                          onClick={() => onDeleteRow(row.rowId)}
+                          className="px-2.5 py-1 bg-rose-100 hover:bg-rose-200 text-rose-800 rounded-lg text-xs font-bold border border-rose-300"
+                        >
+                          Xóa
+                        </button>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Main 19-Column Table Container (Hidden on mobile when mobileViewMode === 'CARDS') */}
+      <div className={`bg-white border border-slate-200 rounded-2xl shadow-xl overflow-hidden ${mobileViewMode === 'CARDS' ? 'hidden sm:block' : 'block'}`}>
         <div className="overflow-x-auto scrollbar-thin">
           <table className="w-full text-xs text-left border-collapse min-w-[960px]">
             {/* Table Header matching official 19-column government standard */}
