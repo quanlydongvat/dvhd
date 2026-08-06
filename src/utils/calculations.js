@@ -91,6 +91,23 @@ export function processInternalTransfer({
 }
 
 /**
+ * Helper to check if fluctuation reason is purchasing / importing from outside facility
+ */
+export function isPurchaseFromOutside(reasonStr) {
+  if (!reasonStr) return false;
+  const lower = reasonStr.toLowerCase();
+  return (
+    lower.includes('mua') ||
+    lower.includes('nhập') ||
+    lower.includes('khai thác') ||
+    lower.includes('bên ngoài') ||
+    lower.includes('cơ sở khác') ||
+    lower.includes('ngoại tỉnh') ||
+    lower.includes('con giống')
+  );
+}
+
+/**
  * Independent validation function for internal group transfers
  */
 export function validateInternalTransfer(formData) {
@@ -98,16 +115,9 @@ export function validateInternalTransfer(formData) {
   const iM = Math.max(0, parseInt(formData.incMother) || 0);
   const dOM = Math.max(0, parseInt(formData.decOtherMale) || 0);
   const dOF = Math.max(0, parseInt(formData.decOtherFemale) || 0);
-  const reason = (formData.reason || '').toLowerCase();
 
-  // If purchasing breeding stock from outside facility (Mua từ cơ sở nuôi sinh sản khác)
-  const isPurchaseOutside =
-    reason.includes('mua từ cơ sở') ||
-    reason.includes('mua bố mẹ') ||
-    reason.includes('nhập mua từ cơ sở') ||
-    reason.includes('mua con giống');
-
-  if (isPurchaseOutside) {
+  // If explicit purchasing mode is selected OR reason matches outside purchase
+  if (formData.isPurchaseMode || isPurchaseFromOutside(formData.reason)) {
     return { isValid: true, message: '' };
   }
 
@@ -116,7 +126,8 @@ export function validateInternalTransfer(formData) {
     if (iF !== dOM || iM !== dOF) {
       return {
         isValid: false,
-        message: 'Chuyển cá thể từ đàn khác sang đàn bố mẹ phải ghi đồng thời: B8 = B15 và B9 = B16. (Nếu mua từ cơ sở khác, vui lòng chọn nguyên nhân "Mua từ cơ sở nuôi sinh sản khác").',
+        message:
+          'Chuyển cá thể từ đàn khác sang đàn bố mẹ phải ghi đồng thời: B8 = B15 và B9 = B16. (Nếu mua từ cơ sở khác, vui lòng chọn hình thức "Mua từ cơ sở khác").',
       };
     }
   }

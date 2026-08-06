@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { X, Save, AlertCircle, PlusCircle, MinusCircle, Calculator, RefreshCw, AlertTriangle } from 'lucide-react';
-import { PURPOSE_CODES, INTERNAL_TRANSFER_REASONS, processInternalTransfer, validateInternalTransfer } from '../utils/calculations';
+import { X, Save, Calculator, RefreshCw, AlertTriangle, PlusCircle, MinusCircle, ShoppingCart } from 'lucide-react';
+import {
+  PURPOSE_CODES,
+  INTERNAL_TRANSFER_REASONS,
+  validateInternalTransfer,
+  isPurchaseFromOutside,
+} from '../utils/calculations';
 
 export default function FluctuationModal({
   isOpen,
@@ -26,33 +31,26 @@ export default function FluctuationModal({
     reason: '',
     purpose: species?.purposeCode || 'T',
     verifier: '',
+    isPurchaseMode: false, // Explicit toggle for purchasing parents from outside
   });
 
   const QUICK_REASONS = [
     'Mua từ cơ sở nuôi sinh sản khác',
-    ...INTERNAL_TRANSFER_REASONS,
+    'Khai thác/nhập mua thêm con giống',
+    'Chuyển cá thể đực đủ tuổi vào đàn bố mẹ.',
+    'Chuyển cá thể cái đủ tuổi vào đàn bố mẹ.',
+    'Chuyển cá thể đực và cái đủ tuổi vào đàn bố mẹ.',
     'Sinh sản lứa F1 mới nở/sinh',
     'Sinh sản lứa F2 mới nở/sinh',
-    'Khai thác/nhập mua thêm con giống',
     'Xuất bán thương mại cho cơ sở B',
     'Tặng cho/chuyển nhượng theo quyết định',
     'Chết do thời tiết/bệnh lý',
     'Xác định giới tính thế hệ F1',
   ];
 
-  const isPurchaseFromOutside = (reasonStr) => {
-    if (!reasonStr) return false;
-    const lower = reasonStr.toLowerCase();
-    return (
-      lower.includes('mua từ cơ sở') ||
-      lower.includes('mua bố mẹ') ||
-      lower.includes('nhập mua từ cơ sở') ||
-      lower.includes('mua con giống')
-    );
-  };
-
   useEffect(() => {
     if (editData) {
+      const isPurchase = isPurchaseFromOutside(editData.reason);
       setFormData({
         date: editData.date || new Date().toISOString().slice(0, 10),
         time: editData.time || '',
@@ -69,6 +67,7 @@ export default function FluctuationModal({
         reason: editData.reason || '',
         purpose: editData.purpose || species?.purposeCode || 'T',
         verifier: editData.verifier || '',
+        isPurchaseMode: isPurchase,
       });
     } else {
       setFormData({
@@ -87,6 +86,7 @@ export default function FluctuationModal({
         reason: '',
         purpose: species?.purposeCode || 'T',
         verifier: '',
+        isPurchaseMode: false,
       });
     }
   }, [editData, species, isOpen]);
@@ -120,17 +120,58 @@ export default function FluctuationModal({
   const newTotal = newF + newM + newOM + newOF + newOU;
 
   const totalInc = incF + incM + incOM + incOF + incOU;
-  const totalDec = decF + decM + decOF + decOU;
+  const totalDec = decF + decM + decOM + decOF + decOU;
 
   // Circular 85/2025 validation state
-  const isPurchasingOutside = isPurchaseFromOutside(formData.reason);
+  const isPurchasingOutside = formData.isPurchaseMode || isPurchaseFromOutside(formData.reason);
   const isTransferringParents = (incF > 0 || incM > 0) && !isPurchasingOutside;
   const isTransferMismatch = isTransferringParents && (incF !== decOM || incM !== decOF);
+
+  // Switch between Internal Transfer vs External Purchase Mode
+  const setTransferMode = (isPurchase) => {
+    setFormData((prev) => {
+      if (isPurchase) {
+        // Clear auto-assigned B15/B16
+        const newReason =
+          prev.reason && !INTERNAL_TRANSFER_REASONS.includes(prev.reason)
+            ? prev.reason
+            : 'Mua từ cơ sở nuôi sinh sản khác';
+        return {
+          ...prev,
+          isPurchaseMode: true,
+          decOtherMale: 0,
+          decOtherFemale: 0,
+          reason: newReason,
+        };
+      } else {
+        // Switch back to Internal Transfer Mode
+        const newDecOM = prev.incFather;
+        const newDecOF = prev.incMother;
+        let newReason = prev.reason;
+        if (!newReason || isPurchaseFromOutside(newReason)) {
+          if (prev.incFather > 0 && prev.incMother > 0) {
+            newReason = 'Chuyển cá thể đực và cái đủ tuổi vào đàn bố mẹ.';
+          } else if (prev.incFather > 0) {
+            newReason = 'Chuyển cá thể đực đủ tuổi vào đàn bố mẹ.';
+          } else if (prev.incMother > 0) {
+            newReason = 'Chuyển cá thể cái đủ tuổi vào đàn bố mẹ.';
+          }
+        }
+        return {
+          ...prev,
+          isPurchaseMode: false,
+          decOtherMale: newDecOM,
+          decOtherFemale: newDecOF,
+          reason: newReason,
+        };
+      }
+    });
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Check Circular 85/2025 rule: B8 = B15 and B9 = B16 (unless purchasing from outside)
+    // Validate internal transfer
     const validation = validateInternalTransfer(formData);
     if (!validation.isValid) {
       alert(`⚠️ ${validation.message}`);
@@ -149,16 +190,16 @@ export default function FluctuationModal({
     onClose();
   };
 
-  // Handler for number changes with Circular 85/2025 auto-assign rule (Yêu cầu 5 & 6)
+  // Handler for number changes
   const handleNumChange = (field, val) => {
     const num = Math.max(0, parseInt(val) || 0);
-    
+
     setFormData((prev) => {
       const updated = { ...prev, [field]: num };
-      const purchasingOutside = isPurchaseFromOutside(updated.reason);
+      const purchasingOutside = updated.isPurchaseMode || isPurchaseFromOutside(updated.reason);
 
       if (!purchasingOutside) {
-        // Rule 5: Internal transfer B8 => auto-assign B15 = num
+        // Internal transfer B8 => auto-assign B15 = num
         if (field === 'incFather') {
           updated.decOtherMale = num;
           if (!updated.reason || INTERNAL_TRANSFER_REASONS.includes(updated.reason)) {
@@ -170,7 +211,7 @@ export default function FluctuationModal({
           }
         }
 
-        // Rule 5: Internal transfer B9 => auto-assign B16 = num
+        // Internal transfer B9 => auto-assign B16 = num
         if (field === 'incMother') {
           updated.decOtherFemale = num;
           if (!updated.reason || INTERNAL_TRANSFER_REASONS.includes(updated.reason)) {
@@ -181,49 +222,28 @@ export default function FluctuationModal({
             }
           }
         }
+      } else {
+        // In purchase mode, B15 and B16 are kept at 0 when B8 or B9 are entered
+        if (field === 'incFather' || field === 'incMother') {
+          updated.decOtherMale = 0;
+          updated.decOtherFemale = 0;
+        }
       }
 
       return updated;
     });
   };
 
-  // Quick Action Button: Auto-Fill Internal Transfer & Outside Purchase
-  const handleAutoFillTransfer = (type) => {
-    if (type === 'MALE') {
-      const count = prevOM > 0 ? 1 : 0;
-      setFormData((prev) => ({
-        ...prev,
-        incFather: count,
-        decOtherMale: count,
-        reason: 'Chuyển cá thể đực đủ tuổi vào đàn bố mẹ.',
-      }));
-    } else if (type === 'FEMALE') {
-      const count = prevOF > 0 ? 1 : 0;
-      setFormData((prev) => ({
-        ...prev,
-        incMother: count,
-        decOtherFemale: count,
-        reason: 'Chuyển cá thể cái đủ tuổi vào đàn bố mẹ.',
-      }));
-    } else if (type === 'BOTH') {
-      const countM = prevOM > 0 ? 1 : 0;
-      const countF = prevOF > 0 ? 1 : 0;
-      setFormData((prev) => ({
-        ...prev,
-        incFather: countM,
-        decOtherMale: countM,
-        incMother: countF,
-        decOtherFemale: countF,
-        reason: 'Chuyển cá thể đực và cái đủ tuổi vào đàn bố mẹ.',
-      }));
-    } else if (type === 'PURCHASE_PARENTS') {
-      setFormData((prev) => ({
-        ...prev,
-        decOtherMale: 0,
-        decOtherFemale: 0,
-        reason: 'Mua từ cơ sở nuôi sinh sản khác',
-      }));
-    }
+  // Select Quick Reason Chip
+  const handleSelectReason = (reasonStr) => {
+    const isPurchase = isPurchaseFromOutside(reasonStr);
+    setFormData((prev) => ({
+      ...prev,
+      reason: reasonStr,
+      isPurchaseMode: isPurchase,
+      decOtherMale: isPurchase ? 0 : prev.decOtherMale,
+      decOtherFemale: isPurchase ? 0 : prev.decOtherFemale,
+    }));
   };
 
   return (
@@ -254,53 +274,15 @@ export default function FluctuationModal({
 
         {/* Modal Form */}
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
-          {/* Quick Preset: Chuyển nhóm nội bộ sang Đàn bố mẹ theo Thông tư 85/2025 */}
-          <div className="bg-emerald-50/80 border border-emerald-200 rounded-xl p-3 text-xs space-y-2">
-            <div className="flex items-center justify-between">
-              <div className="font-extrabold text-emerald-900 flex items-center gap-2">
-                <RefreshCw className="w-4 h-4 text-emerald-600" />
-                <span>CÁC HÌNH THỨC TĂNG ĐÀN BỐ MẸ (Thông tư 85/2025/TT-BNNMT):</span>
-              </div>
-              <span className="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold border border-emerald-300">
-                Lựa chọn quy tắc
-              </span>
-            </div>
-            <p className="text-[11px] text-slate-600 font-medium">
-              Chuyển nội bộ (bắt buộc B8=B15, B9=B16 không đổi tổng đàn) HOẶC Mua từ cơ sở khác (cộng trực tiếp Bố/Mẹ, không giảm cá thể khác).
-            </p>
-            <div className="flex flex-wrap gap-2 pt-1">
-              <button
-                type="button"
-                onClick={() => handleAutoFillTransfer('PURCHASE_PARENTS')}
-                className="bg-indigo-600 hover:bg-indigo-700 text-white border border-indigo-700 px-3 py-1 rounded-lg font-bold transition-all shadow-xs"
-              >
-                + 🛒 Mua từ cơ sở nuôi sinh sản khác (Không giảm B15/B16)
-              </button>
-              <button
-                type="button"
-                onClick={() => handleAutoFillTransfer('MALE')}
-                className="bg-white hover:bg-emerald-100 text-emerald-900 border border-emerald-300 px-2.5 py-1 rounded-lg font-bold transition-all shadow-2xs"
-              >
-                + 🔄 Chuyển 01 Đực vào Bố (B8=1, B15=1)
-              </button>
-              <button
-                type="button"
-                onClick={() => handleAutoFillTransfer('FEMALE')}
-                className="bg-white hover:bg-emerald-100 text-emerald-900 border border-emerald-300 px-2.5 py-1 rounded-lg font-bold transition-all shadow-2xs"
-              >
-                + 🔄 Chuyển 01 Cái vào Mẹ (B9=1, B16=1)
-              </button>
-            </div>
-          </div>  type="button"
-                onClick={() => handleAutoFillTransfer('BOTH')}
-                className="bg-white hover:bg-emerald-100 text-emerald-900 border border-emerald-300 px-3 py-1 rounded-lg font-bold transition-all shadow-2xs"
-              >
-                + 🔄 Chuyển cả Đực & Cái (1 Đực + 1 Cái)
-              </button>
-            </div>
+          {/* Top Banner requested by user */}
+          <div className="bg-emerald-600 text-white rounded-xl p-3.5 text-center shadow-sm">
+            <h4 className="text-sm sm:text-base font-extrabold uppercase tracking-wide flex items-center justify-center gap-2">
+              <Calculator className="w-5 h-5 text-emerald-200" />
+              <span>HÃY KHAI BÁO BIẾN ĐỘNG TĂNG GIẢM ĐÀN</span>
+            </h4>
           </div>
 
-          {/* Warning Banner if B8 != B15 or B9 != B16 (Yêu cầu 5) */}
+          {/* Warning Banner if B8 != B15 or B9 != B16 */}
           {isTransferMismatch && (
             <div className="bg-amber-50 border border-amber-300 rounded-xl p-3 flex items-start gap-2 text-xs text-amber-900 font-bold shadow-2xs">
               <AlertTriangle className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
@@ -365,7 +347,7 @@ export default function FluctuationModal({
                   <PlusCircle className="w-4 h-4 text-teal-600" />
                   TĂNG ĐÀN (Cột 8 - 12)
                 </h4>
-                <span className="text-xs font-extrabold text-teal-800 bg-teal-100 px-2 py-0.5 rounded border border-teal-300">
+                <span className="text-xs font-extrabold text-teal-800 bg-teal-100 px-2 py-0.5 rounded border border-teal-300 font-mono">
                   Total +{totalInc}
                 </span>
               </div>
@@ -431,7 +413,7 @@ export default function FluctuationModal({
                   <MinusCircle className="w-4 h-4 text-rose-600" />
                   GIẢM ĐÀN (Cột 13 - 17)
                 </h4>
-                <span className="text-xs font-extrabold text-rose-800 bg-rose-100 px-2 py-0.5 rounded border border-rose-300">
+                <span className="text-xs font-extrabold text-rose-800 bg-rose-100 px-2 py-0.5 rounded border border-rose-300 font-mono">
                   Total -{totalDec}
                 </span>
               </div>
@@ -460,7 +442,9 @@ export default function FluctuationModal({
                 <div>
                   <label className="block text-slate-700 font-bold mb-1 flex items-center justify-between">
                     <span>Đực khác (B15):</span>
-                    {incF > 0 && <span className="text-[10px] text-teal-700 font-bold">(tự gán = B8)</span>}
+                    {incF > 0 && !isPurchasingOutside && (
+                      <span className="text-[10px] text-teal-700 font-bold">(tự gán = B8)</span>
+                    )}
                   </label>
                   <input
                     type="number"
@@ -468,14 +452,18 @@ export default function FluctuationModal({
                     value={formData.decOtherMale}
                     onChange={(e) => handleNumChange('decOtherMale', e.target.value)}
                     className={`w-full bg-white border rounded-lg px-2.5 py-1.5 font-extrabold focus:border-rose-500 shadow-xs ${
-                      incF > 0 && incF !== decOM ? 'border-amber-400 text-amber-900 bg-amber-50' : 'border-slate-300 text-slate-800'
+                      incF > 0 && !isPurchasingOutside && incF !== decOM
+                        ? 'border-amber-400 text-amber-900 bg-amber-50'
+                        : 'border-slate-300 text-slate-800'
                     }`}
                   />
                 </div>
                 <div>
                   <label className="block text-slate-700 font-bold mb-1 flex items-center justify-between">
                     <span>Cái khác (B16):</span>
-                    {incM > 0 && <span className="text-[10px] text-teal-700 font-bold">(tự gán = B9)</span>}
+                    {incM > 0 && !isPurchasingOutside && (
+                      <span className="text-[10px] text-teal-700 font-bold">(tự gán = B9)</span>
+                    )}
                   </label>
                   <input
                     type="number"
@@ -483,7 +471,9 @@ export default function FluctuationModal({
                     value={formData.decOtherFemale}
                     onChange={(e) => handleNumChange('decOtherFemale', e.target.value)}
                     className={`w-full bg-white border rounded-lg px-2.5 py-1.5 font-extrabold focus:border-rose-500 shadow-xs ${
-                      incM > 0 && incM !== decOF ? 'border-amber-400 text-amber-900 bg-amber-50' : 'border-slate-300 text-slate-800'
+                      incM > 0 && !isPurchasingOutside && incM !== decOF
+                        ? 'border-amber-400 text-amber-900 bg-amber-50'
+                        : 'border-slate-300 text-slate-800'
                     }`}
                   />
                 </div>
@@ -545,23 +535,43 @@ export default function FluctuationModal({
 
               {/* Quick Chips */}
               <div className="flex flex-wrap gap-1.5 mb-2">
-                {QUICK_REASONS.map((r, i) => (
-                  <button
-                    key={i}
-                    type="button"
-                    onClick={() => setFormData({ ...formData, reason: r })}
-                    className="text-[11px] bg-slate-100 hover:bg-emerald-100 text-slate-700 hover:text-emerald-800 border border-slate-300 px-2 py-0.5 rounded transition-colors font-medium"
-                  >
-                    + {r}
-                  </button>
-                ))}
+                {QUICK_REASONS.map((r, i) => {
+                  const isCur = formData.reason === r;
+                  const isPurch = isPurchaseFromOutside(r);
+                  return (
+                    <button
+                      key={i}
+                      type="button"
+                      onClick={() => handleSelectReason(r)}
+                      className={`text-[11px] px-2.5 py-1 rounded-lg transition-all font-bold border ${
+                        isCur
+                          ? 'bg-emerald-600 text-white border-emerald-700 shadow-xs'
+                          : isPurch
+                          ? 'bg-indigo-50 hover:bg-indigo-100 text-indigo-800 border-indigo-200'
+                          : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-300'
+                      }`}
+                    >
+                      + {r}
+                    </button>
+                  );
+                })}
               </div>
 
               <textarea
                 rows={2}
                 value={formData.reason}
-                onChange={(e) => setFormData({ ...formData, reason: e.target.value })}
-                placeholder="Ghi rõ thông tin sinh sản thế hệ F1, F2..., chuyển cá thể đủ tuổi vào đàn bố mẹ, hợp đồng mua bán..."
+                onChange={(e) => {
+                  const val = e.target.value;
+                  const isPurch = isPurchaseFromOutside(val);
+                  setFormData((prev) => ({
+                    ...prev,
+                    reason: val,
+                    isPurchaseMode: isPurch,
+                    decOtherMale: isPurch ? 0 : prev.decOtherMale,
+                    decOtherFemale: isPurch ? 0 : prev.decOtherFemale,
+                  }));
+                }}
+                placeholder="Ghi rõ thông tin sinh sản thế hệ F1, F2..., chuyển cá thể đủ tuổi vào đàn bố mẹ, mua bán giống từ cơ sở khác..."
                 required
                 className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-sm text-slate-900 font-medium focus:outline-none focus:border-emerald-500 shadow-xs"
               />
@@ -592,7 +602,7 @@ export default function FluctuationModal({
             </button>
             <button
               type="submit"
-              className="flex items-center gap-2 px-5 py-2 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl shadow-md transition-all"
+              className="flex items-center gap-2 px-5 py-2 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl shadow-md transition-all active:scale-95"
             >
               <Save className="w-4 h-4" />
               <span>{editData ? 'Lưu Thay Đổi' : 'Tạo Nhật Ký Biến Động'}</span>
@@ -603,4 +613,3 @@ export default function FluctuationModal({
     </div>
   );
 }
-
