@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, LayoutList, BarChart3, MapPin, Plus, Menu } from 'lucide-react';
+import { Table, LayoutList, BarChart3, PieChart, MapPin, Plus, Menu } from 'lucide-react';
 
 export default function MobileBottomNav({
   currentView,
@@ -48,17 +48,17 @@ export default function MobileBottomNav({
           <Plus className="w-6 h-6 stroke-[3]" />
         </button>
 
-        {/* Biểu Đồ Thống Kê */}
+        {/* 3. Trang Chủ / Thống Kê */}
         <button
-          onClick={() => onChangeView('ANALYTICS')}
+          onClick={() => onChangeView('HOME')}
           className={`flex flex-col items-center gap-0.5 px-3 py-1 rounded-xl transition-all ${
-            currentView === 'ANALYTICS'
-              ? 'text-indigo-400 bg-slate-800 font-bold scale-105'
+            currentView === 'HOME'
+              ? 'text-amber-400 bg-slate-800 font-bold scale-105'
               : 'text-slate-400 hover:text-slate-200'
           }`}
         >
-          <BarChart3 className="w-5 h-5" />
-          <span className="text-[10px] font-sans">Thống Kê</span>
+          <PieChart className="w-5 h-5" />
+          <span className="text-[10px] font-sans">Trang Chủ</span>
         </button>
 
         {/* Bản Đồ GIS */}

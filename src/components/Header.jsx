@@ -17,7 +17,7 @@ export default function Header({
   onOpenPrintView,
   onOpenBackupModal,
   onOpenUISettings,
-  currentView = 'SUMMARY', // 'LOGBOOK' | 'SUMMARY' | 'ANALYTICS' | 'MAP'
+  currentView = 'SUMMARY', // 'LOGBOOK' | 'SUMMARY' | 'HOME' | 'MAP'
   onChangeView,
 }) {
   const currentPurpose = PURPOSE_CODES.find((p) => p.code === activeSpecies?.purposeCode) || {
@@ -31,8 +31,8 @@ export default function Header({
         return { title: 'Sổ Theo Dõi Chi Tiết (Mẫu II)', icon: Table, color: 'text-emerald-700' };
       case 'SUMMARY':
         return { title: `Bảng Tổng Hợp Tất Cả Cơ Sở (${facilitiesList.length} CS)`, icon: LayoutList, color: 'text-teal-700' };
-      case 'ANALYTICS':
-        return { title: 'Biểu Đồ Thống Kê Tổng Quan', icon: BarChart3, color: 'text-indigo-700' };
+      case 'HOME':
+        return { title: 'Trang Chủ & Thống Kê Tổng Quan', icon: BarChart3, color: 'text-amber-600' };
       case 'MAP':
         return { title: 'Bản Đồ Định Vị GIS Cơ Sở Nuôi (Google Hybrid)', icon: MapPin, color: 'text-rose-600' };
       default:
@@ -85,12 +85,12 @@ export default function Header({
                 Tổng hợp ({facilitiesList.length})
               </button>
               <button
-                onClick={() => onChangeView && onChangeView('ANALYTICS')}
+                onClick={() => onChangeView && onChangeView('HOME')}
                 className={`px-2.5 py-1 rounded-lg text-xs font-bold whitespace-nowrap ${
-                  currentView === 'ANALYTICS' ? 'bg-white text-indigo-700 shadow-xs' : 'text-slate-600'
+                  currentView === 'HOME' ? 'bg-white text-amber-600 shadow-xs' : 'text-slate-600'
                 }`}
               >
-                Thống kê
+                Trang chủ
               </button>
               <button
                 onClick={() => onChangeView && onChangeView('MAP')}

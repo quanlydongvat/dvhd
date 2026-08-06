@@ -5,7 +5,7 @@ import TableView from './components/TableView';
 import SummaryView from './components/SummaryView';
 import AnalyticsView from './components/AnalyticsView';
 import MapView from './components/MapView';
-import WildlifeHeroBanner from './components/WildlifeHeroBanner';
+
 
 import DesktopAppHeader from './components/DesktopAppHeader';
 import DesktopShortcutsModal from './components/DesktopShortcutsModal';
@@ -26,7 +26,7 @@ import { syncAppDataToCloud } from './firebase';
 
 export default function App() {
   const [appState, setAppState] = useState(() => loadAppData());
-  const [currentView, setCurrentView] = useState('SUMMARY'); // Default to SUMMARY so user immediately sees all facilities!
+  const [currentView, setCurrentView] = useState('HOME'); // Default to HOME dashboard
   const [targetFacilityId, setTargetFacilityId] = useState(null);
 
   // Desktop App UI & Workspace Settings States
@@ -100,7 +100,7 @@ export default function App() {
         setCurrentView('SUMMARY');
       } else if (e.altKey && (e.key === '3' || e.key === '#')) {
         e.preventDefault();
-        setCurrentView('ANALYTICS');
+        setCurrentView('HOME');
       } else if (e.altKey && (e.key === '4' || e.key === '$')) {
         e.preventDefault();
         setCurrentView('MAP');
@@ -383,15 +383,15 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 flex flex-col font-sans antialiased selection:bg-emerald-500 selection:text-white pb-16 lg:pb-0">
-      {/* Desktop App Header Bar */}
-      <DesktopAppHeader
+      {/* Desktop App Header Bar - Hidden per user request */}
+      {/* <DesktopAppHeader
         onToggleFullscreen={handleToggleFullscreen}
         isFullscreen={isFullscreen}
         density={density}
         onChangeDensity={setDensity}
         onOpenShortcutsModal={() => setIsShortcutsModalOpen(true)}
         onOpenUISettings={() => setIsUISettingsModalOpen(true)}
-      />
+      /> */}
 
       {/* Main Flex Wrapper with Fixed Left Sidebar + Main Workspace */}
       <div className="flex-1 flex flex-col lg:flex-row min-h-0">
@@ -443,19 +443,16 @@ export default function App() {
 
           {/* Main Content Area */}
           <main className="flex-1 max-w-[1720px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-5">
-            {/* Wildlife Hero Banner featuring wild animals & quick KPIs */}
-            <WildlifeHeroBanner
-              facilitiesCount={facilitiesList.length}
-              totalAnimals={grandTotalAnimals}
-              currentView={currentView}
-              onChangeView={setCurrentView}
-              onOpenAddFluctuation={() => {
-                setEditingFluctuation(null);
-                setIsFluctuationModalOpen(true);
-              }}
-            />
+            {/* Show Image Banner ONLY on Home view */}
+            {currentView === 'HOME' && (
+              <div className="mb-6 animate-in fade-in slide-in-from-top-4 duration-500">
+                <img src="./images/banner.jpg" alt="Wildlife Banner" className="w-full rounded-2xl shadow-xl object-cover object-center max-h-[350px] border-4 border-emerald-900/10" />
+              </div>
+            )}
 
-            {currentView === 'SUMMARY' ? (
+            {currentView === 'HOME' ? (
+              <AnalyticsView facilitiesList={facilitiesList} />
+            ) : currentView === 'SUMMARY' ? (
               <SummaryView
                 facilitiesList={facilitiesList}
                 activeFacilityId={activeFacilityId}
@@ -468,8 +465,6 @@ export default function App() {
                   setCurrentView('MAP');
                 }}
               />
-            ) : currentView === 'ANALYTICS' ? (
-              <AnalyticsView facilitiesList={facilitiesList} />
             ) : currentView === 'MAP' ? (
               <MapView
                 facilitiesList={facilitiesList}

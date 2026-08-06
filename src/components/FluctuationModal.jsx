@@ -248,10 +248,10 @@ export default function FluctuationModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm overflow-y-auto">
-      <div className="bg-white border border-slate-200 rounded-2xl max-w-3xl w-full shadow-2xl overflow-hidden my-8 animate-in fade-in zoom-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-slate-900/60 backdrop-blur-sm">
+      <div className="bg-white border border-slate-200 rounded-2xl max-w-3xl w-full shadow-2xl flex flex-col max-h-[95vh] animate-in fade-in zoom-in duration-200">
         {/* Modal Header */}
-        <div className="bg-slate-50 border-b border-slate-200 px-6 py-4 flex items-center justify-between">
+        <div className="bg-slate-50 border-b border-slate-200 px-6 py-4 flex items-center justify-between flex-shrink-0">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-emerald-50 text-emerald-600 rounded-xl border border-emerald-200">
               <Calculator className="w-6 h-6" />
@@ -274,7 +274,8 @@ export default function FluctuationModal({
         </div>
 
         {/* Modal Form */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-6">
+        <form onSubmit={handleSubmit} className="flex flex-col overflow-hidden min-h-0">
+          <div className="p-4 sm:p-6 space-y-6 overflow-y-auto flex-1">
           {/* Top Banner requested by user */}
           <div className="bg-emerald-600 text-white rounded-xl p-3.5 text-center shadow-sm">
             <h4 className="text-sm sm:text-base font-extrabold uppercase tracking-wide flex items-center justify-center gap-2">
@@ -627,8 +628,10 @@ export default function FluctuationModal({
             </div>
           </div>
 
+          </div>
+
           {/* Footer Actions */}
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-200">
+          <div className="flex items-center justify-end gap-3 px-4 sm:px-6 py-4 border-t border-slate-200 bg-slate-50 flex-shrink-0">
             <button
               type="button"
               onClick={onClose}

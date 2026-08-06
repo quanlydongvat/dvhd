@@ -71,22 +71,18 @@ export default function AnalyticsView({ facilitiesList = [] }) {
       totalEnd: 0,
     }));
 
-    // Initial total stock across filtered facilities
-    let initialTotal = 0;
+    let initialTotal = 0; // Accumulated total right before the start of selectedYear
 
     filteredFacilities.forEach((fac) => {
       fac.speciesList.forEach((sp) => {
         const b = sp.baseline || {};
-        const baselineTotal =
+        let currentSpTotal =
           (Number(b.father) || 0) +
           (Number(b.mother) || 0) +
           (Number(b.otherMale) || 0) +
           (Number(b.otherFemale) || 0) +
           (Number(b.otherUnknown) || 0);
 
-        initialTotal += baselineTotal;
-
-        // Process fluctuations
         const processedRows = computeLogbookTable(b, sp.fluctuations || []);
 
         processedRows.forEach((row) => {
@@ -95,25 +91,28 @@ export default function AnalyticsView({ facilitiesList = [] }) {
           const monthIdx = rowDate.getMonth(); // 0 - 11
           const year = rowDate.getFullYear();
 
-          if (year === selectedYear && monthIdx >= 0 && monthIdx < 12) {
-            const inc =
-              (row.incFather || 0) +
-              (row.incMother || 0) +
-              (row.incOtherMale || 0) +
-              (row.incOtherFemale || 0) +
-              (row.incOtherUnknown || 0);
+          const inc =
+            (row.incFather || 0) +
+            (row.incMother || 0) +
+            (row.incOtherMale || 0) +
+            (row.incOtherFemale || 0) +
+            (row.incOtherUnknown || 0);
 
-            const dec =
-              (row.decFather || 0) +
-              (row.decMother || 0) +
-              (row.decOtherMale || 0) +
-              (row.decOtherFemale || 0) +
-              (row.decOtherUnknown || 0);
+          const dec =
+            (row.decFather || 0) +
+            (row.decMother || 0) +
+            (row.decOtherMale || 0) +
+            (row.decOtherFemale || 0) +
+            (row.decOtherUnknown || 0);
 
+          if (year < selectedYear) {
+             currentSpTotal += (inc - dec);
+          } else if (year === selectedYear && monthIdx >= 0 && monthIdx < 12) {
             monthlyStats[monthIdx].inc += inc;
             monthlyStats[monthIdx].dec += dec;
           }
         });
+        initialTotal += currentSpTotal;
       });
     });
 
@@ -147,6 +146,40 @@ export default function AnalyticsView({ facilitiesList = [] }) {
   const kpiStats = useMemo(() => {
     let totalInc = 0;
     let totalDec = 0;
+    let totalSold = 0;
+
+    filteredFacilities.forEach((fac) => {
+      fac.speciesList.forEach((sp) => {
+        const processedRows = computeLogbookTable(sp.baseline || {}, sp.fluctuations || []);
+        processedRows.forEach((row) => {
+          if (row.isBaseline || !row.date) return;
+          const rowDate = new Date(row.date);
+          const monthIdx = rowDate.getMonth();
+          const year = rowDate.getFullYear();
+
+          let isTargetPeriod = false;
+          if (year === selectedYear) {
+             if (timeMode === 'YEAR') isTargetPeriod = true;
+             else if (timeMode === 'H1' && monthIdx < 6) isTargetPeriod = true;
+             else if (timeMode === 'H2' && monthIdx >= 6) isTargetPeriod = true;
+             else if (timeMode === 'MONTH' && monthIdx === selectedMonth - 1) isTargetPeriod = true;
+          }
+
+          if (isTargetPeriod) {
+            const dec =
+              (row.decFather || 0) +
+              (row.decMother || 0) +
+              (row.decOtherMale || 0) +
+              (row.decOtherFemale || 0) +
+              (row.decOtherUnknown || 0);
+            
+            if (dec > 0 && (row.reason || '').toLowerCase().includes('xuất bán')) {
+               totalSold += dec;
+            }
+          }
+        });
+      });
+    });
 
     chartData.targetStats.forEach((st) => {
       totalInc += st.inc;
@@ -154,8 +187,8 @@ export default function AnalyticsView({ facilitiesList = [] }) {
     });
 
     const netGrowth = totalInc - totalDec;
-    return { totalInc, totalDec, netGrowth };
-  }, [chartData]);
+    return { totalInc, totalDec, totalSold, netGrowth };
+  }, [chartData, filteredFacilities, selectedYear, timeMode, selectedMonth]);
 
   // Commune Distribution Data for Doughnut Chart
   const communeDistribution = useMemo(() => {
@@ -167,13 +200,9 @@ export default function AnalyticsView({ facilitiesList = [] }) {
         if ((fac.commune || '') === cName) {
           facCount++;
           fac.speciesList.forEach((sp) => {
-            const b = sp.baseline || {};
-            total +=
-              (Number(b.father) || 0) +
-              (Number(b.mother) || 0) +
-              (Number(b.otherMale) || 0) +
-              (Number(b.otherFemale) || 0) +
-              (Number(b.otherUnknown) || 0);
+            const processedRows = computeLogbookTable(sp.baseline || {}, sp.fluctuations || []);
+            const lastRow = processedRows[processedRows.length - 1];
+            if (lastRow) total += lastRow.total;
           });
         }
       });
@@ -191,13 +220,9 @@ export default function AnalyticsView({ facilitiesList = [] }) {
     filteredFacilities.forEach((fac) => {
       fac.speciesList.forEach((sp) => {
         const name = sp.vietnameseName;
-        const b = sp.baseline || {};
-        const total =
-          (Number(b.father) || 0) +
-          (Number(b.mother) || 0) +
-          (Number(b.otherMale) || 0) +
-          (Number(b.otherFemale) || 0) +
-          (Number(b.otherUnknown) || 0);
+        const processedRows = computeLogbookTable(sp.baseline || {}, sp.fluctuations || []);
+        const lastRow = processedRows[processedRows.length - 1];
+        const total = lastRow ? lastRow.total : 0;
 
         if (!speciesMap[name]) {
           speciesMap[name] = { name, total: 0, isBird: isBirdSpecies(sp) };
@@ -392,7 +417,7 @@ export default function AnalyticsView({ facilitiesList = [] }) {
           <div>
             <span className="text-[10px] sm:text-xs font-bold text-rose-700 block uppercase">Tổng Giảm Đàn</span>
             <div className="text-lg sm:text-2xl font-extrabold text-rose-700 mt-0.5 sm:mt-1 font-mono">-{kpiStats.totalDec} <span className="text-[10px] sm:text-xs font-sans font-normal text-slate-500">con</span></div>
-            <span className="text-[10px] sm:text-[11px] text-slate-500 font-medium hidden sm:block">Xuất bán & Chết</span>
+            <span className="text-[10px] sm:text-[11px] text-slate-500 font-medium hidden sm:block">Trong đó xuất bán: <strong className="text-rose-800">{kpiStats.totalSold}</strong> con</span>
           </div>
           <div className="p-2 sm:p-3 bg-rose-50 text-rose-600 rounded-xl sm:rounded-2xl border border-rose-200">
             <TrendingDown className="w-5 h-5 sm:w-6 sm:h-6" />
@@ -493,7 +518,7 @@ export default function AnalyticsView({ facilitiesList = [] }) {
             className="flex-1 sm:flex-initial bg-slate-50 border border-slate-300 rounded-xl px-2.5 py-1.5 text-xs text-slate-900 font-bold focus:outline-none focus:border-emerald-500 cursor-pointer shadow-xs"
           >
             <option value="ALL">🐾 Tất cả nhóm loài</option>
-            <option value="MAMMAL_REPTILE">🦔 Thú & Bò sát</option>
+            <option value="MAMMAL_REPTILE">🦔 Lớp Thú</option>
             <option value="BIRD">🦜 Nhóm Chim</option>
           </select>
         </div>

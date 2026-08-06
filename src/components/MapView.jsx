@@ -580,7 +580,7 @@ export default function MapView({
                   className="w-full bg-white border border-slate-300 rounded-lg px-2 py-1 text-xs text-slate-800 font-bold focus:outline-none focus:border-emerald-500 shadow-xs cursor-pointer"
                 >
                   <option value="ALL">🐾 Tất cả loài</option>
-                  <option value="MAMMAL">🦔 Thú / Bò sát</option>
+                  <option value="MAMMAL">🦔 Lớp Thú</option>
                   <option value="BIRD">🦜 Nhóm Chim</option>
                 </select>
               </div>

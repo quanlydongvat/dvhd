@@ -13,7 +13,8 @@ import {
   Sparkles,
   Cloud,
   ChevronRight,
-  RefreshCw
+  RefreshCw,
+  Home
 } from 'lucide-react';
 import { forceClearAllCache } from '../utils/storage';
 
@@ -96,18 +97,18 @@ export default function LeftSidebar({
               </span>
             </button>
 
-            {/* 3. Biểu Đồ Thống Kê */}
+            {/* 3. Trang Chủ & Thống Kê */}
             <button
-              onClick={() => onChangeView('ANALYTICS')}
+              onClick={() => onChangeView('HOME')}
               className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all ${
-                currentView === 'ANALYTICS'
-                  ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/20 translate-x-1'
+                currentView === 'HOME'
+                  ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 translate-x-1'
                   : 'text-slate-700 hover:bg-slate-100/90 hover:text-slate-900'
               }`}
             >
               <div className="flex items-center gap-2.5">
-                <BarChart3 className={`w-4 h-4 ${currentView === 'ANALYTICS' ? 'text-white' : 'text-indigo-600'}`} />
-                <span>Biểu Đồ Thống Kê</span>
+                <Home className={`w-4 h-4 ${currentView === 'HOME' ? 'text-white' : 'text-amber-500'}`} />
+                <span>Trang Chủ & Thống Kê</span>
               </div>
             </button>
 

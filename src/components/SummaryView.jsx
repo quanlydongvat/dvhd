@@ -211,7 +211,7 @@ export default function SummaryView({
     groupedByCommune.forEach((communeGroup) => {
       communeGroup.facilities.forEach((fac) => {
         const facCat = getFacilityCategory(fac);
-        const catLabel = facCat === 'BIRD' ? 'Nhóm Chim' : 'Nhóm Thú / Bò sát';
+        const catLabel = facCat === 'BIRD' ? 'Lớp Chim' : 'Lớp Thú';
 
         fac.speciesList.forEach((sp) => {
           const b = sp.baseline || {};
@@ -373,7 +373,7 @@ export default function SummaryView({
                     isSelected ? 'border-white/20 text-emerald-100' : 'border-slate-200/80 text-slate-600'
                   }`}
                 >
-                  <span className="flex items-center gap-1">🦔 Thú/Bò sát: <strong className={isSelected ? 'text-white' : 'text-slate-900'}>{cMammals}</strong></span>
+                  <span className="flex items-center gap-1">🦔 Lớp Thú: <strong className={isSelected ? 'text-white' : 'text-slate-900'}>{cMammals}</strong></span>
                   <span className="flex items-center gap-1">🦜 Chim: <strong className={isSelected ? 'text-amber-300' : 'text-slate-900'}>{cBirds}</strong></span>
                 </div>
               </div>
@@ -415,7 +415,7 @@ export default function SummaryView({
           </div>
         </div>
 
-        {/* Tách Riêng Nhóm Chim vs Nhóm Thú / Bò Sát (Category Segmented Buttons) */}
+        {/* Tách Riêng Nhóm Chim vs Lớp Thú (Category Segmented Buttons) */}
         <div className="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs font-bold w-full md:w-auto">
           <button
             onClick={() => setSelectedCategory('ALL')}
@@ -435,7 +435,7 @@ export default function SummaryView({
                 : 'text-slate-700 hover:bg-white/80'
             }`}
           >
-            <span>🦔 Nhóm Thú & Bò Sát ({mammalFacilitiesCount})</span>
+            <span>🦔 Lớp Thú ({mammalFacilitiesCount})</span>
           </button>
           <button
             onClick={() => setSelectedCategory('BIRD')}
@@ -661,7 +661,7 @@ export default function SummaryView({
                       </span>
                     </h3>
                     <p className="text-xs text-slate-500 font-medium">
-                      Đang hiển thị: <strong className="text-emerald-700">{communeGroup.facilities.length} cơ sở</strong> | 🦔 Thú/Bò sát: <strong>{communeGroup.mammalFacs} CS</strong> | 🦜 Chim: <strong>{communeGroup.birdFacs} CS</strong>
+                      Đang hiển thị: <strong className="text-emerald-700">{communeGroup.facilities.length} cơ sở</strong> | 🦔 Lớp Thú: <strong>{communeGroup.mammalFacs} CS</strong> | 🦜 Lớp Chim: <strong>{communeGroup.birdFacs} CS</strong>
                     </p>
                   </div>
                 </div>
@@ -684,9 +684,9 @@ export default function SummaryView({
                     <thead>
                       <tr className="bg-slate-50 text-slate-800 text-center font-bold border-b border-slate-200">
                         <th rowSpan={2} className="px-1 py-2 border-r border-slate-200 w-8 bg-slate-100 whitespace-nowrap">STT</th>
-                        <th rowSpan={2} className="px-1.5 py-2 border-r border-slate-200 w-20 bg-slate-100 whitespace-nowrap">Phân nhóm</th>
+                        <th rowSpan={2} className="px-1 py-2 border-r border-slate-200 w-14 bg-slate-100 whitespace-nowrap">Phân nhóm</th>
                         <th rowSpan={2} className="px-1.5 py-2 border-r border-slate-200 min-w-[125px] max-w-[145px] text-left">Họ tên & Địa chỉ chủ nuôi</th>
-                        <th rowSpan={2} className="px-1.5 py-2 border-r border-slate-200 min-w-[110px] max-w-[130px] text-left">Tên tiếng Việt & Khoa học</th>
+                        <th rowSpan={2} className="px-1.5 py-2 border-r border-slate-200 min-w-[90px] max-w-[110px] text-left leading-tight">Tên tiếng Việt & Khoa học</th>
                         <th rowSpan={2} className="px-1 py-2 border-r border-slate-200 w-12 bg-emerald-100/80 text-emerald-950 font-extrabold whitespace-nowrap">
                           Tổng số<br />
                           <span className="font-mono text-[8px] text-emerald-800">(5=6+..+10)</span>
@@ -776,7 +776,7 @@ export default function SummaryView({
                                   </span>
                                 ) : (
                                   <span className="bg-teal-100 text-teal-900 border border-teal-300 px-1 py-0.5 rounded text-[9px] font-extrabold inline-flex items-center gap-0.5 shadow-2xs whitespace-nowrap">
-                                    🦔 Thú/Bò sát
+                                    🦔 Lớp Thú
                                   </span>
                                 )}
                               </td>
@@ -793,10 +793,10 @@ export default function SummaryView({
                               </td>
                             )}
 
-                            {/* Tên tiếng Việt & Tên khoa học gộp chung */}
-                            <td className="px-1.5 py-1.5 border-r border-slate-200 min-w-[110px] max-w-[130px]">
-                              <div className="font-bold text-slate-900 text-xs leading-snug">{sp.vietnameseName}</div>
-                              <div className="text-[9px] italic text-slate-500 font-mono mt-0.5 leading-tight">{sp.scientificName}</div>
+                            {/* Tên Loài */}
+                            <td className="px-1.5 py-1.5 border-r border-slate-200 min-w-[90px] max-w-[110px] leading-tight">
+                              <div className="font-bold text-slate-800 text-[11px] md:text-xs">{sp.vietnameseName}</div>
+                              <div className="italic text-[9.5px] text-slate-500 font-serif line-clamp-2">{sp.scientificName}</div>
                             </td>
 
                             {/* Tổng số */}
