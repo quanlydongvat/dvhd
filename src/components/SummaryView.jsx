@@ -248,39 +248,6 @@ export default function SummaryView({
 
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
-      {/* Header Banner */}
-      <div className="bg-gradient-to-r from-emerald-600 via-teal-600 to-indigo-700 rounded-2xl p-6 shadow-lg text-white flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-        <div>
-          <div className="flex items-center gap-2.5 text-base sm:text-lg font-black uppercase tracking-wide text-white">
-            <Building2 className="w-5 h-5 text-emerald-200 flex-shrink-0" />
-            <span>Quản Lý Tổng Hợp Các Cơ Sở Nuôi Động Vật Hoang Dã Phân Theo Xã</span>
-          </div>
-          <p className="text-xs text-emerald-100 mt-1">
-            Quản lý tổng số 31 cơ sở (21 cơ sở Thú/Bò sát & 10 cơ sở Chim cảnh) thuộc 5 Xã địa bàn Hạt Kiểm lâm khu vực Krông Bông quản lý
-          </p>
-        </div>
-
-        {/* Quick Stats Badges */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-white/10 backdrop-blur-md p-3 rounded-xl border border-white/20 text-xs">
-          <div className="text-center p-2 bg-white/10 rounded-lg">
-            <span className="text-emerald-100 block text-[11px]">Tổng số cơ sở:</span>
-            <span className="text-xl font-extrabold text-white">{facilitiesList.length} CS</span>
-          </div>
-          <div className="text-center p-2 bg-white/10 rounded-lg">
-            <span className="text-emerald-100 block text-[11px]">Tổng cá thể:</span>
-            <span className="text-xl font-extrabold text-amber-300">{grandTotal}</span>
-          </div>
-          <div className="text-center p-2 bg-white/10 rounded-lg">
-            <span className="text-emerald-100 block text-[11px]">🦔 Nhóm Thú / Bò sát:</span>
-            <span className="text-sm font-bold text-teal-100">{mammalFacilitiesCount} cơ sở</span>
-          </div>
-          <div className="text-center p-2 bg-white/10 rounded-lg">
-            <span className="text-emerald-100 block text-[11px]">🦜 Nhóm Chim:</span>
-            <span className="text-sm font-bold text-amber-200">{birdFacilitiesCount} cơ sở</span>
-          </div>
-        </div>
-      </div>
-
       {/* Table Format Sub-Tabs Switcher (Bảng 1.1 vs Bảng 1.2) */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-3 bg-slate-100/90 p-2 rounded-2xl border border-slate-200 shadow-inner">
         <div className="flex items-center gap-1.5 w-full sm:w-auto">
