@@ -8,6 +8,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     <title>Quản Lý Sổ Theo Dõi Động Vật Hoang Dã (Mẫu II - Nuôi Sinh Sản)</title>
 
+    <!-- Inline Auto-Purge Cache & Unregister SW Script to fix white screen -->
+    <script>
+      (function() {
+        const CURRENT_APP_VERSION = 'v2026.08.07_v1000';
+        if (localStorage.getItem('wildlife_app_ver') !== CURRENT_APP_VERSION) {
+          localStorage.setItem('wildlife_app_ver', CURRENT_APP_VERSION);
+          if ('caches' in window) {
+            caches.keys().then(function(keys) {
+              return Promise.all(keys.map(function(k) { return caches.delete(k); }));
+            });
+          }
+          if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(function(regs) {
+              for (var i = 0; i < regs.length; i++) {
+                regs[i].unregister();
+              }
+            });
+          }
+        }
+      })();
+    </script>
+
     <!-- Web App & PWA Meta Tags -->
     <meta name="theme-color" content="#059669" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -33,7 +55,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
 
     <!-- Vite Source Entrypoint -->
-    <script type="module" crossorigin src="./assets/index-MBJj-uIn.js"></script>
+    <script type="module" crossorigin src="./assets/index-AnRrt1it.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-DXDou0CT.css">
   </head>
 
