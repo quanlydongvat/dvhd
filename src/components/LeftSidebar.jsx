@@ -54,12 +54,9 @@ export default function LeftSidebar({
       <div className="flex-1 overflow-y-auto p-3.5 space-y-5 scrollbar-thin">
         {/* GROUP 1: CHẾ ĐỘ QUẢN LÝ (View Modes) */}
         <div>
-          <div className="px-2 mb-2 flex items-center justify-between">
+          <div className="px-2 mb-2">
             <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
               Chế độ quản lý & xem
-            </span>
-            <span className="text-[10px] bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded font-mono">
-              View Modes
             </span>
           </div>
 
@@ -67,7 +64,7 @@ export default function LeftSidebar({
             {/* 1. Sổ Mẫu II */}
             <button
               onClick={() => onChangeView('LOGBOOK')}
-              className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold transition-all ${
+              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all ${
                 currentView === 'LOGBOOK'
                   ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 translate-x-1'
                   : 'text-slate-700 hover:bg-slate-100/90 hover:text-slate-900'
@@ -77,21 +74,12 @@ export default function LeftSidebar({
                 <Table className={`w-4 h-4 ${currentView === 'LOGBOOK' ? 'text-white' : 'text-emerald-600'}`} />
                 <span>Sổ Mẫu II (Chi Tiết)</span>
               </div>
-              <span
-                className={`text-[10px] px-1.5 py-0.5 rounded font-mono ${
-                  currentView === 'LOGBOOK'
-                    ? 'bg-emerald-700 text-emerald-100'
-                    : 'bg-slate-200 text-slate-600'
-                }`}
-              >
-                Alt+1
-              </span>
             </button>
 
             {/* 2. Bảng Tổng Hợp */}
             <button
               onClick={() => onChangeView('SUMMARY')}
-              className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold transition-all ${
+              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all ${
                 currentView === 'SUMMARY'
                   ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 translate-x-1'
                   : 'text-slate-700 hover:bg-slate-100/90 hover:text-slate-900'
@@ -101,26 +89,17 @@ export default function LeftSidebar({
                 <LayoutList className={`w-4 h-4 ${currentView === 'SUMMARY' ? 'text-white' : 'text-teal-600'}`} />
                 <span>Bảng Tổng Hợp</span>
               </div>
-              <div className="flex items-center gap-1.5">
-                <span className="text-[10px] bg-emerald-100 text-emerald-800 font-extrabold px-1.5 py-0.5 rounded-full">
-                  {facilitiesCount} CS
-                </span>
-                <span
-                  className={`text-[10px] px-1.5 py-0.5 rounded font-mono ${
-                    currentView === 'SUMMARY'
-                      ? 'bg-emerald-700 text-emerald-100'
-                      : 'bg-slate-200 text-slate-600'
-                  }`}
-                >
-                  Alt+2
-                </span>
-              </div>
+              <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full ${
+                currentView === 'SUMMARY' ? 'bg-white/20 text-white' : 'bg-emerald-100 text-emerald-800'
+              }`}>
+                {facilitiesCount} CS
+              </span>
             </button>
 
             {/* 3. Biểu Đồ Thống Kê */}
             <button
               onClick={() => onChangeView('ANALYTICS')}
-              className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold transition-all ${
+              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all ${
                 currentView === 'ANALYTICS'
                   ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/20 translate-x-1'
                   : 'text-slate-700 hover:bg-slate-100/90 hover:text-slate-900'
@@ -130,21 +109,12 @@ export default function LeftSidebar({
                 <BarChart3 className={`w-4 h-4 ${currentView === 'ANALYTICS' ? 'text-white' : 'text-indigo-600'}`} />
                 <span>Biểu Đồ Thống Kê</span>
               </div>
-              <span
-                className={`text-[10px] px-1.5 py-0.5 rounded font-mono ${
-                  currentView === 'ANALYTICS'
-                    ? 'bg-indigo-700 text-indigo-100'
-                    : 'bg-slate-200 text-slate-600'
-                }`}
-              >
-                Alt+3
-              </span>
             </button>
 
             {/* 4. Bản Đồ GIS */}
             <button
               onClick={() => onChangeView('MAP')}
-              className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold transition-all ${
+              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all ${
                 currentView === 'MAP'
                   ? 'bg-rose-600 text-white shadow-md shadow-rose-600/20 translate-x-1'
                   : 'text-slate-700 hover:bg-slate-100/90 hover:text-slate-900'
@@ -154,27 +124,15 @@ export default function LeftSidebar({
                 <MapPin className={`w-4 h-4 ${currentView === 'MAP' ? 'text-white animate-bounce' : 'text-rose-500'}`} />
                 <span>Bản Đồ GIS (Google Hybrid)</span>
               </div>
-              <span
-                className={`text-[10px] px-1.5 py-0.5 rounded font-mono ${
-                  currentView === 'MAP'
-                    ? 'bg-rose-700 text-rose-100'
-                    : 'bg-slate-200 text-slate-600'
-                }`}
-              >
-                Alt+4
-              </span>
             </button>
           </nav>
         </div>
 
         {/* GROUP 2: THAO TÁC BIẾN ĐỘNG & BÁO CÁO (Actions) */}
         <div>
-          <div className="px-2 mb-2 flex items-center justify-between">
+          <div className="px-2 mb-2">
             <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
               Tác vụ & Báo cáo
-            </span>
-            <span className="text-[10px] bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded font-mono">
-              Actions
             </span>
           </div>
 
@@ -182,55 +140,43 @@ export default function LeftSidebar({
             {/* Nút Thêm Biến Động Nổi Bật */}
             <button
               onClick={onOpenAddFluctuation}
-              className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-extrabold text-white bg-linear-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 shadow-md shadow-emerald-600/25 transition-all hover:scale-[1.01] active:scale-[0.99]"
+              className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-extrabold text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 shadow-md shadow-emerald-600/25 transition-all hover:scale-[1.01] active:scale-[0.99]"
             >
               <div className="flex items-center gap-2.5">
                 <Plus className="w-4 h-4 text-emerald-100" />
                 <span>Thêm Biến Động Mới</span>
               </div>
-              <span className="text-[10px] bg-emerald-800/60 text-emerald-100 px-1.5 py-0.5 rounded font-mono">
-                Alt+N
-              </span>
             </button>
 
             {/* Xuất Excel */}
             <button
               onClick={onExportExcel}
-              className="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-bold text-slate-700 hover:bg-emerald-50 hover:text-emerald-800 border border-slate-200/80 transition-all"
+              className="w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-xs font-bold text-slate-700 hover:bg-emerald-50 hover:text-emerald-800 border border-slate-200/80 transition-all"
             >
               <div className="flex items-center gap-2.5">
                 <Download className="w-4 h-4 text-emerald-600" />
                 <span>Xuất Sổ Excel (19 Cột)</span>
               </div>
-              <span className="text-[10px] bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded font-mono">
-                Alt+E
-              </span>
             </button>
 
             {/* In Sổ A4 */}
             <button
               onClick={onOpenPrintView}
-              className="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-100 hover:text-slate-900 border border-slate-200/80 transition-all"
+              className="w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-100 hover:text-slate-900 border border-slate-200/80 transition-all"
             >
               <div className="flex items-center gap-2.5">
                 <Printer className="w-4 h-4 text-sky-600" />
                 <span>Xem & In Sổ (A4 Ngang)</span>
               </div>
-              <span className="text-[10px] bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded font-mono">
-                Alt+P
-              </span>
             </button>
           </div>
         </div>
 
         {/* GROUP 3: DỮ LIỆU & HỆ THỐNG (System Tools) */}
         <div>
-          <div className="px-2 mb-2 flex items-center justify-between">
+          <div className="px-2 mb-2">
             <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
               Dữ liệu & Cài đặt
-            </span>
-            <span className="text-[10px] bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded font-mono">
-              System
             </span>
           </div>
 
@@ -238,7 +184,7 @@ export default function LeftSidebar({
             {/* Nhập / Xuất dữ liệu */}
             <button
               onClick={onOpenBackupModal}
-              className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold text-slate-700 hover:bg-indigo-50 hover:text-indigo-800 border border-slate-200/80 transition-all"
+              className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold text-slate-700 hover:bg-indigo-50 hover:text-indigo-800 border border-slate-200/80 transition-all"
             >
               <div className="flex items-center gap-2.5">
                 <Database className="w-4 h-4 text-indigo-600" />
@@ -250,7 +196,7 @@ export default function LeftSidebar({
             {/* Cài đặt giao diện */}
             <button
               onClick={onOpenUISettings}
-              className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold text-slate-700 hover:bg-emerald-50 hover:text-emerald-800 border border-slate-200/80 transition-all"
+              className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold text-slate-700 hover:bg-emerald-50 hover:text-emerald-800 border border-slate-200/80 transition-all"
             >
               <div className="flex items-center gap-2.5">
                 <Settings className="w-4 h-4 text-emerald-600" />
@@ -266,7 +212,7 @@ export default function LeftSidebar({
                   forceClearAllCache();
                 }
               }}
-              className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold text-amber-900 bg-amber-50 hover:bg-amber-100 border border-amber-200 transition-all shadow-2xs mt-2"
+              className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold text-amber-900 bg-amber-50 hover:bg-amber-100 border border-amber-200 transition-all shadow-2xs mt-2"
               title="Xóa toàn bộ bộ nhớ tạm (Cache/LocalStorage) và làm mới trình duyệt"
             >
               <div className="flex items-center gap-2.5">
