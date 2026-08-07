@@ -11,7 +11,7 @@
     <!-- Inline Auto-Purge Cache & Unregister SW Script to fix white screen -->
     <script>
       (function() {
-        const CURRENT_APP_VERSION = 'v2026.08.07_v1000';
+        const CURRENT_APP_VERSION = 'v2026.08.07_v1001';
         if (localStorage.getItem('wildlife_app_ver') !== CURRENT_APP_VERSION) {
           localStorage.setItem('wildlife_app_ver', CURRENT_APP_VERSION);
           if ('caches' in window) {
@@ -45,7 +45,7 @@
     <meta property="og:description" content="Ứng dụng quản lý hiện trạng & biến động tăng giảm đàn động vật hoang dã nuôi sinh sản theo Thông tư 85/2025/TT-BNNMT." />
 
     <!-- PWA Manifest & App Icons -->
-    <link rel="manifest" href="./assets/app-bS2CFNro.json" />
+    <link rel="manifest" href="/dvhd/assets/app-bS2CFNro.json" />
     <link rel="icon" type="image/jpeg" href="./images/logo.jpg" />
     <link rel="apple-touch-icon" href="./images/logo.jpg" />
 
@@ -56,8 +56,8 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
 
     <!-- Vite Source Entrypoint -->
-    <script type="module" crossorigin src="./assets/index-AX6s1W_K.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-AgId6B8c.css">
+    <script type="module" crossorigin src="/dvhd/assets/index-AX6s1W_K.js"></script>
+    <link rel="stylesheet" crossorigin href="/dvhd/assets/index-AgId6B8c.css">
   </head>
 
   <body class="bg-slate-50 text-slate-800 font-sans antialiased selection:bg-emerald-500 selection:text-white">
