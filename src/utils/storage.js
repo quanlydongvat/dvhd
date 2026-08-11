@@ -1355,8 +1355,12 @@ export function loadAppData() {
     }
     const parsed = JSON.parse(raw);
 
-    // Force reload/merge with REAL_FACILITIES_DATA to incorporate the latest full datasets
-    const facilitiesList = REAL_FACILITIES_DATA;
+    // Load saved facilities list from localStorage if present, otherwise fallback to REAL_FACILITIES_DATA
+    const facilitiesList =
+      parsed.facilitiesList && Array.isArray(parsed.facilitiesList) && parsed.facilitiesList.length > 0
+        ? parsed.facilitiesList
+        : REAL_FACILITIES_DATA;
+
     const activeFacilityId = parsed.activeFacilityId || facilitiesList[0]?.id || null;
     const activeFacility = facilitiesList.find((f) => f.id === activeFacilityId) || facilitiesList[0] || null;
 
@@ -1367,10 +1371,13 @@ export function loadAppData() {
           ownerName: activeFacility.ownerName,
           registrationCode: activeFacility.registrationCode,
           registrationDate: activeFacility.registrationDate,
+          commune: activeFacility.commune || 'xã Hòa Sơn',
           address: activeFacility.address,
           phone: activeFacility.phone,
           purposeCode: activeFacility.purposeCode,
           note: activeFacility.note,
+          lat: activeFacility.lat || '',
+          lng: activeFacility.lng || '',
         }
       : parsed.facilityInfo || { ...EMPTY_FACILITY_INFO };
 

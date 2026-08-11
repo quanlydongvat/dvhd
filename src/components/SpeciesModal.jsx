@@ -1,6 +1,108 @@
 import React, { useState, useEffect } from 'react';
-import { X, Save, FolderPlus, Layers } from 'lucide-react';
+import { X, Save, FolderPlus, Sparkles, CheckCircle2 } from 'lucide-react';
 import { PURPOSE_CODES } from '../utils/calculations';
+
+// Predefined Species Catalog Dictionary (Danh mục loài mẫu phổ biến)
+export const PRESET_SPECIES_CATALOG = [
+  {
+    vietnameseName: 'Cầy vòi Hương',
+    scientificName: 'Paradoxurus hermaphroditus',
+    group: 'Động vật rừng nguy cấp, quý, hiếm (Nhóm IIB)',
+    citesAppendix: 'Phụ lục II CITES',
+    isBird: false,
+  },
+  {
+    vietnameseName: 'Cầy vòi mốc',
+    scientificName: 'Paguma larvata',
+    group: 'Động vật rừng nguy cấp, quý, hiếm (Nhóm IIB)',
+    citesAppendix: 'Phụ lục II CITES',
+    isBird: false,
+  },
+  {
+    vietnameseName: 'Don',
+    scientificName: 'Atherurus macrourus',
+    group: 'Động vật rừng (Nhóm IIB)',
+    citesAppendix: 'Phụ lục II CITES',
+    isBird: false,
+  },
+  {
+    vietnameseName: 'Nhím',
+    scientificName: 'Hystrix brachyura',
+    group: 'Động vật rừng thông thường',
+    citesAppendix: 'Khai báo kiểm lâm',
+    isBird: false,
+  },
+  {
+    vietnameseName: 'Dúi má đào',
+    scientificName: 'Rhizomys sumatrensis',
+    group: 'Động vật rừng (Nhóm IIB)',
+    citesAppendix: 'Phụ lục II CITES',
+    isBird: false,
+  },
+  {
+    vietnameseName: 'Dúi mốc lớn',
+    scientificName: 'Rhizomys pruinosus',
+    group: 'Động vật rừng thông thường',
+    citesAppendix: 'Khai báo kiểm lâm',
+    isBird: false,
+  },
+  {
+    vietnameseName: 'Hổ Đông Dương',
+    scientificName: 'Panthera tigris corbetti',
+    group: 'Động vật rừng nguy cấp, quý, hiếm (Nhóm IB)',
+    citesAppendix: 'Phụ lục I CITES',
+    isBird: false,
+  },
+  {
+    vietnameseName: 'Trăn đất',
+    scientificName: 'Python bivittatus',
+    group: 'Động vật rừng nguy cấp, quý, hiếm (Nhóm IIB)',
+    citesAppendix: 'Phụ lục II CITES',
+    isBird: false,
+  },
+  {
+    vietnameseName: 'Trăn gấm',
+    scientificName: 'Malayopython reticulatus',
+    group: 'Động vật rừng nguy cấp, quý, hiếm (Nhóm IIB)',
+    citesAppendix: 'Phụ lục II CITES',
+    isBird: false,
+  },
+  {
+    vietnameseName: 'Kỳ đà hoa',
+    scientificName: 'Varanus salvator',
+    group: 'Động vật rừng nguy cấp, quý, hiếm (Nhóm IIB)',
+    citesAppendix: 'Phụ lục II CITES',
+    isBird: false,
+  },
+  {
+    vietnameseName: 'Chim Chào mào',
+    scientificName: 'Pycnonotus jocosus',
+    group: 'Động vật rừng thông thường (Lớp Chim)',
+    citesAppendix: 'Khai báo kiểm lâm',
+    isBird: true,
+  },
+  {
+    vietnameseName: 'Chim Chích chòe lửa',
+    scientificName: 'Copsychus malabaricus',
+    group: 'Động vật rừng thông thường (Lớp Chim)',
+    citesAppendix: 'Khai báo kiểm lâm',
+    isBird: true,
+  },
+  {
+    vietnameseName: 'Chim Họa mi',
+    scientificName: 'Garrulax canorus',
+    group: 'Động vật rừng nguy cấp, quý, hiếm (Nhóm IIB)',
+    citesAppendix: 'Phụ lục II CITES',
+    isBird: true,
+  },
+  {
+    vietnameseName: 'Vẹt ngực hồng',
+    scientificName: 'Psittacula alexandri',
+    group: 'Động vật rừng nguy cấp, quý, hiếm (Nhóm IIB)',
+    citesAppendix: 'Phụ lục II CITES',
+    isBird: true,
+  },
+];
 
 export default function SpeciesModal({
   isOpen,
@@ -8,6 +110,8 @@ export default function SpeciesModal({
   onSave,
   editSpecies = null,
 }) {
+  const [selectedPresetKey, setSelectedPresetKey] = useState('CUSTOM');
+
   const [formData, setFormData] = useState({
     vietnameseName: '',
     scientificName: '',
@@ -27,6 +131,11 @@ export default function SpeciesModal({
 
   useEffect(() => {
     if (editSpecies) {
+      const matched = PRESET_SPECIES_CATALOG.find(
+        (s) => s.vietnameseName.toLowerCase() === (editSpecies.vietnameseName || '').toLowerCase()
+      );
+      setSelectedPresetKey(matched ? matched.vietnameseName : 'CUSTOM');
+
       setFormData({
         vietnameseName: editSpecies.vietnameseName || '',
         scientificName: editSpecies.scientificName || '',
@@ -34,15 +143,16 @@ export default function SpeciesModal({
         citesAppendix: editSpecies.citesAppendix || 'Phụ lục II CITES',
         purposeCode: editSpecies.purposeCode || 'T',
         baselineDate: editSpecies.baseline?.date || new Date().toISOString().slice(0, 10),
-        father: editSpecies.baseline?.father || 0,
-        mother: editSpecies.baseline?.mother || 0,
-        otherMale: editSpecies.baseline?.otherMale || 0,
-        otherFemale: editSpecies.baseline?.otherFemale || 0,
-        otherUnknown: editSpecies.baseline?.otherUnknown || 0,
+        father: Number(editSpecies.baseline?.father) || 0,
+        mother: Number(editSpecies.baseline?.mother) || 0,
+        otherMale: Number(editSpecies.baseline?.otherMale) || 0,
+        otherFemale: Number(editSpecies.baseline?.otherFemale) || 0,
+        otherUnknown: Number(editSpecies.baseline?.otherUnknown) || 0,
         baselineNote: editSpecies.baseline?.note || 'Số lượng vật nuôi hiện có ban đầu',
         verifier: editSpecies.baseline?.verifier || '',
       });
     } else {
+      setSelectedPresetKey('CUSTOM');
       setFormData({
         vietnameseName: '',
         scientificName: '',
@@ -63,6 +173,27 @@ export default function SpeciesModal({
 
   if (!isOpen) return null;
 
+  // Handle Preset Dropdown Selection
+  const handleSelectPreset = (e) => {
+    const key = e.target.value;
+    setSelectedPresetKey(key);
+
+    if (key === 'CUSTOM') {
+      return;
+    }
+
+    const preset = PRESET_SPECIES_CATALOG.find((s) => s.vietnameseName === key);
+    if (preset) {
+      setFormData((prev) => ({
+        ...prev,
+        vietnameseName: preset.vietnameseName,
+        scientificName: preset.scientificName,
+        group: preset.group,
+        citesAppendix: preset.citesAppendix,
+      }));
+    }
+  };
+
   const totalBaseline =
     (parseInt(formData.father) || 0) +
     (parseInt(formData.mother) || 0) +
@@ -73,7 +204,7 @@ export default function SpeciesModal({
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!formData.vietnameseName.trim()) {
-      alert('Vui lòng nhập tên tiếng Việt của loài!');
+      alert('Vui lòng chọn hoặc nhập tên tiếng Việt của loài!');
       return;
     }
     onSave(formData);
@@ -83,9 +214,10 @@ export default function SpeciesModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm overflow-y-auto">
       <div className="bg-white border border-slate-200 rounded-2xl max-w-2xl w-full shadow-2xl overflow-hidden my-8 animate-in fade-in zoom-in duration-200">
+        {/* Header */}
         <div className="bg-slate-50 border-b border-slate-200 px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-indigo-50 text-indigo-600 rounded-xl border border-indigo-200">
+            <div className="p-2.5 bg-indigo-50 text-indigo-700 rounded-xl border border-indigo-200">
               <FolderPlus className="w-6 h-6" />
             </div>
             <div>
@@ -105,13 +237,57 @@ export default function SpeciesModal({
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-6">
+        <form onSubmit={handleSubmit} className="p-6 space-y-6 max-h-[82vh] overflow-y-auto scrollbar-thin">
           {/* Thông tin loài */}
           <div className="space-y-4">
-            <h4 className="text-xs font-extrabold uppercase tracking-wider text-emerald-800 border-b border-slate-200 pb-1">
-              1. Thông tin chung về loài
-            </h4>
+            <div className="flex items-center justify-between border-b border-slate-200 pb-1">
+              <h4 className="text-xs font-extrabold uppercase tracking-wider text-emerald-800">
+                1. Thông tin chung về loài
+              </h4>
+              <span className="text-[11px] font-bold text-emerald-700 flex items-center gap-1">
+                <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                <span>Chọn nhanh từ danh mục có sẵn</span>
+              </span>
+            </div>
 
+            {/* Quick Preset Dropdown Selection Bar */}
+            <div className="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200/90 rounded-2xl p-3.5 space-y-2 shadow-2xs">
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-extrabold text-emerald-950 flex items-center gap-1.5">
+                  <span>📋 Chọn nhanh tên loài nuôi từ danh mục:</span>
+                </label>
+                {selectedPresetKey !== 'CUSTOM' && (
+                  <span className="text-[11px] font-bold text-emerald-700 flex items-center gap-1 bg-white px-2 py-0.5 rounded-full border border-emerald-300">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                    Đã điền tự động
+                  </span>
+                )}
+              </div>
+
+              <select
+                value={selectedPresetKey}
+                onChange={handleSelectPreset}
+                className="w-full bg-white border border-emerald-300 rounded-xl px-3.5 py-2 text-xs text-slate-900 font-extrabold focus:outline-none focus:border-emerald-600 cursor-pointer shadow-2xs"
+              >
+                <option value="CUSTOM">✏️ -- Tự nhập loài mới (Chưa có trong danh mục) --</option>
+                <optgroup label="🦔 Lớp Thú & Bò Sát Phổ Biến">
+                  {PRESET_SPECIES_CATALOG.filter((s) => !s.isBird).map((sp) => (
+                    <option key={sp.vietnameseName} value={sp.vietnameseName}>
+                      {sp.vietnameseName} ({sp.scientificName}) - {sp.group}
+                    </option>
+                  ))}
+                </optgroup>
+                <optgroup label="🦜 Lớp Chim Phổ Biến">
+                  {PRESET_SPECIES_CATALOG.filter((s) => s.isBird).map((sp) => (
+                    <option key={sp.vietnameseName} value={sp.vietnameseName}>
+                      {sp.vietnameseName} ({sp.scientificName}) - {sp.group}
+                    </option>
+                  ))}
+                </optgroup>
+              </select>
+            </div>
+
+            {/* Input Fields */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1">
@@ -120,10 +296,13 @@ export default function SpeciesModal({
                 <input
                   type="text"
                   value={formData.vietnameseName}
-                  onChange={(e) => setFormData({ ...formData, vietnameseName: e.target.value })}
+                  onChange={(e) => {
+                    setFormData({ ...formData, vietnameseName: e.target.value });
+                    setSelectedPresetKey('CUSTOM');
+                  }}
                   placeholder="VD: Dúi mốc lớn, Chim Chào mào..."
                   required
-                  className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-sm text-slate-900 font-medium focus:outline-none focus:border-emerald-500 shadow-xs"
+                  className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2 text-sm text-slate-900 font-bold focus:outline-none focus:border-emerald-500 shadow-xs"
                 />
               </div>
 
@@ -134,7 +313,7 @@ export default function SpeciesModal({
                   value={formData.scientificName}
                   onChange={(e) => setFormData({ ...formData, scientificName: e.target.value })}
                   placeholder="VD: Rhizomys pruinosus"
-                  className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-sm text-slate-900 font-medium focus:outline-none focus:border-emerald-500 shadow-xs font-mono italic"
+                  className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2 text-sm text-slate-900 font-medium focus:outline-none focus:border-emerald-500 shadow-xs font-mono italic"
                 />
               </div>
 
@@ -145,7 +324,7 @@ export default function SpeciesModal({
                   value={formData.group}
                   onChange={(e) => setFormData({ ...formData, group: e.target.value })}
                   placeholder="VD: Nhóm IB / Nhóm IIB / Thông thường"
-                  className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-sm text-slate-900 font-medium focus:outline-none focus:border-emerald-500 shadow-xs"
+                  className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2 text-sm text-slate-900 font-semibold focus:outline-none focus:border-emerald-500 shadow-xs"
                 />
               </div>
 
@@ -154,7 +333,7 @@ export default function SpeciesModal({
                 <select
                   value={formData.purposeCode}
                   onChange={(e) => setFormData({ ...formData, purposeCode: e.target.value })}
-                  className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-sm text-slate-900 font-medium focus:outline-none focus:border-emerald-500 shadow-xs cursor-pointer"
+                  className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2 text-sm text-slate-900 font-semibold focus:outline-none focus:border-emerald-500 shadow-xs cursor-pointer"
                 >
                   {PURPOSE_CODES.map((p) => (
                     <option key={p.code} value={p.code}>
@@ -186,7 +365,7 @@ export default function SpeciesModal({
                   type="date"
                   value={formData.baselineDate}
                   onChange={(e) => setFormData({ ...formData, baselineDate: e.target.value })}
-                  className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-sm text-slate-900 font-medium focus:outline-none focus:border-emerald-500 shadow-xs"
+                  className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2 text-sm text-slate-900 font-medium focus:outline-none focus:border-emerald-500 shadow-xs"
                 />
               </div>
 
@@ -196,7 +375,7 @@ export default function SpeciesModal({
                   type="text"
                   value={formData.baselineNote}
                   onChange={(e) => setFormData({ ...formData, baselineNote: e.target.value })}
-                  className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-sm text-slate-900 font-medium focus:outline-none focus:border-emerald-500 shadow-xs"
+                  className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2 text-sm text-slate-900 font-medium focus:outline-none focus:border-emerald-500 shadow-xs"
                 />
               </div>
             </div>
@@ -213,7 +392,7 @@ export default function SpeciesModal({
                     min="0"
                     value={formData.father}
                     onChange={(e) => setFormData({ ...formData, father: e.target.value })}
-                    className="w-full bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 text-slate-900 font-bold focus:border-indigo-500 shadow-xs"
+                    className="w-full bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 text-slate-900 font-extrabold focus:border-indigo-500 shadow-xs text-center"
                   />
                 </div>
                 <div>
@@ -223,7 +402,7 @@ export default function SpeciesModal({
                     min="0"
                     value={formData.mother}
                     onChange={(e) => setFormData({ ...formData, mother: e.target.value })}
-                    className="w-full bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 text-slate-900 font-bold focus:border-indigo-500 shadow-xs"
+                    className="w-full bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 text-slate-900 font-extrabold focus:border-indigo-500 shadow-xs text-center"
                   />
                 </div>
                 <div>
@@ -233,7 +412,7 @@ export default function SpeciesModal({
                     min="0"
                     value={formData.otherMale}
                     onChange={(e) => setFormData({ ...formData, otherMale: e.target.value })}
-                    className="w-full bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 text-slate-900 font-bold focus:border-indigo-500 shadow-xs"
+                    className="w-full bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 text-slate-900 font-extrabold focus:border-indigo-500 shadow-xs text-center"
                   />
                 </div>
                 <div>
@@ -243,7 +422,7 @@ export default function SpeciesModal({
                     min="0"
                     value={formData.otherFemale}
                     onChange={(e) => setFormData({ ...formData, otherFemale: e.target.value })}
-                    className="w-full bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 text-slate-900 font-bold focus:border-indigo-500 shadow-xs"
+                    className="w-full bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 text-slate-900 font-extrabold focus:border-indigo-500 shadow-xs text-center"
                   />
                 </div>
                 <div>
@@ -253,7 +432,7 @@ export default function SpeciesModal({
                     min="0"
                     value={formData.otherUnknown}
                     onChange={(e) => setFormData({ ...formData, otherUnknown: e.target.value })}
-                    className="w-full bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 text-slate-900 font-bold focus:border-indigo-500 shadow-xs"
+                    className="w-full bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 text-slate-900 font-extrabold focus:border-indigo-500 shadow-xs text-center"
                   />
                 </div>
               </div>
@@ -264,13 +443,13 @@ export default function SpeciesModal({
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-xs font-semibold text-slate-700 hover:text-slate-900 bg-white hover:bg-slate-100 border border-slate-300 rounded-xl transition-colors shadow-xs"
+              className="px-4 py-2 text-xs font-semibold text-slate-700 hover:text-slate-900 bg-white hover:bg-slate-100 border border-slate-300 rounded-xl transition-colors shadow-xs cursor-pointer"
             >
               Hủy
             </button>
             <button
               type="submit"
-              className="flex items-center gap-2 px-5 py-2 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl shadow-md transition-all"
+              className="flex items-center gap-2 px-5 py-2 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl shadow-md transition-all cursor-pointer"
             >
               <Save className="w-4 h-4" />
               <span>{editSpecies ? 'Lưu Thông Tin Loài' : 'Tạo Sổ Theo Dõi Mới'}</span>

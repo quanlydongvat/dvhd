@@ -8,10 +8,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     <title>Quản Lý Sổ Theo Dõi Động Vật Hoang Dã (Mẫu II - Nuôi Sinh Sản)</title>
 
-    <!-- Inline Auto-Purge Cache & Unregister SW Script -->
+    <!-- Inline Auto-Purge Cache & Unregister SW Script to fix white screen -->
     <script>
       (function() {
-        const CURRENT_APP_VERSION = 'v2026.08.06_v999';
+        const CURRENT_APP_VERSION = 'v2026.08.07_v1001';
         if (localStorage.getItem('wildlife_app_ver') !== CURRENT_APP_VERSION) {
           localStorage.setItem('wildlife_app_ver', CURRENT_APP_VERSION);
           if ('caches' in window) {
@@ -45,9 +45,9 @@
     <meta property="og:description" content="Ứng dụng quản lý hiện trạng & biến động tăng giảm đàn động vật hoang dã nuôi sinh sản theo Thông tư 85/2025/TT-BNNMT." />
 
     <!-- PWA Manifest & App Icons -->
-    <link rel="manifest" href="./assets/app-bS2CFNro-bS2CFNro-bS2CFNro-bS2CFNro-bS2CFNro-bS2CFNro-bS2CFNro.json" />
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23059669' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z'/></svg>" />
-    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512' fill='%23059669'><rect width='512' height='512' rx='128' fill='%23064e3b'/><path d='M256 64s160 80 160 200v112c0 80-160 120-160 120S96 456 96 376V264C96 144 256 64 256 64z' fill='none' stroke='%2334d399' stroke-width='32' stroke-linecap='round' stroke-linejoin='round'/><path d='M200 240l40 40 72-72' fill='none' stroke='%2334d399' stroke-width='32' stroke-linecap='round' stroke-linejoin='round'/></svg>" />
+    <link rel="manifest" href="/dvhd/assets/app-bS2CFNro.json" />
+    <link rel="icon" type="image/jpeg" href="./images/logo.jpg" />
+    <link rel="apple-touch-icon" href="./images/logo.jpg" />
 
     <!-- Google Fonts & Leaflet CSS -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -56,28 +56,11 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
 
     <!-- Vite Source Entrypoint -->
-    <script type="module" crossorigin src="./assets/index-DFVnRxpj.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-BPUi3ItA.css">
+    <script type="module" crossorigin src="/dvhd/assets/index-DIF1hQyp.js"></script>
+    <link rel="stylesheet" crossorigin href="/dvhd/assets/index-CM4Nqc5t.css">
   </head>
 
   <body class="bg-slate-50 text-slate-800 font-sans antialiased selection:bg-emerald-500 selection:text-white">
     <div id="root"></div>
-
-    <!-- Clear Cache & Unregister Service Workers on Localhost -->
-    <script>
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.getRegistrations().then(function(registrations) {
-          for (let reg of registrations) {
-            reg.unregister();
-            console.log('[PWA] Unregistered service worker to force fresh live updates');
-          }
-        });
-      }
-      if ('caches' in window) {
-        caches.keys().then(function(names) {
-          for (let name of names) caches.delete(name);
-        });
-      }
-    </script>
   </body>
 </html>

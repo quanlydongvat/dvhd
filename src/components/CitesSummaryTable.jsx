@@ -1,6 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Download, Printer, ShieldAlert, FileText, CheckCircle2, Building2, MapPin } from 'lucide-react';
-import { exportCitesTableToExcel } from '../utils/exportExcel';
+import { Printer, ShieldAlert, FileText, CheckCircle2, Building2, MapPin } from 'lucide-react';
 
 export default function CitesSummaryTable({ facilitiesList = [] }) {
   const [selectedCommune, setSelectedCommune] = useState('ALL');
@@ -76,11 +75,6 @@ export default function CitesSummaryTable({ facilitiesList = [] }) {
     };
   }, [facilitiesList, selectedCommune]);
 
-  // Export to Excel
-  const handleExportExcel = () => {
-    exportCitesTableToExcel(facilitiesList, selectedCommune);
-  };
-
   // Print view handler
   const handlePrint = () => {
     window.print();
@@ -121,22 +115,16 @@ export default function CitesSummaryTable({ facilitiesList = [] }) {
               </option>
             ))}
           </select>
-
-          <button
-            onClick={handleExportExcel}
-            className="flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-2 rounded-xl text-xs font-bold transition-all shadow-md hover:scale-[1.02] active:scale-[0.98]"
-          >
-            <Download className="w-4 h-4" />
-            <span>Xuất Excel Bảng 1.2</span>
-          </button>
-
-          <button
-            onClick={handlePrint}
-            className="flex items-center gap-1.5 bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 px-3.5 py-2 rounded-xl text-xs font-bold transition-all shadow-xs"
-          >
-            <Printer className="w-4 h-4 text-slate-600" />
-            <span>In Bảng (A4)</span>
-          </button>
+          <div className="flex items-center gap-2">
+            {/* We only keep the print button */}
+            <button
+              onClick={handlePrint}
+              className="flex items-center gap-2 px-4 py-2 bg-slate-100 text-slate-700 hover:bg-slate-200 hover:text-slate-900 rounded-xl text-sm font-bold border border-slate-300 transition-colors shadow-xs"
+            >
+              <Printer className="w-4 h-4" />
+              <span>In Báo Cáo</span>
+            </button>
+          </div>
         </div>
       </div>
 

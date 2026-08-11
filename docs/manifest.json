@@ -2,7 +2,7 @@
   "name": "Sổ Theo Dõi Động Vật Hoang Dã (Mẫu II)",
   "short_name": "Sổ ĐVHD",
   "description": "Ứng dụng Quản lý Sổ Theo Dõi Động Vật Hoang Dã Mẫu II (Nuôi sinh sản, nuôi sinh trưởng) theo quy định Kiểm lâm",
-  "start_url": "./index.html",
+  "start_url": ".",
   "display": "standalone",
   "orientation": "any",
   "background_color": "#064e3b",

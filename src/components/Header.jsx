@@ -1,5 +1,5 @@
 import React from 'react';
-import { Settings, Edit3, FolderPlus, Table, LayoutList, BarChart3, MapPin, Building2, Download, Printer, Database } from 'lucide-react';
+import { Settings, Edit3, FolderPlus, Table, LayoutList, BarChart3, MapPin, Building2, Download, Printer, Database, PlusCircle } from 'lucide-react';
 import { PURPOSE_CODES } from '../utils/calculations';
 
 export default function Header({
@@ -12,6 +12,7 @@ export default function Header({
   onSelectSpecies,
   onOpenAddSpecies,
   onOpenEditSpecies,
+  onOpenAddFacility,
   onOpenEditFacility,
   onExportExcel,
   onOpenPrintView,
@@ -19,7 +20,39 @@ export default function Header({
   onOpenUISettings,
   currentView = 'SUMMARY', // 'LOGBOOK' | 'SUMMARY' | 'HOME' | 'MAP'
   onChangeView,
+  currentUser,
 }) {
+  const COMMUNES = ['xã Hòa Sơn', 'xã Yang Mao', 'xã Cư Pui', 'Xã Krông Bông', 'Xã Dang Kang'];
+
+  // 2-Level Hierarchical Selection State: Selected Commune
+  const [selectedCommune, setSelectedCommune] = React.useState('ALL');
+
+  // Sync selectedCommune with active facility's commune if user switched facility externally
+  React.useEffect(() => {
+    if (facilityInfo && facilityInfo.commune && selectedCommune !== 'ALL') {
+      if (facilityInfo.commune !== selectedCommune) {
+        setSelectedCommune(facilityInfo.commune);
+      }
+    }
+  }, [facilityInfo]);
+
+  // Filter facilities for 2nd Level Dropdown
+  const filteredFacilitiesByCommune = React.useMemo(() => {
+    if (selectedCommune === 'ALL') return facilitiesList;
+    return facilitiesList.filter((f) => (f.commune || '') === selectedCommune);
+  }, [facilitiesList, selectedCommune]);
+
+  // Handle Level 1 Commune selection
+  const handleCommuneChange = (newCommune) => {
+    setSelectedCommune(newCommune);
+    if (newCommune !== 'ALL') {
+      const matchInCommune = facilitiesList.filter((f) => (f.commune || '') === newCommune);
+      if (matchInCommune.length > 0 && onSelectFacility) {
+        onSelectFacility(matchInCommune[0].id);
+      }
+    }
+  };
+
   const currentPurpose = PURPOSE_CODES.find((p) => p.code === activeSpecies?.purposeCode) || {
     code: 'T',
     name: 'Thương mại',
@@ -67,35 +100,39 @@ export default function Header({
 
           {/* Quick Tools & View Bar for Mobile Devices */}
           <div className="flex lg:hidden items-center justify-between gap-1.5 overflow-x-auto pb-1">
-            <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200/80">
+            <div className="flex items-center gap-1 bg-emerald-950/5 p-1 rounded-2xl border border-emerald-900/10">
               <button
-                onClick={() => onChangeView && onChangeView('LOGBOOK')}
-                className={`px-2.5 py-1 rounded-lg text-xs font-bold whitespace-nowrap ${
-                  currentView === 'LOGBOOK' ? 'bg-white text-emerald-700 shadow-xs' : 'text-slate-600'
-                }`}
-              >
-                Sổ Mẫu II
-              </button>
-              <button
-                onClick={() => onChangeView && onChangeView('SUMMARY')}
-                className={`px-2.5 py-1 rounded-lg text-xs font-bold whitespace-nowrap ${
-                  currentView === 'SUMMARY' ? 'bg-white text-emerald-700 shadow-xs' : 'text-slate-600'
-                }`}
-              >
-                Tổng hợp ({facilitiesList.length})
-              </button>
-              <button
+                type="button"
                 onClick={() => onChangeView && onChangeView('HOME')}
-                className={`px-2.5 py-1 rounded-lg text-xs font-bold whitespace-nowrap ${
-                  currentView === 'HOME' ? 'bg-white text-amber-600 shadow-xs' : 'text-slate-600'
+                className={`px-3 py-1.5 rounded-xl text-xs font-black whitespace-nowrap transition-all ${
+                  currentView === 'HOME' ? 'bg-amber-400 text-slate-950 shadow-xs' : 'text-slate-700 hover:text-slate-950'
                 }`}
               >
                 Trang chủ
               </button>
               <button
+                type="button"
+                onClick={() => onChangeView && onChangeView('SUMMARY')}
+                className={`px-3 py-1.5 rounded-xl text-xs font-black whitespace-nowrap transition-all ${
+                  currentView === 'SUMMARY' ? 'bg-emerald-700 text-white shadow-xs' : 'text-slate-700 hover:text-slate-950'
+                }`}
+              >
+                Tổng hợp ({facilitiesList.length})
+              </button>
+              <button
+                type="button"
+                onClick={() => onChangeView && onChangeView('LOGBOOK')}
+                className={`px-3 py-1.5 rounded-xl text-xs font-black whitespace-nowrap transition-all ${
+                  currentView === 'LOGBOOK' ? 'bg-emerald-700 text-white shadow-xs' : 'text-slate-700 hover:text-slate-950'
+                }`}
+              >
+                Sổ Mẫu II
+              </button>
+              <button
+                type="button"
                 onClick={() => onChangeView && onChangeView('MAP')}
-                className={`px-2.5 py-1 rounded-lg text-xs font-bold whitespace-nowrap ${
-                  currentView === 'MAP' ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-600'
+                className={`px-3 py-1.5 rounded-xl text-xs font-black whitespace-nowrap transition-all ${
+                  currentView === 'MAP' ? 'bg-emerald-700 text-white shadow-xs' : 'text-slate-700 hover:text-slate-950'
                 }`}
               >
                 Bản đồ
@@ -104,20 +141,17 @@ export default function Header({
 
             {/* Quick Action Icons for Mobile */}
             <div className="flex items-center gap-1">
-              <button
-                onClick={onExportExcel}
-                className="p-2 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-lg text-xs font-bold shadow-xs active:scale-95"
-                title="Xuất Excel"
-              >
-                <Download className="w-4 h-4" />
-              </button>
-              <button
-                onClick={onOpenPrintView}
-                className="p-2 bg-slate-100 text-slate-700 border border-slate-200 rounded-lg text-xs font-bold shadow-xs active:scale-95"
-                title="In Sổ A4"
-              >
-                <Printer className="w-4 h-4" />
-              </button>
+              {currentUser?.role === 'ADMIN' && (
+                <>
+                  <button
+                    onClick={onExportExcel}
+                    className="p-2 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-lg text-xs font-bold shadow-xs active:scale-95"
+                    title="Xuất Báo Cáo Tổng Hợp"
+                  >
+                    <Download className="w-4 h-4" />
+                  </button>
+                </>
+              )}
               <button
                 onClick={onOpenBackupModal}
                 className="p-2 bg-indigo-50 text-indigo-700 border border-indigo-200 rounded-lg text-xs font-bold shadow-xs active:scale-95"
@@ -129,52 +163,99 @@ export default function Header({
           </div>
         </div>
 
-        {/* Facility Info Card & Species Tabs */}
+        {/* 2-Level Hierarchical Facility Info Card & Species Tabs */}
         {currentView === 'LOGBOOK' && (
           <div className="mt-2.5 grid grid-cols-1 lg:grid-cols-12 gap-3 items-center">
-            {/* Facility Selector Dropdown & Details */}
-            <div className="lg:col-span-5 bg-slate-50 border border-slate-200 rounded-xl p-2 flex items-center justify-between shadow-2xs">
-              <div className="min-w-0 pr-2 flex-1">
-                <div className="flex items-center gap-2 mb-1">
-                  <Building2 className="w-4 h-4 text-emerald-700 flex-shrink-0" />
-                  <span className="text-[11px] font-bold text-emerald-800 uppercase tracking-wider whitespace-nowrap">Chủ cơ sở:</span>
-                  <select
-                    value={activeFacilityId || ''}
-                    onChange={(e) => onSelectFacility && onSelectFacility(e.target.value)}
-                    className="bg-white border border-slate-300 rounded-lg px-2 py-1 text-xs text-slate-900 font-bold w-full focus:outline-none focus:border-emerald-500 cursor-pointer shadow-2xs"
-                  >
-                    {['xã Hòa Sơn', 'xã Yang Mao', 'xã Cư Pui', 'Xã Krông Bông', 'Xã Dang Kang'].map((communeName) => {
-                      const communeFacs = facilitiesList.filter((f) => (f.commune || '') === communeName);
-                      if (communeFacs.length === 0) return null;
+            {/* 2-Level Facility Selector (Level 1: Xã -> Level 2: Chủ cơ sở) */}
+            <div className="lg:col-span-6 bg-slate-50 border border-slate-200 rounded-xl p-2.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 shadow-2xs">
+              <div className="min-w-0 flex-1 w-full space-y-1.5">
+                {/* Level 1 (Xã) & Level 2 (Chủ CS) Grid Controls */}
+                <div className="grid grid-cols-1 sm:grid-cols-12 gap-1.5 items-center">
+                  {/* Level 1: Select Commune */}
+                  <div className="sm:col-span-5 flex items-center gap-1">
+                    <MapPin className="w-3.5 h-3.5 text-emerald-700 flex-shrink-0" />
+                    <span className="text-[11px] font-extrabold text-emerald-900 uppercase tracking-wider whitespace-nowrap">Xã:</span>
+                    <select
+                      value={selectedCommune}
+                      onChange={(e) => handleCommuneChange(e.target.value)}
+                      className="bg-white border border-slate-300 rounded-lg px-1.5 py-1 text-xs text-slate-900 font-bold focus:outline-none focus:border-emerald-500 cursor-pointer shadow-2xs w-full truncate"
+                    >
+                      <option value="ALL">📍 Tất cả 5 Xã ({facilitiesList.length} CS)</option>
+                      {COMMUNES.map((c) => {
+                        const count = facilitiesList.filter((f) => (f.commune || '') === c).length;
+                        if (count === 0) return null;
+                        return (
+                          <option key={c} value={c}>
+                            📍 {c} ({count} CS)
+                          </option>
+                        );
+                      })}
+                    </select>
+                  </div>
 
-                      return (
-                        <optgroup key={communeName} label={`📍 ${communeName} (${communeFacs.length} CS)`}>
-                          {communeFacs.map((fac) => (
-                            <option key={fac.id} value={fac.id}>
-                              {fac.ownerName} - {fac.speciesList.map((s) => s.vietnameseName).join(', ')} ({fac.registrationCode || 'Chưa mã số'})
-                            </option>
-                          ))}
-                        </optgroup>
-                      );
-                    })}
-                  </select>
+                  {/* Level 2: Select Owner / Facility */}
+                  <div className="sm:col-span-7 flex items-center gap-1">
+                    <Building2 className="w-3.5 h-3.5 text-emerald-700 flex-shrink-0" />
+                    <span className="text-[11px] font-extrabold text-emerald-900 uppercase tracking-wider whitespace-nowrap">Chủ CS:</span>
+                    <select
+                      value={activeFacilityId || ''}
+                      onChange={(e) => onSelectFacility && onSelectFacility(e.target.value)}
+                      className="bg-white border border-slate-300 rounded-lg px-2 py-1 text-xs text-slate-900 font-bold w-full focus:outline-none focus:border-emerald-500 cursor-pointer shadow-2xs truncate"
+                    >
+                      {selectedCommune === 'ALL' ? (
+                        COMMUNES.map((communeName) => {
+                          const communeFacs = facilitiesList.filter((f) => (f.commune || '') === communeName);
+                          if (communeFacs.length === 0) return null;
+                          return (
+                            <optgroup key={communeName} label={`📍 ${communeName} (${communeFacs.length} CS)`}>
+                              {communeFacs.map((fac) => (
+                                <option key={fac.id} value={fac.id}>
+                                  {fac.ownerName} - {fac.speciesList.map((s) => s.vietnameseName).join(', ')} ({fac.registrationCode || 'Chưa mã số'})
+                                </option>
+                              ))}
+                            </optgroup>
+                          );
+                        })
+                      ) : (
+                        filteredFacilitiesByCommune.map((fac) => (
+                          <option key={fac.id} value={fac.id}>
+                            {fac.ownerName} - {fac.speciesList.map((s) => s.vietnameseName).join(', ')} ({fac.registrationCode || 'Chưa mã số'})
+                          </option>
+                        ))
+                      )}
+                    </select>
+                  </div>
                 </div>
-                <div className="text-[11px] text-slate-500 flex flex-wrap gap-x-3 gap-y-0.5 truncate pl-6">
-                  <span>Mã số: <strong className="text-slate-800 font-semibold">{facilityInfo.registrationCode}</strong></span>
-                  <span>Địa chỉ: <strong className="text-slate-800 font-semibold truncate">{facilityInfo.address}</strong></span>
+
+                {/* Sub-Details: Code & Address */}
+                <div className="text-[11px] text-slate-500 flex flex-wrap items-center gap-x-3 gap-y-0.5 truncate pl-1 pt-0.5 border-t border-slate-200/60">
+                  <span>Mã số: <strong className="text-slate-800 font-semibold">{facilityInfo.registrationCode || 'Chưa có'}</strong></span>
+                  <span>Địa chỉ: <strong className="text-slate-800 font-semibold truncate">{facilityInfo.address || 'Chưa cập nhật'}</strong></span>
                 </div>
               </div>
-              <button
-                onClick={onOpenEditFacility}
-                className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-200 rounded-lg transition-colors flex-shrink-0 ml-1"
-                title="Chỉnh sửa thông tin cơ sở"
-              >
-                <Settings className="w-4 h-4" />
-              </button>
+
+              {/* Action Buttons: Add / Edit Facility */}
+              <div className="flex items-center gap-1.5 flex-shrink-0 self-start sm:self-center">
+                <button
+                  onClick={onOpenAddFacility}
+                  className="flex items-center gap-1 text-[11px] font-extrabold bg-emerald-100/90 hover:bg-emerald-200 text-emerald-950 border border-emerald-300/90 px-2.5 py-1.5 rounded-xl transition-all shadow-2xs cursor-pointer whitespace-nowrap hover:scale-[1.02] active:scale-[0.98]"
+                  title="Thêm cơ sở nuôi sinh sản mới"
+                >
+                  <PlusCircle className="w-3.5 h-3.5 text-emerald-700" />
+                  <span>+ CS mới</span>
+                </button>
+                <button
+                  onClick={onOpenEditFacility}
+                  className="p-1.5 text-slate-500 hover:text-slate-900 hover:bg-slate-200/80 rounded-xl transition-colors"
+                  title="Chỉnh sửa thông tin cơ sở đang chọn"
+                >
+                  <Settings className="w-4 h-4" />
+                </button>
+              </div>
             </div>
 
             {/* Species Tabs */}
-            <div className="lg:col-span-7 flex items-center gap-2 overflow-x-auto pb-1 scrollbar-thin">
+            <div className="lg:col-span-6 flex items-center gap-2 overflow-x-auto pb-1 scrollbar-thin">
               <div className="flex items-center gap-1.5 bg-slate-100/90 p-1.5 rounded-xl border border-slate-200/80 w-full overflow-x-auto">
                 {speciesList.map((sp) => {
                   const isActive = sp.id === activeSpecies?.id;

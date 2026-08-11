@@ -118,19 +118,7 @@ export default function DesktopAppHeader({
           <span className="hidden sm:inline">Phím Tắt</span>
         </button>
 
-        {/* Clear Cache Button */}
-        <button
-          onClick={() => {
-            if (window.confirm('Bạn có muốn xóa toàn bộ bộ nhớ Cache và tải lại dữ liệu mới nhất không?')) {
-              forceClearAllCache();
-            }
-          }}
-          className="flex items-center gap-1 px-2.5 py-1 bg-amber-900/40 hover:bg-amber-800/60 text-amber-300 hover:text-amber-200 rounded-lg border border-amber-700/60 transition-all font-sans font-extrabold text-[11px]"
-          title="Xóa toàn bộ Cache & LocalStorage, làm mới dữ liệu web tức thì"
-        >
-          <RefreshCw className="w-3.5 h-3.5 text-amber-400" />
-          <span className="hidden sm:inline">Xóa Cache</span>
-        </button>
+
 
 
         {/* Fullscreen Button */}

@@ -1,149 +1,660 @@
+import ExcelJS from 'exceljs';
+import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
-import { formatDateVN, PURPOSE_CODES } from './calculations';
+import { computeLogbookTable } from './calculations';
 
-/**
- * Export 19-Column Wildlife Logbook to Excel (.xlsx) file
- * formatted according to Official Forest Ranger guidelines
- */
-export function exportToExcel(species, rows, facilityInfo) {
-  const purposeObj = PURPOSE_CODES.find((p) => p.code === (species.purposeCode || facilityInfo.purposeCode));
-  const purposeStr = purposeObj ? `${purposeObj.code} - ${purposeObj.name}` : (species.purposeCode || facilityInfo.purposeCode || '');
+export const COMMUNES = ['xã Hòa Sơn', 'xã Yang Mao', 'xã Cư Pui', 'Xã Krông Bông', 'Xã Dang Kang'];
 
-  // Build workbook data matrix
-  const sheetData = [];
+export async function exportDistrictReport(facilitiesList, selectedCommune = 'ALL') {
+  // 1. Create a new workbook
+  const workbook = new ExcelJS.Workbook();
+  workbook.creator = 'Phần mềm Quản lý ĐVHD';
+  workbook.created = new Date();
 
-  // Title
-  sheetData.push(['SỔ THEO DÕI BIẾN ĐỘNG ĐỘNG VẬT HOANG DÃ (MẪU II - CƠ SỞ NUÔI SINH SẢN)']);
-  sheetData.push([]);
-  sheetData.push([`Tên cơ sở nuôi: ${facilityInfo.facilityName || ''}`, '', '', '', '', `Mã số cơ sở: ${facilityInfo.registrationCode || ''}`]);
-  sheetData.push([`Chủ cơ sở: ${facilityInfo.ownerName || ''}`, '', '', '', '', `Địa chỉ: ${facilityInfo.address || ''}`]);
-  sheetData.push([`Loài nuôi: ${species.vietnameseName} (${species.scientificName})`, '', '', '', '', `Mục đích nuôi: ${purposeStr}`]);
-  sheetData.push([]);
-
-  // Table Headers (Row 7 - 9)
-  sheetData.push([
-    'STT / Dòng',
-    'Ngày/tháng/năm',
-    'Hiện trạng nuôi', '', '', '', '', '',
-    'Biến động', '', '', '', '', '', '', '', '', '',
-    'Nguyên nhân biến động (sinh sản, khai thác, mua, bán, tặng cho, chết...)',
-    'Xác nhận của cơ quan kiểm lâm sở tại/Thủy sản',
-  ]);
-
-  sheetData.push([
-    '', '',
-    'Tổng số cá thể',
-    'Bố mẹ', '',
-    'Các cá thể khác', '', '',
-    'Tăng đàn', '', '', '', '',
-    'Giảm đàn', '', '', '', '',
-    '', '',
-  ]);
-
-  sheetData.push([
-    '', '',
-    '',
-    'Bố', 'Mẹ',
-    'Đực', 'Cái', 'Chưa XĐ',
-    'Bố mẹ', '', 'Cá thể khác', '', '',
-    'Bố mẹ', '', 'Cá thể khác', '', '',
-    '', '',
-  ]);
-
-  sheetData.push([
-    '', '',
-    '',
-    '', '',
-    '', '', '',
-    'Bố', 'Mẹ', 'Đực', 'Cái', 'Chưa XĐ',
-    'Bố', 'Mẹ', 'Đực', 'Cái', 'Chưa XĐ',
-    '', '',
-  ]);
-
-  // Column Numbers (1 to 19)
-  sheetData.push([
-    'Label',
-    '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19'
-  ]);
-
-  // Data rows
-  rows.forEach((row) => {
-    sheetData.push([
-      row.label,
-      formatDateVN(row.date),
-      row.total,
-      row.father,
-      row.mother,
-      row.otherMale,
-      row.otherFemale,
-      row.otherUnknown,
-      row.isBaseline ? '-' : (row.incFather || 0),
-      row.isBaseline ? '-' : (row.incMother || 0),
-      row.isBaseline ? '-' : (row.incOtherMale || 0),
-      row.isBaseline ? '-' : (row.incOtherFemale || 0),
-      row.isBaseline ? '-' : (row.incOtherUnknown || 0),
-      row.isBaseline ? '-' : (row.decFather || 0),
-      row.isBaseline ? '-' : (row.decMother || 0),
-      row.isBaseline ? '-' : (row.decOtherMale || 0),
-      row.isBaseline ? '-' : (row.decOtherFemale || 0),
-      row.isBaseline ? '-' : (row.decOtherUnknown || 0),
-      row.reason || '',
-      row.verifier || '',
-    ]);
+  // 2. Filter facilities
+  let filteredFacs = facilitiesList;
+  if (selectedCommune !== 'ALL') {
+    filteredFacs = facilitiesList.filter(f => (f.commune || '') === selectedCommune);
+  }
+  // Sort facilities by commune, then by name
+  filteredFacs.sort((a, b) => {
+    const cA = a.commune || '';
+    const cB = b.commune || '';
+    if (cA !== cB) return cA.localeCompare(cB);
+    return (a.ownerName || '').localeCompare(b.ownerName || '');
   });
 
-  // Footer notes
-  sheetData.push([]);
-  sheetData.push(['Ghi chú:']);
-  sheetData.push(['1. Mục đích nuôi: (T) Thương mại; (Z) Vườn thú; (Q) Biểu diễn xiếc; (R) Cứu hộ; (S) Nghiên cứu KH; (C) Bảo tồn; (E) Du lịch sinh thái; (O) Khác.']);
-  sheetData.push(['2. Cột 1 ghi ngày/tháng/năm biến động. Không ghi gộp thông tin nhập xuất trong cùng 1 ngày.']);
-  sheetData.push(['3. Tổng số cá thể (cột 2) = (3) + (4) + (5) + (6) + (7).']);
-  sheetData.push(['4. Dòng A: Ghi chép số lượng vật nuôi hiện có ban đầu.']);
-  sheetData.push(['5. Dòng B, C...: Ghi chép thông tin khi có biến động tăng/giảm đàn.']);
-  sheetData.push(['6. Mỗi loài được lập 01 sổ theo dõi riêng.']);
+  // Calculate current state for all species in all filtered facilities
+  const reportData = [];
+  const speciesTotals = {};
 
-  // Create worksheet
-  const ws = XLSX.utils.aoa_to_sheet(sheetData);
+  filteredFacs.forEach((fac) => {
+    (fac.speciesList || []).forEach((species) => {
+      const baseline = species.baseline || {};
+      const fluctuations = species.fluctuations || [];
+      const computed = computeLogbookTable(baseline, fluctuations);
+      const currentState = computed && computed.length > 0 ? computed[computed.length - 1] : null;
 
-  // Set column widths
-  ws['!cols'] = [
-    { wch: 8 },  // STT
-    { wch: 14 }, // Date
-    { wch: 10 }, // Col 2 Total
-    { wch: 7 },  // Col 3
-    { wch: 7 },  // Col 4
-    { wch: 7 },  // Col 5
-    { wch: 7 },  // Col 6
-    { wch: 10 }, // Col 7
-    { wch: 7 },  // Col 8
-    { wch: 7 },  // Col 9
-    { wch: 7 },  // Col 10
-    { wch: 7 },  // Col 11
-    { wch: 10 }, // Col 12
-    { wch: 7 },  // Col 13
-    { wch: 7 },  // Col 14
-    { wch: 7 },  // Col 15
-    { wch: 7 },  // Col 16
-    { wch: 10 }, // Col 17
-    { wch: 35 }, // Col 18 Reason
-    { wch: 25 }, // Col 19 Verifier
-  ];
+      if (!currentState || currentState.total <= 0) return;
 
-  const wb = XLSX.utils.book_new();
-  const safeSpeciesName = species.vietnameseName.replace(/[/\\?%*:|"<>]/g, '-').slice(0, 25);
-  XLSX.utils.book_append_sheet(wb, ws, `So_Theo_Doi_${safeSpeciesName}`);
+      const village = extractVillage(fac.address || '');
 
-  const fileName = `So_Theo_Doi_${safeSpeciesName}_${new Date().toISOString().slice(0, 10)}.xlsx`;
-  XLSX.writeFile(wb, fileName);
+      reportData.push({
+        commune: fac.commune || '',
+        village,
+        ownerName: fac.ownerName || '',
+        vnName: species.vietnameseName || '',
+        sciName: species.scientificName || '',
+        total: currentState.total,
+        bFather: currentState.father,
+        bMother: currentState.mother,
+        oMale: currentState.otherMale,
+        oFemale: currentState.otherFemale,
+        oUnknown: currentState.otherUnknown,
+        regCode: fac.registrationCode || '',
+        regDate: fac.registrationDate || '',
+        purpose: fac.purposeCode || species.purposeCode || 'T',
+        note: fac.note || currentState.reason || '',
+        group: species.group || '',
+        citesAppendix: species.citesAppendix || '',
+      });
+
+      // Aggregate for Sheet 2
+      const key = `${species.vietnameseName}_${species.scientificName}`;
+      if (!speciesTotals[key]) {
+        speciesTotals[key] = {
+          vnName: species.vietnameseName || '',
+          sciName: species.scientificName || '',
+          totalAnimals: 0,
+          facIds: new Set(),
+          facWithCodeIds: new Set(),
+          group: species.group || '',
+          citesAppendix: species.citesAppendix || '',
+        };
+      }
+      speciesTotals[key].totalAnimals += currentState.total;
+      speciesTotals[key].facIds.add(fac.id);
+
+      const isRegistered =
+        fac.registrationCode &&
+        fac.registrationCode.trim() !== '' &&
+        !fac.registrationCode.toLowerCase().includes('chưa') &&
+        !fac.registrationCode.toLowerCase().includes('cập nhật');
+
+      if (isRegistered) {
+        speciesTotals[key].facWithCodeIds.add(fac.id);
+      }
+    });
+  });
+
+  // --- SHEET 1: Tổng hợp cơ sở nuôi ---
+  const sheet1 = workbook.addWorksheet('Tổng hợp cơ sở nuôi');
+  buildSheet1(sheet1, reportData);
+
+  // --- SHEET 2: Tổng hợp các loài ---
+  const sheet2 = workbook.addWorksheet('Tổng hợp các loài');
+  buildSheet2(sheet2, speciesTotals);
+
+  // 3. Export file
+  const buffer = await workbook.xlsx.writeBuffer();
+  const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+  const filename =
+    selectedCommune === 'ALL'
+      ? 'Bao_Cao_Tong_Hop_Toan_Huyen.xlsx'
+      : `Bao_Cao_Tong_Hop_${selectedCommune.replace(/\s+/g, '_')}.xlsx`;
+  saveAs(blob, filename);
 }
 
-/**
- * Generate & Download Excel Template (.xlsx) for easy manual data entry
- */
+function extractVillage(address) {
+  if (!address) return '';
+  const parts = address.split(',');
+  return parts[0].trim();
+}
+
+function setHeaderStyle(cell) {
+  cell.font = { name: 'Times New Roman', size: 12, bold: true };
+  cell.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
+  cell.border = {
+    top: { style: 'thin' },
+    left: { style: 'thin' },
+    bottom: { style: 'thin' },
+    right: { style: 'thin' },
+  };
+}
+
+function setCellStyle(cell, bold = false, align = 'center') {
+  cell.font = { name: 'Times New Roman', size: 12, bold };
+  cell.alignment = { horizontal: align, vertical: 'middle', wrapText: true };
+  cell.border = {
+    top: { style: 'thin' },
+    left: { style: 'thin' },
+    bottom: { style: 'thin' },
+    right: { style: 'thin' },
+  };
+}
+
+function buildSheet1(ws, data) {
+  // Columns width
+  ws.columns = [
+    { width: 6 }, // A: STT
+    { width: 14 }, // B: Xã
+    { width: 14 }, // C: Thôn
+    { width: 25 }, // D: Họ tên
+    { width: 22 }, // E: Tên TV
+    { width: 22 }, // F: Tên KH
+    { width: 10 }, // G: Tổng
+    { width: 10 }, // H: Bố đực
+    { width: 10 }, // I: Mẹ cái
+    { width: 10 }, // J: Khác đực
+    { width: 10 }, // K: Khác cái
+    { width: 10 }, // L: Khác chưa
+    { width: 18 }, // M: Mã số
+    { width: 14 }, // N: Ngày cấp
+    { width: 10 }, // O: Mục đích
+    { width: 22 }, // P: Ghi chú
+  ];
+
+  // Header rows
+  ws.mergeCells('A1:A3');
+  ws.getCell('A1').value = 'STT';
+
+  ws.mergeCells('B1:D1');
+  ws.getCell('B1').value = 'Họ tên và địa chỉ của chủ nuôi';
+  ws.mergeCells('B2:B3');
+  ws.getCell('B2').value = 'Xã';
+  ws.mergeCells('C2:C3');
+  ws.getCell('C2').value = 'Thôn/Buôn';
+  ws.mergeCells('D2:D3');
+  ws.getCell('D2').value = 'Họ tên';
+
+  ws.mergeCells('E1:F1');
+  ws.getCell('E1').value = 'Tên loài nuôi';
+  ws.mergeCells('E2:E3');
+  ws.getCell('E2').value = 'Tên tiếng Việt';
+  ws.mergeCells('F2:F3');
+  ws.getCell('F2').value = 'Tên khoa học';
+
+  ws.mergeCells('G1:G3');
+  ws.getCell('G1').value = 'Tổng';
+
+  ws.mergeCells('H1:I1');
+  ws.getCell('H1').value = 'Bố mẹ';
+  ws.mergeCells('H2:H3');
+  ws.getCell('H2').value = 'Đực';
+  ws.getCell('H2').font = { color: { argb: 'FFFF0000' } };
+  ws.mergeCells('I2:I3');
+  ws.getCell('I2').value = 'Cái';
+  ws.getCell('I2').font = { color: { argb: 'FFFF0000' } };
+
+  ws.mergeCells('J1:L1');
+  ws.getCell('J1').value = 'Các cá thể khác';
+  ws.mergeCells('J2:J3');
+  ws.getCell('J2').value = 'Đực';
+  ws.mergeCells('K2:K3');
+  ws.getCell('K2').value = 'Cái';
+  ws.mergeCells('L2:L3');
+  ws.getCell('L2').value = 'Chưa';
+
+  ws.mergeCells('M1:M3');
+  ws.getCell('M1').value = 'Mã số cơ sở nuôi/ Giấy';
+
+  ws.mergeCells('N1:N3');
+  ws.getCell('N1').value = 'Ngày cấp mã số/ Giấy';
+
+  ws.mergeCells('O1:O3');
+  ws.getCell('O1').value = 'Mục đích nuôi';
+
+  ws.mergeCells('P1:P3');
+  ws.getCell('P1').value = 'Ghi chú';
+
+  // Apply header styles
+  for (let r = 1; r <= 3; r++) {
+    for (let c = 1; c <= 16; c++) {
+      setHeaderStyle(ws.getCell(r, c));
+    }
+  }
+
+  // Row 4 (Indices)
+  const indices = ['1', '2', '3', '4', '5', '6', '7=8+9+10+11+12', '8', '9', '10', '11', '12', '13', '14', '15', '16'];
+  for (let c = 1; c <= 16; c++) {
+    const cell = ws.getCell(4, c);
+    cell.value = indices[c - 1];
+    setCellStyle(cell, false, 'center');
+    cell.font = { name: 'Times New Roman', size: 10, italic: true, underline: true };
+  }
+
+  // Data rows with grouping
+  let currentRow = 5;
+  let currentCommune = '';
+  let communeStartRow = -1;
+  let communeIndex = 1;
+
+  let sumTotal = 0;
+  let sumFather = 0;
+  let sumMother = 0;
+  let sumOMale = 0;
+  let sumOFemale = 0;
+  let sumOUnknown = 0;
+
+  data.forEach((row) => {
+    if (row.commune !== currentCommune) {
+      if (communeStartRow !== -1 && currentRow - 1 > communeStartRow) {
+        ws.mergeCells(`B${communeStartRow}:B${currentRow - 1}`);
+      }
+      currentCommune = row.commune;
+      communeStartRow = currentRow;
+      ws.getCell(`A${currentRow}`).value = communeIndex++;
+    } else {
+      ws.getCell(`A${currentRow}`).value = '';
+    }
+
+    ws.getCell(`B${currentRow}`).value = row.commune;
+    ws.getCell(`C${currentRow}`).value = row.village;
+    ws.getCell(`D${currentRow}`).value = row.ownerName;
+    ws.getCell(`E${currentRow}`).value = row.vnName;
+    ws.getCell(`F${currentRow}`).value = row.sciName;
+    ws.getCell(`F${currentRow}`).font = { name: 'Times New Roman', size: 12, italic: true };
+    ws.getCell(`G${currentRow}`).value = row.total || 0;
+
+    ws.getCell(`H${currentRow}`).value = row.bFather || 0;
+    ws.getCell(`H${currentRow}`).font = { name: 'Times New Roman', size: 12, color: { argb: 'FFFF0000' } };
+
+    ws.getCell(`I${currentRow}`).value = row.bMother || 0;
+    ws.getCell(`I${currentRow}`).font = { name: 'Times New Roman', size: 12, color: { argb: 'FFFF0000' } };
+
+    ws.getCell(`J${currentRow}`).value = row.oMale || 0;
+    ws.getCell(`K${currentRow}`).value = row.oFemale || 0;
+    ws.getCell(`L${currentRow}`).value = row.oUnknown || 0;
+    ws.getCell(`M${currentRow}`).value = row.regCode;
+    ws.getCell(`N${currentRow}`).value = row.regDate;
+    ws.getCell(`O${currentRow}`).value = row.purpose;
+    ws.getCell(`P${currentRow}`).value = row.note;
+
+    sumTotal += row.total || 0;
+    sumFather += row.bFather || 0;
+    sumMother += row.bMother || 0;
+    sumOMale += row.oMale || 0;
+    sumOFemale += row.oFemale || 0;
+    sumOUnknown += row.oUnknown || 0;
+
+    // Apply styles
+    for (let c = 1; c <= 16; c++) {
+      const cell = ws.getCell(currentRow, c);
+      if (!cell.font) {
+        setCellStyle(cell, false, c === 4 || c === 5 || c === 16 ? 'left' : 'center');
+      } else {
+        const existingFont = cell.font;
+        setCellStyle(cell, false, c === 4 || c === 5 || c === 16 ? 'left' : 'center');
+        cell.font = { ...cell.font, ...existingFont };
+      }
+    }
+    currentRow++;
+  });
+
+  if (communeStartRow !== -1 && currentRow - 1 > communeStartRow) {
+    ws.mergeCells(`B${communeStartRow}:B${currentRow - 1}`);
+  }
+
+  // TOTAL ROW FOR SHEET 1
+  ws.mergeCells(`A${currentRow}:F${currentRow}`);
+  ws.getCell(`A${currentRow}`).value = 'Tổng cộng:';
+  ws.getCell(`A${currentRow}`).font = { name: 'Times New Roman', size: 12, bold: true };
+  ws.getCell(`A${currentRow}`).alignment = { horizontal: 'right', vertical: 'middle' };
+
+  ws.getCell(`G${currentRow}`).value = sumTotal;
+  ws.getCell(`H${currentRow}`).value = sumFather;
+  ws.getCell(`I${currentRow}`).value = sumMother;
+  ws.getCell(`J${currentRow}`).value = sumOMale;
+  ws.getCell(`K${currentRow}`).value = sumOFemale;
+  ws.getCell(`L${currentRow}`).value = sumOUnknown;
+
+  for (let c = 1; c <= 16; c++) {
+    const cell = ws.getCell(currentRow, c);
+    cell.font = { name: 'Times New Roman', size: 12, bold: true };
+    cell.border = {
+      top: { style: 'thin' },
+      left: { style: 'thin' },
+      bottom: { style: 'double' },
+      right: { style: 'thin' },
+    };
+    if (c >= 7 && c <= 12) {
+      cell.alignment = { horizontal: 'center', vertical: 'middle' };
+    }
+  }
+}
+
+function buildSheet2(ws, speciesTotals) {
+  ws.columns = [
+    { width: 10 }, // STT
+    { width: 28 }, // Tên VN
+    { width: 28 }, // Tên KH
+    { width: 16 }, // Tổng cá thể
+    { width: 16 }, // Tổng số cơ sở
+    { width: 20 }, // Số cs đăng ký
+    { width: 25 }, // Ghi chú
+  ];
+
+  // Title
+  ws.mergeCells('A1:G2');
+  ws.getCell('A1').value =
+    'Số liệu tổng hợp về các loài động vật nguy cấp, quý, hiếm; động vật thuộc Phụ lục CITES và động vật rừng thông thường nuôi trên địa bàn';
+  ws.getCell('A1').font = { name: 'Times New Roman', size: 14, bold: true };
+  ws.getCell('A1').alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
+
+  // Headers
+  const hRow1 = ws.getRow(3);
+  hRow1.values = ['TT', 'Tên loài nuôi', '', 'Số lượng', '', '', 'Ghi chú'];
+  ws.mergeCells('B3:C3');
+  ws.mergeCells('D3:F3');
+  ws.mergeCells('A3:A4');
+  ws.mergeCells('G3:G4');
+
+  const hRow2 = ws.getRow(4);
+  hRow2.values = [
+    '',
+    'Tên tiếng Việt',
+    'Tên khoa học',
+    'Tổng số cá thể',
+    'Tổng số cơ sở nuôi',
+    'Số cơ sở đã đăng ký mã số',
+    '',
+  ];
+
+  for (let r = 3; r <= 4; r++) {
+    for (let c = 1; c <= 7; c++) {
+      setHeaderStyle(ws.getCell(r, c));
+    }
+  }
+
+  // Indices
+  const indices = ['1', '2', '3', '4', '5=6+7', '6', '7'];
+  for (let c = 1; c <= 7; c++) {
+    const cell = ws.getCell(5, c);
+    cell.value = indices[c - 1];
+    setCellStyle(cell, false, 'center');
+    cell.font = { name: 'Times New Roman', size: 10, italic: true, underline: true };
+  }
+
+  let currentRow = 6;
+
+  // Grouping logic
+  const citesGroup = [];
+  const commonGroup = [];
+
+  Object.values(speciesTotals).forEach((sp) => {
+    const groupStr = (sp.group || '') + ' ' + (sp.citesAppendix || '');
+    const isCites =
+      groupStr.includes('IB') ||
+      groupStr.includes('IIB') ||
+      groupStr.toLowerCase().includes('cites') ||
+      groupStr.toLowerCase().includes('nguy cấp') ||
+      groupStr.toLowerCase().includes('quý');
+
+    if (isCites) {
+      citesGroup.push(sp);
+    } else {
+      commonGroup.push(sp);
+    }
+  });
+
+  const renderGroup = (groupTitle, romanIndex, dataList, defaultNote) => {
+    if (dataList.length === 0) return;
+
+    // Header section row
+    ws.mergeCells(`A${currentRow}:G${currentRow}`);
+    ws.getCell(`A${currentRow}`).value = `${romanIndex}. ${groupTitle}`;
+    ws.getCell(`A${currentRow}`).font = { name: 'Times New Roman', size: 12, bold: true };
+    ws.getCell(`A${currentRow}`).alignment = { horizontal: 'left', vertical: 'middle' };
+    for (let c = 1; c <= 7; c++) {
+      ws.getCell(currentRow, c).border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' },
+      };
+    }
+    currentRow++;
+
+    let sectionAnimals = 0;
+    const sectionFacs = new Set();
+    const sectionRegFacs = new Set();
+
+    dataList.forEach((sp, idx) => {
+      ws.getCell(`A${currentRow}`).value = idx + 1;
+      ws.getCell(`B${currentRow}`).value = sp.vnName;
+      ws.getCell(`C${currentRow}`).value = sp.sciName;
+      ws.getCell(`C${currentRow}`).font = { name: 'Times New Roman', size: 12, italic: true };
+      ws.getCell(`D${currentRow}`).value = sp.totalAnimals;
+      ws.getCell(`E${currentRow}`).value = sp.facIds.size;
+      ws.getCell(`F${currentRow}`).value = sp.facWithCodeIds.size || '---';
+      ws.getCell(`G${currentRow}`).value = defaultNote || sp.group || sp.citesAppendix || '';
+
+      sectionAnimals += sp.totalAnimals;
+      sp.facIds.forEach((id) => sectionFacs.add(id));
+      sp.facWithCodeIds.forEach((id) => sectionRegFacs.add(id));
+
+      for (let c = 1; c <= 7; c++) {
+        const cell = ws.getCell(currentRow, c);
+        if (!cell.font) {
+          setCellStyle(cell, false, 'center');
+        } else {
+          const existingFont = cell.font;
+          setCellStyle(cell, false, 'center');
+          cell.font = { ...cell.font, ...existingFont };
+        }
+      }
+      currentRow++;
+    });
+
+    // Subtotal row for section
+    ws.mergeCells(`A${currentRow}:C${currentRow}`);
+    ws.getCell(`A${currentRow}`).value = `Cộng Nhóm ${romanIndex}:`;
+    ws.getCell(`A${currentRow}`).font = { name: 'Times New Roman', size: 12, bold: true };
+    ws.getCell(`A${currentRow}`).alignment = { horizontal: 'right', vertical: 'middle' };
+
+    ws.getCell(`D${currentRow}`).value = sectionAnimals;
+    ws.getCell(`E${currentRow}`).value = sectionFacs.size;
+    ws.getCell(`F${currentRow}`).value = sectionRegFacs.size;
+
+    for (let c = 1; c <= 7; c++) {
+      const cell = ws.getCell(currentRow, c);
+      cell.font = { name: 'Times New Roman', size: 12, bold: true };
+      cell.border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' },
+      };
+      if (c >= 4 && c <= 6) cell.alignment = { horizontal: 'center', vertical: 'middle' };
+    }
+    currentRow++;
+  };
+
+  renderGroup(
+    'Động vật nguy cấp, quý, hiếm; động vật thuộc Phụ lục CITES',
+    'I',
+    citesGroup,
+    ''
+  );
+  renderGroup('Động vật rừng thông thường', 'II', commonGroup, 'Khai báo kiểm lâm');
+
+  // Grand Total Row
+  ws.mergeCells(`A${currentRow}:C${currentRow}`);
+  ws.getCell(`A${currentRow}`).value = 'Tổng cộng toàn bộ:';
+  ws.getCell(`A${currentRow}`).font = { name: 'Times New Roman', size: 12, bold: true };
+  ws.getCell(`A${currentRow}`).alignment = { horizontal: 'right', vertical: 'middle' };
+
+  const allSpecies = Object.values(speciesTotals);
+  const grandTotalAnimals = allSpecies.reduce((sum, sp) => sum + sp.totalAnimals, 0);
+  const allFacs = new Set();
+  const allRegFacs = new Set();
+  allSpecies.forEach((sp) => {
+    sp.facIds.forEach((id) => allFacs.add(id));
+    sp.facWithCodeIds.forEach((id) => allRegFacs.add(id));
+  });
+
+  ws.getCell(`D${currentRow}`).value = grandTotalAnimals;
+  ws.getCell(`E${currentRow}`).value = allFacs.size;
+  ws.getCell(`F${currentRow}`).value = allRegFacs.size;
+
+  for (let c = 1; c <= 7; c++) {
+    const cell = ws.getCell(currentRow, c);
+    cell.font = { name: 'Times New Roman', size: 12, bold: true };
+    cell.border = {
+      top: { style: 'thin' },
+      left: { style: 'thin' },
+      bottom: { style: 'double' },
+      right: { style: 'thin' },
+    };
+    if (c >= 4 && c <= 6) cell.alignment = { horizontal: 'center', vertical: 'middle' };
+  }
+}
+
+export async function exportFacilityLogbook(facility) {
+  if (!facility) return;
+
+  const workbook = new ExcelJS.Workbook();
+  workbook.creator = 'Phần mềm Quản lý ĐVHD';
+  workbook.created = new Date();
+
+  const facName = facility.facilityName || 'Co_So';
+  const ownerName = facility.ownerName || '';
+  const regCode = facility.registrationCode || 'Chưa cấp';
+
+  (facility.speciesList || []).forEach((species, spIdx) => {
+    const rawSheetName = species.vietnameseName || `Loai_${spIdx + 1}`;
+    const sheetName = rawSheetName.replace(/[:\\/?*\[\]]/g, '').slice(0, 30);
+    const ws = workbook.addWorksheet(sheetName);
+
+    // Title Block
+    ws.mergeCells('A1:O1');
+    ws.getCell('A1').value = 'SỔ THEO DÕI ĐỘNG VẬT HOANG DÃ NUÔI SINH SẢN, NUÔI SINH TRƯỞNG (MẪU II)';
+    ws.getCell('A1').font = { name: 'Times New Roman', size: 14, bold: true };
+    ws.getCell('A1').alignment = { horizontal: 'center', vertical: 'middle' };
+
+    ws.mergeCells('A2:O2');
+    ws.getCell('A2').value = `Cơ sở: ${facName} | Chủ cơ sở: ${ownerName} | Mã số đăng ký: ${regCode}`;
+    ws.getCell('A2').font = { name: 'Times New Roman', size: 11, italic: true };
+    ws.getCell('A2').alignment = { horizontal: 'center', vertical: 'middle' };
+
+    ws.mergeCells('A3:O3');
+    ws.getCell(
+      'A3'
+    ).value = `Loài nuôi: ${species.vietnameseName || ''} (${species.scientificName || ''}) | Nhóm: ${species.group || 'Thông thường'} | Phụ lục CITES: ${species.citesAppendix || 'Không'}`;
+    ws.getCell('A3').font = { name: 'Times New Roman', size: 11, bold: true };
+    ws.getCell('A3').alignment = { horizontal: 'center', vertical: 'middle' };
+
+    // Column widths
+    ws.columns = [
+      { width: 6 }, // A: STT
+      { width: 14 }, // B: Ngày tháng
+      { width: 9 }, // C: Tăng Bố đực
+      { width: 9 }, // D: Tăng Mẹ cái
+      { width: 9 }, // E: Tăng Khác đực
+      { width: 9 }, // F: Tăng Khác cái
+      { width: 9 }, // G: Tăng Khác chưa
+      { width: 9 }, // H: Giảm Bố đực
+      { width: 9 }, // I: Giảm Mẹ cái
+      { width: 9 }, // J: Giảm Khác đực
+      { width: 9 }, // K: Giảm Khác cái
+      { width: 9 }, // L: Giảm Khác chưa
+      { width: 12 }, // M: Tổng cộng
+      { width: 28 }, // N: Lý do / Nguồn gốc
+      { width: 18 }, // O: Người xác nhận
+    ];
+
+    // Header Table
+    ws.mergeCells('A4:A5');
+    ws.getCell('A4').value = 'STT';
+
+    ws.mergeCells('B4:B5');
+    ws.getCell('B4').value = 'Ngày tháng';
+
+    ws.mergeCells('C4:G4');
+    ws.getCell('C4').value = 'Số lượng tăng';
+
+    ws.mergeCells('H4:L4');
+    ws.getCell('H4').value = 'Số lượng giảm';
+
+    ws.mergeCells('M4:M5');
+    ws.getCell('M4').value = 'Tổng cộng';
+
+    ws.mergeCells('N4:N5');
+    ws.getCell('N4').value = 'Lý do biến động / Nguồn gốc';
+
+    ws.mergeCells('O4:O5');
+    ws.getCell('O4').value = 'Người xác nhận';
+
+    const subHeaders = [
+      '',
+      '',
+      'Bố đực',
+      'Mẹ cái',
+      'Khác đực',
+      'Khác cái',
+      'Chưa rõ',
+      'Bố đực',
+      'Mẹ cái',
+      'Khác đực',
+      'Khác cái',
+      'Chưa rõ',
+      '',
+      '',
+      '',
+    ];
+    const row5 = ws.getRow(5);
+    row5.values = subHeaders;
+
+    for (let r = 4; r <= 5; r++) {
+      for (let c = 1; c <= 15; c++) {
+        setHeaderStyle(ws.getCell(r, c));
+      }
+    }
+
+    // Rows calculation
+    const baseline = species.baseline || {};
+    const fluctuations = species.fluctuations || [];
+    const computedRows = computeLogbookTable(baseline, fluctuations);
+
+    let currentRow = 6;
+    computedRows.forEach((r, idx) => {
+      ws.getCell(`A${currentRow}`).value = idx + 1;
+      ws.getCell(`B${currentRow}`).value = r.date || '';
+      ws.getCell(`C${currentRow}`).value = r.incFather || '';
+      ws.getCell(`D${currentRow}`).value = r.incMother || '';
+      ws.getCell(`E${currentRow}`).value = r.incOtherMale || '';
+      ws.getCell(`F${currentRow}`).value = r.incOtherFemale || '';
+      ws.getCell(`G${currentRow}`).value = r.incOtherUnknown || '';
+
+      ws.getCell(`H${currentRow}`).value = r.decFather || '';
+      ws.getCell(`I${currentRow}`).value = r.decMother || '';
+      ws.getCell(`J${currentRow}`).value = r.decOtherMale || '';
+      ws.getCell(`K${currentRow}`).value = r.decOtherFemale || '';
+      ws.getCell(`L${currentRow}`).value = r.decOtherUnknown || '';
+
+      ws.getCell(`M${currentRow}`).value = r.total || 0;
+      ws.getCell(`N${currentRow}`).value = r.reason || (r.isBaseline ? 'Số liệu chốt ban đầu' : '');
+      ws.getCell(`O${currentRow}`).value = r.verifier || '';
+
+      for (let c = 1; c <= 15; c++) {
+        const cell = ws.getCell(currentRow, c);
+        setCellStyle(cell, r.isBaseline, c === 14 ? 'left' : 'center');
+      }
+      currentRow++;
+    });
+  });
+
+  const buffer = await workbook.xlsx.writeBuffer();
+  const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+  const filename = `So_Ghi_Chep_Mau2_${facName.replace(/\s+/g, '_')}.xlsx`;
+  saveAs(blob, filename);
+}
+
+export const exportRegionalSummaryTable = exportDistrictReport;
+
 export function downloadExcelTemplate() {
   const wb = XLSX.utils.book_new();
 
-  // Sheet 1: Thông tin cơ sở
   const facilityRows = [
     ['THÔNG TIN CƠ SỞ NUÔI ĐỘNG VẬT HOANG DÃ'],
     [],
@@ -162,7 +673,6 @@ export function downloadExcelTemplate() {
   wsFacility['!cols'] = [{ wch: 25 }, { wch: 60 }];
   XLSX.utils.book_append_sheet(wb, wsFacility, 'Thong_Tin_Co_So');
 
-  // Sheet 2: Danh sách loài & Hiện trạng ban đầu (Dòng A)
   const speciesRows = [
     [
       'Tên tiếng Việt loài',
@@ -171,237 +681,63 @@ export function downloadExcelTemplate() {
       'Phụ lục CITES (VD: Phụ lục I CITES)',
       'Mục đích (T/Z/C...)',
       'Ngày chốt ban đầu (YYYY-MM-DD)',
-      'Bố (cột 3)',
-      'Mẹ (cột 4)',
-      'Đực (cột 5)',
-      'Cái (cột 6)',
-      'Chưa XĐ (cột 7)',
-      'Ghi chú hiện trạng',
-      'Đơn vị xác nhận'
-    ],
-    [
-      'Trăn đất',
-      'Python bivittatus',
-      'Động vật rừng nguy cấp, quý, hiếm (Nhóm IIB)',
-      'Phụ lục II CITES',
-      'T',
-      '2026-01-01',
-      5,
-      10,
-      4,
-      6,
-      15,
-      'Số lượng vật nuôi hiện có tại trại đầu năm',
-      'Hạt Kiểm lâm sở tại'
+      'Bố đực',
+      'Mẹ cái',
+      'Khác đực',
+      'Khác cái',
+      'Khác chưa rõ',
+      'Ghi chú nguồn gốc',
+      'Người kiểm tra'
     ],
     [
       'Hổ Đông Dương',
-      'Panthera tigris corbetti',
-      'Động vật rừng nguy cấp, quý, hiếm (Nhóm IB)',
+      'Panthera tigris',
+      'Nhóm IB',
       'Phụ lục I CITES',
-      'C',
+      'T',
       '2026-01-01',
-      2,
-      3,
       1,
-      2,
+      1,
       0,
-      'Hiện trạng vật nuôi ghi nhận đầu năm',
-      'Chi cục Kiểm lâm'
+      0,
+      0,
+      'Nhập hợp pháp từ cơ sở X',
+      'Nguyễn Văn Kiểm Lâm'
     ]
   ];
   const wsSpecies = XLSX.utils.aoa_to_sheet(speciesRows);
   wsSpecies['!cols'] = [
-    { wch: 22 }, { wch: 25 }, { wch: 35 }, { wch: 20 },
-    { wch: 12 }, { wch: 18 }, { wch: 10 }, { wch: 10 },
-    { wch: 10 }, { wch: 10 }, { wch: 12 }, { wch: 35 }, { wch: 25 }
+    { wch: 20 }, { wch: 20 }, { wch: 15 }, { wch: 18 }, { wch: 10 },
+    { wch: 15 }, { wch: 8 }, { wch: 8 }, { wch: 8 }, { wch: 8 }, { wch: 10 },
+    { wch: 25 }, { wch: 20 }
   ];
   XLSX.utils.book_append_sheet(wb, wsSpecies, 'Danh_Sach_Loai');
 
-  // Sheet 3: Lịch sử biến động
   const fluctuationRows = [
     [
       'Tên tiếng Việt loài',
       'Ngày biến động (YYYY-MM-DD)',
-      'Giờ (HH:MM)',
-      'Tăng Bố', 'Tăng Mẹ', 'Tăng Đực', 'Tăng Cái', 'Tăng Chưa XĐ',
-      'Giảm Bố', 'Giảm Mẹ', 'Giảm Đực', 'Giảm Cái', 'Giảm Chưa XĐ',
-      'Nguyên nhân biến động',
-      'Xác nhận kiểm lâm / Thủy sản'
-    ],
-    [
-      'Trăn đất',
-      '2026-02-20',
-      '09:00',
-      0, 0, 0, 0, 30,
-      0, 0, 0, 0, 0,
-      'Sinh sản 30 trăn con lứa F1',
-      'Hạt Kiểm lâm xác nhận'
-    ],
-    [
-      'Trăn đất',
-      '2026-04-15',
-      '15:30',
-      0, 0, 0, 0, 0,
-      0, 0, 0, 0, 10,
-      'Xuất bán 10 trăn con theo hợp đồng số 12',
-      'Đã xác nhận'
+      'Giờ biến động (HH:MM)',
+      'Tăng - Bố đực',
+      'Tăng - Mẹ cái',
+      'Tăng - Khác đực',
+      'Tăng - Khác cái',
+      'Tăng - Khác chưa',
+      'Giảm - Bố đực',
+      'Giảm - Mẹ cái',
+      'Giảm - Khác đực',
+      'Giảm - Khác cái',
+      'Giảm - Khác chưa',
+      'Lý do biến động (Sinh sản / Xuất bán / Chết...)',
+      'Người xác nhận'
     ]
   ];
   const wsFluctuation = XLSX.utils.aoa_to_sheet(fluctuationRows);
-  wsFluctuation['!cols'] = [
-    { wch: 22 }, { wch: 18 }, { wch: 10 },
-    { wch: 8 }, { wch: 8 }, { wch: 8 }, { wch: 8 }, { wch: 12 },
-    { wch: 8 }, { wch: 8 }, { wch: 8 }, { wch: 8 }, { wch: 12 },
-    { wch: 40 }, { wch: 25 }
-  ];
   XLSX.utils.book_append_sheet(wb, wsFluctuation, 'Lich_Su_Bien_Dong');
 
   XLSX.writeFile(wb, 'Mau_Nhap_Du_Lieu_Dong_Vat_Hoang_Da.xlsx');
 }
 
-/**
- * Export Bảng 1.2 (Số liệu tổng hợp loài Nguy cấp/Quý hiếm/CITES & Thông thường) to Excel (.xlsx)
- * Formatted exactly according to official Government report layout
- */
-export function exportCitesTableToExcel(facilitiesList, communeFilter = 'ALL') {
-  const speciesMap = {};
-
-  facilitiesList.forEach((fac) => {
-    if (communeFilter !== 'ALL' && fac.commune !== communeFilter) return;
-
-    fac.speciesList.forEach((sp) => {
-      const name = sp.vietnameseName;
-      const b = sp.baseline || {};
-      const totalAnimals =
-        (Number(b.father) || 0) +
-        (Number(b.mother) || 0) +
-        (Number(b.otherMale) || 0) +
-        (Number(b.otherFemale) || 0) +
-        (Number(b.otherUnknown) || 0);
-
-      const isRegistered =
-        fac.registrationCode &&
-        fac.registrationCode.trim() !== '' &&
-        !fac.registrationCode.toLowerCase().includes('chưa') &&
-        !fac.registrationCode.toLowerCase().includes('cập nhật');
-
-      // Check if Endangered / Quý hiếm / CITES
-      const groupStr = (sp.group || '') + ' ' + (sp.citesAppendix || '');
-      const isCites =
-        groupStr.includes('IB') ||
-        groupStr.includes('IIB') ||
-        groupStr.toLowerCase().includes('cites') ||
-        groupStr.toLowerCase().includes('nguy cấp');
-
-      if (!speciesMap[name]) {
-        speciesMap[name] = {
-          vietnameseName: name,
-          scientificName: sp.scientificName || '',
-          isCites,
-          totalAnimals: 0,
-          facilitiesSet: new Set(),
-          registeredFacilitiesSet: new Set(),
-        };
-      }
-
-      speciesMap[name].totalAnimals += totalAnimals;
-      speciesMap[name].facilitiesSet.add(fac.id);
-      if (isRegistered) {
-        speciesMap[name].registeredFacilitiesSet.add(fac.id);
-      }
-    });
-  });
-
-  const citesSpecies = Object.values(speciesMap).filter((s) => s.isCites);
-  const commonSpecies = Object.values(speciesMap).filter((s) => !s.isCites);
-
-  const sheetData = [];
-  sheetData.push([
-    '1.2. Số liệu tổng hợp về các loài động vật nguy cấp, quý, hiếm; động vật thuộc Phụ lục CITES và động vật rừng thông thường nuôi trên địa bàn'
-  ]);
-  sheetData.push([]);
-
-  // Headers (Row 3-4)
-  sheetData.push([
-    'TT',
-    'Tên loài nuôi', '',
-    'Số lượng', '', '',
-    'Ghi chú'
-  ]);
-
-  sheetData.push([
-    '',
-    'Tên tiếng Việt',
-    'Tên khoa học',
-    'Tổng số cá thể',
-    'Tổng số cơ sở nuôi',
-    'Số cơ sở đã đăng ký mã số',
-    ''
-  ]);
-
-  sheetData.push([
-    '1', '2', '3', '4', '5=6+7', '6', '7'
-  ]);
-
-  // Section I: Động vật nguy cấp, quý, hiếm; động vật thuộc Phụ lục CITES
-  sheetData.push(['I', 'Động vật nguy cấp, quý, hiếm; động vật thuộc Phụ lục CITES', '', '', '', '', '']);
-
-  let grandTotalAnimals = 0;
-  let sttI = 1;
-  citesSpecies.forEach((s) => {
-    grandTotalAnimals += s.totalAnimals;
-    sheetData.push([
-      sttI++,
-      s.vietnameseName,
-      s.scientificName,
-      s.totalAnimals,
-      s.facilitiesSet.size,
-      s.registeredFacilitiesSet.size || '',
-      ''
-    ]);
-  });
-
-  // Section II: Động vật rừng thông thường
-  sheetData.push(['II', 'Động vật rừng thông thường', '', '', '', '', '']);
-
-  let sttII = 1;
-  commonSpecies.forEach((s) => {
-    grandTotalAnimals += s.totalAnimals;
-    sheetData.push([
-      sttII++,
-      s.vietnameseName,
-      s.scientificName,
-      s.totalAnimals,
-      s.facilitiesSet.size,
-      s.registeredFacilitiesSet.size || '',
-      ''
-    ]);
-  });
-
-  // Grand Total
-  sheetData.push(['', 'Tổng', '', grandTotalAnimals, '', '', '']);
-
-  const ws = XLSX.utils.aoa_to_sheet(sheetData);
-  ws['!cols'] = [
-    { wch: 8 },  // TT
-    { wch: 25 }, // Tên tiếng Việt
-    { wch: 30 }, // Tên khoa học
-    { wch: 18 }, // Tổng số cá thể
-    { wch: 20 }, // Tổng số cơ sở nuôi
-    { wch: 25 }, // Số cơ sở đã đăng ký mã số
-    { wch: 15 }, // Ghi chú
-  ];
-
-  const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, 'Tong_Hop_CITES_Thong_Thuong');
-  XLSX.writeFile(wb, `Bang_1.2_Tong_Hop_CITES_Thong_Thuong_${new Date().toISOString().slice(0, 10)}.xlsx`);
-}
-
-
-/**
- * Parse uploaded Excel file (.xlsx / .xls) into app data format
- */
 export async function parseExcelImport(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -422,7 +758,6 @@ export async function parseExcelImport(file) {
         const speciesList = [];
         const sheetNames = workbook.SheetNames;
 
-        // Check if there is a 'Thong_Tin_Co_So' or facility sheet
         const facilitySheetName = sheetNames.find(
           (name) => name.toLowerCase().includes('co_so') || name.toLowerCase().includes('facility')
         );
@@ -443,7 +778,6 @@ export async function parseExcelImport(file) {
           });
         }
 
-        // Check if there is a 'Danh_Sach_Loai' sheet
         const speciesSheetName = sheetNames.find(
           (name) => name.toLowerCase().includes('danh_sach_loai') || name.toLowerCase().includes('loai') || name.toLowerCase().includes('species')
         );
@@ -451,7 +785,6 @@ export async function parseExcelImport(file) {
         if (speciesSheetName) {
           const ws = workbook.Sheets[speciesSheetName];
           const rows = XLSX.utils.sheet_to_json(ws, { header: 1 });
-          // Skip header row if contains 'Tên tiếng Việt' or similar
           const dataRows = rows.filter((r, idx) => idx > 0 && r[0] && String(r[0]).trim() !== '' && !String(r[0]).includes('Tên tiếng Việt'));
 
           dataRows.forEach((r, index) => {
@@ -463,7 +796,6 @@ export async function parseExcelImport(file) {
             const citesAppendix = String(r[3] || '').trim();
             const purposeCode = String(r[4] || 'T').trim().toUpperCase();
 
-            // Date parsing safely
             let baselineDate = r[5];
             if (baselineDate instanceof Date) {
               baselineDate = baselineDate.toISOString().slice(0, 10);
@@ -501,7 +833,6 @@ export async function parseExcelImport(file) {
           });
         }
 
-        // Check if there is a 'Lich_Su_Bien_Dong' sheet
         const fluctuationSheetName = sheetNames.find(
           (name) => name.toLowerCase().includes('bien_dong') || name.toLowerCase().includes('fluctuation')
         );
@@ -564,12 +895,10 @@ export async function parseExcelImport(file) {
           });
         }
 
-        // Fallback: If uploaded file is a single 19-column exported official Excel sheet
         if (speciesList.length === 0 && sheetNames.length > 0) {
           const firstWs = workbook.Sheets[sheetNames[0]];
           const rows = XLSX.utils.sheet_to_json(firstWs, { header: 1 });
 
-          // Try to extract facility info from rows 2-5
           rows.forEach((r) => {
             if (!r) return;
             const lineText = r.join(' ');
@@ -591,7 +920,6 @@ export async function parseExcelImport(file) {
             }
           });
 
-          // Look for Baseline row A
           let vietnameseName = 'Loài mới nhập từ Excel';
           let scientificName = 'Species name';
 
@@ -606,7 +934,6 @@ export async function parseExcelImport(file) {
             }
           });
 
-          // Find baseline row A
           const rowA = rows.find((r) => r && String(r[0] || '').trim().toUpperCase() === 'A');
 
           if (rowA) {
@@ -626,7 +953,6 @@ export async function parseExcelImport(file) {
             };
 
             const fluctuations = [];
-            // Fluctuations are rows B, C, D...
             const fluctuationRows = rows.filter(
               (r) => r && /^[B-Z]$/i.test(String(r[0] || '').trim())
             );
@@ -678,4 +1004,3 @@ export async function parseExcelImport(file) {
     reader.readAsArrayBuffer(file);
   });
 }
-

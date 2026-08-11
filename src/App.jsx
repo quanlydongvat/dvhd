@@ -5,8 +5,7 @@ import TableView from './components/TableView';
 import SummaryView from './components/SummaryView';
 import AnalyticsView from './components/AnalyticsView';
 import MapView from './components/MapView';
-
-
+import AdminDashboard from './components/AdminDashboard';
 import DesktopAppHeader from './components/DesktopAppHeader';
 import DesktopShortcutsModal from './components/DesktopShortcutsModal';
 import MobileBottomNav from './components/MobileBottomNav';
@@ -20,11 +19,20 @@ import PrintView from './components/PrintView';
 import PWAInstallPrompt from './components/PWAInstallPrompt';
 import { computeLogbookTable } from './utils/calculations';
 import { loadAppData, saveAppData, clearAppData, resetToDemoData, REAL_FACILITIES_DATA, EMPTY_FACILITY_INFO } from './utils/storage';
-import { exportToExcel } from './utils/exportExcel';
-import { syncAppDataToCloud } from './firebase';
+import { exportDistrictReport, exportFacilityLogbook } from './utils/exportExcel';
+import { syncAppDataToCloud, loadAppDataFromCloud } from './firebase';
+import ExportModal from './components/ExportModal';
 
+
+import { auth, db } from './firebase';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
+import Login from './components/Login';
 
 export default function App() {
+  const [currentUser, setCurrentUser] = useState(null);
+  const [isAuthChecking, setIsAuthChecking] = useState(true);
+  
   const [appState, setAppState] = useState(() => loadAppData());
   const [currentView, setCurrentView] = useState('HOME'); // Default to HOME dashboard
   const [targetFacilityId, setTargetFacilityId] = useState(null);
@@ -51,6 +59,48 @@ export default function App() {
     } catch (e) {}
   }, [uiSettings]);
 
+  // Auth Listener
+  useEffect(() => {
+    import('./firebase').then(({ db }) => {
+      const unsubscribe = onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          try {
+            const userDoc = await getDoc(doc(db, 'users', user.uid));
+            let role = 'FACILITY';
+            let facilityId = null;
+            const cleanUsername = user.email ? user.email.split('@')[0] : 'user';
+
+            if (userDoc.exists()) {
+              const data = userDoc.data();
+              role = data.role || 'FACILITY';
+              facilityId = data.facilityId || null;
+            } else {
+              if (cleanUsername === 'admin') role = 'ADMIN';
+            }
+
+            setCurrentUser({
+              uid: user.uid,
+              email: user.email,
+              username: cleanUsername,
+              role,
+              facilityId,
+            });
+          } catch (err) {
+            console.error("Error fetching user role", err);
+          }
+        } else {
+          setCurrentUser(null);
+        }
+        setIsAuthChecking(false);
+      });
+      return () => unsubscribe();
+    });
+  }, []);
+
+  const handleLogout = async () => {
+    await signOut(auth);
+    setCurrentUser(null);
+  };
 
   const { facilitiesList = REAL_FACILITIES_DATA, activeFacilityId, facilityInfo, speciesList = [], activeSpeciesId } = appState;
 
@@ -59,7 +109,7 @@ export default function App() {
   facilitiesList.forEach((fac) => {
     fac.speciesList?.forEach((sp) => {
       const b = sp.baseline || {};
-      grandTotalAnimals += (b.father || 0) + (b.mother || 0) + (b.otherMale || 0) + (b.otherFemale || 0) + (b.otherUnknown || 0);
+      grandTotalAnimals += (Number(b.father) || 0) + (Number(b.mother) || 0) + (Number(b.otherMale) || 0) + (Number(b.otherFemale) || 0) + (Number(b.otherUnknown) || 0);
     });
   });
 
@@ -77,14 +127,78 @@ export default function App() {
   const [editingSpecies, setEditingSpecies] = useState(null);
 
   const [isFacilityModalOpen, setIsFacilityModalOpen] = useState(false);
+  const [editingFacility, setEditingFacility] = useState(null);
   const [isBackupModalOpen, setIsBackupModalOpen] = useState(false);
   const [isPrintViewOpen, setIsPrintViewOpen] = useState(false);
+  const [skipNextSync, setSkipNextSync] = useState(false);
+  const isInitialMount = React.useRef(true);
 
   // Sync state to LocalStorage and Firebase Cloud Firestore on change
   useEffect(() => {
     saveAppData(appState);
+    if (skipNextSync) {
+      setSkipNextSync(false);
+      return;
+    }
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
     syncAppDataToCloud(appState);
   }, [appState]);
+
+  // Load data from Firebase Cloud after authentication
+  useEffect(() => {
+    if (!currentUser) return;
+    let cancelled = false;
+    
+    loadAppDataFromCloud(currentUser).then((cloudData) => {
+      if (cancelled || !cloudData) return;
+
+      const cloudFacilities = cloudData.facilitiesList;
+      if (!cloudFacilities || !Array.isArray(cloudFacilities) || cloudFacilities.length === 0) return;
+
+      const localFacilities = appState.facilitiesList || [];
+
+      // If user is Facility, we force the loaded facility
+      // If user is Admin, we merge/take from cloud if it's larger
+      if (currentUser.role === 'FACILITY' || cloudFacilities.length > localFacilities.length) {
+        console.log(`[Firebase Restore] Loaded ${cloudFacilities.length} facilities for role ${currentUser.role}`);
+
+        let activeFacId = currentUser.facilityId || cloudData.activeFacilityId || cloudFacilities[0]?.id;
+        // If the facility list doesn't have the activeFacId, pick the first one
+        if (!cloudFacilities.find(f => f.id === activeFacId)) {
+           activeFacId = cloudFacilities[0]?.id;
+        }
+        
+        const activeFac = cloudFacilities.find((f) => f.id === activeFacId) || cloudFacilities[0];
+
+        setSkipNextSync(true);
+        setAppState({
+          facilitiesList: cloudFacilities,
+          activeFacilityId: activeFacId,
+          facilityInfo: activeFac ? {
+            id: activeFac.id,
+            facilityName: activeFac.facilityName,
+            ownerName: activeFac.ownerName,
+            registrationCode: activeFac.registrationCode,
+            registrationDate: activeFac.registrationDate,
+            commune: activeFac.commune || 'xã Hòa Sơn',
+            address: activeFac.address,
+            phone: activeFac.phone,
+            purposeCode: activeFac.purposeCode,
+            note: activeFac.note,
+            lat: activeFac.lat || '',
+            lng: activeFac.lng || '',
+          } : appState.facilityInfo,
+          speciesList: activeFac?.speciesList || [],
+          activeSpeciesId: cloudData.activeSpeciesId || activeFac?.speciesList?.[0]?.id || null,
+        });
+      }
+    });
+
+    return () => { cancelled = true; };
+  }, [currentUser]); 
 
 
   // Global Desktop Keyboard Shortcuts Listener
@@ -177,41 +291,131 @@ export default function App() {
     const demo = resetToDemoData();
     setAppState(demo);
   };
+  // --- APPROVAL WORKFLOW FOR ADMIN ---
+  const handleApproveRequest = async (req) => {
+    // Merge pending fluctuation into the facility
+    const targetFac = facilitiesList.find(f => f.id === req.facilityId);
+    if (!targetFac) {
+      alert("Không tìm thấy cơ sở này trong dữ liệu.");
+      return;
+    }
+    const targetSpList = targetFac.speciesList || [];
+    const targetSp = targetSpList.find(s => s.id === req.speciesId);
+    if (!targetSp) {
+      alert("Không tìm thấy loài này trong cơ sở.");
+      return;
+    }
+
+    const { id, status, facilityId, speciesId, facilityName, speciesName, submittedBy, ...cleanFormData } = req;
+    
+    let updatedFluctuations = [...(targetSp.fluctuations || [])];
+    updatedFluctuations.push({
+      id: 'fluc_' + Date.now(),
+      ...cleanFormData,
+      createdAt: req.createdAt || Date.now(),
+    });
+
+    const updatedSpeciesList = targetSpList.map((sp) =>
+      sp.id === req.speciesId ? { ...sp, fluctuations: updatedFluctuations } : sp
+    );
+
+    const updatedFacilitiesList = facilitiesList.map((fac) =>
+      fac.id === req.facilityId ? { ...fac, speciesList: updatedSpeciesList } : fac
+    );
+
+    // Update local state, this will trigger syncAppDataToCloud in useEffect
+    setAppState((prev) => ({
+      ...prev,
+      facilitiesList: updatedFacilitiesList
+    }));
+  };
 
   // Handler: Save Fluctuation (Add or Edit)
-  const handleSaveFluctuation = (formData) => {
-    if (!activeSpecies) return;
+  const handleSaveFluctuation = async (formData) => {
+    const { targetFacilityId, targetSpeciesId, ...cleanFormData } = formData;
 
-    let updatedFluctuations = [...(activeSpecies.fluctuations || [])];
+    const targetFacId = targetFacilityId || activeFacilityId;
 
+    const targetFac = facilitiesList.find((f) => f.id === targetFacId) || facilitiesList[0];
+    if (!targetFac) return;
+
+    const targetSpList = targetFac.speciesList || [];
+    const targetSpId = targetSpeciesId || activeSpeciesId;
+    const targetSp = targetSpList.find((s) => s.id === targetSpId) || targetSpList[0];
+    if (!targetSp) return;
+
+    let updatedFluctuations = [...(targetSp.fluctuations || [])];
+
+    if (currentUser && currentUser.role === 'FACILITY') {
+      // Yêu cầu chờ duyệt (Approval Workflow)
+      const newItem = {
+        ...cleanFormData,
+        createdAt: Date.now(),
+        status: 'PENDING',
+        facilityId: targetFacId,
+        speciesId: targetSpId,
+        facilityName: targetFac.facilityName,
+        speciesName: targetSp.vietnameseName,
+        submittedBy: currentUser.username
+      };
+      
+      try {
+        const { collection, addDoc } = await import('firebase/firestore');
+        await addDoc(collection(db, 'fluctuation_requests'), newItem);
+        alert('Đã gửi báo cáo thành công! Vui lòng chờ Hạt Kiểm Lâm duyệt.');
+        setIsFluctuationModalOpen(false);
+        setEditingFluctuation(null);
+      } catch (err) {
+        console.error(err);
+        alert('Lỗi khi gửi yêu cầu: ' + err.message);
+      }
+      return; // Dừng lại, không cập nhật state local ngay
+    }
+
+    // Luồng cũ (dành cho Admin)
     if (editingFluctuation) {
       // Edit existing
       updatedFluctuations = updatedFluctuations.map((item) =>
-        item.id === editingFluctuation.id ? { ...item, ...formData } : item
+        item.id === editingFluctuation.id ? { ...item, ...cleanFormData } : item
       );
     } else {
       // Add new
       const newItem = {
         id: 'fluc_' + Date.now(),
-        ...formData,
+        ...cleanFormData,
         createdAt: Date.now(),
       };
       updatedFluctuations.push(newItem);
     }
 
-    const updatedSpeciesList = speciesList.map((sp) =>
-      sp.id === activeSpecies.id ? { ...sp, fluctuations: updatedFluctuations } : sp
+    const updatedSpeciesList = targetSpList.map((sp) =>
+      sp.id === targetSp.id ? { ...sp, fluctuations: updatedFluctuations } : sp
     );
 
-    // Also update facilitiesList entry
     const updatedFacilitiesList = facilitiesList.map((fac) =>
-      fac.id === activeFacilityId ? { ...fac, speciesList: updatedSpeciesList } : fac
+      fac.id === targetFacId ? { ...fac, speciesList: updatedSpeciesList } : fac
     );
 
     setAppState((prev) => ({
       ...prev,
       facilitiesList: updatedFacilitiesList,
+      activeFacilityId: targetFacId,
+      facilityInfo: {
+        id: targetFac.id,
+        facilityName: targetFac.facilityName,
+        ownerName: targetFac.ownerName,
+        registrationCode: targetFac.registrationCode,
+        registrationDate: targetFac.registrationDate,
+        commune: targetFac.commune,
+        address: targetFac.address,
+        phone: targetFac.phone,
+        purposeCode: targetFac.purposeCode,
+        note: targetFac.note,
+        lat: targetFac.lat,
+        lng: targetFac.lng,
+      },
       speciesList: updatedSpeciesList,
+      activeSpeciesId: targetSp.id,
     }));
     setEditingFluctuation(null);
   };
@@ -325,17 +529,87 @@ export default function App() {
     setEditingSpecies(null);
   };
 
-  // Handler: Save Facility Info
-  const handleSaveFacility = (formData) => {
-    const updatedFacilitiesList = facilitiesList.map((fac) =>
-      fac.id === activeFacilityId ? { ...fac, ...formData } : fac
-    );
+  // Handler: Open Add Facility Modal
+  const handleOpenAddFacility = () => {
+    setEditingFacility(null);
+    setIsFacilityModalOpen(true);
+  };
 
-    setAppState((prev) => ({
-      ...prev,
-      facilitiesList: updatedFacilitiesList,
-      facilityInfo: formData,
-    }));
+  // Handler: Open Edit Facility Modal
+  const handleOpenEditFacility = () => {
+    setEditingFacility(facilityInfo);
+    setIsFacilityModalOpen(true);
+  };
+
+  // Handler: Save Facility Info (Add new or Edit existing)
+  const handleSaveFacility = (formData) => {
+    if (editingFacility && editingFacility.id) {
+      // Edit existing facility
+      const updatedFacilitiesList = facilitiesList.map((fac) =>
+        fac.id === editingFacility.id ? { ...fac, ...formData } : fac
+      );
+
+      const isCurrentActive = activeFacilityId === editingFacility.id;
+      const updatedFacilityInfo = isCurrentActive ? { ...facilityInfo, ...formData } : facilityInfo;
+
+      setAppState((prev) => ({
+        ...prev,
+        facilitiesList: updatedFacilitiesList,
+        facilityInfo: updatedFacilityInfo,
+      }));
+    } else {
+      // Create new facility
+      const newFacilityId = 'fac_' + Date.now();
+      const defaultSpeciesList = [
+        {
+          id: 'sp_' + Date.now() + '_1',
+          vietnameseName: formData.initialSpeciesName || 'Cầy vòi Hương',
+          scientificName: formData.initialScientificName || 'Paradoxurus hermaphroditus',
+          group: formData.initialGroup || 'Động vật rừng nguy cấp, quý, hiếm (Nhóm IIB)',
+          citesAppendix: formData.initialCites || 'Phụ lục II CITES',
+          purposeCode: formData.purposeCode || 'T',
+          baseline: {
+            date: formData.registrationDate || new Date().toISOString().split('T')[0],
+            father: Number(formData.father) || 0,
+            mother: Number(formData.mother) || 0,
+            otherMale: Number(formData.otherMale) || 0,
+            otherFemale: Number(formData.otherFemale) || 0,
+            otherUnknown: Number(formData.otherUnknown) || 0,
+            note: 'Hiện trạng đăng ký ban đầu',
+            verifier: 'Hạt Kiểm lâm Huyện Krông Bông',
+          },
+          fluctuations: [],
+        },
+      ];
+
+      const newFacilityObj = {
+        id: newFacilityId,
+        facilityName: formData.facilityName || 'Cơ sở nuôi mới',
+        ownerName: formData.ownerName || 'Chủ cơ sở',
+        registrationCode: formData.registrationCode || 'Chưa có mã số',
+        registrationDate: formData.registrationDate || new Date().toISOString().split('T')[0],
+        commune: formData.commune || 'xã Hòa Sơn',
+        address: formData.address || '',
+        phone: formData.phone || '',
+        purposeCode: formData.purposeCode || 'T',
+        note: formData.note || '',
+        lat: formData.lat || '',
+        lng: formData.lng || '',
+        speciesList: defaultSpeciesList,
+      };
+
+      const updatedFacilitiesList = [newFacilityObj, ...facilitiesList];
+
+      setAppState((prev) => ({
+        ...prev,
+        facilitiesList: updatedFacilitiesList,
+        activeFacilityId: newFacilityId,
+        facilityInfo: newFacilityObj,
+        speciesList: defaultSpeciesList,
+        activeSpeciesId: defaultSpeciesList[0].id,
+      }));
+    }
+    setEditingFacility(null);
   };
 
   // Handler: Import Data (JSON or Excel)
@@ -372,18 +646,51 @@ export default function App() {
     });
   };
 
+  const [isExportModalOpen, setIsExportModalOpen] = useState(false);
+
   // Export Excel
-  const handleExportExcel = () => {
-    if (!activeSpecies) {
-      alert('Vui lòng chọn ít nhất 01 loài nuôi để xuất Excel.');
-      return;
+  const handleExportExcelClick = () => {
+    if (currentUser?.role === 'ADMIN') {
+      // Chỉ Admin mới có quyền mở modal xuất báo cáo tổng hợp mẫu (Toàn huyện / 5 Xã)
+      setIsExportModalOpen(true);
+    } else {
+      // Cơ sở nuôi chỉ xuất sổ ghi chép Mẫu II của chính cơ sở đó
+      const userFac =
+        facilitiesList.find(
+          (f) => (currentUser?.assignedFacilityIds || []).includes(f.id) || f.ownerName === currentUser?.username
+        ) ||
+        facilitiesList.find((f) => f.id === activeFacilityId) ||
+        facilitiesList[0];
+
+      if (userFac) {
+        exportFacilityLogbook(userFac);
+      } else {
+        alert('Không tìm thấy dữ liệu cơ sở nuôi của bạn.');
+      }
     }
-    exportToExcel(activeSpecies, rows, facilityInfo);
   };
+
+  const handleExportExecute = async (selectedCommune) => {
+    await exportDistrictReport(facilitiesList, selectedCommune);
+  };
+
+  if (isAuthChecking) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-slate-600 font-medium animate-pulse">Đang kiểm tra hệ thống...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!currentUser) {
+    return <Login onLoginSuccess={setCurrentUser} />;
+  }
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 flex flex-col font-sans antialiased selection:bg-emerald-500 selection:text-white pb-16 lg:pb-0">
-      {/* Desktop App Header Bar - Hidden per user request */}
       {/* <DesktopAppHeader
         onToggleFullscreen={handleToggleFullscreen}
         isFullscreen={isFullscreen}
@@ -405,11 +712,14 @@ export default function App() {
               setEditingFluctuation(null);
               setIsFluctuationModalOpen(true);
             }}
-            onExportExcel={handleExportExcel}
+            onOpenAddFacility={handleOpenAddFacility}
+            onExportExcel={handleExportExcelClick}
             onOpenPrintView={() => setIsPrintViewOpen(true)}
             onOpenBackupModal={() => setIsBackupModalOpen(true)}
             onOpenUISettings={() => setIsUISettingsModalOpen(true)}
             activeSpecies={activeSpecies}
+            currentUser={currentUser}
+            onLogout={handleLogout}
           />
         </div>
 
@@ -432,34 +742,44 @@ export default function App() {
               setEditingSpecies(activeSpecies);
               setIsSpeciesModalOpen(true);
             }}
-            onOpenEditFacility={() => setIsFacilityModalOpen(true)}
-            onExportExcel={handleExportExcel}
+            onOpenAddFacility={handleOpenAddFacility}
+            onOpenEditFacility={handleOpenEditFacility}
+            onExportExcel={handleExportExcelClick}
             onOpenPrintView={() => setIsPrintViewOpen(true)}
             onOpenBackupModal={() => setIsBackupModalOpen(true)}
             onOpenUISettings={() => setIsUISettingsModalOpen(true)}
             currentView={currentView}
             onChangeView={setCurrentView}
+            currentUser={currentUser}
           />
 
-          {/* Main Content Area */}
-          <main className="flex-1 max-w-[1720px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-5">
-            {/* Show Image Banner ONLY on Home view */}
-            {currentView === 'HOME' && (
-              <div className="mb-6 animate-in fade-in slide-in-from-top-4 duration-500">
-                <img src="./images/banner.jpg" alt="Wildlife Banner" className="w-full rounded-2xl shadow-xl object-cover object-center max-h-[350px] border-4 border-emerald-900/10" />
-              </div>
-            )}
+            {/* Main Content Area */}
+            <main className="flex-1 max-w-[1720px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-5">
+              {/* Show Image Banner ONLY on Home view */}
+              {currentView === 'HOME' && (
+                <div className="mb-6 animate-in fade-in slide-in-from-top-4 duration-500">
+                  <img
+                    src="./images/banner.jpg"
+                    alt="Wildlife Farm Banner"
+                    className="w-full rounded-2xl shadow-xl object-cover object-center max-h-[350px] border-4 border-emerald-900/10"
+                  />
+                </div>
+              )}
 
-            {currentView === 'HOME' ? (
-              <AnalyticsView facilitiesList={facilitiesList} />
+              {currentView === 'ADMIN_USERS' && currentUser?.role === 'ADMIN' ? (
+                <AdminDashboard facilitiesList={facilitiesList} onApproveRequest={handleApproveRequest} />
+              ) : currentView === 'HOME' ? (
+                <AnalyticsView facilitiesList={facilitiesList} />
             ) : currentView === 'SUMMARY' ? (
               <SummaryView
+                currentUser={currentUser}
                 facilitiesList={facilitiesList}
                 activeFacilityId={activeFacilityId}
                 onSelectFacility={(facId) => {
                   handleSelectFacility(facId);
                   setCurrentView('LOGBOOK');
                 }}
+                onOpenAddFacility={handleOpenAddFacility}
                 onOpenMapFacility={(facId) => {
                   setTargetFacilityId(facId);
                   setCurrentView('MAP');
@@ -509,7 +829,8 @@ export default function App() {
                   setEditingSpecies(null);
                   setIsSpeciesModalOpen(true);
                 }}
-                onOpenEditFacility={() => setIsFacilityModalOpen(true)}
+                onOpenAddFacility={handleOpenAddFacility}
+                onOpenEditFacility={handleOpenEditFacility}
                 onOpenBackupModal={() => setIsBackupModalOpen(true)}
               />
             )}
@@ -541,7 +862,14 @@ export default function App() {
         facilityCount={facilitiesList.length}
       />
 
-      {/* Modals */}
+      {isExportModalOpen && (
+        <ExportModal
+          onClose={() => setIsExportModalOpen(false)}
+          onExport={handleExportExecute}
+        />
+      )}
+
+      {/* Settings Modals */}
       <UISettingsModal
         isOpen={isUISettingsModalOpen}
         onClose={() => setIsUISettingsModalOpen(false)}
@@ -561,6 +889,8 @@ export default function App() {
         onClose={() => setIsFluctuationModalOpen(false)}
         onSave={handleSaveFluctuation}
         editData={editingFluctuation}
+        facilitiesList={facilitiesList}
+        activeFacilityId={activeFacilityId}
         species={activeSpecies}
         lastRowState={rows[rows.length - 1]}
       />
@@ -576,7 +906,7 @@ export default function App() {
         isOpen={isFacilityModalOpen}
         onClose={() => setIsFacilityModalOpen(false)}
         onSave={handleSaveFacility}
-        facilityInfo={facilityInfo}
+        editFacility={editingFacility}
       />
 
       <ExportImportModal

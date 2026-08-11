@@ -2,9 +2,11 @@ import React, { useState, useMemo } from 'react';
 import { Building2, Search, Filter, ArrowRight, Download, Feather, ShieldCheck, MapPin, FileText, Table, ChevronDown, ChevronRight, CheckSquare, Square, Eye, EyeOff, Layers, Check } from 'lucide-react';
 import * as XLSX from 'xlsx';
 import { isBirdSpecies, getFacilityCategory } from '../utils/calculations';
+import { exportRegionalSummaryTable } from '../utils/exportExcel';
 import CitesSummaryTable from './CitesSummaryTable';
 
 export default function SummaryView({
+  currentUser,
   facilitiesList = [],
   activeFacilityId,
   onSelectFacility,
@@ -167,7 +169,7 @@ export default function SummaryView({
 
       fac.speciesList.forEach((sp) => {
         const b = sp.baseline || {};
-        communeTotalAnimals += (b.father || 0) + (b.mother || 0) + (b.otherMale || 0) + (b.otherFemale || 0) + (b.otherUnknown || 0);
+        communeTotalAnimals += (Number(b.father) || 0) + (Number(b.mother) || 0) + (Number(b.otherMale) || 0) + (Number(b.otherFemale) || 0) + (Number(b.otherUnknown) || 0);
       });
     });
 
@@ -180,70 +182,8 @@ export default function SummaryView({
     };
   });
 
-  // Export summary to Excel (grouped by Commune & Category)
   const handleExportSummaryExcel = () => {
-    const sheetData = [];
-    sheetData.push(['BẢNG TỔNG HỢP DANH SÁCH CÁC CƠ SỞ NUÔI ĐỘNG VẬT HOANG DÃ THEO XÃ & NHÓM LOÀI']);
-    sheetData.push(['Huyện Krông Bông - Tỉnh Đắk Lắk']);
-    sheetData.push([]);
-
-    sheetData.push([
-      'STT',
-      'Xã',
-      'Phân nhóm loài',
-      'Thôn/Buôn/TDP',
-      'Họ tên chủ nuôi',
-      'Tên tiếng Việt',
-      'Tên khoa học',
-      'Tổng số',
-      'Bố (Đực)',
-      'Mẹ (Cái)',
-      'Đực khác',
-      'Cái khác',
-      'Chưa XĐ',
-      'Mã số CS BTĐDSH',
-      'Ngày cấp mã số',
-      'Mục đích nuôi',
-      'Ghi chú'
-    ]);
-
-    let stt = 1;
-    groupedByCommune.forEach((communeGroup) => {
-      communeGroup.facilities.forEach((fac) => {
-        const facCat = getFacilityCategory(fac);
-        const catLabel = facCat === 'BIRD' ? 'Lớp Chim' : 'Lớp Thú';
-
-        fac.speciesList.forEach((sp) => {
-          const b = sp.baseline || {};
-          const total = (b.father || 0) + (b.mother || 0) + (b.otherMale || 0) + (b.otherFemale || 0) + (b.otherUnknown || 0);
-
-          sheetData.push([
-            stt++,
-            fac.commune || '',
-            catLabel,
-            fac.address ? fac.address.split(',')[0] : '',
-            fac.ownerName,
-            sp.vietnameseName,
-            sp.scientificName,
-            total,
-            b.father || 0,
-            b.mother || 0,
-            b.otherMale || 0,
-            b.otherFemale || 0,
-            b.otherUnknown || 0,
-            fac.registrationCode,
-            fac.registrationDate || '',
-            sp.purposeCode || fac.purposeCode || 'T',
-            fac.note || ''
-          ]);
-        });
-      });
-    });
-
-    const ws = XLSX.utils.aoa_to_sheet(sheetData);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Tong_Hop_Co_So_Theo_Xa');
-    XLSX.writeFile(wb, `Bang_Tong_Hop_Co_So_Theo_Xa_${new Date().toISOString().slice(0, 10)}.xlsx`);
+    exportRegionalSummaryTable(facilitiesList);
   };
 
   return (
@@ -276,10 +216,20 @@ export default function SummaryView({
           </button>
         </div>
 
-        <div className="text-xs text-slate-500 font-medium px-2">
-          {summarySubTab === 'TABLE_1_1'
-            ? '📌 Hiển thị bảng chi tiết danh sách cơ sở nuôi nhóm theo 5 xã'
-            : '📌 Hiển thị mẫu tổng hợp loài nguy cấp/CITES & thông thường theo chuẩn Thông tư số 85/2025/TT-BNNMT'}
+        <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
+          <span className="text-xs text-slate-500 font-medium hidden md:inline">
+            {summarySubTab === 'TABLE_1_1'
+              ? '📌 Hiển thị bảng chi tiết danh sách cơ sở nuôi nhóm theo 5 xã'
+              : '📌 Hiển thị mẫu tổng hợp loài nguy cấp/CITES & thông thường theo chuẩn TT85'}
+          </span>
+          <button
+            type="button"
+            onClick={handleExportSummaryExcel}
+            className="flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-extrabold text-white bg-emerald-600 hover:bg-emerald-700 shadow-md transition-all cursor-pointer"
+          >
+            <Download className="w-4 h-4 text-white" />
+            <span>Xuất Báo Cáo Excel (TT85)</span>
+          </button>
         </div>
       </div>
 
@@ -306,7 +256,7 @@ export default function SummaryView({
 
             f.speciesList.forEach((sp) => {
               const b = sp.baseline || {};
-              cTotalAnimals += (b.father || 0) + (b.mother || 0) + (b.otherMale || 0) + (b.otherFemale || 0) + (b.otherUnknown || 0);
+              cTotalAnimals += (Number(b.father) || 0) + (Number(b.mother) || 0) + (Number(b.otherMale) || 0) + (Number(b.otherFemale) || 0) + (Number(b.otherUnknown) || 0);
             });
           });
 
@@ -450,13 +400,26 @@ export default function SummaryView({
           </button>
         </div>
 
-        <button
-          onClick={handleExportSummaryExcel}
-          className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-md hover:scale-[1.02] active:scale-[0.98] w-full md:w-auto justify-center"
-        >
-          <Download className="w-4 h-4" />
-          <span>Xuất Bảng Excel 5 Xã</span>
-        </button>
+        <div className="flex items-center gap-2 w-full md:w-auto">
+          {(!currentUser || currentUser.role === 'ADMIN') && (
+            <>
+              <button
+                onClick={onOpenAddFacility}
+                className="flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white px-4 py-2 rounded-xl text-xs font-extrabold transition-all shadow-md hover:scale-[1.02] active:scale-[0.98] w-full md:w-auto justify-center cursor-pointer"
+              >
+                <Building2 className="w-4 h-4 text-emerald-100" />
+                <span>+ Thêm Cơ Sở Mới</span>
+              </button>
+              <button
+                onClick={handleExportSummaryExcel}
+                className="flex items-center gap-2 bg-slate-800 hover:bg-slate-900 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-md hover:scale-[1.02] active:scale-[0.98] w-full md:w-auto justify-center cursor-pointer"
+              >
+                <Download className="w-4 h-4" />
+                <span>Xuất Báo Cáo Toàn Huyện (Bảng 1.1)</span>
+              </button>
+            </>
+          )}
+        </div>
       </div>
 
       {/* Interactive Accordion Controls & Facility Picker Bar */}

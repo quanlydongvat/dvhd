@@ -7,6 +7,9 @@ import {
   LineElement,
   BarElement,
   ArcElement,
+  BarController,
+  LineController,
+  DoughnutController,
   Title,
   Tooltip,
   Legend,
@@ -25,6 +28,9 @@ ChartJS.register(
   LineElement,
   BarElement,
   ArcElement,
+  BarController,
+  LineController,
+  DoughnutController,
   Title,
   Tooltip,
   Legend,
@@ -363,25 +369,28 @@ export default function AnalyticsView({ facilitiesList = [] }) {
   return (
     <div className="space-y-4 sm:space-y-6 animate-in fade-in duration-300">
       {/* Analytics Banner Header */}
-      <div className="bg-gradient-to-r from-emerald-600 via-teal-600 to-indigo-700 rounded-2xl p-4 sm:p-6 shadow-lg text-white flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-emerald-200">
-            <Activity className="w-4 h-4 text-emerald-200" />
+      <div className="bg-gradient-to-br from-emerald-950 via-teal-900 to-slate-900 rounded-3xl p-4 sm:p-6 shadow-xl border border-emerald-500/20 text-white flex flex-col lg:flex-row lg:items-center justify-between gap-4 relative overflow-hidden">
+        <div className="absolute -right-10 -bottom-10 w-48 h-48 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none" />
+        
+        <div className="relative z-10">
+          <div className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-emerald-400">
+            <Activity className="w-4 h-4 text-amber-400" />
             <span>Biểu Đồ Trực Quan & Phân Tích Tăng Trưởng</span>
           </div>
-          <h2 className="text-xl sm:text-2xl font-extrabold text-white mt-1">
+          <h2 className="text-xl sm:text-2xl font-black text-white mt-1 tracking-tight">
             Báo Cáo Thống Kê Sự Phát Triển Đàn Vật Nuôi
           </h2>
-          <p className="text-xs text-emerald-100 mt-1">
+          <p className="text-xs text-emerald-200/90 font-medium mt-1">
             Theo dõi tốc độ sinh sản, tăng giảm số lượng cá thể theo Từng tháng, 6 tháng (H1/H2) và Cả năm 2026
           </p>
         </div>
 
         <button
+          type="button"
           onClick={handleExportAnalyticsExcel}
-          className="flex items-center justify-center gap-2 bg-white text-emerald-800 hover:bg-emerald-50 px-4 py-2.5 rounded-xl text-xs font-extrabold transition-all shadow-md active:scale-95 w-full sm:w-auto"
+          className="flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 px-4 py-3 rounded-2xl text-xs font-black transition-all shadow-md active:scale-95 w-full sm:w-auto relative z-10 cursor-pointer"
         >
-          <Download className="w-4 h-4 text-emerald-600" />
+          <Download className="w-4 h-4 text-slate-950 stroke-[2.5]" />
           <span>Xuất Báo Cáo Thống Kê Excel</span>
         </button>
       </div>
