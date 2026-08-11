@@ -1,5 +1,5 @@
 import React from 'react';
-import { Settings, Edit3, FolderPlus, Table, LayoutList, BarChart3, MapPin, Building2, Download, Printer, Database, PlusCircle } from 'lucide-react';
+import { Settings, Edit3, FolderPlus, Table, LayoutList, BarChart3, MapPin, Building2, Download, Printer, Database, PlusCircle, Bell } from 'lucide-react';
 import { PURPOSE_CODES } from '../utils/calculations';
 
 export default function Header({
@@ -21,6 +21,8 @@ export default function Header({
   currentView = 'SUMMARY', // 'LOGBOOK' | 'SUMMARY' | 'HOME' | 'MAP'
   onChangeView,
   currentUser,
+  pendingRequestsCount = 0,
+  onOpenPendingModal,
 }) {
   const COMMUNES = ['xã Hòa Sơn', 'xã Yang Mao', 'xã Cư Pui', 'Xã Krông Bông', 'Xã Dang Kang'];
 
@@ -81,21 +83,47 @@ export default function Header({
       <div className="max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-8 py-3">
         {/* Top View Header Title & Quick View Badges for Mobile */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-slate-100">
-          <div className="flex items-center gap-2.5">
-            <div className="p-2 bg-emerald-50 border border-emerald-200/80 rounded-lg text-emerald-700 shadow-2xs">
-              <IconComponent className={`w-5 h-5 ${activeViewObj.color}`} />
+          <div className="flex items-center justify-between w-full sm:w-auto gap-3">
+            <div className="flex items-center gap-2.5">
+              <div className="p-2 bg-emerald-50 border border-emerald-200/80 rounded-lg text-emerald-700 shadow-2xs">
+                <IconComponent className={`w-5 h-5 ${activeViewObj.color}`} />
+              </div>
+              <div>
+                <h2 className="text-base sm:text-lg font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
+                  <span>{activeViewObj.title}</span>
+                  <span className="text-[10px] bg-emerald-100/90 text-emerald-800 border border-emerald-200 font-bold px-2 py-0.5 rounded-full">
+                    TT 85/2025/TT-BNNMT
+                  </span>
+                </h2>
+                <p className="text-xs text-slate-500 mt-0.5 font-medium">
+                  Ứng dụng tự động tính toán hiện trạng & biến động tăng giảm đàn theo Thông tư số 85/2025/TT-BNNMT
+                </p>
+              </div>
             </div>
-            <div>
-              <h2 className="text-base sm:text-lg font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
-                <span>{activeViewObj.title}</span>
-                <span className="text-[10px] bg-emerald-100/90 text-emerald-800 border border-emerald-200 font-bold px-2 py-0.5 rounded-full">
-                  TT 85/2025/TT-BNNMT
+
+            {/* Notification Bell for Pending Approvals */}
+            {(currentUser?.role === 'ADMIN' || currentUser?.role === 'STAFF') && (
+              <button
+                type="button"
+                onClick={onOpenPendingModal}
+                className={`relative flex items-center gap-2 px-3 py-1.5 rounded-2xl text-xs font-black transition-all cursor-pointer border ${
+                  pendingRequestsCount > 0
+                    ? 'bg-gradient-to-r from-amber-500 to-orange-600 text-white border-amber-400 shadow-md shadow-amber-500/20 animate-pulse hover:scale-105'
+                    : 'bg-slate-100 text-slate-700 hover:bg-slate-200 border-slate-200'
+                }`}
+                title="Xem danh sách biến động đang chờ duyệt"
+              >
+                <Bell className={`w-4 h-4 ${pendingRequestsCount > 0 ? 'animate-bounce text-white' : 'text-slate-600'}`} />
+                <span className="hidden md:inline">Biến động chờ duyệt</span>
+                <span className={`px-2 py-0.5 rounded-full text-[11px] font-extrabold ${
+                  pendingRequestsCount > 0
+                    ? 'bg-white text-slate-950 shadow-xs'
+                    : 'bg-slate-200 text-slate-700'
+                }`}>
+                  {pendingRequestsCount}
                 </span>
-              </h2>
-              <p className="text-xs text-slate-500 mt-0.5 font-medium">
-                Ứng dụng tự động tính toán hiện trạng & biến động tăng giảm đàn theo Thông tư số 85/2025/TT-BNNMT
-              </p>
-            </div>
+              </button>
+            )}
           </div>
 
           {/* Quick Tools & View Bar for Mobile Devices */}

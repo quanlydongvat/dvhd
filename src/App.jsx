@@ -22,6 +22,7 @@ import { loadAppData, saveAppData, clearAppData, resetToDemoData, REAL_FACILITIE
 import { exportDistrictReport, exportFacilityLogbook } from './utils/exportExcel';
 import { syncAppDataToCloud, loadAppDataFromCloud } from './firebase';
 import ExportModal from './components/ExportModal';
+import PendingApprovalsModal from './components/PendingApprovalsModal';
 
 
 import { auth, db } from './firebase';
@@ -298,6 +299,36 @@ export default function App() {
     const demo = resetToDemoData();
     setAppState(demo);
   };
+  // Pending Fluctuation Requests State & Handlers
+  const [pendingRequests, setPendingRequests] = useState([]);
+  const [isPendingModalOpen, setIsPendingModalOpen] = useState(false);
+
+  const fetchPendingRequests = async () => {
+    try {
+      const { collection, getDocs } = await import('firebase/firestore');
+      const querySnapshot = await getDocs(collection(db, 'fluctuation_requests'));
+      const reqs = [];
+      querySnapshot.forEach((docSnap) => {
+        const data = docSnap.data();
+        if (data.status === 'PENDING') {
+          reqs.push({ id: docSnap.id, ...data });
+        }
+      });
+      reqs.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+      setPendingRequests(reqs);
+    } catch (err) {
+      console.error("Error fetching pending requests:", err);
+    }
+  };
+
+  useEffect(() => {
+    if (currentUser?.role === 'ADMIN' || currentUser?.role === 'STAFF') {
+      fetchPendingRequests();
+      const interval = setInterval(fetchPendingRequests, 15000);
+      return () => clearInterval(interval);
+    }
+  }, [currentUser]);
+
   // --- APPROVAL WORKFLOW FOR ADMIN ---
   const handleApproveRequest = async (req) => {
     // Merge pending fluctuation into the facility
@@ -335,6 +366,32 @@ export default function App() {
       ...prev,
       facilitiesList: updatedFacilitiesList
     }));
+  };
+
+  const handleApprovePending = async (req) => {
+    try {
+      const { doc, setDoc } = await import('firebase/firestore');
+      await setDoc(doc(db, 'fluctuation_requests', req.id), { status: 'APPROVED' }, { merge: true });
+      await handleApproveRequest(req);
+      alert(`Đã duyệt thành công biến động của cơ sở ${req.facilityName || ''}!`);
+      fetchPendingRequests();
+    } catch (err) {
+      console.error(err);
+      alert("Lỗi khi duyệt yêu cầu: " + err.message);
+    }
+  };
+
+  const handleRejectPending = async (req) => {
+    if (!window.confirm(`Bạn có chắc chắn muốn TỪ CHỐI yêu cầu biến động của ${req.facilityName || 'cơ sở'}?`)) return;
+    try {
+      const { doc, setDoc } = await import('firebase/firestore');
+      await setDoc(doc(db, 'fluctuation_requests', req.id), { status: 'REJECTED' }, { merge: true });
+      alert("Đã từ chối yêu cầu biến động.");
+      fetchPendingRequests();
+    } catch (err) {
+      console.error(err);
+      alert("Lỗi khi từ chối yêu cầu: " + err.message);
+    }
   };
 
   // Handler: Save Fluctuation (Add or Edit)
@@ -758,6 +815,8 @@ export default function App() {
             currentView={currentView}
             onChangeView={setCurrentView}
             currentUser={currentUser}
+            pendingRequestsCount={pendingRequests.length}
+            onOpenPendingModal={() => setIsPendingModalOpen(true)}
           />
 
             {/* Main Content Area */}
@@ -880,6 +939,14 @@ export default function App() {
           onExport={handleExportExecute}
         />
       )}
+
+      <PendingApprovalsModal
+        isOpen={isPendingModalOpen}
+        onClose={() => setIsPendingModalOpen(false)}
+        pendingRequests={pendingRequests}
+        onApprove={handleApprovePending}
+        onReject={handleRejectPending}
+      />
 
       {/* Settings Modals */}
       <UISettingsModal
