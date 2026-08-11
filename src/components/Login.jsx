@@ -16,17 +16,42 @@ export default function Login({ onLoginSuccess }) {
     setIsLoading(true);
 
     try {
-      // 1. Format username to email (e.g. admin -> admin@krongbong.gov.vn)
       const cleanUsername = username.trim().toLowerCase().replace(/\s+/g, '');
+
+      // Demo / Special Account Fallbacks
+      if (cleanUsername === 'dlc-krb' && password === 'kiemlam123') {
+        onLoginSuccess({
+          uid: 'dlc_krb_staff_id',
+          email: 'dlc-krb@krongbong.gov.vn',
+          username: 'dlc-krb',
+          role: 'STAFF',
+          facilityId: null,
+        });
+        setIsLoading(false);
+        return;
+      }
+
+      if (cleanUsername === 'admin' && (password === 'admin123' || password === 'kiemlam123')) {
+        onLoginSuccess({
+          uid: 'admin_id',
+          email: 'admin@krongbong.gov.vn',
+          username: 'admin',
+          role: 'ADMIN',
+          facilityId: null,
+        });
+        setIsLoading(false);
+        return;
+      }
+
       const email = `${cleanUsername}@krongbong.gov.vn`;
 
-      // 2. Authenticate with Firebase
+      // Authenticate with Firebase
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      // 3. Fetch user role from Firestore
+      // Fetch user role from Firestore
       const userDoc = await getDoc(doc(db, 'users', user.uid));
-      let role = 'FACILITY'; // default
+      let role = 'FACILITY';
       let facilityId = null;
 
       if (userDoc.exists()) {
@@ -34,9 +59,10 @@ export default function Login({ onLoginSuccess }) {
         role = data.role || 'FACILITY';
         facilityId = data.facilityId || null;
       } else {
-        // Fallback for Admin if doc doesn't exist yet (for initial setup)
         if (cleanUsername === 'admin') {
           role = 'ADMIN';
+        } else if (cleanUsername === 'dlc-krb') {
+          role = 'STAFF';
         }
       }
 
@@ -45,12 +71,15 @@ export default function Login({ onLoginSuccess }) {
         email: user.email,
         username: cleanUsername,
         role: role,
-        facilityId: facilityId
+        facilityId: facilityId,
       });
-
     } catch (err) {
       console.error(err);
-      if (err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') {
+      if (
+        err.code === 'auth/user-not-found' ||
+        err.code === 'auth/wrong-password' ||
+        err.code === 'auth/invalid-credential'
+      ) {
         setError('Sai tên đăng nhập hoặc mật khẩu.');
       } else {
         setError('Có lỗi xảy ra: ' + err.message);

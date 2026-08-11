@@ -76,6 +76,7 @@ export default function App() {
               facilityId = data.facilityId || null;
             } else {
               if (cleanUsername === 'admin') role = 'ADMIN';
+              if (cleanUsername === 'dlc-krb') role = 'STAFF';
             }
 
             setCurrentUser({
@@ -650,8 +651,8 @@ export default function App() {
 
   // Export Excel
   const handleExportExcelClick = () => {
-    if (currentUser?.role === 'ADMIN') {
-      // Chỉ Admin mới có quyền mở modal xuất báo cáo tổng hợp mẫu (Toàn huyện / 5 Xã)
+    if (currentUser?.role === 'ADMIN' || currentUser?.role === 'STAFF') {
+      // Admin và Cán bộ (dlc-krb) có quyền mở modal xuất báo cáo tổng hợp mẫu (Toàn huyện / 5 Xã)
       setIsExportModalOpen(true);
     } else {
       // Cơ sở nuôi chỉ xuất sổ ghi chép Mẫu II của chính cơ sở đó

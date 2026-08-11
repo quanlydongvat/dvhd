@@ -196,24 +196,26 @@ export default function LeftSidebar({
               <div className="flex items-center gap-3">
                 <Download className="w-4 h-4 text-emerald-600" />
                 <span>
-                  {currentUser?.role === 'ADMIN' ? 'Xuất Báo Cáo (Toàn huyện)' : 'Xuất Sổ Ghi Chép (Cơ sở)'}
+                  {currentUser?.role === 'ADMIN' || currentUser?.role === 'STAFF'
+                    ? 'Xuất Báo Cáo (Toàn huyện)'
+                    : 'Xuất Sổ Ghi Chép (Cơ sở)'}
                 </span>
               </div>
             </button>
           </div>
         </div>
 
-        {/* GROUP 3: DỮ LIỆU & CÀI ĐẶT */}
-        <div>
-          <div className="px-2 mb-2.5">
-            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
-              Dữ liệu & Cài đặt
-            </span>
-          </div>
+        {/* GROUP 3: DỮ LIỆU & CÀI ĐẶT (Chỉ dành riêng cho Admin tối cao) */}
+        {currentUser?.role === 'ADMIN' && (
+          <div>
+            <div className="px-2 mb-2.5">
+              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                Dữ liệu & Cài đặt
+              </span>
+            </div>
 
-          <div className="space-y-1.5">
-            {/* Quản Trị Tài Khoản (Chỉ Admin) */}
-            {currentUser?.role === 'ADMIN' && (
+            <div className="space-y-1.5">
+              {/* Quản Trị Tài Khoản (Chỉ Admin) */}
               <button
                 type="button"
                 onClick={() => onChangeView('ADMIN_USERS')}
@@ -229,35 +231,35 @@ export default function LeftSidebar({
                 </div>
                 <ChevronRight className={`w-3.5 h-3.5 ${isNavActive('ADMIN_USERS') ? 'text-white' : 'text-slate-400'}`} />
               </button>
-            )}
 
-            {/* Nhập / Xuất dữ liệu */}
-            <button
-              type="button"
-              onClick={onOpenBackupModal}
-              className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-extrabold text-slate-700 hover:text-emerald-950 bg-slate-50/80 hover:bg-emerald-50/80 border border-slate-200/80 hover:border-emerald-200/80 transition-all cursor-pointer"
-            >
-              <div className="flex items-center gap-3">
-                <Database className="w-4 h-4 text-emerald-600" />
-                <span>Nhập / Xuất dữ liệu</span>
-              </div>
-              <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
-            </button>
+              {/* Nhập / Xuất dữ liệu */}
+              <button
+                type="button"
+                onClick={onOpenBackupModal}
+                className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-extrabold text-slate-700 hover:text-emerald-950 bg-slate-50/80 hover:bg-emerald-50/80 border border-slate-200/80 hover:border-emerald-200/80 transition-all cursor-pointer"
+              >
+                <div className="flex items-center gap-3">
+                  <Database className="w-4 h-4 text-emerald-600" />
+                  <span>Nhập / Xuất dữ liệu</span>
+                </div>
+                <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+              </button>
 
-            {/* Cài đặt giao diện */}
-            <button
-              type="button"
-              onClick={onOpenUISettings}
-              className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-extrabold text-slate-700 hover:text-emerald-950 bg-slate-50/80 hover:bg-emerald-50/80 border border-slate-200/80 hover:border-emerald-200/80 transition-all cursor-pointer"
-            >
-              <div className="flex items-center gap-3">
-                <Settings className="w-4 h-4 text-emerald-600" />
-                <span>Cài đặt giao diện</span>
-              </div>
-              <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
-            </button>
+              {/* Cài đặt giao diện */}
+              <button
+                type="button"
+                onClick={onOpenUISettings}
+                className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-extrabold text-slate-700 hover:text-emerald-950 bg-slate-50/80 hover:bg-emerald-50/80 border border-slate-200/80 hover:border-emerald-200/80 transition-all cursor-pointer"
+              >
+                <div className="flex items-center gap-3">
+                  <Settings className="w-4 h-4 text-emerald-600" />
+                  <span>Cài đặt giao diện</span>
+                </div>
+                <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+              </button>
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* Sidebar Footer Status & Logged-in User */}
@@ -266,14 +268,22 @@ export default function LeftSidebar({
           <div className="bg-white p-2.5 rounded-2xl border border-slate-200/90 shadow-2xs flex items-center justify-between gap-2">
             <div className="flex items-center gap-2.5 overflow-hidden">
               <div className={`w-8 h-8 rounded-xl font-black flex items-center justify-center text-xs flex-shrink-0 ${
-                currentUser.role === 'ADMIN' ? 'bg-gradient-to-br from-emerald-600 to-teal-800 text-white' : 'bg-emerald-600 text-white'
+                currentUser.role === 'ADMIN'
+                  ? 'bg-gradient-to-br from-emerald-600 to-teal-800 text-white'
+                  : currentUser.role === 'STAFF'
+                  ? 'bg-gradient-to-br from-teal-600 to-emerald-700 text-white'
+                  : 'bg-emerald-600 text-white'
               }`}>
                 {currentUser.username?.[0]?.toUpperCase() || 'U'}
               </div>
               <div className="overflow-hidden leading-tight">
                 <div className="font-extrabold text-slate-900 truncate text-xs">{currentUser.username}</div>
                 <div className="text-[10px] font-extrabold text-emerald-700 mt-0.5">
-                  {currentUser.role === 'ADMIN' ? '🛡️ Hạt Kiểm Lâm (Admin)' : '🏠 Cơ sở nuôi'}
+                  {currentUser.role === 'ADMIN'
+                    ? '🛡️ Hạt Kiểm Lâm (Admin)'
+                    : currentUser.role === 'STAFF'
+                    ? '🌲 Cán Bộ Lâm Nghiệp (dlc-krb)'
+                    : '🏠 Cơ sở nuôi'}
                 </div>
               </div>
             </div>
