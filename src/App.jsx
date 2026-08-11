@@ -98,6 +98,12 @@ export default function App() {
     });
   }, []);
 
+  useEffect(() => {
+    if (currentUser?.role === 'FACILITY') {
+      setCurrentView('LOGBOOK');
+    }
+  }, [currentUser]);
+
   const handleLogout = async () => {
     await signOut(auth);
     setCurrentUser(null);
@@ -864,6 +870,8 @@ export default function App() {
           setIsFluctuationModalOpen(true);
         }}
         facilityCount={facilitiesList.length}
+        currentUser={currentUser}
+        onExportExcel={handleExportExcelClick}
       />
 
       {isExportModalOpen && (

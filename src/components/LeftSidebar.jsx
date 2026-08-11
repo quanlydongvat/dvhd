@@ -77,79 +77,103 @@ export default function LeftSidebar({
           </div>
 
           <nav className="space-y-1.5">
-            {/* 1. Trang Chủ & Thống Kê (Uu tien tren cung) */}
-            <button
-              type="button"
-              onClick={() => onChangeView('HOME')}
-              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-extrabold transition-all cursor-pointer ${
-                isNavActive('HOME')
-                  ? 'bg-gradient-to-r from-emerald-600 to-teal-700 text-white shadow-md shadow-emerald-600/20 translate-x-1'
-                  : 'text-slate-700 hover:bg-emerald-50/80 hover:text-emerald-950 border border-transparent hover:border-emerald-200/60'
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <BarChart3 className={`w-4 h-4 ${isNavActive('HOME') ? 'text-white' : 'text-emerald-600'}`} />
-                <span>Trang Chủ & Thống Kê</span>
-              </div>
-              <span className={`text-[9px] font-black px-1.5 py-0.5 rounded-full uppercase tracking-wider ${
-                isNavActive('HOME') ? 'bg-amber-400 text-slate-950' : 'bg-amber-100 text-amber-900 border border-amber-200'
-              }`}>
-                HOT
-              </span>
-            </button>
+            {/* If FACILITY account, show ONLY Sổ Mẫu II (Chi Tiết của cơ sở) */}
+            {currentUser?.role === 'FACILITY' ? (
+              <button
+                type="button"
+                onClick={() => onChangeView('LOGBOOK')}
+                className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-extrabold bg-gradient-to-r from-emerald-600 to-teal-700 text-white shadow-md shadow-emerald-600/20 translate-x-1 cursor-pointer"
+              >
+                <div className="flex items-center gap-3">
+                  <Table className="w-4 h-4 text-white" />
+                  <span>Sổ Ghi Chép Mẫu II</span>
+                </div>
+              </button>
+            ) : (
+              <>
+                {/* 1. Trang Chủ & Thống Kê (Uu tien tren cung) */}
+                <button
+                  type="button"
+                  onClick={() => onChangeView('HOME')}
+                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-extrabold transition-all cursor-pointer ${
+                    isNavActive('HOME')
+                      ? 'bg-gradient-to-r from-emerald-600 to-teal-700 text-white shadow-md shadow-emerald-600/20 translate-x-1'
+                      : 'text-slate-700 hover:bg-emerald-50/80 hover:text-emerald-950 border border-transparent hover:border-emerald-200/60'
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <BarChart3 className={`w-4 h-4 ${isNavActive('HOME') ? 'text-white' : 'text-emerald-600'}`} />
+                    <span>Trang Chủ & Thống Kê</span>
+                  </div>
+                  <span
+                    className={`text-[9px] font-black px-1.5 py-0.5 rounded-full uppercase tracking-wider ${
+                      isNavActive('HOME')
+                        ? 'bg-amber-400 text-slate-950'
+                        : 'bg-amber-100 text-amber-900 border border-amber-200'
+                    }`}
+                  >
+                    HOT
+                  </span>
+                </button>
 
-            {/* 2. Bảng Tổng Hợp */}
-            <button
-              type="button"
-              onClick={() => onChangeView('SUMMARY')}
-              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-extrabold transition-all cursor-pointer ${
-                isNavActive('SUMMARY')
-                  ? 'bg-gradient-to-r from-emerald-600 to-teal-700 text-white shadow-md shadow-emerald-600/20 translate-x-1'
-                  : 'text-slate-700 hover:bg-emerald-50/80 hover:text-emerald-950 border border-transparent hover:border-emerald-200/60'
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <LayoutList className={`w-4 h-4 ${isNavActive('SUMMARY') ? 'text-white' : 'text-emerald-600'}`} />
-                <span>Bảng Tổng Hợp</span>
-              </div>
-              <span className={`text-[10px] font-black px-2 py-0.5 rounded-full transition-colors ${
-                isNavActive('SUMMARY') ? 'bg-white/20 text-white' : 'bg-emerald-100 text-emerald-900 border border-emerald-200/80'
-              }`}>
-                {facilitiesCount} CS
-              </span>
-            </button>
+                {/* 2. Bảng Tổng Hợp */}
+                <button
+                  type="button"
+                  onClick={() => onChangeView('SUMMARY')}
+                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-extrabold transition-all cursor-pointer ${
+                    isNavActive('SUMMARY')
+                      ? 'bg-gradient-to-r from-emerald-600 to-teal-700 text-white shadow-md shadow-emerald-600/20 translate-x-1'
+                      : 'text-slate-700 hover:bg-emerald-50/80 hover:text-emerald-950 border border-transparent hover:border-emerald-200/60'
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <LayoutList className={`w-4 h-4 ${isNavActive('SUMMARY') ? 'text-white' : 'text-emerald-600'}`} />
+                    <span>Bảng Tổng Hợp</span>
+                  </div>
+                  <span
+                    className={`text-[10px] font-black px-2 py-0.5 rounded-full transition-colors ${
+                      isNavActive('SUMMARY')
+                        ? 'bg-white/20 text-white'
+                        : 'bg-emerald-100 text-emerald-900 border border-emerald-200/80'
+                    }`}
+                  >
+                    {facilitiesCount} CS
+                  </span>
+                </button>
 
-            {/* 3. Sổ Mẫu II (Chi Tiết) */}
-            <button
-              type="button"
-              onClick={() => onChangeView('LOGBOOK')}
-              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-extrabold transition-all cursor-pointer ${
-                isNavActive('LOGBOOK')
-                  ? 'bg-gradient-to-r from-emerald-600 to-teal-700 text-white shadow-md shadow-emerald-600/20 translate-x-1'
-                  : 'text-slate-700 hover:bg-emerald-50/80 hover:text-emerald-950 border border-transparent hover:border-emerald-200/60'
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <Table className={`w-4 h-4 ${isNavActive('LOGBOOK') ? 'text-white' : 'text-emerald-600'}`} />
-                <span>Sổ Mẫu II (Chi Tiết)</span>
-              </div>
-            </button>
+                {/* 3. Sổ Mẫu II (Chi Tiết) */}
+                <button
+                  type="button"
+                  onClick={() => onChangeView('LOGBOOK')}
+                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-extrabold transition-all cursor-pointer ${
+                    isNavActive('LOGBOOK')
+                      ? 'bg-gradient-to-r from-emerald-600 to-teal-700 text-white shadow-md shadow-emerald-600/20 translate-x-1'
+                      : 'text-slate-700 hover:bg-emerald-50/80 hover:text-emerald-950 border border-transparent hover:border-emerald-200/60'
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <Table className={`w-4 h-4 ${isNavActive('LOGBOOK') ? 'text-white' : 'text-emerald-600'}`} />
+                    <span>Sổ Mẫu II (Chi Tiết)</span>
+                  </div>
+                </button>
 
-            {/* 4. Bản Đồ GIS */}
-            <button
-              type="button"
-              onClick={() => onChangeView('MAP')}
-              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-extrabold transition-all cursor-pointer ${
-                isNavActive('MAP')
-                  ? 'bg-gradient-to-r from-emerald-600 to-teal-700 text-white shadow-md shadow-emerald-600/20 translate-x-1'
-                  : 'text-slate-700 hover:bg-emerald-50/80 hover:text-emerald-950 border border-transparent hover:border-emerald-200/60'
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <MapPin className={`w-4 h-4 ${isNavActive('MAP') ? 'text-white' : 'text-emerald-600'}`} />
-                <span>Bản Đồ GIS (Google Hybrid)</span>
-              </div>
-            </button>
+                {/* 4. Bản Đồ GIS */}
+                <button
+                  type="button"
+                  onClick={() => onChangeView('MAP')}
+                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-extrabold transition-all cursor-pointer ${
+                    isNavActive('MAP')
+                      ? 'bg-gradient-to-r from-emerald-600 to-teal-700 text-white shadow-md shadow-emerald-600/20 translate-x-1'
+                      : 'text-slate-700 hover:bg-emerald-50/80 hover:text-emerald-950 border border-transparent hover:border-emerald-200/60'
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <MapPin className={`w-4 h-4 ${isNavActive('MAP') ? 'text-white' : 'text-emerald-600'}`} />
+                    <span>Bản Đồ GIS (Google Hybrid)</span>
+                  </div>
+                </button>
+              </>
+            )}
           </nav>
         </div>
 
@@ -174,20 +198,22 @@ export default function LeftSidebar({
               </div>
             </button>
 
-            {/* Secondary Action: Thêm Cơ Sở Nuôi Mới */}
-            <button
-              type="button"
-              onClick={onOpenAddFacility}
-              className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-extrabold text-emerald-950 bg-emerald-50/90 hover:bg-emerald-100 border border-emerald-200/90 hover:border-emerald-300 transition-all hover:scale-[1.01] active:scale-[0.99] cursor-pointer shadow-2xs"
-            >
-              <div className="flex items-center gap-3">
-                <Building2 className="w-4 h-4 text-emerald-700" />
-                <span>Thêm Cơ Sở Nuôi Mới</span>
-              </div>
-              <Plus className="w-3.5 h-3.5 text-emerald-700" />
-            </button>
+            {/* Secondary Action: Thêm Cơ Sở Nuôi Mới (Chỉ dành cho Admin/Staff) */}
+            {currentUser?.role !== 'FACILITY' && (
+              <button
+                type="button"
+                onClick={onOpenAddFacility}
+                className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-extrabold text-emerald-950 bg-emerald-50/90 hover:bg-emerald-100 border border-emerald-200/90 hover:border-emerald-300 transition-all hover:scale-[1.01] active:scale-[0.99] cursor-pointer shadow-2xs"
+              >
+                <div className="flex items-center gap-3">
+                  <Building2 className="w-4 h-4 text-emerald-700" />
+                  <span>Thêm Cơ Sở Nuôi Mới</span>
+                </div>
+                <Plus className="w-3.5 h-3.5 text-emerald-700" />
+              </button>
+            )}
 
-            {/* Action: Xuất Báo Cáo Excel */}
+            {/* Action: Xuất Báo Cáo Excel / Xuất Sổ Ghi Chép */}
             <button
               type="button"
               onClick={onExportExcel}
