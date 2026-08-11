@@ -241,6 +241,17 @@ export default function AnalyticsView({ facilitiesList = [] }) {
   }, [filteredFacilities]);
 
   // Combo Chart Configurations (Bar + Line)
+  // Calculate max values for bar Y-axis scaling to prevent overlapping with line chart
+  const maxBarVal = useMemo(() => {
+    let max = 0;
+    chartData.targetStats.forEach((s) => {
+      if (s.inc > max) max = s.inc;
+      if (s.dec > max) max = s.dec;
+    });
+    return max === 0 ? 10 : max;
+  }, [chartData]);
+
+  // Combo Chart Configurations (Bar + Line)
   const mainChartDataConfig = {
     labels: chartData.targetStats.map((s) => s.monthLabel),
     datasets: [
@@ -248,30 +259,44 @@ export default function AnalyticsView({ facilitiesList = [] }) {
         type: 'line',
         label: 'Quy mô tổng đàn (Con)',
         data: chartData.targetStats.map((s) => s.totalEnd),
-        borderColor: '#0284c7', // Sky Blue
-        backgroundColor: 'rgba(2, 132, 199, 0.1)',
-        borderWidth: 3,
-        tension: 0.3,
+        borderColor: '#0284c7', // Sky Blue 600
+        backgroundColor: 'rgba(2, 132, 199, 0.12)',
+        borderWidth: 3.5,
+        tension: 0.35,
         fill: true,
         yAxisID: 'y1',
         pointRadius: 5,
-        pointHoverRadius: 7,
+        pointHoverRadius: 8,
+        pointBackgroundColor: '#ffffff',
+        pointBorderColor: '#0284c7',
+        pointBorderWidth: 3,
+        order: 1,
       },
       {
         type: 'bar',
         label: 'Số lượng Tăng đàn (+)',
         data: chartData.targetStats.map((s) => s.inc),
-        backgroundColor: '#10b981', // Emerald Green
-        borderRadius: 8,
+        backgroundColor: '#10b981', // Emerald 500
+        hoverBackgroundColor: '#059669',
+        borderRadius: { topLeft: 6, topRight: 6 },
+        maxBarThickness: 28,
+        categoryPercentage: 0.65,
+        barPercentage: 0.75,
         yAxisID: 'y',
+        order: 2,
       },
       {
         type: 'bar',
         label: 'Số lượng Giảm đàn (-)',
         data: chartData.targetStats.map((s) => s.dec),
-        backgroundColor: '#f43f5e', // Rose Red
-        borderRadius: 8,
+        backgroundColor: '#f43f5e', // Rose 500
+        hoverBackgroundColor: '#e11d48',
+        borderRadius: { topLeft: 6, topRight: 6 },
+        maxBarThickness: 28,
+        categoryPercentage: 0.65,
+        barPercentage: 0.75,
         yAxisID: 'y',
+        order: 2,
       },
     ],
   };
@@ -279,49 +304,94 @@ export default function AnalyticsView({ facilitiesList = [] }) {
   const mainChartOptions = {
     responsive: true,
     maintainAspectRatio: false,
+    interaction: {
+      mode: 'index',
+      intersect: false,
+    },
     plugins: {
       legend: {
         position: 'top',
+        align: 'center',
         labels: {
           font: { family: 'Plus Jakarta Sans', size: 11, weight: 'bold' },
           usePointStyle: true,
-          padding: 10,
-          boxWidth: 10,
+          padding: 15,
+          boxWidth: 8,
+          boxHeight: 8,
         },
       },
       tooltip: {
         backgroundColor: '#0f172a',
-        titleFont: { size: 12, weight: 'bold' },
-        bodyFont: { size: 11 },
-        padding: 10,
-        cornerRadius: 8,
+        titleFont: { size: 12, weight: 'bold', family: 'Plus Jakarta Sans' },
+        bodyFont: { size: 11, family: 'Plus Jakarta Sans' },
+        padding: 12,
+        cornerRadius: 10,
+        callbacks: {
+          label: function (context) {
+            let label = context.dataset.label || '';
+            if (label) {
+              label += ': ';
+            }
+            if (context.parsed.y !== null) {
+              if (context.dataset.type === 'bar') {
+                const isInc = context.datasetIndex === 1;
+                label += `${isInc ? '+' : '-'}${context.parsed.y} con`;
+              } else {
+                label += `${context.parsed.y.toLocaleString('vi-VN')} con`;
+              }
+            }
+            return label;
+          },
+        },
       },
     },
     scales: {
       x: {
         grid: { display: false },
         ticks: {
-          font: { family: 'Plus Jakarta Sans', size: 10, weight: 'bold' },
-          maxRotation: 45,
+          font: { family: 'Plus Jakarta Sans', size: 11, weight: 'bold' },
+          color: '#475569',
+          maxRotation: 0,
           minRotation: 0,
-          autoSkip: true,
         },
       },
       y: {
         type: 'linear',
         display: true,
         position: 'left',
-        title: { display: false },
+        title: {
+          display: true,
+          text: 'Biến động (+/- con)',
+          font: { size: 10, weight: 'bold' },
+          color: '#64748b',
+        },
+        suggestedMin: 0,
+        suggestedMax: Math.ceil(maxBarVal * 2.5),
         grid: { color: '#f1f5f9' },
-        ticks: { font: { size: 10 } },
+        ticks: {
+          font: { size: 10, weight: 'bold' },
+          color: '#64748b',
+          precision: 0,
+        },
       },
       y1: {
         type: 'linear',
         display: true,
         position: 'right',
-        title: { display: false },
+        title: {
+          display: true,
+          text: 'Tổng quy mô đàn (con)',
+          font: { size: 10, weight: 'bold' },
+          color: '#0284c7',
+        },
         grid: { drawOnChartArea: false },
-        ticks: { font: { size: 10 } },
+        ticks: {
+          font: { size: 10, weight: 'bold' },
+          color: '#0284c7',
+          callback: function (val) {
+            return val.toLocaleString('vi-VN');
+          },
+        },
       },
     },
   };

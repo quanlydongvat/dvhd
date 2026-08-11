@@ -317,10 +317,22 @@ export function getFacilityCategory(facility) {
  */
 export function formatDateVN(dateStr) {
   if (!dateStr) return '';
-  const parts = dateStr.split('-');
-  if (parts.length === 3) {
-    return `${parts[2]}/${parts[1]}/${parts[0]}`;
-  }
+  if (typeof dateStr !== 'string') return dateStr;
+  
+  // If already in DD/MM/YYYY format
+  if (dateStr.includes('/')) return dateStr;
+
+  try {
+    const clean = dateStr.split('T')[0].trim();
+    const parts = clean.split('-');
+    if (parts.length === 3) {
+      const [year, month, day] = parts;
+      if (year.length === 4) {
+        return `${day.padStart(2, '0')}/${month.padStart(2, '0')}/${year}`;
+      }
+    }
+  } catch (e) {}
+  
   return dateStr;
 }
 

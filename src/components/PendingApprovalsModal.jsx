@@ -1,5 +1,6 @@
 import React from 'react';
 import { Bell, CheckCircle2, XCircle, Clock, Building2, Calendar, FileText, X } from 'lucide-react';
+import { formatDateVN } from '../utils/calculations';
 
 export default function PendingApprovalsModal({
   isOpen,
@@ -160,7 +161,7 @@ export default function PendingApprovalsModal({
                       </div>
                       <div>
                         <span className="text-[10px] text-slate-400 font-bold uppercase block">Ngày phát sinh</span>
-                        <strong className="text-slate-800 font-semibold">{req.date || 'Chưa có'}</strong>
+                        <strong className="text-slate-800 font-semibold">{formatDateVN(req.date) || 'Chưa có'}</strong>
                       </div>
                       <div>
                         <span className="text-[10px] text-slate-400 font-bold uppercase block">Loại biến động</span>
