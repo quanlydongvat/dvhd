@@ -84,43 +84,123 @@ export default function PendingApprovalsModal({
                   </div>
                 </div>
 
-                {/* Details grid */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs bg-slate-50/80 p-3 rounded-xl border border-slate-100">
-                  <div>
-                    <span className="text-[10px] text-slate-400 font-bold uppercase block">Loài ĐVHD</span>
-                    <strong className="text-emerald-950 font-extrabold text-xs">{req.speciesName || 'Loài'}</strong>
-                  </div>
-                  <div>
-                    <span className="text-[10px] text-slate-400 font-bold uppercase block">Ngày phát sinh</span>
-                    <strong className="text-slate-800 font-semibold">{req.date || 'Chưa có'}</strong>
-                  </div>
-                  <div>
-                    <span className="text-[10px] text-slate-400 font-bold uppercase block">Loại biến động</span>
-                    <span className={`inline-block font-extrabold text-xs px-2 py-0.5 rounded ${
-                      req.type === 'TĂNG' || req.type === 'Tăng' || req.type === 'TĂNG ĐÀN'
-                        ? 'bg-emerald-100 text-emerald-950 border border-emerald-300'
-                        : 'bg-rose-100 text-rose-950 border border-rose-300'
-                    }`}>
-                      {req.type || 'Biến động'}
-                    </span>
-                  </div>
-                  <div>
-                    <span className="text-[10px] text-slate-400 font-bold uppercase block">Số lượng</span>
-                    <strong className="text-slate-900 font-bold">
-                      {req.male || 0} Đực / {req.female || 0} Cái / {req.unsexed || 0} KXD
-                    </strong>
-                  </div>
-                </div>
+              {(() => {
+                const incFather = Number(req.incFather || 0);
+                const incMother = Number(req.incMother || 0);
+                const incOtherMale = Number(req.incOtherMale || 0);
+                const incOtherFemale = Number(req.incOtherFemale || 0);
+                const incUnknown = Number(req.incOtherUnknown || 0);
+                const totalIncMale = incFather + incOtherMale;
+                const totalIncFemale = incMother + incOtherFemale;
+                const totalInc = totalIncMale + totalIncFemale + incUnknown;
 
-                {(req.reason || req.description || req.note) && (
-                  <div className="text-xs text-slate-600 bg-amber-50/60 border border-amber-200/50 p-2.5 rounded-xl flex items-start gap-2">
-                    <FileText className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
-                    <div>
-                      <strong className="text-amber-900 font-semibold">Lý do / Chứng từ: </strong>
-                      <span>{req.reason || req.description || req.note}</span>
+                const decFather = Number(req.decFather || 0);
+                const decMother = Number(req.decMother || 0);
+                const decOtherMale = Number(req.decOtherMale || 0);
+                const decOtherFemale = Number(req.decOtherFemale || 0);
+                const decUnknown = Number(req.decOtherUnknown || 0);
+                const totalDecMale = decFather + decOtherMale;
+                const totalDecFemale = decMother + decOtherFemale;
+                const totalDec = totalDecMale + totalDecFemale + decUnknown;
+
+                let typeBadgeText = 'Biến động';
+                let typeBadgeClass = 'bg-slate-100 text-slate-800 border border-slate-300';
+                let detailsText = '';
+
+                if (totalInc > 0 && totalDec === 0) {
+                  typeBadgeText = `🟢 TĂNG ĐÀN (+${totalInc})`;
+                  typeBadgeClass = 'bg-emerald-100 text-emerald-950 border border-emerald-300 font-black';
+                  
+                  const parts = [];
+                  if (incFather > 0) parts.push(`Đực bố: +${incFather}`);
+                  if (incMother > 0) parts.push(`Cái mẹ: +${incMother}`);
+                  if (incOtherMale > 0) parts.push(`Đực con/hậu bị: +${incOtherMale}`);
+                  if (incOtherFemale > 0) parts.push(`Cái con/hậu bị: +${incOtherFemale}`);
+                  if (incUnknown > 0) parts.push(`KXD (mới nở/sinh): +${incUnknown}`);
+                  
+                  detailsText = parts.length > 0 ? parts.join(', ') : `+${totalInc} cá thể`;
+                } else if (totalDec > 0 && totalInc === 0) {
+                  typeBadgeText = `🔴 GIẢM ĐÀN (-${totalDec})`;
+                  typeBadgeClass = 'bg-rose-100 text-rose-950 border border-rose-300 font-black';
+                  
+                  const parts = [];
+                  if (decFather > 0) parts.push(`Đực bố: -${decFather}`);
+                  if (decMother > 0) parts.push(`Cái mẹ: -${decMother}`);
+                  if (decOtherMale > 0) parts.push(`Đực con/hậu bị: -${decOtherMale}`);
+                  if (decOtherFemale > 0) parts.push(`Cái con/hậu bị: -${decOtherFemale}`);
+                  if (decUnknown > 0) parts.push(`KXD: -${decUnknown}`);
+                  
+                  detailsText = parts.length > 0 ? parts.join(', ') : `-${totalDec} cá thể`;
+                } else if (totalInc > 0 && totalDec > 0) {
+                  typeBadgeText = `🔄 TÁCH/CHUYỂN ĐÀN`;
+                  typeBadgeClass = 'bg-amber-100 text-amber-950 border border-amber-300 font-black';
+                  detailsText = `Tăng: +${totalInc} cá thể | Giảm: -${totalDec} cá thể`;
+                } else {
+                  // Fallback for custom male/female props if any
+                  const fbMale = req.male || 0;
+                  const fbFemale = req.female || 0;
+                  const fbUnsexed = req.unsexed || 0;
+                  const fbTotal = fbMale + fbFemale + fbUnsexed;
+                  if (fbTotal > 0) {
+                    typeBadgeText = `📊 BIẾN ĐỘNG (${fbTotal})`;
+                    detailsText = `${fbMale} Đực / ${fbFemale} Cái / ${fbUnsexed} KXD`;
+                  } else {
+                    typeBadgeText = `⚠️ 0 cá thể`;
+                    detailsText = `Chưa có thông số số lượng`;
+                  }
+                }
+
+                return (
+                  <>
+                    {/* Details grid */}
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs bg-slate-50/80 p-3 rounded-xl border border-slate-100">
+                      <div>
+                        <span className="text-[10px] text-slate-400 font-bold uppercase block">Loài ĐVHD</span>
+                        <strong className="text-emerald-950 font-extrabold text-xs">{req.speciesName || 'Loài'}</strong>
+                      </div>
+                      <div>
+                        <span className="text-[10px] text-slate-400 font-bold uppercase block">Ngày phát sinh</span>
+                        <strong className="text-slate-800 font-semibold">{req.date || 'Chưa có'}</strong>
+                      </div>
+                      <div>
+                        <span className="text-[10px] text-slate-400 font-bold uppercase block">Loại biến động</span>
+                        <span className={`inline-block text-xs px-2 py-0.5 rounded shadow-2xs ${typeBadgeClass}`}>
+                          {typeBadgeText}
+                        </span>
+                      </div>
+                      <div>
+                        <span className="text-[10px] text-slate-400 font-bold uppercase block">Tổng biến động</span>
+                        <strong className="text-slate-900 font-extrabold text-xs">
+                          {totalInc > 0 && totalDec === 0 && `+${totalInc} cá thể`}
+                          {totalDec > 0 && totalInc === 0 && `-${totalDec} cá thể`}
+                          {totalInc > 0 && totalDec > 0 && `+${totalInc} / -${totalDec}`}
+                          {totalInc === 0 && totalDec === 0 && `0 cá thể`}
+                        </strong>
+                      </div>
                     </div>
-                  </div>
-                )}
+
+                    {/* Quantity Detail Breakdown */}
+                    <div className="bg-emerald-50/70 border border-emerald-200/60 p-2.5 rounded-xl text-xs flex items-center gap-2">
+                      <span className="text-[11px] font-extrabold text-emerald-900 uppercase tracking-wider flex-shrink-0">
+                        Chi tiết số lượng:
+                      </span>
+                      <span className="text-emerald-950 font-extrabold bg-white px-2.5 py-0.5 rounded border border-emerald-300 shadow-2xs">
+                        {detailsText}
+                      </span>
+                    </div>
+
+                    {(req.reason || req.description || req.note) && (
+                      <div className="text-xs text-slate-600 bg-amber-50/60 border border-amber-200/50 p-2.5 rounded-xl flex items-start gap-2">
+                        <FileText className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
+                        <div>
+                          <strong className="text-amber-900 font-semibold">Lý do / Chứng từ: </strong>
+                          <span>{req.reason || req.description || req.note}</span>
+                        </div>
+                      </div>
+                    )}
+                  </>
+                );
+              })()}
 
                 {/* Actions */}
                 <div className="flex items-center justify-end gap-2 pt-1">
