@@ -80,8 +80,15 @@ export default function PWAInstallPrompt() {
           </p>
 
           {isIOS ? (
-            <div className="mt-2.5 text-[10px] bg-slate-800 p-2 rounded-lg text-emerald-300 font-medium border border-slate-700 flex items-center gap-1.5">
-              <span>Bấm nút chia sẻ <Share className="w-3 h-3 inline text-sky-400" /> rồi chọn <strong>"Thêm vào MH chính"</strong></span>
+            <div className="mt-2.5 text-xs bg-slate-800/90 p-2.5 rounded-xl text-emerald-300 font-medium border border-emerald-500/30 space-y-1">
+              <div className="flex items-center gap-1.5 text-amber-400 font-bold text-[11px]">
+                <Share className="w-3.5 h-3.5 text-sky-400" />
+                <span>Hướng dẫn thêm biểu tượng trên iPhone/iPad:</span>
+              </div>
+              <p className="text-[10px] text-slate-200 leading-normal">
+                1. Nhấn nút <strong>Chia sẻ 📤</strong> ở dưới thanh Safari<br />
+                2. Chọn <strong>"Thêm vào Màn hình chính" ➕</strong>
+              </p>
             </div>
           ) : (
             <button
