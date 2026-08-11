@@ -839,12 +839,15 @@ export default function App() {
 
           {/* App Footer */}
           <footer className="bg-white border-t border-slate-200/80 py-3 text-center text-xs text-slate-600 no-print shadow-2xs mb-12 lg:mb-0 mt-auto">
-            <div className="max-w-7xl mx-auto px-4 space-y-0.5">
+            <div className="max-w-7xl mx-auto px-4 space-y-1">
               <p className="font-semibold text-slate-800 text-xs">
                 Ứng dụng sổ theo dõi quản lý động vật hoang dã điện tử - Nuôi sinh sản
               </p>
+              <p className="text-[11px] text-emerald-800 font-bold">
+                © Hạt kiểm lâm khu vực Krông Bông
+              </p>
               <p className="text-[11px] text-slate-500 font-medium">
-                © Y Thái Niê – Liên hệ: <a href="tel:0326014014" className="text-emerald-700 font-bold hover:underline">0326.014.014</a>
+                Sử dụng và lưu hành trong phạm vi quản lý của đơn vị.
               </p>
             </div>
           </footer>
