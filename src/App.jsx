@@ -817,6 +817,7 @@ export default function App() {
             currentUser={currentUser}
             pendingRequestsCount={pendingRequests.length}
             onOpenPendingModal={() => setIsPendingModalOpen(true)}
+            onLogout={handleLogout}
           />
 
             {/* Main Content Area */}

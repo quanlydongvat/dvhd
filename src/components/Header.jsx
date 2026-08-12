@@ -1,5 +1,5 @@
 import React from 'react';
-import { Settings, Edit3, FolderPlus, Table, LayoutList, BarChart3, MapPin, Building2, Download, Printer, Database, PlusCircle, Bell } from 'lucide-react';
+import { Settings, Edit3, FolderPlus, Table, LayoutList, BarChart3, MapPin, Building2, Download, Printer, Database, PlusCircle, Bell, LogOut } from 'lucide-react';
 import { PURPOSE_CODES } from '../utils/calculations';
 
 export default function Header({
@@ -23,6 +23,7 @@ export default function Header({
   currentUser,
   pendingRequestsCount = 0,
   onOpenPendingModal,
+  onLogout,
 }) {
   const COMMUNES = ['xã Hòa Sơn', 'xã Yang Mao', 'xã Cư Pui', 'Xã Krông Bông', 'Xã Dang Kang'];
 
@@ -101,29 +102,44 @@ export default function Header({
               </div>
             </div>
 
-            {/* Notification Bell for Pending Approvals */}
-            {(currentUser?.role === 'ADMIN' || currentUser?.role === 'STAFF') && (
-              <button
-                type="button"
-                onClick={onOpenPendingModal}
-                className={`relative flex items-center gap-2 px-3 py-1.5 rounded-2xl text-xs font-black transition-all cursor-pointer border ${
-                  pendingRequestsCount > 0
-                    ? 'bg-gradient-to-r from-amber-500 to-orange-600 text-white border-amber-400 shadow-md shadow-amber-500/20 animate-pulse hover:scale-105'
-                    : 'bg-slate-100 text-slate-700 hover:bg-slate-200 border-slate-200'
-                }`}
-                title="Xem danh sách biến động đang chờ duyệt"
-              >
-                <Bell className={`w-4 h-4 ${pendingRequestsCount > 0 ? 'animate-bounce text-white' : 'text-slate-600'}`} />
-                <span className="hidden md:inline">Biến động chờ duyệt</span>
-                <span className={`px-2 py-0.5 rounded-full text-[11px] font-extrabold ${
-                  pendingRequestsCount > 0
-                    ? 'bg-white text-slate-950 shadow-xs'
-                    : 'bg-slate-200 text-slate-700'
-                }`}>
-                  {pendingRequestsCount}
-                </span>
-              </button>
-            )}
+            {/* Top Right Action Group: Notification Bell & Mobile Logout Button */}
+            <div className="flex items-center gap-1.5 flex-shrink-0">
+              {(currentUser?.role === 'ADMIN' || currentUser?.role === 'STAFF') && (
+                <button
+                  type="button"
+                  onClick={onOpenPendingModal}
+                  className={`relative flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-2xl text-xs font-black transition-all cursor-pointer border ${
+                    pendingRequestsCount > 0
+                      ? 'bg-gradient-to-r from-amber-500 to-orange-600 text-white border-amber-400 shadow-md shadow-amber-500/20 animate-pulse hover:scale-105'
+                      : 'bg-slate-100 text-slate-700 hover:bg-slate-200 border-slate-200'
+                  }`}
+                  title="Xem danh sách biến động đang chờ duyệt"
+                >
+                  <Bell className={`w-4 h-4 ${pendingRequestsCount > 0 ? 'animate-bounce text-white' : 'text-slate-600'}`} />
+                  <span className="hidden sm:inline">Chờ duyệt</span>
+                  <span className={`px-1.5 py-0.5 rounded-full text-[10px] sm:text-[11px] font-extrabold ${
+                    pendingRequestsCount > 0
+                      ? 'bg-white text-slate-950 shadow-xs'
+                      : 'bg-slate-200 text-slate-700'
+                  }`}>
+                    {pendingRequestsCount}
+                  </span>
+                </button>
+              )}
+
+              {/* Logout Button on Header (Visible on Mobile & Desktop) */}
+              {onLogout && (
+                <button
+                  type="button"
+                  onClick={onLogout}
+                  className="flex items-center gap-1 px-2.5 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200/90 rounded-2xl text-xs font-black transition-all cursor-pointer active:scale-95 shadow-2xs"
+                  title="Đăng xuất khỏi hệ thống"
+                >
+                  <LogOut className="w-4 h-4 text-rose-600" />
+                  <span className="text-[11px] sm:text-xs">Đăng xuất</span>
+                </button>
+              )}
+            </div>
           </div>
 
           {/* Quick Tools & View Bar for Mobile Devices */}
