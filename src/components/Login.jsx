@@ -10,13 +10,6 @@ export default function Login({ onLoginSuccess }) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const ANIMAL_PHOTOS = [
-    { name: 'Dúi mốc lớn', src: './images/dui_moc.jpg' },
-    { name: 'Cầy vòi Hương', src: './images/cay_voi.jpg' },
-    { name: 'Nhím bờm', src: './images/nhim.jpg' },
-    { name: 'Chim Chào mào', src: './images/chao_mao.jpg' },
-  ];
-
   const handleLogin = async (e) => {
     e.preventDefault();
     setError('');
@@ -104,12 +97,12 @@ export default function Login({ onLoginSuccess }) {
 
       <div className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl w-full max-w-md overflow-hidden border border-emerald-500/20 z-10">
         {/* Header */}
-        <div className="bg-gradient-to-br from-emerald-800 via-emerald-700 to-teal-800 p-6 sm:p-7 text-center text-white relative overflow-hidden">
+        <div className="bg-gradient-to-br from-emerald-800 via-emerald-700 to-teal-800 p-7 sm:p-8 text-center text-white relative overflow-hidden">
           <div className="absolute -right-8 -top-8 w-32 h-32 bg-white/10 rounded-full blur-xl pointer-events-none" />
           
           <div className="relative z-10 flex flex-col items-center">
             {/* Official Vietnam Forest Protection Badge Logo */}
-            <div className="mb-3 relative group">
+            <div className="mb-3.5 relative group">
               <div className="w-20 h-20 sm:w-24 sm:h-24 mx-auto flex items-center justify-center p-1.5 bg-white/15 rounded-2xl border border-white/30 shadow-xl backdrop-blur-md">
                 <img
                   src="./images/logo_kiem_lam.png"
@@ -127,32 +120,9 @@ export default function Login({ onLoginSuccess }) {
               KRÔNG BÔNG
             </div>
 
-            <p className="text-[11px] sm:text-xs text-emerald-100/90 font-semibold mt-1 bg-emerald-900/40 px-3 py-0.5 rounded-full border border-emerald-400/30">
+            <p className="text-[11px] sm:text-xs text-emerald-100/90 font-semibold mt-1.5 bg-emerald-900/40 px-3 py-1 rounded-full border border-emerald-400/30">
               Ứng Dụng Quản Lý Động Vật Hoang Dã Mẫu II
             </p>
-
-            {/* REAL ANIMAL PHOTO GALLERY SHOWCASE */}
-            <div className="mt-4 pt-3 border-t border-emerald-600/40 w-full">
-              <span className="text-[10px] uppercase font-bold text-amber-300 tracking-wider block mb-2">
-                Các loài động vật hoang dã quản lý trọng điểm
-              </span>
-              <div className="flex items-center justify-center gap-3">
-                {ANIMAL_PHOTOS.map((anim, idx) => (
-                  <div key={idx} className="group relative flex flex-col items-center">
-                    <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl overflow-hidden border-2 border-amber-300/80 shadow-md transition-all duration-300 group-hover:scale-110 group-hover:border-amber-200">
-                      <img
-                        src={anim.src}
-                        alt={anim.name}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <span className="text-[9px] font-extrabold text-white mt-1 opacity-90 truncate max-w-[60px]">
-                      {anim.name}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
           </div>
         </div>
 
