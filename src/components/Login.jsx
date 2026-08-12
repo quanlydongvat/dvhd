@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ShieldCheck, User, Lock, Loader2, Sparkles, Feather } from 'lucide-react';
+import { ShieldCheck, User, Lock, Loader2 } from 'lucide-react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth, db } from '../firebase';
 import { doc, getDoc } from 'firebase/firestore';
@@ -10,13 +10,11 @@ export default function Login({ onLoginSuccess }) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const WILDLIFE_SPECIES = [
-    { name: 'Dúi mốc lớn', icon: '🦔', tag: 'Nhóm IIB' },
-    { name: 'Cầy vòi Hương', icon: '🦊', tag: 'Nhóm IIB' },
-    { name: 'Nhím bờm', icon: '🦔', tag: 'Nhóm IIB' },
-    { name: 'Chim Chào mào', icon: '🦜', tag: 'ĐV Thông thường' },
-    { name: 'Dúi má đào', icon: '🦔', tag: 'Nhóm IIB' },
-    { name: 'Cầy vòi mốc', icon: '🦊', tag: 'Nhóm IIB' },
+  const ANIMAL_PHOTOS = [
+    { name: 'Dúi mốc lớn', src: './images/dui_moc.jpg' },
+    { name: 'Cầy vòi Hương', src: './images/cay_voi.jpg' },
+    { name: 'Nhím bờm', src: './images/nhim.jpg' },
+    { name: 'Chim Chào mào', src: './images/chao_mao.jpg' },
   ];
 
   const handleLogin = async (e) => {
@@ -106,20 +104,16 @@ export default function Login({ onLoginSuccess }) {
 
       <div className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl w-full max-w-md overflow-hidden border border-emerald-500/20 z-10">
         {/* Header */}
-        <div className="bg-gradient-to-br from-emerald-800 via-emerald-700 to-teal-800 p-6 sm:p-8 text-center text-white relative overflow-hidden">
+        <div className="bg-gradient-to-br from-emerald-800 via-emerald-700 to-teal-800 p-6 sm:p-7 text-center text-white relative overflow-hidden">
           <div className="absolute -right-8 -top-8 w-32 h-32 bg-white/10 rounded-full blur-xl pointer-events-none" />
           
           <div className="relative z-10 flex flex-col items-center">
-            {/* Center Shield & Wildlife Badges */}
-            <div className="relative mb-3">
-              <div className="bg-white/20 p-3.5 rounded-2xl border border-white/30 shadow-lg backdrop-blur-md">
-                <ShieldCheck className="w-9 h-9 text-amber-300" />
-              </div>
-              <span className="absolute -top-2 -right-3 text-lg animate-bounce">🦜</span>
-              <span className="absolute -bottom-2 -left-3 text-lg animate-pulse">🦔</span>
+            {/* Center Shield Icon */}
+            <div className="bg-white/20 p-3 rounded-2xl border border-white/30 shadow-lg backdrop-blur-md mb-3">
+              <ShieldCheck className="w-8 h-8 text-amber-300" />
             </div>
 
-            {/* Split Title with "KRÔNG BÔNG" prominently on 2nd line */}
+            {/* Title with "KRÔNG BÔNG" prominently on 2nd line */}
             <h1 className="text-xs sm:text-sm font-extrabold text-emerald-200 uppercase tracking-widest">
               Hạt Kiểm lâm khu vực
             </h1>
@@ -127,25 +121,32 @@ export default function Login({ onLoginSuccess }) {
               KRÔNG BÔNG
             </div>
 
-            <p className="text-[11px] sm:text-xs text-emerald-100/90 font-semibold mt-1 bg-emerald-900/40 px-3 py-1 rounded-full border border-emerald-400/30">
+            <p className="text-[11px] sm:text-xs text-emerald-100/90 font-semibold mt-1 bg-emerald-900/40 px-3 py-0.5 rounded-full border border-emerald-400/30">
               Ứng Dụng Quản Lý Động Vật Hoang Dã Mẫu II
             </p>
-          </div>
-        </div>
 
-        {/* Wildlife Showcase Ticker */}
-        <div className="bg-slate-900 py-2.5 px-3 overflow-hidden border-b border-slate-800 flex items-center gap-2">
-          <div className="flex items-center gap-1 text-[10px] font-black uppercase text-amber-400 flex-shrink-0 bg-amber-500/20 px-2 py-0.5 rounded border border-amber-500/30">
-            <Sparkles className="w-3 h-3 text-amber-400" />
-            <span>Loài nuôi:</span>
-          </div>
-          <div className="flex items-center gap-2 overflow-x-auto scrollbar-none text-[11px] font-bold text-slate-200 whitespace-nowrap">
-            {WILDLIFE_SPECIES.map((sp, idx) => (
-              <span key={idx} className="inline-flex items-center gap-1 bg-slate-800/80 border border-slate-700/80 px-2 py-0.5 rounded-lg text-emerald-300">
-                <span>{sp.icon}</span>
-                <span>{sp.name}</span>
+            {/* REAL ANIMAL PHOTO GALLERY SHOWCASE */}
+            <div className="mt-4 pt-3 border-t border-emerald-600/40 w-full">
+              <span className="text-[10px] uppercase font-bold text-amber-300 tracking-wider block mb-2">
+                Các loài động vật hoang dã quản lý trọng điểm
               </span>
-            ))}
+              <div className="flex items-center justify-center gap-3">
+                {ANIMAL_PHOTOS.map((anim, idx) => (
+                  <div key={idx} className="group relative flex flex-col items-center">
+                    <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl overflow-hidden border-2 border-amber-300/80 shadow-md transition-all duration-300 group-hover:scale-110 group-hover:border-amber-200">
+                      <img
+                        src={anim.src}
+                        alt={anim.name}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <span className="text-[9px] font-extrabold text-white mt-1 opacity-90 truncate max-w-[60px]">
+                      {anim.name}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
 
