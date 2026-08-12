@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ShieldCheck, User, Lock, Loader2 } from 'lucide-react';
+import { User, Lock, Loader2, ShieldCheck } from 'lucide-react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth, db } from '../firebase';
 import { doc, getDoc } from 'firebase/firestore';
@@ -108,12 +108,18 @@ export default function Login({ onLoginSuccess }) {
           <div className="absolute -right-8 -top-8 w-32 h-32 bg-white/10 rounded-full blur-xl pointer-events-none" />
           
           <div className="relative z-10 flex flex-col items-center">
-            {/* Center Shield Icon */}
-            <div className="bg-white/20 p-3 rounded-2xl border border-white/30 shadow-lg backdrop-blur-md mb-3">
-              <ShieldCheck className="w-8 h-8 text-amber-300" />
+            {/* Official Vietnam Forest Protection Badge Logo */}
+            <div className="mb-3 relative group">
+              <div className="w-20 h-20 sm:w-24 sm:h-24 mx-auto flex items-center justify-center p-1.5 bg-white/15 rounded-2xl border border-white/30 shadow-xl backdrop-blur-md">
+                <img
+                  src="./images/logo_kiem_lam.png"
+                  alt="Phù Hiệu Kiểm Lâm Việt Nam"
+                  className="w-full h-full object-contain filter drop-shadow-md transition-transform duration-300 group-hover:scale-105"
+                />
+              </div>
             </div>
 
-            {/* Title with "KRÔNG BÔNG" prominently on 2nd line */}
+            {/* Split Title with "KRÔNG BÔNG" prominently on 2nd line */}
             <h1 className="text-xs sm:text-sm font-extrabold text-emerald-200 uppercase tracking-widest">
               Hạt Kiểm lâm khu vực
             </h1>
