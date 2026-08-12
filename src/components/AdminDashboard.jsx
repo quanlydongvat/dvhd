@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ShieldCheck, UserPlus, Key, Trash2, Search, Loader2, Check, Clock, UserCheck } from 'lucide-react';
+import { ShieldCheck, UserPlus, Key, Trash2, Search, Loader2, Check, Clock, UserCheck, X, Edit3 } from 'lucide-react';
 import { db } from '../firebase';
 import { collection, getDocs, doc, setDoc, deleteDoc } from 'firebase/firestore';
 import { getAuth, createUserWithEmailAndPassword, signOut } from 'firebase/auth';
@@ -22,10 +22,16 @@ export default function AdminDashboard({ facilitiesList = [], onApproveRequest }
   const [requests, setRequests] = useState([]);
   const [isLoadingReqs, setIsLoadingReqs] = useState(false);
 
-  // Form states
+  // Form states (Cấp mới)
   const [selectedFacility, setSelectedFacility] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('@123456');
+
+  // Modal Đổi Mật Khẩu / Tên Đăng Nhập
+  const [editingUser, setEditingUser] = useState(null); // User object selected for edit
+  const [editUsername, setEditUsername] = useState('');
+  const [editPassword, setEditPassword] = useState('');
+  const [isResetting, setIsResetting] = useState(false);
 
   useEffect(() => {
     fetchUsers();
@@ -106,6 +112,7 @@ export default function AdminDashboard({ facilitiesList = [], onApproveRequest }
         email: email,
         role: 'FACILITY',
         facilityId: selectedFacility,
+        customPassword: password,
         createdAt: new Date().toISOString()
       });
 
@@ -127,6 +134,60 @@ export default function AdminDashboard({ facilitiesList = [], onApproveRequest }
     }
   };
 
+  // Mở modal đổi tài khoản/mật khẩu
+  const handleOpenEditModal = (u) => {
+    setEditingUser(u);
+    setEditUsername(u.username || '');
+    setEditPassword(u.customPassword || '@123456');
+  };
+
+  // Đổi tài khoản/mật khẩu
+  const handleSaveResetPassword = async (e) => {
+    e.preventDefault();
+    if (!editingUser || !editUsername.trim() || !editPassword.trim()) {
+      alert("Vui lòng điền đầy đủ tên đăng nhập và mật khẩu mới.");
+      return;
+    }
+
+    setIsResetting(true);
+    try {
+      const cleanUsername = editUsername.trim().toLowerCase().replace(/\s+/g, '');
+      const email = `${cleanUsername}@krongbong.gov.vn`;
+
+      await setDoc(doc(db, "users", editingUser.id), {
+        username: cleanUsername,
+        email: email,
+        customPassword: editPassword.trim(),
+        updatedAt: new Date().toISOString()
+      }, { merge: true });
+
+      alert(`✅ Đã cấp đổi lại tài khoản thành công cho cơ sở!\n\n• Tên đăng nhập mới: ${cleanUsername}\n• Mật khẩu mới: ${editPassword.trim()}`);
+      setEditingUser(null);
+      fetchUsers();
+    } catch (err) {
+      console.error("Lỗi khi cấp đổi tài khoản:", err);
+      alert("Lỗi khi cấp đổi lại tài khoản: " + err.message);
+    } finally {
+      setIsResetting(false);
+    }
+  };
+
+  // Xóa tài khoản
+  const handleDeleteUser = async (u) => {
+    if (!window.confirm(`⚠️ Bạn có chắc chắn muốn xóa tài khoản "${u.username}" của cơ sở này khỏi hệ thống không?`)) {
+      return;
+    }
+
+    try {
+      await deleteDoc(doc(db, "users", u.id));
+      alert(`Đã xóa tài khoản ${u.username} thành công.`);
+      fetchUsers();
+    } catch (err) {
+      console.error(err);
+      alert("Lỗi khi xóa tài khoản: " + err.message);
+    }
+  };
+
   return (
     <div className="p-4 sm:p-6 max-w-[1600px] mx-auto space-y-6 animate-in fade-in duration-300">
       {/* Header Banner */}
@@ -136,9 +197,9 @@ export default function AdminDashboard({ facilitiesList = [], onApproveRequest }
             <ShieldCheck className="w-8 h-8 text-amber-300" />
           </div>
           <div>
-            <h1 className="text-xl sm:text-2xl font-black tracking-tight text-white">Quản Trị Hệ Thống & Cấp Tài Khoản</h1>
+            <h1 className="text-xl sm:text-2xl font-black tracking-tight text-white">Quản Trị Hệ Thống & Cấp Đổi Tài Khoản</h1>
             <p className="text-xs text-emerald-200 font-medium mt-0.5">
-              Cấp tài khoản cho các cơ sở nuôi sinh sản trên địa bàn Hạt Kiểm lâm khu vực Krông Bông
+              Cấp mới, đổi mật khẩu hoặc cập nhật tài khoản đăng nhập cho các cơ sở nuôi sinh sản Krông Bông
             </p>
           </div>
         </div>
@@ -284,6 +345,7 @@ export default function AdminDashboard({ facilitiesList = [], onApproveRequest }
                         <th className="px-4 py-3">Tài Khoản</th>
                         <th className="px-3 py-3">Vai Trò</th>
                         <th className="px-4 py-3">Cơ Sở Nuôi Quản Lý</th>
+                        <th className="px-3 py-3 text-center">Thao tác Admin</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100">
@@ -293,6 +355,11 @@ export default function AdminDashboard({ facilitiesList = [], onApproveRequest }
                           <tr key={u.id} className="hover:bg-slate-50/80 transition-colors">
                             <td className="px-4 py-3 font-mono font-bold text-slate-900">
                               {u.username}
+                              {u.customPassword && (
+                                <span className="block text-[10px] font-normal text-slate-400">
+                                  MK: <span className="font-mono text-slate-600">{u.customPassword}</span>
+                                </span>
+                              )}
                             </td>
                             <td className="px-3 py-3">
                               <span className={`px-2 py-0.5 rounded-md text-[10px] font-black uppercase ${
@@ -319,12 +386,36 @@ export default function AdminDashboard({ facilitiesList = [], onApproveRequest }
                                 <span className="text-slate-400 italic">Không tìm thấy cơ sở</span>
                               )}
                             </td>
+                            <td className="px-3 py-3 text-center">
+                              {u.role !== 'ADMIN' && (
+                                <div className="flex items-center justify-center gap-1.5">
+                                  <button
+                                    type="button"
+                                    onClick={() => handleOpenEditModal(u)}
+                                    className="px-2.5 py-1 bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 rounded-lg font-bold text-[11px] transition-all inline-flex items-center gap-1 cursor-pointer active:scale-95 shadow-2xs"
+                                    title="Cấp đổi tên đăng nhập hoặc mật khẩu mới"
+                                  >
+                                    <Key className="w-3.5 h-3.5 text-blue-600" />
+                                    <span>Đổi MK</span>
+                                  </button>
+
+                                  <button
+                                    type="button"
+                                    onClick={() => handleDeleteUser(u)}
+                                    className="p-1 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded-lg transition-all cursor-pointer active:scale-95"
+                                    title="Xóa tài khoản này khỏi hệ thống"
+                                  >
+                                    <Trash2 className="w-3.5 h-3.5 text-rose-600" />
+                                  </button>
+                                </div>
+                              )}
+                            </td>
                           </tr>
                         );
                       })}
                       {users.length === 0 && (
                         <tr>
-                          <td colSpan="3" className="px-4 py-8 text-center text-slate-500 font-medium">
+                          <td colSpan="4" className="px-4 py-8 text-center text-slate-500 font-medium">
                             Chưa có tài khoản nào được tạo trên Cloud.
                           </td>
                         </tr>
@@ -396,6 +487,86 @@ export default function AdminDashboard({ facilitiesList = [], onApproveRequest }
         </div>
 
       </div>
+
+      {/* MODAL CẤP ĐỔI TÀI KHOẢN / MẬT KHẨU CHO CƠ SỞ */}
+      {editingUser && (
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 z-50 animate-in fade-in">
+          <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-200 relative space-y-4">
+            <button
+              type="button"
+              onClick={() => setEditingUser(null)}
+              className="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-full transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <div className="flex items-center gap-3 border-b border-slate-100 pb-3">
+              <div className="p-2.5 bg-blue-100 text-blue-700 rounded-2xl">
+                <Key className="w-6 h-6" />
+              </div>
+              <div>
+                <h3 className="text-base font-black text-slate-900">Cấp Đổi Tài Khoản / Mật Khẩu</h3>
+                <p className="text-xs text-slate-500 font-medium">
+                  Cơ sở: <strong className="text-slate-800">{facilitiesList.find(f => f.id === editingUser.facilityId)?.facilityName || editingUser.username}</strong>
+                </p>
+              </div>
+            </div>
+
+            <form onSubmit={handleSaveResetPassword} className="space-y-4">
+              <div>
+                <label className="block text-xs font-extrabold text-slate-700 uppercase tracking-wide mb-1.5">
+                  Tên Đăng Nhập Mới
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={editUsername}
+                  onChange={(e) => setEditUsername(e.target.value.toLowerCase().replace(/\s+/g, ''))}
+                  className="w-full text-sm bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 font-bold text-slate-900 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                  placeholder="Nhập tên đăng nhập mới..."
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-extrabold text-slate-700 uppercase tracking-wide mb-1.5">
+                  Mật Khẩu Mới
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={editPassword}
+                  onChange={(e) => setEditPassword(e.target.value)}
+                  className="w-full text-sm bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 font-mono font-bold text-slate-900 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                  placeholder="Nhập mật khẩu mới..."
+                />
+              </div>
+
+              <div className="p-3 bg-amber-50 border border-amber-200 rounded-2xl text-xs text-amber-900 font-medium">
+                🔑 Sau khi bấm lưu, tài khoản và mật khẩu mới sẽ có hiệu lực ngay lập tức. Hãy bàn giao mật khẩu này cho chủ cơ sở nuôi.
+              </div>
+
+              <div className="flex items-center justify-end gap-2 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setEditingUser(null)}
+                  className="px-4 py-2.5 text-xs font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors cursor-pointer"
+                >
+                  Hủy bỏ
+                </button>
+
+                <button
+                  type="submit"
+                  disabled={isResetting}
+                  className="px-5 py-2.5 text-xs font-extrabold text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 rounded-xl transition-all shadow-md flex items-center gap-1.5 cursor-pointer disabled:opacity-70"
+                >
+                  {isResetting ? <Loader2 className="w-4 h-4 animate-spin text-white" /> : <Check className="w-4 h-4 text-amber-300 stroke-[3]" />}
+                  <span>Lưu Cấp Đổi</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

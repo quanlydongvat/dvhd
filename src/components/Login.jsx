@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { User, Lock, Loader2, ShieldCheck } from 'lucide-react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth, db } from '../firebase';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, collection, query, where, getDocs } from 'firebase/firestore';
 
 export default function Login({ onLoginSuccess }) {
   const [username, setUsername] = useState('');
@@ -45,12 +45,38 @@ export default function Login({ onLoginSuccess }) {
 
       const email = `${cleanUsername}@krongbong.gov.vn`;
 
-      // Authenticate with Firebase
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
+      // 1. Try Firebase Auth first
+      let authUser = null;
+      try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        authUser = userCredential.user;
+      } catch (authErr) {
+        // Fallback: Check if Firestore users collection has customPassword updated by Admin
+        const q = query(collection(db, 'users'), where('username', '==', cleanUsername));
+        const querySnap = await getDocs(q);
+        
+        if (!querySnap.empty) {
+          const userDoc = querySnap.docs[0];
+          const userData = userDoc.data();
+          if (userData.customPassword && userData.customPassword === password) {
+            onLoginSuccess({
+              uid: userDoc.id,
+              email: userData.email || email,
+              username: userData.username,
+              role: userData.role || 'FACILITY',
+              facilityId: userData.facilityId || null,
+            });
+            setIsLoading(false);
+            return;
+          }
+        }
 
-      // Fetch user role from Firestore
-      const userDoc = await getDoc(doc(db, 'users', user.uid));
+        // If no customPassword match either, throw original auth error
+        throw authErr;
+      }
+
+      // Fetch user role from Firestore if Firebase Auth succeeded
+      const userDoc = await getDoc(doc(db, 'users', authUser.uid));
       let role = 'FACILITY';
       let facilityId = null;
 
@@ -67,8 +93,8 @@ export default function Login({ onLoginSuccess }) {
       }
 
       onLoginSuccess({
-        uid: user.uid,
-        email: user.email,
+        uid: authUser.uid,
+        email: authUser.email,
         username: cleanUsername,
         role: role,
         facilityId: facilityId,
