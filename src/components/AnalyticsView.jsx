@@ -240,6 +240,160 @@ export default function AnalyticsView({ facilitiesList = [] }) {
     return Object.values(speciesMap).sort((a, b) => b.total - a.total);
   }, [filteredFacilities]);
 
+  // 1. Top 5 Facilities Ranking
+  const topFacilities = useMemo(() => {
+    const list = filteredFacilities.map((fac) => {
+      let facTotal = 0;
+      const spList = [];
+
+      fac.speciesList.forEach((sp) => {
+        const processedRows = computeLogbookTable(sp.baseline || {}, sp.fluctuations || []);
+        const lastRow = processedRows[processedRows.length - 1];
+        const count = lastRow ? lastRow.total : 0;
+        if (count > 0) {
+          facTotal += count;
+          spList.push(sp.vietnameseName);
+        }
+      });
+
+      return {
+        id: fac.id,
+        facilityName: fac.facilityName,
+        ownerName: fac.ownerName,
+        commune: fac.commune,
+        registrationCode: fac.registrationCode,
+        totalAnimals: facTotal,
+        speciesCount: spList.length,
+        speciesNames: spList.join(', '),
+      };
+    });
+
+    list.sort((a, b) => b.totalAnimals - a.totalAnimals);
+    return list.slice(0, 5);
+  }, [filteredFacilities]);
+
+  // 2. Gender & Breeding Structure Breakdown
+  const genderAgeBreakdown = useMemo(() => {
+    let father = 0;
+    let mother = 0;
+    let otherMale = 0;
+    let otherFemale = 0;
+    let otherUnknown = 0;
+
+    filteredFacilities.forEach((fac) => {
+      fac.speciesList.forEach((sp) => {
+        const processedRows = computeLogbookTable(sp.baseline || {}, sp.fluctuations || []);
+        const lastRow = processedRows[processedRows.length - 1];
+        if (lastRow) {
+          father += (lastRow.father || 0);
+          mother += (lastRow.mother || 0);
+          otherMale += (lastRow.otherMale || 0);
+          otherFemale += (lastRow.otherFemale || 0);
+          otherUnknown += (lastRow.otherUnknown || 0);
+        }
+      });
+    });
+
+    const grandTotal = father + mother + otherMale + otherFemale + otherUnknown || 1;
+    const breedingTotal = father + mother;
+    const youngTotal = otherMale + otherFemale + otherUnknown;
+
+    const ratioMotherToFather = father > 0 ? (mother / father).toFixed(1) : 0;
+
+    return {
+      father,
+      mother,
+      otherMale,
+      otherFemale,
+      otherUnknown,
+      grandTotal,
+      breedingTotal,
+      youngTotal,
+      ratioMotherToFather,
+      fatherPct: Math.round((father / grandTotal) * 100),
+      motherPct: Math.round((mother / grandTotal) * 100),
+      youngPct: Math.round((youngTotal / grandTotal) * 100),
+    };
+  }, [filteredFacilities]);
+
+  // 3. Legal & CITES Species Classification (Nghị định 84/2021/NĐ-CP & CITES)
+  const legalCitesBreakdown = useMemo(() => {
+    let groupIIBCount = 0; // Nhóm IIB CITES II (Dúi, Cầy, Nhím...)
+    let groupNormalCount = 0; // ĐV Thông thường (Chim chào mào, chim cu gáy...)
+
+    filteredFacilities.forEach((fac) => {
+      fac.speciesList.forEach((sp) => {
+        const processedRows = computeLogbookTable(sp.baseline || {}, sp.fluctuations || []);
+        const lastRow = processedRows[processedRows.length - 1];
+        const count = lastRow ? lastRow.total : 0;
+
+        if (isBirdSpecies(sp)) {
+          groupNormalCount += count;
+        } else {
+          groupIIBCount += count;
+        }
+      });
+    });
+
+    const total = groupIIBCount + groupNormalCount || 1;
+
+    return {
+      groupIIBCount,
+      groupNormalCount,
+      groupIIBPct: Math.round((groupIIBCount / total) * 100),
+      groupNormalPct: Math.round((groupNormalCount / total) * 100),
+    };
+  }, [filteredFacilities]);
+
+  // 4. Decrease Reasons Breakdown (Commercial vs Loss/Death vs Other)
+  const decreaseReasons = useMemo(() => {
+    let sold = 0;
+    let death = 0;
+    let transfer = 0;
+    let other = 0;
+
+    filteredFacilities.forEach((fac) => {
+      fac.speciesList.forEach((sp) => {
+        const processedRows = computeLogbookTable(sp.baseline || {}, sp.fluctuations || []);
+        processedRows.forEach((row) => {
+          if (row.isBaseline || !row.date) return;
+          const dec =
+            (row.decFather || 0) +
+            (row.decMother || 0) +
+            (row.decOtherMale || 0) +
+            (row.decOtherFemale || 0) +
+            (row.decOtherUnknown || 0);
+
+          if (dec > 0) {
+            const reason = (row.reason || '').toLowerCase();
+            if (reason.includes('xuất bán') || reason.includes('bán')) {
+              sold += dec;
+            } else if (reason.includes('chết') || reason.includes('bệnh') || reason.includes('rủi ro')) {
+              death += dec;
+            } else if (reason.includes('tặng') || reason.includes('chuyển') || reason.includes('nhượng')) {
+              transfer += dec;
+            } else {
+              other += dec;
+            }
+          }
+        });
+      });
+    });
+
+    const totalDec = sold + death + transfer + other || 1;
+
+    return {
+      sold,
+      death,
+      transfer,
+      other,
+      totalDec,
+      soldPct: Math.round((sold / totalDec) * 100),
+      deathPct: Math.round((death / totalDec) * 100),
+      transferPct: Math.round((transfer / totalDec) * 100),
+    };
+  }, [filteredFacilities]);
+
   // Combo Chart Configurations (Bar + Line)
   // Calculate max values for bar Y-axis scaling to prevent overlapping with line chart
   const maxBarVal = useMemo(() => {
@@ -695,6 +849,198 @@ export default function AnalyticsView({ facilitiesList = [] }) {
               </span>
             </div>
           ))}
+        </div>
+      </div>
+
+      {/* 2 Grid Columns Section: Top 5 Facilities & Gender / Age Structure */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6">
+        {/* Top 5 Facilities Leaderboard (7 cols) */}
+        <div className="lg:col-span-7 bg-white border border-slate-200 rounded-2xl p-3.5 sm:p-5 shadow-sm space-y-3">
+          <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
+            <div>
+              <h3 className="text-xs sm:text-sm font-extrabold text-slate-900 flex items-center gap-2">
+                <Award className="w-4 h-4 text-amber-500 flex-shrink-0" />
+                <span>Top 5 Cơ Sở Nuôi Quy Mô Lớn Nhất Huyện</span>
+              </h3>
+              <p className="text-[10px] sm:text-[11px] text-slate-500 font-medium">
+                Xếp hạng các cơ sở theo tổng số lượng cá thể đang quản lý
+              </p>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            {topFacilities.map((fac, rank) => {
+              const pct = chartData.finalTotal > 0 ? Math.round((fac.totalAnimals / chartData.finalTotal) * 100) : 0;
+              const badgeColors = [
+                'bg-amber-100 text-amber-800 border-amber-300 font-black',
+                'bg-slate-200 text-slate-700 border-slate-300 font-bold',
+                'bg-amber-700/10 text-amber-900 border-amber-400 font-bold',
+                'bg-slate-100 text-slate-600 border-slate-200 font-medium',
+                'bg-slate-100 text-slate-600 border-slate-200 font-medium',
+              ];
+
+              return (
+                <div key={fac.id} className="bg-slate-50/80 border border-slate-200/80 rounded-xl p-2.5 sm:p-3 space-y-1.5 hover:bg-slate-100/80 transition-colors">
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span className={`w-6 h-6 rounded-lg text-xs flex items-center justify-center border flex-shrink-0 ${badgeColors[rank]}`}>
+                        #{rank + 1}
+                      </span>
+                      <div className="truncate">
+                        <h4 className="text-xs font-bold text-slate-900 truncate">
+                          {fac.facilityName}
+                        </h4>
+                        <span className="text-[10px] text-slate-500 font-medium">
+                          Chủ hộ: {fac.ownerName} • 📍 {fac.commune}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="text-right flex-shrink-0">
+                      <span className="text-sm sm:text-base font-extrabold font-mono text-emerald-800">
+                        {fac.totalAnimals} <span className="text-[10px] font-sans font-normal text-slate-500">con</span>
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Progress bar */}
+                  <div className="w-full bg-slate-200 rounded-full h-1.5 overflow-hidden">
+                    <div
+                      className="bg-emerald-600 h-1.5 rounded-full transition-all duration-500"
+                      style={{ width: `${Math.max(5, pct)}%` }}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Gender & Breed Ratio Breakdown (5 cols) */}
+        <div className="lg:col-span-5 bg-white border border-slate-200 rounded-2xl p-3.5 sm:p-5 shadow-sm space-y-3.5">
+          <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
+            <div>
+              <h3 className="text-xs sm:text-sm font-extrabold text-slate-900 flex items-center gap-2">
+                <Feather className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+                <span>Cấu Trúc Đàn & Giới Tính</span>
+              </h3>
+              <p className="text-[10px] sm:text-[11px] text-slate-500 font-medium">
+                Tỷ lệ Bố / Mẹ sinh sản & Động vật non / Hậu bị
+              </p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-2 text-center">
+            <div className="bg-sky-50 border border-sky-200 rounded-xl p-2.5">
+              <span className="text-[10px] font-bold text-sky-700 uppercase block">Đực Bố (♂️)</span>
+              <span className="text-lg font-black text-sky-900 font-mono">{genderAgeBreakdown.father}</span>
+              <span className="text-[10px] text-sky-600 block mt-0.5">{genderAgeBreakdown.fatherPct}% tổng đàn</span>
+            </div>
+
+            <div className="bg-pink-50 border border-pink-200 rounded-xl p-2.5">
+              <span className="text-[10px] font-bold text-pink-700 uppercase block">Cái Mẹ (♀️)</span>
+              <span className="text-lg font-black text-pink-900 font-mono">{genderAgeBreakdown.mother}</span>
+              <span className="text-[10px] text-pink-600 block mt-0.5">{genderAgeBreakdown.motherPct}% tổng đàn</span>
+            </div>
+          </div>
+
+          <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3 flex items-center justify-between text-xs">
+            <div>
+              <span className="font-bold text-emerald-900 block">Tỷ lệ Phối Giống Sinh Sản</span>
+              <span className="text-[10px] text-emerald-700">Trung bình 1 Đực Bố phối với</span>
+            </div>
+            <span className="text-base font-extrabold text-emerald-900 font-mono bg-white px-2.5 py-1 rounded-lg border border-emerald-300">
+              1 ♂ : {genderAgeBreakdown.ratioMotherToFather} ♀
+            </span>
+          </div>
+
+          <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 space-y-1 text-xs">
+            <div className="flex items-center justify-between text-slate-700 font-medium">
+              <span>🐣 Đàn non / Hậu bị / Khác:</span>
+              <strong className="font-mono text-slate-900">{genderAgeBreakdown.youngTotal} con ({genderAgeBreakdown.youngPct}%)</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 2 Grid Columns Section: CITES Classification & Decrease Reasons Analysis */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6">
+        {/* Legal CITES Classification (6 cols) */}
+        <div className="lg:col-span-6 bg-white border border-slate-200 rounded-2xl p-3.5 sm:p-5 shadow-sm space-y-3">
+          <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
+            <div>
+              <h3 className="text-xs sm:text-sm font-extrabold text-slate-900 flex items-center gap-2">
+                <Filter className="w-4 h-4 text-purple-600 flex-shrink-0" />
+                <span>Phân Loại Pháp Lý ĐVHD (NĐ 84/2021/NĐ-CP & CITES)</span>
+              </h3>
+              <p className="text-[10px] sm:text-[11px] text-slate-500 font-medium">
+                Tỷ lệ loài nguy cấp, quý, hiếm (Nhóm IIB) và loài thông thường
+              </p>
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            <div className="bg-amber-50/80 border border-amber-200 rounded-xl p-3 space-y-1.5">
+              <div className="flex items-center justify-between text-xs">
+                <span className="font-extrabold text-amber-900 flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded-full bg-amber-500 inline-block" />
+                  Loài Nhóm IIB & Phụ lục II CITES (Dúi, Cầy, Nhím...)
+                </span>
+                <strong className="font-mono text-amber-950 font-black text-sm">{legalCitesBreakdown.groupIIBCount} con ({legalCitesBreakdown.groupIIBPct}%)</strong>
+              </div>
+              <div className="w-full bg-amber-200 rounded-full h-2 overflow-hidden">
+                <div className="bg-amber-600 h-2 rounded-full" style={{ width: `${legalCitesBreakdown.groupIIBPct}%` }} />
+              </div>
+            </div>
+
+            <div className="bg-emerald-50/80 border border-emerald-200 rounded-xl p-3 space-y-1.5">
+              <div className="flex items-center justify-between text-xs">
+                <span className="font-extrabold text-emerald-900 flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block" />
+                  Động Vật Hoang Dã Thông Thường (Chim chào mào, cu gáy...)
+                </span>
+                <strong className="font-mono text-emerald-950 font-black text-sm">{legalCitesBreakdown.groupNormalCount} con ({legalCitesBreakdown.groupNormalPct}%)</strong>
+              </div>
+              <div className="w-full bg-emerald-200 rounded-full h-2 overflow-hidden">
+                <div className="bg-emerald-600 h-2 rounded-full" style={{ width: `${legalCitesBreakdown.groupNormalPct}%` }} />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Decrease Reasons Analysis (6 cols) */}
+        <div className="lg:col-span-6 bg-white border border-slate-200 rounded-2xl p-3.5 sm:p-5 shadow-sm space-y-3">
+          <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
+            <div>
+              <h3 className="text-xs sm:text-sm font-extrabold text-slate-900 flex items-center gap-2">
+                <TrendingDown className="w-4 h-4 text-rose-600 flex-shrink-0" />
+                <span>Phân Tích Lý Do Giảm Đàn Trong Kỳ</span>
+              </h3>
+              <p className="text-[10px] sm:text-[11px] text-slate-500 font-medium">
+                Tỷ lệ giữa xuất bán thương mại và rủi ro bệnh/chết
+              </p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-3 gap-2 text-center text-xs">
+            <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-2.5 space-y-0.5">
+              <span className="text-[10px] font-bold text-emerald-800 uppercase block">Xuất bán 💰</span>
+              <span className="text-base font-black text-emerald-900 font-mono">{decreaseReasons.sold} con</span>
+              <span className="text-[10px] text-emerald-700 block font-medium">{decreaseReasons.soldPct}%</span>
+            </div>
+
+            <div className="bg-rose-50 border border-rose-200 rounded-xl p-2.5 space-y-0.5">
+              <span className="text-[10px] font-bold text-rose-800 uppercase block">Rủi ro/Chết ⚠️</span>
+              <span className="text-base font-black text-rose-900 font-mono">{decreaseReasons.death} con</span>
+              <span className="text-[10px] text-rose-700 block font-medium">{decreaseReasons.deathPct}%</span>
+            </div>
+
+            <div className="bg-blue-50 border border-blue-200 rounded-xl p-2.5 space-y-0.5">
+              <span className="text-[10px] font-bold text-blue-800 uppercase block">Chuyển nhượng 🚚</span>
+              <span className="text-base font-black text-blue-900 font-mono">{decreaseReasons.transfer} con</span>
+              <span className="text-[10px] text-blue-700 block font-medium">{decreaseReasons.transferPct}%</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
