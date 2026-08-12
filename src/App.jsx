@@ -824,11 +824,11 @@ export default function App() {
             <main className="flex-1 max-w-[1720px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-5">
               {/* Show Image Banner ONLY on Home view */}
               {currentView === 'HOME' && (
-                <div className="mb-5 animate-in fade-in slide-in-from-top-4 duration-500 rounded-2xl overflow-hidden border border-emerald-500/20 shadow-md">
+                <div className="mb-5 animate-in fade-in slide-in-from-top-4 duration-500 rounded-2xl overflow-hidden border border-emerald-500/30 shadow-lg bg-emerald-950 p-1 sm:p-1.5 flex items-center justify-center">
                   <img
                     src="./images/banner.jpg"
                     alt="Hạt Kiểm lâm khu vực Krông Bông - Banner Quản lý cơ sở nuôi động vật hoang dã"
-                    className="w-full h-auto block rounded-2xl"
+                    className="w-full h-auto min-h-[190px] sm:min-h-[260px] md:min-h-[300px] max-h-[450px] object-contain rounded-xl block mx-auto"
                   />
                 </div>
               )}
