@@ -35,7 +35,7 @@ export default function WildlifeHeroBanner({
 
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-500/20 border border-indigo-400/40 text-indigo-200 font-extrabold shadow-xs backdrop-blur-md">
               <MapPin className="w-3.5 h-3.5 text-indigo-300" />
-              <span>Hạt Kiểm Lâm Krông Bông</span>
+              <span>Hạt Kiểm lâm khu vực Krông Bông</span>
             </span>
           </div>
 

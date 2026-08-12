@@ -97,7 +97,7 @@ export default function Login({ onLoginSuccess }) {
           <div className="bg-white/20 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 backdrop-blur-md">
             <ShieldCheck className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-2xl font-black mb-2">Hạt Kiểm Lâm Krông Bông</h1>
+          <h1 className="text-xl sm:text-2xl font-black mb-2">Hạt Kiểm lâm khu vực Krông Bông</h1>
           <p className="text-emerald-100 font-medium text-sm">Hệ Thống Quản Lý Động Vật Hoang Dã</p>
         </div>
 

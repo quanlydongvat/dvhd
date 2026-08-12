@@ -906,7 +906,7 @@ export default function App() {
           <footer className="bg-white border-t border-slate-200/80 py-3 text-center text-xs text-slate-600 no-print shadow-2xs mb-12 lg:mb-0 mt-auto">
             <div className="max-w-7xl mx-auto px-4 space-y-1">
               <p className="text-xs text-emerald-800 font-extrabold">
-                © Hạt kiểm lâm khu vực Krông Bông
+                © Hạt Kiểm lâm khu vực Krông Bông
               </p>
               <p className="font-semibold text-slate-800 text-xs">
                 Ứng dụng sổ theo dõi quản lý động vật hoang dã điện tử - Nuôi sinh sản
