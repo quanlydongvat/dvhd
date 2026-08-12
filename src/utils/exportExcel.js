@@ -1,7 +1,7 @@
 import ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
-import { computeLogbookTable } from './calculations';
+import { computeLogbookTable, getRegistrationCodeStatus } from './calculations';
 
 export const COMMUNES = ['xã Hòa Sơn', 'xã Yang Mao', 'xã Cư Pui', 'Xã Krông Bông', 'Xã Dang Kang'];
 
@@ -51,7 +51,10 @@ export async function exportDistrictReport(facilitiesList, selectedCommune = 'AL
         oMale: currentState.otherMale,
         oFemale: currentState.otherFemale,
         oUnknown: currentState.otherUnknown,
-        regCode: fac.registrationCode || '',
+        regCode: (() => {
+          const st = getRegistrationCodeStatus(fac);
+          return st.isAssigned ? st.text : (!st.isRequired ? 'Không thuộc diện cấp mã số' : 'Chưa cấp mã số');
+        })(),
         regDate: fac.registrationDate || '',
         purpose: fac.purposeCode || species.purposeCode || 'T',
         note: fac.note || currentState.reason || '',
@@ -519,7 +522,10 @@ export async function exportFacilityLogbook(facility) {
 
   const facName = facility.facilityName || 'Co_So';
   const ownerName = facility.ownerName || '';
-  const regCode = facility.registrationCode || 'Chưa cấp';
+  const regStatus = getRegistrationCodeStatus(facility);
+  const regCode = regStatus.isAssigned
+    ? regStatus.text
+    : (!regStatus.isRequired ? 'Không thuộc diện cấp mã số' : 'Chưa cấp mã số');
 
   (facility.speciesList || []).forEach((species, spIdx) => {
     const rawSheetName = species.vietnameseName || `Loai_${spIdx + 1}`;

@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { Building2, Search, Filter, ArrowRight, Download, Feather, ShieldCheck, MapPin, FileText, Table, ChevronDown, ChevronRight, CheckSquare, Square, Eye, EyeOff, Layers, Check } from 'lucide-react';
 import * as XLSX from 'xlsx';
-import { isBirdSpecies, getFacilityCategory } from '../utils/calculations';
+import { isBirdSpecies, getFacilityCategory, getRegistrationCodeStatus } from '../utils/calculations';
 import { exportRegionalSummaryTable } from '../utils/exportExcel';
 import CitesSummaryTable from './CitesSummaryTable';
 
@@ -796,9 +796,18 @@ export default function SummaryView({
                             {isFirstSpeciesRow && (
                               <td
                                 rowSpan={fac.speciesList.length}
-                                className="px-1.5 py-1.5 font-mono font-bold border-r border-slate-200 text-indigo-700 text-[11px] text-center"
+                                className="px-1.5 py-1.5 border-r border-slate-200 text-center"
                               >
-                                {fac.registrationCode || 'Chưa có'}
+                                {(() => {
+                                  const reg = getRegistrationCodeStatus(fac);
+                                  if (reg.isAssigned) {
+                                    return <span className="font-mono font-extrabold text-indigo-700 text-[11px]">{reg.text}</span>;
+                                  }
+                                  if (!reg.isRequired) {
+                                    return <span className="text-[10px] text-slate-400 font-medium italic block leading-tight">Không thuộc diện cấp mã số</span>;
+                                  }
+                                  return <span className="text-[10px] text-amber-700 font-bold bg-amber-50 px-1 py-0.5 rounded border border-amber-200">Chưa cấp</span>;
+                                })()}
                               </td>
                             )}
 
@@ -808,7 +817,13 @@ export default function SummaryView({
                                 rowSpan={fac.speciesList.length}
                                 className="px-1 py-1.5 font-mono border-r border-slate-200 text-slate-600 whitespace-nowrap text-center font-semibold text-[10px]"
                               >
-                                {fac.registrationDate ? fac.registrationDate.split('-').reverse().join('/') : '---'}
+                                {(() => {
+                                  const reg = getRegistrationCodeStatus(fac);
+                                  if (!reg.isRequired) {
+                                    return <span className="text-slate-400 font-normal">---</span>;
+                                  }
+                                  return fac.registrationDate ? fac.registrationDate.split('-').reverse().join('/') : '---';
+                                })()}
                               </td>
                             )}
 
