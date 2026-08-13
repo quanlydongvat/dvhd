@@ -190,13 +190,13 @@ export default function SummaryView({
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
       {/* Table Format Sub-Tabs Switcher (Bảng 1.1 vs Bảng 1.2) */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 bg-slate-100/90 p-2 rounded-2xl border border-slate-200 shadow-inner">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 bg-slate-100/90 p-2 rounded-2xl border border-slate-300 shadow-inner">
         <div className="flex items-center gap-1.5 w-full sm:w-auto">
           <button
             onClick={() => setSummarySubTab('TABLE_1_1')}
             className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-extrabold transition-all w-full sm:w-auto justify-center ${
               summarySubTab === 'TABLE_1_1'
-                ? 'bg-white text-emerald-800 shadow-md border border-slate-200'
+                ? 'bg-white text-emerald-800 shadow-md border border-slate-300'
                 : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
             }`}
           >
@@ -208,7 +208,7 @@ export default function SummaryView({
             onClick={() => setSummarySubTab('TABLE_1_2')}
             className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-extrabold transition-all w-full sm:w-auto justify-center ${
               summarySubTab === 'TABLE_1_2'
-                ? 'bg-white text-indigo-800 shadow-md border border-slate-200'
+                ? 'bg-white text-indigo-800 shadow-md border border-slate-300'
                 : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
             }`}
           >
@@ -268,7 +268,7 @@ export default function SummaryView({
               className={`p-4 rounded-2xl border text-left transition-all duration-300 relative overflow-hidden group shadow-md flex flex-col justify-between ${
                 isSelected
                   ? 'bg-gradient-to-br from-emerald-600 via-teal-600 to-indigo-700 text-white border-emerald-400 shadow-xl ring-2 ring-emerald-400 scale-[1.03]'
-                  : 'bg-gradient-to-br from-white to-slate-50 hover:to-emerald-50/40 border-slate-200 text-slate-800 hover:border-emerald-400 hover:shadow-xl hover:scale-[1.02]'
+                  : 'bg-gradient-to-br from-white to-slate-50 hover:to-emerald-50/40 border-slate-300 text-slate-800 hover:border-emerald-400 hover:shadow-xl hover:scale-[1.02]'
               }`}
             >
               {/* Background Decorative Glow */}
@@ -321,7 +321,7 @@ export default function SummaryView({
 
                 <div
                   className={`pt-2.5 border-t text-[11px] flex items-center justify-between font-bold ${
-                    isSelected ? 'border-white/20 text-emerald-100' : 'border-slate-200/80 text-slate-600'
+                    isSelected ? 'border-white/20 text-emerald-100' : 'border-slate-300/85 text-slate-600'
                   }`}
                 >
                   <span className="flex items-center gap-1">🦔 Lớp Thú: <strong className={isSelected ? 'text-white' : 'text-slate-900'}>{cMammals}</strong></span>
@@ -606,12 +606,12 @@ export default function SummaryView({
               return (
                 <div
                   key={communeGroup.communeName}
-                  className="bg-white border border-slate-200 rounded-2xl shadow-lg overflow-hidden animate-in fade-in duration-200"
+                  className="bg-white border border-slate-300 rounded-2xl shadow-lg overflow-hidden animate-in fade-in duration-200"
                 >
                   {/* Commune Group Section Header (Interactive Accordion Toggle) */}
                   <div
                     onClick={() => toggleCommuneExpand(communeGroup.communeName)}
-                    className="bg-slate-100/90 hover:bg-slate-200/90 border-b border-slate-200 px-6 py-3 flex flex-wrap items-center justify-between gap-3 cursor-pointer transition-colors select-none"
+                    className="bg-slate-100/90 hover:bg-slate-200/90 border-b border-slate-300 px-6 py-3 flex flex-wrap items-center justify-between gap-3 cursor-pointer transition-colors select-none"
                   >
                     <div className="flex items-center gap-3">
                       <span className="p-2 bg-emerald-600 text-white rounded-xl font-bold shadow-xs">
@@ -646,29 +646,29 @@ export default function SummaryView({
                   <table className="w-full text-xs text-left border-collapse min-w-[880px]">
 
                     <thead>
-                      <tr className="bg-slate-50 text-slate-800 text-center font-bold border-b border-slate-200">
-                        <th rowSpan={2} className="px-1 py-2 border-r border-slate-200 w-8 bg-slate-100 whitespace-nowrap">STT</th>
-                        <th rowSpan={2} className="px-1 py-2 border-r border-slate-200 w-14 bg-slate-100 whitespace-nowrap">Phân nhóm</th>
-                        <th rowSpan={2} className="px-1.5 py-2 border-r border-slate-200 min-w-[125px] max-w-[145px] text-left">Họ tên & Địa chỉ chủ nuôi</th>
-                        <th rowSpan={2} className="px-1.5 py-2 border-r border-slate-200 min-w-[90px] max-w-[110px] text-left leading-tight">Tên tiếng Việt & Khoa học</th>
-                        <th rowSpan={2} className="px-1 py-2 border-r border-slate-200 w-12 bg-emerald-100/80 text-emerald-950 font-extrabold whitespace-nowrap">
+                      <tr className="bg-slate-50 text-slate-800 text-center font-bold border-b border-slate-300">
+                        <th rowSpan={2} className="px-1 py-2 border-r border-slate-300 w-8 bg-slate-100 whitespace-nowrap">STT</th>
+                        <th rowSpan={2} className="px-1 py-2 border-r border-slate-300 w-14 bg-slate-100 whitespace-nowrap">Phân nhóm</th>
+                        <th rowSpan={2} className="px-1.5 py-2 border-r border-slate-300 min-w-[125px] max-w-[145px] text-left">Họ tên & Địa chỉ chủ nuôi</th>
+                        <th rowSpan={2} className="px-1.5 py-2 border-r border-slate-300 min-w-[90px] max-w-[110px] text-left leading-tight">Tên tiếng Việt & Khoa học</th>
+                        <th rowSpan={2} className="px-1 py-2 border-r border-slate-300 w-12 bg-emerald-100/80 text-emerald-950 font-extrabold whitespace-nowrap">
                           Tổng số<br />
                           <span className="font-mono text-[8px] text-emerald-800">(5=6+..+10)</span>
                         </th>
-                        <th colSpan={2} className="px-1 py-1 border-r border-slate-200 bg-teal-100/70 text-teal-950 font-extrabold whitespace-nowrap text-[11px]">Đàn bố mẹ</th>
-                        <th colSpan={3} className="px-1 py-1 border-r border-slate-200 bg-indigo-100/70 text-indigo-950 font-extrabold whitespace-nowrap text-[11px]">Cá thể khác</th>
-                        <th rowSpan={2} className="px-1.5 py-2 border-r border-slate-200 w-20 text-center">Mã số cơ sở</th>
-                        <th rowSpan={2} className="px-1 py-2 border-r border-slate-200 w-16 text-center">Ngày cấp mã số</th>
-                        <th rowSpan={2} className="px-0.5 py-2 border-r border-slate-200 w-10 text-center">Mục đích</th>
-                        <th rowSpan={2} className="px-1 py-2 border-r border-slate-200 w-16 text-center">Ghi chú</th>
+                        <th colSpan={2} className="px-1 py-1 border-r border-slate-300 bg-teal-100/70 text-teal-950 font-extrabold whitespace-nowrap text-[11px]">Đàn bố mẹ</th>
+                        <th colSpan={3} className="px-1 py-1 border-r border-slate-300 bg-indigo-100/70 text-indigo-950 font-extrabold whitespace-nowrap text-[11px]">Cá thể khác</th>
+                        <th rowSpan={2} className="px-1.5 py-2 border-r border-slate-300 w-20 text-center">Mã số cơ sở</th>
+                        <th rowSpan={2} className="px-1 py-2 border-r border-slate-300 w-16 text-center">Ngày cấp mã số</th>
+                        <th rowSpan={2} className="px-0.5 py-2 border-r border-slate-300 w-10 text-center">Mục đích</th>
+                        <th rowSpan={2} className="px-1 py-2 border-r border-slate-300 w-16 text-center">Ghi chú</th>
                         <th rowSpan={2} className="px-1 py-2 w-20 text-center whitespace-nowrap">Thao tác</th>
                       </tr>
-                      <tr className="bg-slate-50/50 text-slate-700 text-center font-bold border-b border-slate-200">
-                        <th className="px-0.5 py-1 border-r border-slate-200 w-8 bg-teal-50 text-teal-900 text-[10px]">Đực (6)</th>
-                        <th className="px-0.5 py-1 border-r border-slate-200 w-8 bg-teal-50 text-teal-900 text-[10px]">Cái (7)</th>
-                        <th className="px-0.5 py-1 border-r border-slate-200 w-8 bg-indigo-50 text-indigo-900 text-[10px]">Đực (8)</th>
-                        <th className="px-0.5 py-1 border-r border-slate-200 w-8 bg-indigo-50 text-indigo-900 text-[10px]">Cái (9)</th>
-                        <th className="px-0.5 py-1 border-r border-slate-200 w-9 bg-indigo-50 text-indigo-900 text-[9px]">Chưa XĐ (10)</th>
+                      <tr className="bg-slate-50/50 text-slate-700 text-center font-bold border-b border-slate-300">
+                        <th className="px-0.5 py-1 border-r border-slate-300 w-8 bg-teal-50 text-teal-900 text-[10px]">Đực (6)</th>
+                        <th className="px-0.5 py-1 border-r border-slate-300 w-8 bg-teal-50 text-teal-900 text-[10px]">Cái (7)</th>
+                        <th className="px-0.5 py-1 border-r border-slate-300 w-8 bg-indigo-50 text-indigo-900 text-[10px]">Đực (8)</th>
+                        <th className="px-0.5 py-1 border-r border-slate-300 w-8 bg-indigo-50 text-indigo-900 text-[10px]">Cái (9)</th>
+                        <th className="px-0.5 py-1 border-r border-slate-300 w-9 bg-indigo-50 text-indigo-900 text-[9px]">Chưa XĐ (10)</th>
                       </tr>
 
                       {/* Underlined Column Numbers Row */}
@@ -687,7 +687,7 @@ export default function SummaryView({
                         <td className="py-0.5 border-r border-slate-300"><u>12</u></td>
                         <td className="py-0.5 border-r border-slate-300"><u>13</u></td>
                         <td className="py-0.5 border-r border-slate-300"><u>14</u></td>
-                        <td className="py-0.5">#</td>
+                        <td className="py-0.5 font-bold text-slate-700">#</td>
                       </tr>
                     </thead>
 
@@ -722,7 +722,7 @@ export default function SummaryView({
                             {isFirstSpeciesRow && (
                               <td
                                 rowSpan={fac.speciesList.length}
-                                className="px-1 py-1.5 text-center font-mono font-bold border-r border-slate-200 text-slate-700 bg-slate-50/80 text-xs"
+                                className="px-1 py-1.5 text-center font-mono font-bold border-r border-slate-300 text-slate-700 bg-slate-50/80 text-xs"
                               >
                                 {sttForThisFac}
                               </td>
@@ -732,7 +732,7 @@ export default function SummaryView({
                             {isFirstSpeciesRow && (
                               <td
                                 rowSpan={fac.speciesList.length}
-                                className="px-1 py-1.5 text-center font-bold border-r border-slate-200 bg-slate-50/50"
+                                className="px-1 py-1.5 text-center font-bold border-r border-slate-300 bg-slate-50/50"
                               >
                                 {isBirdFac ? (
                                   <span className="bg-amber-100 text-amber-900 border border-amber-300 px-1 py-0.5 rounded text-[9px] font-extrabold inline-flex items-center gap-0.5 shadow-2xs whitespace-nowrap">
@@ -750,7 +750,7 @@ export default function SummaryView({
                             {isFirstSpeciesRow && (
                               <td
                                 rowSpan={fac.speciesList.length}
-                                className="px-1.5 py-1.5 border-r border-slate-200 bg-slate-50/30 min-w-[125px] max-w-[145px]"
+                                className="px-1.5 py-1.5 border-r border-slate-300 bg-slate-50/30 min-w-[125px] max-w-[145px]"
                               >
                                 <div className="font-extrabold text-slate-900 text-xs leading-snug">{fac.ownerName}</div>
                                 <div className="text-[9px] text-slate-500 mt-0.5 font-medium leading-tight">{fac.address}</div>
@@ -758,38 +758,38 @@ export default function SummaryView({
                             )}
 
                             {/* Tên Loài */}
-                            <td className="px-1.5 py-1.5 border-r border-slate-200 min-w-[90px] max-w-[110px] leading-tight">
+                            <td className="px-1.5 py-1.5 border-r border-slate-300 min-w-[90px] max-w-[110px] leading-tight">
                               <div className="font-bold text-slate-800 text-[11px] md:text-xs">{sp.vietnameseName}</div>
                               <div className="italic text-[9.5px] text-slate-500 font-serif line-clamp-2">{sp.scientificName}</div>
                             </td>
 
                             {/* Tổng số */}
-                            <td className="px-1 py-1.5 text-center font-mono font-extrabold text-xs border-r border-slate-200 text-emerald-800 bg-emerald-50/80">
+                            <td className="px-1 py-1.5 text-center font-mono font-extrabold text-xs border-r border-slate-300 text-emerald-800 bg-emerald-50/80">
                               {total}
                             </td>
 
                             {/* Bố */}
-                            <td className="px-0.5 py-1.5 text-center font-mono border-r border-slate-200 font-bold text-slate-900 text-xs">
+                            <td className="px-0.5 py-1.5 text-center font-mono border-r border-slate-300 font-bold text-slate-900 text-xs">
                               {father}
                             </td>
 
                             {/* Mẹ */}
-                            <td className="px-0.5 py-1.5 text-center font-mono border-r border-slate-200 font-bold text-slate-900 text-xs">
+                            <td className="px-0.5 py-1.5 text-center font-mono border-r border-slate-300 font-bold text-slate-900 text-xs">
                               {mother}
                             </td>
 
                             {/* Đực */}
-                            <td className="px-0.5 py-1.5 text-center font-mono border-r border-slate-200 text-slate-700 text-xs">
+                            <td className="px-0.5 py-1.5 text-center font-mono border-r border-slate-300 text-slate-700 text-xs">
                               {otherMale || ''}
                             </td>
 
                             {/* Cái */}
-                            <td className="px-0.5 py-1.5 text-center font-mono border-r border-slate-200 text-slate-700 text-xs">
+                            <td className="px-0.5 py-1.5 text-center font-mono border-r border-slate-300 text-slate-700 text-xs">
                               {otherFemale || ''}
                             </td>
 
                             {/* Chưa XĐ */}
-                            <td className="px-0.5 py-1.5 text-center font-mono border-r border-slate-200 text-slate-700 text-xs">
+                            <td className="px-0.5 py-1.5 text-center font-mono border-r border-slate-300 text-slate-700 text-xs">
                               {otherUnknown || ''}
                             </td>
 
@@ -797,7 +797,7 @@ export default function SummaryView({
                             {isFirstSpeciesRow && (
                               <td
                                 rowSpan={fac.speciesList.length}
-                                className="px-1.5 py-1.5 border-r border-slate-200 text-center"
+                                className="px-1.5 py-1.5 border-r border-slate-300 text-center"
                               >
                                 {(() => {
                                   const reg = getRegistrationCodeStatus(fac);
@@ -816,7 +816,7 @@ export default function SummaryView({
                             {isFirstSpeciesRow && (
                               <td
                                 rowSpan={fac.speciesList.length}
-                                className="px-1 py-1.5 font-mono border-r border-slate-200 text-slate-600 whitespace-nowrap text-center font-semibold text-[10px]"
+                                className="px-1 py-1.5 font-mono border-r border-slate-300 text-slate-600 whitespace-nowrap text-center font-semibold text-[10px]"
                               >
                                 {(() => {
                                   const reg = getRegistrationCodeStatus(fac);
@@ -829,7 +829,7 @@ export default function SummaryView({
                             )}
 
                             {/* Mục đích nuôi */}
-                            <td className="px-1 py-1.5 text-center font-mono font-bold border-r border-slate-200 text-teal-800 text-xs">
+                            <td className="px-1 py-1.5 text-center font-mono font-bold border-r border-slate-300 text-teal-800 text-xs">
                               {sp.purposeCode || fac.purposeCode || 'T'}
                             </td>
 
@@ -837,7 +837,7 @@ export default function SummaryView({
                             {isFirstSpeciesRow && (
                               <td
                                 rowSpan={fac.speciesList.length}
-                                className="px-1.5 py-1.5 border-r border-slate-200 text-slate-700 text-[11px]"
+                                className="px-1.5 py-1.5 border-r border-slate-300 text-slate-700 text-[11px]"
                               >
                                 {fac.note ? (
                                   <span className="bg-amber-50 text-amber-800 border border-amber-200 px-1.5 py-0.5 rounded text-[10px] font-bold">
