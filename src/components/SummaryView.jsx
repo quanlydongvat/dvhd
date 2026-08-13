@@ -879,7 +879,7 @@ export default function SummaryView({
                                     </button>
                                   )}
 
-                                  {currentUser?.role === 'ADMIN' && (
+                                  {(!currentUser || currentUser?.role === 'ADMIN') && (
                                     <button
                                       onClick={() => {
                                         if (window.confirm(`⚠️ Bạn có chắc chắn muốn xóa vĩnh viễn cơ sở nuôi "${fac.facilityName}" của chủ nuôi "${fac.ownerName}" cùng toàn bộ dữ liệu lịch sử biến động và các tài khoản liên kết không?`)) {
