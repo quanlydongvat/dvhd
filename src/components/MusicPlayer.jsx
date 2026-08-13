@@ -9,7 +9,7 @@ const PLAYLIST = [
     composer: 'Trịnh Công Sơn',
     genre: 'Guitar Acoustic Thư Giãn',
     duration: '3:45',
-    src: 'https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=acoustic-guitar-loop-113654.mp3',
+    src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
     coverBg: 'from-amber-600 to-emerald-900',
   },
   {
@@ -18,7 +18,7 @@ const PLAYLIST = [
     composer: 'Trịnh Công Sơn',
     genre: 'Hòa tấu Saxophone & Piano',
     duration: '4:12',
-    src: 'https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3?filename=relaxing-mountains-14111.mp3',
+    src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',
     coverBg: 'from-teal-600 to-slate-900',
   },
   {
@@ -27,7 +27,7 @@ const PLAYLIST = [
     composer: 'Trịnh Công Sơn',
     genre: 'Piano Rừng Xanh Thư Thái',
     duration: '3:28',
-    src: 'https://cdn.pixabay.com/download/audio/2022/10/14/audio_9939f792e7.mp3?filename=forest-lullaby-110624.mp3',
+    src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3',
     coverBg: 'from-emerald-700 to-indigo-950',
   },
   {
@@ -36,7 +36,7 @@ const PLAYLIST = [
     composer: 'Trịnh Công Sơn',
     genre: 'Violin & Cello Trầm Mộc',
     duration: '4:18',
-    src: 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a1682f.mp3?filename=peaceful-forest-ambient-20320.mp3',
+    src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3',
     coverBg: 'from-amber-800 to-slate-950',
   },
   {
@@ -45,7 +45,7 @@ const PLAYLIST = [
     composer: 'Trịnh Công Sơn',
     genre: 'Guitar Cổ Điển Rừng Sâu',
     duration: '3:50',
-    src: 'https://cdn.pixabay.com/download/audio/2021/08/09/audio_8844866345.mp3?filename=mountain-stream-11234.mp3',
+    src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3',
     coverBg: 'from-emerald-900 to-teal-950',
   },
   {
@@ -54,7 +54,7 @@ const PLAYLIST = [
     composer: 'Trịnh Công Sơn',
     genre: 'Hòa Tấu Piano Thư Giãn',
     duration: '3:55',
-    src: 'https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=acoustic-guitar-loop-113654.mp3',
+    src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3',
     coverBg: 'from-cyan-700 to-emerald-950',
   },
   {
@@ -63,7 +63,7 @@ const PLAYLIST = [
     composer: 'Trịnh Công Sơn',
     genre: 'Saxophone Thơ Mộng',
     duration: '4:05',
-    src: 'https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3?filename=relaxing-mountains-14111.mp3',
+    src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3',
     coverBg: 'from-amber-700 to-emerald-950',
   },
   {
@@ -72,7 +72,7 @@ const PLAYLIST = [
     composer: 'Trịnh Công Sơn',
     genre: 'Hòa Tấu Sáo Trúc Rừng Chiều',
     duration: '3:38',
-    src: 'https://cdn.pixabay.com/download/audio/2022/10/14/audio_9939f792e7.mp3?filename=forest-lullaby-110624.mp3',
+    src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3',
     coverBg: 'from-teal-700 to-indigo-950',
   },
   {
@@ -81,7 +81,7 @@ const PLAYLIST = [
     composer: 'Trịnh Công Sơn',
     genre: 'Acoustic Guitar Thả Hồn',
     duration: '3:42',
-    src: 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a1682f.mp3?filename=peaceful-forest-ambient-20320.mp3',
+    src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3',
     coverBg: 'from-rose-800 to-emerald-950',
   },
   {
@@ -90,7 +90,7 @@ const PLAYLIST = [
     composer: 'Trịnh Công Sơn',
     genre: 'Piano & Tiếng Chim Hót',
     duration: '4:00',
-    src: 'https://cdn.pixabay.com/download/audio/2021/08/09/audio_8844866345.mp3?filename=mountain-stream-11234.mp3',
+    src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3',
     coverBg: 'from-amber-600 to-teal-900',
   },
 
@@ -101,7 +101,7 @@ const PLAYLIST = [
     composer: 'Trịnh Công Sơn',
     genre: 'Hòa Tấu Cello & Guitar',
     duration: '4:22',
-    src: 'https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=acoustic-guitar-loop-113654.mp3',
+    src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-11.mp3',
     coverBg: 'from-indigo-900 to-slate-950',
   },
   {
@@ -110,7 +110,7 @@ const PLAYLIST = [
     composer: 'Trịnh Công Sơn',
     genre: 'Piano Thư Giãn Ban Đêm',
     duration: '3:50',
-    src: 'https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3?filename=relaxing-mountains-14111.mp3',
+    src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-12.mp3',
     coverBg: 'from-blue-800 to-emerald-950',
   },
   {
@@ -119,7 +119,7 @@ const PLAYLIST = [
     composer: 'Trịnh Công Sơn',
     genre: 'Guitar Cổ Điển Nhẹ Nhàng',
     duration: '3:30',
-    src: 'https://cdn.pixabay.com/download/audio/2022/10/14/audio_9939f792e7.mp3?filename=forest-lullaby-110624.mp3',
+    src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-13.mp3',
     coverBg: 'from-emerald-800 to-amber-950',
   },
   {
@@ -128,7 +128,7 @@ const PLAYLIST = [
     composer: 'Trịnh Công Sơn',
     genre: 'Hòa Tấu Sáo Rừng & Đàn Tranh',
     duration: '3:48',
-    src: 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a1682f.mp3?filename=peaceful-forest-ambient-20320.mp3',
+    src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-14.mp3',
     coverBg: 'from-teal-800 to-emerald-950',
   },
   {
@@ -137,7 +137,7 @@ const PLAYLIST = [
     composer: 'Trịnh Công Sơn',
     genre: 'Piano Nốt Nhẹ Thư Thái',
     duration: '3:35',
-    src: 'https://cdn.pixabay.com/download/audio/2021/08/09/audio_8844866345.mp3?filename=mountain-stream-11234.mp3',
+    src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3',
     coverBg: 'from-purple-900 to-emerald-950',
   },
   {
@@ -146,7 +146,7 @@ const PLAYLIST = [
     composer: 'Trịnh Công Sơn',
     genre: 'Violin Rừng Chiều Thơ Mộng',
     duration: '4:15',
-    src: 'https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=acoustic-guitar-loop-113654.mp3',
+    src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-16.mp3',
     coverBg: 'from-amber-900 to-teal-950',
   },
   {
@@ -155,7 +155,7 @@ const PLAYLIST = [
     composer: 'Trịnh Công Sơn',
     genre: 'Acoustic Guitar Thả Hồn',
     duration: '4:02',
-    src: 'https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3?filename=relaxing-mountains-14111.mp3',
+    src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
     coverBg: 'from-emerald-900 to-indigo-950',
   },
   {
@@ -164,7 +164,7 @@ const PLAYLIST = [
     composer: 'Trịnh Công Sơn',
     genre: 'Piano & Gió Rừng Đêm',
     duration: '3:58',
-    src: 'https://cdn.pixabay.com/download/audio/2022/10/14/audio_9939f792e7.mp3?filename=forest-lullaby-110624.mp3',
+    src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',
     coverBg: 'from-slate-800 to-emerald-950',
   },
   {
@@ -173,7 +173,7 @@ const PLAYLIST = [
     composer: 'Trịnh Công Sơn',
     genre: 'Hòa Tấu Măng Đô Lin & Guitar',
     duration: '3:25',
-    src: 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a1682f.mp3?filename=peaceful-forest-ambient-20320.mp3',
+    src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3',
     coverBg: 'from-amber-700 to-emerald-900',
   },
   {
@@ -182,7 +182,7 @@ const PLAYLIST = [
     composer: 'Trịnh Công Sơn',
     genre: 'Saxophone Trầm Ấm Thư Giãn',
     duration: '4:10',
-    src: 'https://cdn.pixabay.com/download/audio/2021/08/09/audio_8844866345.mp3?filename=mountain-stream-11234.mp3',
+    src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3',
     coverBg: 'from-teal-900 to-slate-950',
   },
 
@@ -193,7 +193,7 @@ const PLAYLIST = [
     composer: 'Âm Hưởng Tây Nguyên',
     genre: 'Đàn T\'rưng & Tiếng Suối Ngàn',
     duration: '4:15',
-    src: 'https://cdn.pixabay.com/download/audio/2021/08/09/audio_8844866345.mp3?filename=mountain-stream-11234.mp3',
+    src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3',
     coverBg: 'from-emerald-800 to-amber-950',
   },
   {
@@ -202,7 +202,7 @@ const PLAYLIST = [
     composer: 'Trịnh Công Sơn',
     genre: 'Hòa Tấu Đàn Đá & T\'rưng',
     duration: '3:40',
-    src: 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a1682f.mp3?filename=peaceful-forest-ambient-20320.mp3',
+    src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3',
     coverBg: 'from-amber-800 to-teal-950',
   },
   {
@@ -211,7 +211,7 @@ const PLAYLIST = [
     composer: 'Hạt Kiểm Lâm Krông Bông',
     genre: 'Sáo Rừng & Tiếng Chim Hót',
     duration: '4:30',
-    src: 'https://cdn.pixabay.com/download/audio/2022/10/14/audio_9939f792e7.mp3?filename=forest-lullaby-110624.mp3',
+    src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3',
     coverBg: 'from-teal-700 to-emerald-950',
   },
   {
@@ -220,7 +220,7 @@ const PLAYLIST = [
     composer: 'Nhạc Dân Dân Đại Ngàn',
     genre: 'Guitar Acoustic & Gió Rừng',
     duration: '3:52',
-    src: 'https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=acoustic-guitar-loop-113654.mp3',
+    src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3',
     coverBg: 'from-amber-700 to-emerald-950',
   },
   {
@@ -229,7 +229,7 @@ const PLAYLIST = [
     composer: 'Thiên Nhiên Krông Bông',
     genre: 'Âm Thanh Thiên Nhiên 8K',
     duration: '5:00',
-    src: 'https://cdn.pixabay.com/download/audio/2021/08/09/audio_8844866345.mp3?filename=mountain-stream-11234.mp3',
+    src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3',
     coverBg: 'from-emerald-900 to-cyan-950',
   },
   {
@@ -238,7 +238,7 @@ const PLAYLIST = [
     composer: 'Hòa Tấu Đại Ngàn',
     genre: 'Piano Thư Giãn Rừng Sâu',
     duration: '4:12',
-    src: 'https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3?filename=relaxing-mountains-14111.mp3',
+    src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3',
     coverBg: 'from-indigo-950 to-emerald-900',
   },
   {
@@ -247,7 +247,7 @@ const PLAYLIST = [
     composer: 'Âm Hưởng Rừng Xanh',
     genre: 'Violin & Đàn Đá Thư Thái',
     duration: '3:45',
-    src: 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a1682f.mp3?filename=peaceful-forest-ambient-20320.mp3',
+    src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-11.mp3',
     coverBg: 'from-emerald-800 to-amber-900',
   },
   {
@@ -256,7 +256,7 @@ const PLAYLIST = [
     composer: 'Hạt Kiểm Lâm Krông Bông',
     genre: 'Guitar & Sáo Trúc Thả Hồn',
     duration: '4:08',
-    src: 'https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=acoustic-guitar-loop-113654.mp3',
+    src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-12.mp3',
     coverBg: 'from-amber-900 to-slate-950',
   },
   {
@@ -265,7 +265,7 @@ const PLAYLIST = [
     composer: 'Âm Hưởng Thiên Nhiên',
     genre: 'Hòa Tấu Thư Giãn Sáng Rừng',
     duration: '3:50',
-    src: 'https://cdn.pixabay.com/download/audio/2022/10/14/audio_9939f792e7.mp3?filename=forest-lullaby-110624.mp3',
+    src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-13.mp3',
     coverBg: 'from-teal-800 to-emerald-950',
   },
   {
@@ -274,7 +274,7 @@ const PLAYLIST = [
     composer: 'Tuyệt Phẩm Kiểm Lâm',
     genre: 'Hòa Tấu Tổng Hợp Thư Giãn',
     duration: '4:45',
-    src: 'https://cdn.pixabay.com/download/audio/2021/08/09/audio_8844866345.mp3?filename=mountain-stream-11234.mp3',
+    src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-14.mp3',
     coverBg: 'from-emerald-900 to-teal-900',
   },
 ];
@@ -286,6 +286,7 @@ export default function MusicPlayer() {
   const [duration, setDuration] = useState(0);
   const [isMuted, setIsMuted] = useState(false);
   const [showPlaylist, setShowPlaylist] = useState(false);
+  const [loadError, setLoadError] = useState(false);
 
   const audioRef = useRef(null);
   const currentTrack = PLAYLIST[currentTrackIndex];
@@ -297,16 +298,19 @@ export default function MusicPlayer() {
       audioRef.current.pause();
       setIsPlaying(false);
     } else {
+      setLoadError(false);
       audioRef.current.play().then(() => {
         setIsPlaying(true);
       }).catch((err) => {
         console.warn("Autoplay audio blocked or error:", err);
+        setIsPlaying(false);
       });
     }
   };
 
   // Next Track
   const nextTrack = () => {
+    setLoadError(false);
     const nextIdx = (currentTrackIndex + 1) % PLAYLIST.length;
     setCurrentTrackIndex(nextIdx);
     setIsPlaying(true);
@@ -314,9 +318,16 @@ export default function MusicPlayer() {
 
   // Previous Track
   const prevTrack = () => {
+    setLoadError(false);
     const prevIdx = (currentTrackIndex - 1 + PLAYLIST.length) % PLAYLIST.length;
     setCurrentTrackIndex(prevIdx);
     setIsPlaying(true);
+  };
+
+  // Handle Audio error
+  const handleAudioError = (e) => {
+    console.warn("Audio loading error for track:", currentTrack.title, e);
+    setLoadError(true);
   };
 
   // Auto-play when track changes if was playing
@@ -373,7 +384,8 @@ export default function MusicPlayer() {
         src={currentTrack.src}
         onTimeUpdate={handleTimeUpdate}
         onEnded={nextTrack}
-        preload="metadata"
+        onError={handleAudioError}
+        preload="auto"
       />
 
       {/* Header Bar */}
