@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics, isSupported } from "firebase/analytics";
-import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "firebase/firestore";
+import { getFirestore, doc, setDoc, getDoc, onSnapshot, deleteDoc } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 
 // Your web app's Firebase configuration
@@ -56,6 +56,17 @@ export async function syncAppDataToCloud(appState) {
     return true;
   } catch (error) {
     console.warn("Error syncing to Firebase Cloud:", error);
+    return false;
+  }
+}
+
+export async function deleteFacilityFromCloud(facilityId) {
+  try {
+    if (!db || !facilityId) return false;
+    await deleteDoc(doc(db, "facilities", facilityId));
+    return true;
+  } catch (error) {
+    console.warn("Error deleting facility from Firebase Cloud:", error);
     return false;
   }
 }

@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Building2, Search, Filter, ArrowRight, Download, Feather, ShieldCheck, MapPin, FileText, Table, ChevronDown, ChevronRight, CheckSquare, Square, Eye, EyeOff, Layers, Check } from 'lucide-react';
+import { Building2, Search, Filter, ArrowRight, Download, Feather, ShieldCheck, MapPin, FileText, Table, ChevronDown, ChevronRight, CheckSquare, Square, Eye, EyeOff, Layers, Check, Trash2 } from 'lucide-react';
 import * as XLSX from 'xlsx';
 import { isBirdSpecies, getFacilityCategory, getRegistrationCodeStatus } from '../utils/calculations';
 import { exportRegionalSummaryTable } from '../utils/exportExcel';
@@ -12,6 +12,7 @@ export default function SummaryView({
   onSelectFacility,
   onOpenAddFacility,
   onOpenMapFacility,
+  onDeleteFacility,
 }) {
 
   const [summarySubTab, setSummarySubTab] = useState('TABLE_1_1'); // 'TABLE_1_1' | 'TABLE_1_2'
@@ -875,6 +876,21 @@ export default function SummaryView({
                                     >
                                       <MapPin className="w-3 h-3 text-rose-600" />
                                       <span>Định vị GIS</span>
+                                    </button>
+                                  )}
+
+                                  {currentUser?.role === 'ADMIN' && (
+                                    <button
+                                      onClick={() => {
+                                        if (window.confirm(`⚠️ Bạn có chắc chắn muốn xóa vĩnh viễn cơ sở nuôi "${fac.facilityName}" của chủ nuôi "${fac.ownerName}" cùng toàn bộ dữ liệu lịch sử biến động và các tài khoản liên kết không?`)) {
+                                          onDeleteFacility && onDeleteFacility(fac.id);
+                                        }
+                                      }}
+                                      className="px-1.5 py-0.5 mt-0.5 rounded-lg text-[10px] font-bold text-red-700 bg-red-50 hover:bg-red-100 border border-red-200 transition-all flex items-center justify-center gap-0.5 w-full cursor-pointer"
+                                      title="Xóa vĩnh viễn cơ sở nuôi khỏi hệ thống"
+                                    >
+                                      <Trash2 className="w-3 h-3 text-red-600" />
+                                      <span>Xóa cơ sở</span>
                                     </button>
                                   )}
                                 </div>

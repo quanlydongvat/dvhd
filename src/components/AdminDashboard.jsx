@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ShieldCheck, UserPlus, Key, Trash2, Search, Loader2, Check, UserCheck, X } from 'lucide-react';
+import { ShieldCheck, UserPlus, Key, Trash2, Search, Loader2, Check, UserCheck, X, Building2 } from 'lucide-react';
 import { db } from '../firebase';
 import { collection, getDocs, doc, setDoc, deleteDoc } from 'firebase/firestore';
 import { getAuth, createUserWithEmailAndPassword, signOut } from 'firebase/auth';
@@ -10,11 +10,13 @@ import { firebaseConfig } from '../firebase';
 const secondaryApp = initializeApp(firebaseConfig, "SecondaryApp");
 const secondaryAuth = getAuth(secondaryApp);
 
-export default function AdminDashboard({ facilitiesList = [] }) {
+export default function AdminDashboard({ facilitiesList = [], onDeleteFacility }) {
   const [users, setUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isCreating, setIsCreating] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [activeTab, setActiveTab] = useState('ACCOUNTS'); // 'ACCOUNTS' | 'FACILITIES'
+  const [facilitySearchTerm, setFacilitySearchTerm] = useState('');
 
   // Form states (Cấp mới)
   const [selectedFacility, setSelectedFacility] = useState('');
@@ -155,6 +157,16 @@ export default function AdminDashboard({ facilitiesList = [] }) {
     );
   });
 
+  const filteredFacilities = facilitiesList.filter(f => {
+    const term = facilitySearchTerm.toLowerCase();
+    return (
+      (f.facilityName || '').toLowerCase().includes(term) ||
+      (f.ownerName || '').toLowerCase().includes(term) ||
+      (f.commune || '').toLowerCase().includes(term) ||
+      (f.registrationCode || '').toLowerCase().includes(term)
+    );
+  });
+
   return (
     <div className="p-4 sm:p-6 max-w-[1600px] mx-auto space-y-6 animate-in fade-in duration-300 font-sans">
       {/* Header Banner */}
@@ -172,8 +184,34 @@ export default function AdminDashboard({ facilitiesList = [] }) {
         </div>
       </div>
 
-      {/* 2-COLUMN SIDE-BY-SIDE LAYOUT FOR WEB / DESKTOP */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      {/* Tabs Navigation */}
+      <div className="flex border-b border-slate-200/80 gap-6 text-xs sm:text-sm font-extrabold pb-0">
+        <button
+          onClick={() => setActiveTab('ACCOUNTS')}
+          className={`pb-2 px-1 transition-all flex items-center gap-1.5 border-b-2 cursor-pointer ${
+            activeTab === 'ACCOUNTS'
+              ? 'border-emerald-600 text-emerald-800'
+              : 'border-transparent text-slate-500 hover:text-slate-950'
+          }`}
+        >
+          <UserCheck className="w-4 h-4 text-emerald-600" />
+          <span>Quản lý Tài khoản ({users.length})</span>
+        </button>
+        <button
+          onClick={() => setActiveTab('FACILITIES')}
+          className={`pb-2 px-1 transition-all flex items-center gap-1.5 border-b-2 cursor-pointer ${
+            activeTab === 'FACILITIES'
+              ? 'border-emerald-600 text-emerald-800'
+              : 'border-transparent text-slate-500 hover:text-slate-950'
+          }`}
+        >
+          <Building2 className="w-4 h-4 text-emerald-600" />
+          <span>Quản lý Cơ sở nuôi ({facilitiesList.length})</span>
+        </button>
+      </div>
+
+      {activeTab === 'ACCOUNTS' && (
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         
         {/* LEFT COLUMN (5 Cols): Cấp Tài Khoản Cơ Sở Nuôi */}
         <div className="lg:col-span-5 bg-white p-5 sm:p-6 rounded-3xl shadow-sm border border-slate-200/80 space-y-4">
@@ -372,6 +410,96 @@ export default function AdminDashboard({ facilitiesList = [] }) {
         </div>
 
       </div>
+      )}
+
+      {/* TAB 2: QUẢN LÝ CƠ SỞ NUÔI */}
+      {activeTab === 'FACILITIES' && (
+        <div className="bg-white p-5 sm:p-6 rounded-3xl shadow-sm border border-slate-200/80 space-y-4 animate-in fade-in duration-200">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
+            <div>
+              <h2 className="text-base sm:text-lg font-black text-slate-900 flex items-center gap-2">
+                <Building2 className="w-5 h-5 text-emerald-600 flex-shrink-0" />
+                <span>Danh Sách Cơ Sở Nuôi ({filteredFacilities.length})</span>
+              </h2>
+              <p className="text-xs text-slate-500 font-medium mt-0.5">
+                Xóa cơ sở nuôi khỏi hệ thống và giải phóng các tài khoản liên kết
+              </p>
+            </div>
+
+            {/* Tìm kiếm nhanh cơ sở */}
+            <div className="relative w-full sm:w-64">
+              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                value={facilitySearchTerm}
+                onChange={(e) => setFacilitySearchTerm(e.target.value)}
+                placeholder="Tìm cơ sở, chủ hộ, xã..."
+                className="w-full pl-9 pr-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+              />
+            </div>
+          </div>
+
+          <div className="overflow-x-auto rounded-2xl border border-slate-200/80 max-h-[520px] overflow-y-auto scrollbar-thin">
+            <table className="w-full text-xs text-left">
+              <thead className="bg-slate-50 text-slate-700 font-extrabold uppercase border-b border-slate-200 sticky top-0 z-10">
+                <tr>
+                  <th className="px-4 py-3 text-center w-12">STT</th>
+                  <th className="px-4 py-3">Tên Cơ Sở & Chủ Hộ</th>
+                  <th className="px-4 py-3">Địa bàn (Xã)</th>
+                  <th className="px-4 py-3">Mã Số & Ngày Cấp</th>
+                  <th className="px-4 py-3 text-center">Số Loài Đang Nuôi</th>
+                  <th className="px-4 py-3 text-center">Thao tác Admin</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {filteredFacilities.map((f, idx) => {
+                  return (
+                    <tr key={f.id} className="hover:bg-slate-50/80 transition-colors">
+                      <td className="px-4 py-3 font-mono font-bold text-slate-500 text-center">{idx + 1}</td>
+                      <td className="px-4 py-3">
+                        <div className="font-extrabold text-slate-900 text-xs">{f.facilityName}</div>
+                        <div className="text-[10px] text-slate-500 font-medium">Chủ hộ: {f.ownerName} | SĐT: {f.phone || '---'}</div>
+                        <div className="text-[9px] text-slate-400 font-medium mt-0.5">{f.address}</div>
+                      </td>
+                      <td className="px-4 py-3 font-bold text-slate-800">{f.commune}</td>
+                      <td className="px-4 py-3">
+                        <div className="font-mono font-extrabold text-indigo-700">{f.registrationCode || 'Chưa cấp mã số'}</div>
+                        <div className="text-[10px] text-slate-400 font-medium">{f.registrationDate ? f.registrationDate.split('-').reverse().join('/') : '---'}</div>
+                      </td>
+                      <td className="px-4 py-3 text-center">
+                        <span className="bg-emerald-50 text-emerald-800 border border-emerald-200 px-2 py-0.5 rounded-full font-extrabold">
+                          {f.speciesList?.length || 0} loài
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 text-center">
+                        <button
+                          onClick={() => {
+                            if (window.confirm(`⚠️ Bạn có chắc chắn muốn xóa vĩnh viễn cơ sở nuôi "${f.facilityName}" của chủ nuôi "${f.ownerName}" cùng toàn bộ dữ liệu lịch sử biến động và các tài khoản liên kết không?`)) {
+                              onDeleteFacility && onDeleteFacility(f.id);
+                            }
+                          }}
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 font-extrabold rounded-xl transition-all cursor-pointer shadow-2xs hover:scale-[1.02] active:scale-[0.98]"
+                          title="Xóa vĩnh viễn cơ sở nuôi khỏi hệ thống"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                          <span>Xóa cơ sở</span>
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
+                {filteredFacilities.length === 0 && (
+                  <tr>
+                    <td colSpan="6" className="px-4 py-8 text-center text-slate-500 font-medium">
+                      Không tìm thấy cơ sở nuôi nào phù hợp.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
 
       {/* MODAL CẤP ĐỔI TÀI KHOẢN / MẬT KHẨU CHO CƠ SỞ */}
       {editingUser && (

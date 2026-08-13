@@ -20,14 +20,14 @@ import PWAInstallPrompt from './components/PWAInstallPrompt';
 import { computeLogbookTable } from './utils/calculations';
 import { loadAppData, saveAppData, clearAppData, resetToDemoData, REAL_FACILITIES_DATA, EMPTY_FACILITY_INFO } from './utils/storage';
 import { exportDistrictReport, exportFacilityLogbook } from './utils/exportExcel';
-import { syncAppDataToCloud, loadAppDataFromCloud } from './firebase';
+import { syncAppDataToCloud, loadAppDataFromCloud, deleteFacilityFromCloud } from './firebase';
 import ExportModal from './components/ExportModal';
 import PendingApprovalsModal from './components/PendingApprovalsModal';
 
 
 import { auth, db } from './firebase';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, collection, getDocs, query, where, writeBatch } from 'firebase/firestore';
 import Login from './components/Login';
 
 export default function App() {
@@ -676,6 +676,63 @@ export default function App() {
     setEditingFacility(null);
   };
 
+  const handleDeleteFacility = async (facilityId) => {
+    try {
+      // 1. Delete the facility document from Firestore
+      await deleteFacilityFromCloud(facilityId);
+
+      // 2. Delete any users associated with this facility from Firestore 'users' collection
+      const userSnapshot = await getDocs(query(collection(db, "users"), where("facilityId", "==", facilityId)));
+      const batch = writeBatch(db);
+      userSnapshot.forEach((userDoc) => {
+        batch.delete(userDoc.ref);
+      });
+      await batch.commit();
+
+      // 3. Update local state
+      const updatedFacilitiesList = facilitiesList.filter(f => f.id !== facilityId);
+      let nextActiveId = activeFacilityId;
+      let nextFacilityInfo = facilityInfo;
+      let nextSpeciesList = speciesList;
+      let nextActiveSpeciesId = activeSpeciesId;
+
+      if (activeFacilityId === facilityId) {
+        const fallbackFac = updatedFacilitiesList[0];
+        nextActiveId = fallbackFac ? fallbackFac.id : '';
+        nextFacilityInfo = fallbackFac ? {
+          id: fallbackFac.id,
+          facilityName: fallbackFac.facilityName,
+          ownerName: fallbackFac.ownerName,
+          registrationCode: fallbackFac.registrationCode,
+          registrationDate: fallbackFac.registrationDate,
+          commune: fallbackFac.commune || 'xã Hòa Sơn',
+          address: fallbackFac.address,
+          phone: fallbackFac.phone,
+          purposeCode: fallbackFac.purposeCode,
+          note: fallbackFac.note,
+          lat: fallbackFac.lat || '',
+          lng: fallbackFac.lng || '',
+        } : null;
+        nextSpeciesList = fallbackFac?.speciesList || [];
+        nextActiveSpeciesId = fallbackFac?.speciesList?.[0]?.id || null;
+      }
+
+      setAppState((prev) => ({
+        ...prev,
+        facilitiesList: updatedFacilitiesList,
+        activeFacilityId: nextActiveId,
+        facilityInfo: nextFacilityInfo,
+        speciesList: nextSpeciesList,
+        activeSpeciesId: nextActiveSpeciesId
+      }));
+
+      alert("✅ Đã xóa cơ sở nuôi và các tài khoản liên kết thành công!");
+    } catch (err) {
+      console.error("Lỗi khi xóa cơ sở:", err);
+      alert("Lỗi khi xóa cơ sở: " + err.message);
+    }
+  };
+
   // Handler: Import Data (JSON or Excel)
   const handleImportData = (parsedData) => {
     const facilities = parsedData.facilitiesList || (parsedData.speciesList ? [
@@ -834,7 +891,7 @@ export default function App() {
               )}
 
               {currentView === 'ADMIN_USERS' && currentUser?.role === 'ADMIN' ? (
-                <AdminDashboard facilitiesList={facilitiesList} onApproveRequest={handleApproveRequest} />
+                <AdminDashboard facilitiesList={facilitiesList} onApproveRequest={handleApproveRequest} onDeleteFacility={handleDeleteFacility} />
               ) : currentView === 'HOME' ? (
                 <AnalyticsView facilitiesList={facilitiesList} />
             ) : currentView === 'SUMMARY' ? (
@@ -851,6 +908,7 @@ export default function App() {
                   setTargetFacilityId(facId);
                   setCurrentView('MAP');
                 }}
+                onDeleteFacility={handleDeleteFacility}
               />
             ) : currentView === 'MAP' ? (
               <MapView
