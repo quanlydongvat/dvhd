@@ -392,14 +392,25 @@ export default function App() {
       return;
     }
 
-    const { id, status, facilityId, speciesId, facilityName, speciesName, submittedBy, ...cleanFormData } = req;
-    
-    let updatedFluctuations = [...(targetSp.fluctuations || [])];
-    updatedFluctuations.push({
-      id: 'fluc_' + Date.now(),
-      ...cleanFormData,
-      createdAt: req.createdAt || Date.now(),
+    let found = false;
+    const updatedFluctuations = (targetSp.fluctuations || []).map((fluc) => {
+      const isMatch = req.fluctuationId ? (fluc.id === req.fluctuationId) : (fluc.date === req.date && fluc.reason === req.reason);
+      if (isMatch) {
+        found = true;
+        return { ...fluc, approvalStatus: 'APPROVED' };
+      }
+      return fluc;
     });
+
+    if (!found) {
+      const { id, status, facilityId, speciesId, facilityName, speciesName, submittedBy, ...cleanFormData } = req;
+      updatedFluctuations.push({
+        id: req.fluctuationId || 'fluc_' + Date.now(),
+        ...cleanFormData,
+        createdAt: req.createdAt || Date.now(),
+        approvalStatus: 'APPROVED',
+      });
+    }
 
     const updatedSpeciesList = targetSpList.map((sp) =>
       sp.id === req.speciesId ? { ...sp, fluctuations: updatedFluctuations } : sp
@@ -409,7 +420,6 @@ export default function App() {
       fac.id === req.facilityId ? { ...fac, speciesList: updatedSpeciesList } : fac
     );
 
-    // Update local state, this will trigger syncAppDataToCloud in useEffect
     setAppState((prev) => ({
       ...prev,
       facilitiesList: updatedFacilitiesList
@@ -429,12 +439,39 @@ export default function App() {
     }
   };
 
+  const handleRejectRequest = async (req) => {
+    const targetFac = facilitiesList.find(f => f.id === req.facilityId);
+    if (!targetFac) return;
+
+    const targetSpList = targetFac.speciesList || [];
+    const targetSp = targetSpList.find(s => s.id === req.speciesId);
+    if (!targetSp) return;
+
+    const updatedFluctuations = (targetSp.fluctuations || []).filter((fluc) => {
+      return !(req.fluctuationId ? (fluc.id === req.fluctuationId) : (fluc.date === req.date && fluc.reason === req.reason));
+    });
+
+    const updatedSpeciesList = targetSpList.map((sp) =>
+      sp.id === req.speciesId ? { ...sp, fluctuations: updatedFluctuations } : sp
+    );
+
+    const updatedFacilitiesList = facilitiesList.map((fac) =>
+      fac.id === req.facilityId ? { ...fac, speciesList: updatedSpeciesList } : fac
+    );
+
+    setAppState((prev) => ({
+      ...prev,
+      facilitiesList: updatedFacilitiesList
+    }));
+  };
+
   const handleRejectPending = async (req) => {
-    if (!window.confirm(`Bạn có chắc chắn muốn TỪ CHỐI yêu cầu biến động của ${req.facilityName || 'cơ sở'}?`)) return;
+    if (!window.confirm(`Bạn có chắc chắn muốn TỪ CHỐI yêu cầu biến động của ${req.facilityName || 'cơ sở'}? Biến động này sẽ bị XÓA khỏi sổ ghi chép.`)) return;
     try {
       const { doc, setDoc } = await import('firebase/firestore');
       await setDoc(doc(db, 'fluctuation_requests', req.id), { status: 'REJECTED' }, { merge: true });
-      alert("Đã từ chối yêu cầu biến động.");
+      await handleRejectRequest(req);
+      alert("Đã từ chối yêu cầu và xóa biến động khỏi cơ sở.");
       fetchPendingRequests();
     } catch (err) {
       console.error(err);
@@ -457,47 +494,66 @@ export default function App() {
     if (!targetSp) return;
 
     let updatedFluctuations = [...(targetSp.fluctuations || [])];
+    const isFacilityUser = currentUser && currentUser.role === 'FACILITY';
 
-    if (currentUser && currentUser.role === 'FACILITY') {
-      // Yêu cầu chờ duyệt (Approval Workflow)
-      const newItem = {
-        ...cleanFormData,
-        createdAt: Date.now(),
-        status: 'PENDING',
-        facilityId: targetFacId,
-        speciesId: targetSpId,
-        facilityName: targetFac.facilityName,
-        speciesName: targetSp.vietnameseName,
-        submittedBy: currentUser.username
-      };
-      
-      try {
-        const { collection, addDoc } = await import('firebase/firestore');
-        await addDoc(collection(db, 'fluctuation_requests'), newItem);
-        alert('Đã gửi báo cáo thành công! Vui lòng chờ Hạt Kiểm Lâm duyệt.');
-        setIsFluctuationModalOpen(false);
-        setEditingFluctuation(null);
-      } catch (err) {
-        console.error(err);
-        alert('Lỗi khi gửi yêu cầu: ' + err.message);
-      }
-      return; // Dừng lại, không cập nhật state local ngay
-    }
-
-    // Luồng cũ (dành cho Admin)
     if (editingFluctuation) {
       // Edit existing
       updatedFluctuations = updatedFluctuations.map((item) =>
-        item.id === editingFluctuation.id ? { ...item, ...cleanFormData } : item
+        item.id === editingFluctuation.id 
+          ? { 
+              ...item, 
+              ...cleanFormData,
+              approvalStatus: isFacilityUser ? 'PENDING' : (item.approvalStatus || 'APPROVED')
+            } 
+          : item
       );
+
+      // Sync updated fields to the fluctuation request document in Firebase if it is pending
+      if (editingFluctuation.approvalStatus === 'PENDING') {
+        try {
+          const { collection, getDocs, query, where, doc, updateDoc } = await import('firebase/firestore');
+          const q = query(collection(db, 'fluctuation_requests'), where('fluctuationId', '==', editingFluctuation.id));
+          const snapshot = await getDocs(q);
+          snapshot.forEach(async (docSnap) => {
+            await updateDoc(doc(db, 'fluctuation_requests', docSnap.id), {
+              ...cleanFormData,
+            });
+          });
+        } catch (err) {
+          console.warn("Error syncing edited request to cloud:", err);
+        }
+      }
     } else {
       // Add new
+      const flucId = 'fluc_' + Date.now();
       const newItem = {
-        id: 'fluc_' + Date.now(),
+        id: flucId,
         ...cleanFormData,
         createdAt: Date.now(),
+        approvalStatus: isFacilityUser ? 'PENDING' : 'APPROVED',
       };
       updatedFluctuations.push(newItem);
+
+      if (isFacilityUser) {
+        // Send a request to fluctuation_requests as well so admin sees it in queue
+        const requestItem = {
+          ...cleanFormData,
+          createdAt: Date.now(),
+          status: 'PENDING',
+          facilityId: targetFacId,
+          speciesId: targetSpId,
+          facilityName: targetFac.facilityName,
+          speciesName: targetSp.vietnameseName,
+          submittedBy: currentUser.username,
+          fluctuationId: flucId,
+        };
+        try {
+          const { collection, addDoc } = await import('firebase/firestore');
+          await addDoc(collection(db, 'fluctuation_requests'), requestItem);
+        } catch (err) {
+          console.error("Error creating pending request record:", err);
+        }
+      }
     }
 
     const updatedSpeciesList = targetSpList.map((sp) =>
@@ -527,15 +583,39 @@ export default function App() {
         lng: targetFac.lng,
       },
       speciesList: updatedSpeciesList,
-      activeSpeciesId: targetSp.id,
+      activeSpeciesId: targetSpId,
     }));
+
+    if (isFacilityUser) {
+      alert('Đã lưu biến động và hiển thị tức thì trên sổ! Dữ liệu đang chờ Hạt Kiểm Lâm duyệt.');
+    } else {
+      alert('Đã lưu biến động thành công!');
+    }
+
+    setIsFluctuationModalOpen(false);
     setEditingFluctuation(null);
   };
 
   // Handler: Delete Fluctuation
-  const handleDeleteFluctuation = (rowId) => {
+  const handleDeleteFluctuation = async (rowId) => {
     if (!window.confirm('Bạn có chắc chắn muốn xóa nhật ký biến động này không? Tất cả số liệu phía sau sẽ tự động được tính toán lại!')) {
       return;
+    }
+
+    const targetFluc = (activeSpecies.fluctuations || []).find((item) => item.id === rowId);
+
+    // If it is pending, delete it from firestore collection 'fluctuation_requests'
+    if (targetFluc && targetFluc.approvalStatus === 'PENDING') {
+      try {
+        const { collection, getDocs, query, where, doc, deleteDoc } = await import('firebase/firestore');
+        const q = query(collection(db, 'fluctuation_requests'), where('fluctuationId', '==', rowId));
+        const snapshot = await getDocs(q);
+        snapshot.forEach(async (docSnap) => {
+          await deleteDoc(doc(db, 'fluctuation_requests', docSnap.id));
+        });
+      } catch (err) {
+        console.warn("Error deleting pending request from cloud:", err);
+      }
     }
 
     const updatedFluctuations = (activeSpecies.fluctuations || []).filter((item) => item.id !== rowId);

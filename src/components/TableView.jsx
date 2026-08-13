@@ -131,6 +131,8 @@ export default function TableView({
                 className={`p-4 rounded-2xl border shadow-md space-y-3 transition-all ${
                   isBaseline
                     ? 'bg-gradient-to-r from-indigo-50 to-slate-50 border-indigo-300'
+                    : row.approvalStatus === 'PENDING'
+                    ? 'bg-gradient-to-r from-amber-50/70 to-white border-amber-300 shadow-amber-100/50'
                     : incTotal > 0 && decTotal > 0
                     ? 'bg-white border-amber-300'
                     : incTotal > 0
@@ -143,11 +145,16 @@ export default function TableView({
                 {/* Header Row: Label & Date */}
                 <div className="flex items-center justify-between border-b border-slate-200/80 pb-2">
                   <div className="flex items-center gap-2">
-                    <span className={`px-2.5 py-1 rounded-lg text-xs font-mono font-black ${isBaseline ? 'bg-indigo-600 text-white' : 'bg-slate-800 text-white'}`}>
+                    <span className={`px-2.5 py-1 rounded-lg text-xs font-mono font-black ${isBaseline ? 'bg-indigo-600 text-white' : row.approvalStatus === 'PENDING' ? 'bg-amber-500 text-white' : 'bg-slate-800 text-white'}`}>
                       Dòng {row.label}
                     </span>
-                    <span className="text-xs font-extrabold text-slate-800">
+                    <span className="text-xs font-extrabold text-slate-800 flex items-center gap-1.5">
                       {formatDateVN(row.date)} {row.time && <span className="text-[10px] text-slate-500 font-mono font-normal">({row.time})</span>}
+                      {row.approvalStatus === 'PENDING' && (
+                        <span className="text-[9px] bg-amber-100 text-amber-800 border border-amber-300 px-2 py-0.5 rounded-full font-bold">
+                          🕒 Chờ duyệt
+                        </span>
+                      )}
                     </span>
                   </div>
 
@@ -381,6 +388,8 @@ export default function TableView({
                     className={`transition-colors text-center font-mono ${
                       isBaseline
                         ? 'bg-indigo-50/80 font-bold text-slate-900 border-b border-indigo-100'
+                        : row.approvalStatus === 'PENDING'
+                        ? 'bg-amber-50/75 hover:bg-amber-100/90 text-slate-800 font-medium'
                         : hasInc && hasDec
                         ? 'hover:bg-slate-100 text-slate-800'
                         : hasInc
@@ -391,16 +400,27 @@ export default function TableView({
                     }`}
                   >
                     {/* Row Label (A, B, C...) */}
-                    <td className="px-0.5 py-0.5 font-bold border-r border-slate-200 text-slate-800 text-center">
-                      <span className={`px-1.5 py-0.5 rounded font-sans text-xs shadow-2xs ${isBaseline ? 'bg-indigo-600 text-white font-bold' : 'bg-slate-200 text-slate-800'}`}>
+                    <td className="px-0.5 py-0.5 font-bold border-r border-slate-200 text-slate-800 text-center relative">
+                      <span className={`px-1.5 py-0.5 rounded font-sans text-xs shadow-2xs ${isBaseline ? 'bg-indigo-600 text-white font-bold' : row.approvalStatus === 'PENDING' ? 'bg-amber-500 text-white font-extrabold' : 'bg-slate-200 text-slate-800'}`}>
                         {row.label}
                       </span>
+                      {row.approvalStatus === 'PENDING' && (
+                        <span className="absolute top-0.5 right-0.5 flex h-2 w-2">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                          <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+                        </span>
+                      )}
                     </td>
 
                     {/* Col 1: Date */}
                     <td className="px-1 py-0.5 border-r border-slate-200 whitespace-nowrap text-slate-800 font-sans text-[11px] font-bold text-center">
                       {formatDateVN(row.date)}
                       {row.time && <span className="text-[9px] text-slate-500 block font-mono font-normal mt-0.5">{row.time}</span>}
+                      {row.approvalStatus === 'PENDING' && (
+                        <span className="text-[8px] bg-amber-100 text-amber-800 px-1 py-0.5 rounded border border-amber-300 font-sans font-bold block mt-1 leading-none w-max mx-auto shadow-2xs">
+                          🕒 Chờ duyệt
+                        </span>
+                      )}
                     </td>
 
                     {/* Col 2: Total (Computed = 3 + 4 + 5 + 6 + 7) */}
