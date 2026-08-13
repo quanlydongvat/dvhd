@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { X, Save, Calculator, RefreshCw, AlertTriangle, PlusCircle, MinusCircle, ShoppingCart, Building2, Feather } from 'lucide-react';
+import { X, Save, Calculator, RefreshCw, AlertTriangle, PlusCircle, MinusCircle, ShoppingCart, Building2, Feather, Users } from 'lucide-react';
 import {
   PURPOSE_CODES,
   INTERNAL_TRANSFER_REASONS,
@@ -38,9 +38,11 @@ export default function FluctuationModal({
     purpose: species?.purposeCode || 'T',
     verifier: '',
     isPurchaseMode: false,
+    isGenderIdentifyMode: false,
   });
 
   const QUICK_REASONS = [
+    'Xác định giới tính con con',
     'Mua từ cơ sở nuôi sinh sản khác',
     'Khai thác/nhập mua thêm con giống',
     'Chuyển cá thể đực đủ tuổi vào đàn bố mẹ.',
@@ -51,7 +53,6 @@ export default function FluctuationModal({
     'Xuất bán thương mại cho cơ sở B',
     'Tặng cho/chuyển nhượng theo quyết định',
     'Chết do thời tiết/bệnh lý',
-    'Xác định giới tính thế hệ F1',
   ];
 
   useEffect(() => {
@@ -65,6 +66,7 @@ export default function FluctuationModal({
 
       if (editData) {
         const isPurchase = isPurchaseFromOutside(editData.reason);
+        const isGenderIdentify = editData.reason?.includes('Xác định giới tính con con') || editData.isGenderIdentifyMode || false;
         setFormData({
           date: editData.date || new Date().toISOString().slice(0, 10),
           time: editData.time || '',
@@ -82,6 +84,7 @@ export default function FluctuationModal({
           purpose: editData.purpose || species?.purposeCode || 'T',
           verifier: editData.verifier || '',
           isPurchaseMode: isPurchase,
+          isGenderIdentifyMode: isGenderIdentify,
         });
       } else {
         setFormData({
@@ -101,6 +104,7 @@ export default function FluctuationModal({
           purpose: species?.purposeCode || 'T',
           verifier: '',
           isPurchaseMode: false,
+          isGenderIdentifyMode: false,
         });
       }
     }
@@ -210,6 +214,26 @@ export default function FluctuationModal({
       return;
     }
 
+    if (formData.isGenderIdentifyMode) {
+      if (formData.decOtherUnknown !== (formData.incOtherMale + formData.incOtherFemale)) {
+        alert('⚠️ Lỗi: Số lượng chưa xác định giới tính giảm (B17) phải bằng tổng số lượng đực khác (B10) và cái khác (B11) tăng!');
+        return;
+      }
+      if (formData.decOtherUnknown <= 0) {
+        alert('⚠️ Vui lòng nhập số lượng đực khác hoặc cái khác tăng để xác định giới tính!');
+        return;
+      }
+      const prevOU = Number(activeLastRow?.otherUnknown) || 0;
+      if (formData.decOtherUnknown > prevOU) {
+        alert(`⚠️ Số lượng cá thể chưa xác định giới tính hiện tại trong đàn (${prevOU}) không đủ để thực hiện chuyển nhóm ${formData.decOtherUnknown} cá thể!`);
+        return;
+      }
+      if (!formData.reason.toLowerCase().includes('xác định giới tính con con')) {
+        alert('⚠️ Đối với hình thức này, nguyên nhân biến động bắt buộc phải chọn hoặc chứa từ khóa "Xác định giới tính con con"!');
+        return;
+      }
+    }
+
     if (!formData.reason.trim()) {
       alert('Vui lòng nhập Nguyên nhân biến động (Cột 18)!');
       return;
@@ -230,9 +254,34 @@ export default function FluctuationModal({
   // Handler for number changes
   const handleNumChange = (field, val) => {
     const num = Math.max(0, parseInt(val) || 0);
+    setFormData((prev) => {
+      const next = { ...prev, [field]: num };
+      if (prev.isGenderIdentifyMode) {
+        if (field === 'incOtherMale' || field === 'incOtherFemale') {
+          next.decOtherUnknown = (next.incOtherMale || 0) + (next.incOtherFemale || 0);
+        }
+      }
+      return next;
+    });
+  };
+
+  // Explicit action: Apply Gender Identification (B12 -> B10, B11)
+  const handleApplyGenderIdentify = () => {
     setFormData((prev) => ({
       ...prev,
-      [field]: num,
+      incFather: 0,
+      incMother: 0,
+      incOtherMale: prev.incOtherMale,
+      incOtherFemale: prev.incOtherFemale,
+      incOtherUnknown: 0,
+      decFather: 0,
+      decMother: 0,
+      decOtherMale: 0,
+      decOtherFemale: 0,
+      decOtherUnknown: prev.incOtherMale + prev.incOtherFemale,
+      reason: 'Xác định giới tính con con',
+      isPurchaseMode: false,
+      isGenderIdentifyMode: true,
     }));
   };
 
@@ -265,8 +314,10 @@ export default function FluctuationModal({
       ...prev,
       decOtherMale: 0,
       decOtherFemale: 0,
+      decOtherUnknown: 0,
       reason: 'Mua từ cơ sở nuôi sinh sản khác',
       isPurchaseMode: true,
+      isGenderIdentifyMode: false,
     }));
   };
 
@@ -274,14 +325,29 @@ export default function FluctuationModal({
   const handleSelectReason = (reasonStr) => {
     const isPurchase = isPurchaseFromOutside(reasonStr);
     const isInternal = INTERNAL_TRANSFER_REASONS.includes(reasonStr);
+    const isGender = reasonStr.includes('Xác định giới tính con con');
 
-    setFormData((prev) => ({
-      ...prev,
-      reason: reasonStr,
-      isPurchaseMode: isPurchase,
-      decOtherMale: isInternal ? prev.incFather : isPurchase ? 0 : prev.decOtherMale,
-      decOtherFemale: isInternal ? prev.incMother : isPurchase ? 0 : prev.decOtherFemale,
-    }));
+    setFormData((prev) => {
+      const next = {
+        ...prev,
+        reason: reasonStr,
+        isPurchaseMode: isPurchase,
+        isGenderIdentifyMode: isGender,
+        decOtherMale: isInternal ? prev.incFather : isPurchase ? 0 : prev.decOtherMale,
+        decOtherFemale: isInternal ? prev.incMother : isPurchase ? 0 : prev.decOtherFemale,
+      };
+      if (isGender) {
+        next.incFather = 0;
+        next.incMother = 0;
+        next.incOtherUnknown = 0;
+        next.decFather = 0;
+        next.decMother = 0;
+        next.decOtherMale = 0;
+        next.decOtherFemale = 0;
+        next.decOtherUnknown = prev.incOtherMale + prev.incOtherFemale;
+      }
+      return next;
+    });
   };
 
   return (
@@ -369,20 +435,20 @@ export default function FluctuationModal({
             </div>
 
             {/* Quick Fluctuation Type Selector Bar */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-xs">
               <button
                 type="button"
                 onClick={handleApplyPurchase}
                 className={`p-3 rounded-xl border text-left font-extrabold transition-all flex items-center gap-2.5 shadow-sm cursor-pointer ${
-                  isPurchasingOutside
+                  isPurchasingOutside && !formData.isGenderIdentifyMode
                     ? 'bg-emerald-600 text-white border-emerald-700 shadow-md ring-2 ring-emerald-400'
                     : 'bg-white hover:bg-emerald-50 text-slate-800 border-slate-300'
                 }`}
               >
                 <ShoppingCart className="w-5 h-5 flex-shrink-0" />
                 <div>
-                  <span className="block text-xs uppercase tracking-wide">1. Mua Từ Bên Ngoài / Nhập Giống</span>
-                  <span className="text-[10px] opacity-90 block font-normal">+ Tăng tổng đàn cá thể (B15, B16 = 0)</span>
+                  <span className="block text-xs uppercase tracking-wide">1. Nhập giống ngoài</span>
+                  <span className="text-[10px] opacity-90 block font-normal">+ Tăng tổng đàn (B15, B16, B17=0)</span>
                 </div>
               </button>
 
@@ -390,15 +456,31 @@ export default function FluctuationModal({
                 type="button"
                 onClick={handleApplyInternalTransfer}
                 className={`p-3 rounded-xl border text-left font-extrabold transition-all flex items-center gap-2.5 shadow-sm cursor-pointer ${
-                  !isPurchasingOutside && (incF > 0 || incM > 0)
+                  !isPurchasingOutside && !formData.isGenderIdentifyMode && (incF > 0 || incM > 0)
                     ? 'bg-indigo-600 text-white border-indigo-700 shadow-md ring-2 ring-indigo-400'
                     : 'bg-white hover:bg-indigo-50 text-slate-800 border-slate-300'
                 }`}
               >
                 <RefreshCw className="w-5 h-5 flex-shrink-0" />
                 <div>
-                  <span className="block text-xs uppercase tracking-wide">2. Chuyển Nhóm Nội Bộ Sang Bố Mẹ</span>
-                  <span className="text-[10px] opacity-90 block font-normal">Giữ nguyên tổng đàn (Tự khớp B15=B8, B16=B9)</span>
+                  <span className="block text-xs uppercase tracking-wide">2. Chuyển sang bố mẹ</span>
+                  <span className="text-[10px] opacity-90 block font-normal">Giữ nguyên tổng đàn (B15=B8, B16=B9)</span>
+                </div>
+              </button>
+
+              <button
+                type="button"
+                onClick={handleApplyGenderIdentify}
+                className={`p-3 rounded-xl border text-left font-extrabold transition-all flex items-center gap-2.5 shadow-sm cursor-pointer ${
+                  formData.isGenderIdentifyMode
+                    ? 'bg-amber-600 text-white border-amber-700 shadow-md ring-2 ring-amber-400'
+                    : 'bg-white hover:bg-amber-50 text-slate-800 border-slate-300'
+                }`}
+              >
+                <Users className="w-5 h-5 flex-shrink-0" />
+                <div>
+                  <span className="block text-xs uppercase tracking-wide">3. Xác định giới tính</span>
+                  <span className="text-[10px] opacity-90 block font-normal">Chuyển từ Chưa XĐ (B12) sang Đực/Cái (B10, B11)</span>
                 </div>
               </button>
             </div>
@@ -481,7 +563,8 @@ export default function FluctuationModal({
                       min="0"
                       value={formData.incFather}
                       onChange={(e) => handleNumChange('incFather', e.target.value)}
-                      className="w-full bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 text-teal-800 font-extrabold focus:border-teal-500 shadow-xs text-center"
+                      disabled={formData.isGenderIdentifyMode}
+                      className="w-full bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 text-teal-800 font-extrabold focus:border-teal-500 shadow-xs text-center disabled:bg-slate-100 disabled:text-slate-400"
                     />
                   </div>
                   <div>
@@ -491,7 +574,8 @@ export default function FluctuationModal({
                       min="0"
                       value={formData.incMother}
                       onChange={(e) => handleNumChange('incMother', e.target.value)}
-                      className="w-full bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 text-teal-800 font-extrabold focus:border-teal-500 shadow-xs text-center"
+                      disabled={formData.isGenderIdentifyMode}
+                      className="w-full bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 text-teal-800 font-extrabold focus:border-teal-500 shadow-xs text-center disabled:bg-slate-100 disabled:text-slate-400"
                     />
                   </div>
                   <div>
@@ -521,7 +605,8 @@ export default function FluctuationModal({
                       min="0"
                       value={formData.incOtherUnknown}
                       onChange={(e) => handleNumChange('incOtherUnknown', e.target.value)}
-                      className="w-full bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 text-slate-800 font-bold focus:border-teal-500 shadow-xs text-center"
+                      disabled={formData.isGenderIdentifyMode}
+                      className="w-full bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 text-slate-800 font-bold focus:border-teal-500 shadow-xs text-center disabled:bg-slate-100 disabled:text-slate-400"
                     />
                   </div>
                 </div>
@@ -547,7 +632,8 @@ export default function FluctuationModal({
                       min="0"
                       value={formData.decFather}
                       onChange={(e) => handleNumChange('decFather', e.target.value)}
-                      className="w-full bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 text-rose-800 font-extrabold focus:border-rose-500 shadow-xs text-center"
+                      disabled={formData.isGenderIdentifyMode}
+                      className="w-full bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 text-rose-800 font-extrabold focus:border-rose-500 shadow-xs text-center disabled:bg-slate-100 disabled:text-slate-400"
                     />
                   </div>
                   <div>
@@ -557,7 +643,8 @@ export default function FluctuationModal({
                       min="0"
                       value={formData.decMother}
                       onChange={(e) => handleNumChange('decMother', e.target.value)}
-                      className="w-full bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 text-rose-800 font-extrabold focus:border-rose-500 shadow-xs text-center"
+                      disabled={formData.isGenderIdentifyMode}
+                      className="w-full bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 text-rose-800 font-extrabold focus:border-rose-500 shadow-xs text-center disabled:bg-slate-100 disabled:text-slate-400"
                     />
                   </div>
                   <div>
@@ -572,7 +659,8 @@ export default function FluctuationModal({
                       min="0"
                       value={formData.decOtherMale}
                       onChange={(e) => handleNumChange('decOtherMale', e.target.value)}
-                      className={`w-full bg-white border rounded-lg px-2.5 py-1.5 font-extrabold focus:border-rose-500 shadow-xs text-center ${
+                      disabled={formData.isGenderIdentifyMode}
+                      className={`w-full bg-white border rounded-lg px-2.5 py-1.5 font-extrabold focus:border-rose-500 shadow-xs text-center disabled:bg-slate-100 disabled:text-slate-400 ${
                         incF > 0 && !isPurchasingOutside && incF !== decOM
                           ? 'border-amber-400 text-amber-900 bg-amber-50'
                           : 'border-slate-300 text-slate-800'
@@ -591,7 +679,8 @@ export default function FluctuationModal({
                       min="0"
                       value={formData.decOtherFemale}
                       onChange={(e) => handleNumChange('decOtherFemale', e.target.value)}
-                      className={`w-full bg-white border rounded-lg px-2.5 py-1.5 font-extrabold focus:border-rose-500 shadow-xs text-center ${
+                      disabled={formData.isGenderIdentifyMode}
+                      className={`w-full bg-white border rounded-lg px-2.5 py-1.5 font-extrabold focus:border-rose-500 shadow-xs text-center disabled:bg-slate-100 disabled:text-slate-400 ${
                         incM > 0 && !isPurchasingOutside && incM !== decOF
                           ? 'border-amber-400 text-amber-900 bg-amber-50'
                           : 'border-slate-300 text-slate-800'
@@ -605,7 +694,8 @@ export default function FluctuationModal({
                       min="0"
                       value={formData.decOtherUnknown}
                       onChange={(e) => handleNumChange('decOtherUnknown', e.target.value)}
-                      className="w-full bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 text-slate-800 font-bold focus:border-rose-500 shadow-xs text-center"
+                      disabled={formData.isGenderIdentifyMode}
+                      className="w-full bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 text-slate-800 font-bold focus:border-rose-500 shadow-xs text-center disabled:bg-slate-100 disabled:text-slate-400"
                     />
                   </div>
                 </div>
