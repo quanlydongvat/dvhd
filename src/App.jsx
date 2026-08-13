@@ -23,11 +23,9 @@ import { exportDistrictReport, exportFacilityLogbook } from './utils/exportExcel
 import { syncAppDataToCloud, loadAppDataFromCloud, deleteFacilityFromCloud } from './firebase';
 import ExportModal from './components/ExportModal';
 import PendingApprovalsModal from './components/PendingApprovalsModal';
-
-
 import { auth, db } from './firebase';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
-import { doc, getDoc, collection, getDocs, query, where, writeBatch } from 'firebase/firestore';
+import { doc, setDoc, addDoc, updateDoc, deleteDoc, getDoc, collection, getDocs, query, where, writeBatch } from 'firebase/firestore';
 import Login from './components/Login';
 
 export default function App() {
@@ -353,7 +351,6 @@ export default function App() {
 
   const fetchPendingRequests = async () => {
     try {
-      const { collection, getDocs } = await import('firebase/firestore');
       const querySnapshot = await getDocs(collection(db, 'fluctuation_requests'));
       const reqs = [];
       querySnapshot.forEach((docSnap) => {
@@ -428,7 +425,6 @@ export default function App() {
 
   const handleApprovePending = async (req) => {
     try {
-      const { doc, setDoc } = await import('firebase/firestore');
       await setDoc(doc(db, 'fluctuation_requests', req.id), { status: 'APPROVED' }, { merge: true });
       await handleApproveRequest(req);
       alert(`Đã duyệt thành công biến động của cơ sở ${req.facilityName || ''}!`);
@@ -468,7 +464,6 @@ export default function App() {
   const handleRejectPending = async (req) => {
     if (!window.confirm(`Bạn có chắc chắn muốn TỪ CHỐI yêu cầu biến động của ${req.facilityName || 'cơ sở'}? Biến động này sẽ bị XÓA khỏi sổ ghi chép.`)) return;
     try {
-      const { doc, setDoc } = await import('firebase/firestore');
       await setDoc(doc(db, 'fluctuation_requests', req.id), { status: 'REJECTED' }, { merge: true });
       await handleRejectRequest(req);
       alert("Đã từ chối yêu cầu và xóa biến động khỏi cơ sở.");
@@ -511,7 +506,6 @@ export default function App() {
       // Sync updated fields to the fluctuation request document in Firebase if it is pending
       if (editingFluctuation.approvalStatus === 'PENDING') {
         try {
-          const { collection, getDocs, query, where, doc, updateDoc } = await import('firebase/firestore');
           const q = query(collection(db, 'fluctuation_requests'), where('fluctuationId', '==', editingFluctuation.id));
           const snapshot = await getDocs(q);
           snapshot.forEach(async (docSnap) => {
@@ -548,7 +542,6 @@ export default function App() {
           fluctuationId: flucId,
         };
         try {
-          const { collection, addDoc } = await import('firebase/firestore');
           await addDoc(collection(db, 'fluctuation_requests'), requestItem);
         } catch (err) {
           console.error("Error creating pending request record:", err);
@@ -607,7 +600,6 @@ export default function App() {
     // If it is pending, delete it from firestore collection 'fluctuation_requests'
     if (targetFluc && targetFluc.approvalStatus === 'PENDING') {
       try {
-        const { collection, getDocs, query, where, doc, deleteDoc } = await import('firebase/firestore');
         const q = query(collection(db, 'fluctuation_requests'), where('fluctuationId', '==', rowId));
         const snapshot = await getDocs(q);
         snapshot.forEach(async (docSnap) => {
