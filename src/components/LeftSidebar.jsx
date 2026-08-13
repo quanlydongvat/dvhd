@@ -17,6 +17,7 @@ import {
   LogOut,
   SlidersHorizontal,
 } from 'lucide-react';
+import MusicPlayer from './MusicPlayer';
 
 export default function LeftSidebar({
   currentView = 'SUMMARY',
@@ -283,6 +284,9 @@ export default function LeftSidebar({
                 </div>
                 <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
               </button>
+
+              {/* Music Player Widget (Góc Nhạc Thư Giãn) */}
+              <MusicPlayer />
             </div>
           </div>
         )}
