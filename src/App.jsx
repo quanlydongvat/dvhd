@@ -1001,21 +1001,21 @@ export default function App() {
             <main className="flex-1 max-w-[1720px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-5">
               {/* Show Video Banner ONLY on Home view */}
               {currentView === 'HOME' && (
-                <div className="mb-5 animate-in fade-in slide-in-from-top-4 duration-500 rounded-2xl overflow-hidden border border-emerald-500/20 shadow-md bg-slate-900">
+                <div className="mb-5 animate-in fade-in slide-in-from-top-4 duration-500 rounded-2xl overflow-hidden border border-emerald-500/20 shadow-md bg-slate-900 h-[220px] sm:h-[270px] md:h-[300px] lg:h-[320px] relative flex items-center justify-center">
                   <video
                     autoPlay
                     loop
                     muted
                     playsInline
                     poster="./images/banner.jpg"
-                    className="w-full h-auto block rounded-2xl object-cover"
+                    className="w-full h-full object-cover object-center block rounded-2xl"
                   >
                     <source src="./banner.mp4" type="video/mp4" />
                     <source src="./images/banner.mp4" type="video/mp4" />
                     <img
                       src="./images/banner.jpg"
                       alt="Hạt Kiểm lâm khu vực Krông Bông - Banner Quản lý cơ sở nuôi động vật hoang dã"
-                      className="w-full h-auto block rounded-2xl"
+                      className="w-full h-full object-cover object-center block rounded-2xl"
                     />
                   </video>
                 </div>
