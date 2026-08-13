@@ -99,6 +99,54 @@ export default function App() {
     });
   }, []);
 
+  // Public Cloud Sync on Mount (For Guest / Demo users across different computers)
+  useEffect(() => {
+    import('./firebase').then(async ({ db }) => {
+      if (!db) return;
+      try {
+        const snapshot = await getDocs(collection(db, "facilities"));
+        if (!snapshot.empty) {
+          const cloudFacilities = [];
+          snapshot.forEach(doc => {
+            cloudFacilities.push(doc.data());
+          });
+
+          if (cloudFacilities.length > 0) {
+            console.log(`[Firebase Guest Restore] Loaded ${cloudFacilities.length} facilities publicly.`);
+            setSkipNextSync(true);
+            setAppState(prev => {
+              const activeFacId = prev.activeFacilityId || cloudFacilities[0]?.id;
+              const activeFac = cloudFacilities.find((f) => f.id === activeFacId) || cloudFacilities[0];
+              return {
+                ...prev,
+                facilitiesList: cloudFacilities,
+                activeFacilityId: activeFacId,
+                facilityInfo: activeFac ? {
+                  id: activeFac.id,
+                  facilityName: activeFac.facilityName,
+                  ownerName: activeFac.ownerName,
+                  registrationCode: activeFac.registrationCode,
+                  registrationDate: activeFac.registrationDate,
+                  commune: activeFac.commune || 'xã Hòa Sơn',
+                  address: activeFac.address,
+                  phone: activeFac.phone,
+                  purposeCode: activeFac.purposeCode,
+                  note: activeFac.note,
+                  lat: activeFac.lat || '',
+                  lng: activeFac.lng || '',
+                } : prev.facilityInfo,
+                speciesList: activeFac?.speciesList || [],
+                activeSpeciesId: activeFac?.speciesList?.[0]?.id || null,
+              };
+            });
+          }
+        }
+      } catch (err) {
+        console.warn("Public load from Firebase Cloud failed:", err);
+      }
+    });
+  }, []);
+
   useEffect(() => {
     if (currentUser?.role === 'FACILITY') {
       setCurrentView('LOGBOOK');
