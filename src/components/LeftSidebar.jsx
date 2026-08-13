@@ -35,7 +35,7 @@ export default function LeftSidebar({
   const isNavActive = (viewName) => currentView === viewName;
 
   return (
-    <aside className="w-72 lg:w-80 flex-shrink-0 bg-white border-r border-slate-300 flex flex-col h-full sticky top-0 shadow-xs z-20 select-none font-sans">
+    <aside className="w-80 lg:w-96 flex-shrink-0 bg-white border-r border-slate-300 flex flex-col h-full sticky top-0 shadow-xs z-20 select-none font-sans">
       
       {/* Sidebar Header Logo Banner */}
       <div className="p-4 border-b border-slate-300 bg-gradient-to-br from-emerald-950 via-teal-900 to-slate-900 text-white relative overflow-hidden">
