@@ -190,29 +190,29 @@ export default function SummaryView({
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
       {/* Table Format Sub-Tabs Switcher (Bảng 1.1 vs Bảng 1.2) */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 bg-slate-100/90 p-2 rounded-2xl border border-slate-300 shadow-inner">
-        <div className="flex items-center gap-1.5 w-full sm:w-auto">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 bg-slate-200/85 p-2 rounded-2xl border border-slate-300 shadow-inner">
+        <div className="flex items-center gap-2 w-full sm:w-auto">
           <button
             onClick={() => setSummarySubTab('TABLE_1_1')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-extrabold transition-all w-full sm:w-auto justify-center ${
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black transition-all w-full sm:w-auto justify-center border cursor-pointer ${
               summarySubTab === 'TABLE_1_1'
-                ? 'bg-white text-emerald-800 shadow-md border border-slate-300'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
+                ? 'bg-emerald-700 text-white shadow-md border-emerald-800'
+                : 'bg-white/95 text-slate-700 hover:text-slate-950 hover:bg-white border-slate-300/90 shadow-2xs'
             }`}
           >
-            <Table className="w-4 h-4 text-emerald-600" />
+            <Table className={`w-4 h-4 ${summarySubTab === 'TABLE_1_1' ? 'text-white' : 'text-emerald-700'}`} />
             <span>Bảng 1.1: Danh Sách Chi Tiết 31 Cơ Sở Nuôi</span>
           </button>
 
           <button
             onClick={() => setSummarySubTab('TABLE_1_2')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-extrabold transition-all w-full sm:w-auto justify-center ${
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black transition-all w-full sm:w-auto justify-center border cursor-pointer ${
               summarySubTab === 'TABLE_1_2'
-                ? 'bg-white text-indigo-800 shadow-md border border-slate-300'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
+                ? 'bg-indigo-700 text-white shadow-md border-indigo-800'
+                : 'bg-white/95 text-slate-700 hover:text-slate-950 hover:bg-white border-slate-300/90 shadow-2xs'
             }`}
           >
-            <FileText className="w-4 h-4 text-indigo-600" />
+            <FileText className={`w-4 h-4 ${summarySubTab === 'TABLE_1_2' ? 'text-white' : 'text-indigo-700'}`} />
             <span>Bảng 1.2: Tổng Hợp Loài CITES & Động Vật Thông Thường</span>
           </button>
         </div>

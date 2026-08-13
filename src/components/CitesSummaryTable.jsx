@@ -81,11 +81,11 @@ export default function CitesSummaryTable({ facilitiesList = [] }) {
   };
 
   return (
-    <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-xl space-y-6 animate-in fade-in duration-300">
+    <div className="bg-white border border-slate-300 rounded-2xl p-6 shadow-xl space-y-6 animate-in fade-in duration-300">
       {/* Top Controls Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 no-print">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-300 no-print">
         <div className="flex items-center gap-3">
-          <div className="p-2.5 bg-indigo-50 border border-indigo-200 rounded-xl text-indigo-700 shadow-xs">
+          <div className="p-2.5 bg-indigo-50 border border-indigo-300 rounded-xl text-indigo-700 shadow-xs">
             <FileText className="w-6 h-6" />
           </div>
           <div>
