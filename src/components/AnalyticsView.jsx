@@ -123,11 +123,26 @@ export default function AnalyticsView({ facilitiesList = [] }) {
     });
 
     // Compute cumulative running total at end of each month
+    const now = new Date();
+    const currentRealYear = now.getFullYear();
+    const currentRealMonthIdx = now.getMonth(); // 0-indexed (e.g. 7 for August)
+
     let runningTotal = initialTotal;
-    monthlyStats.forEach((st) => {
+    monthlyStats.forEach((st, idx) => {
       st.net = st.inc - st.dec;
       runningTotal += st.net;
-      st.totalEnd = runningTotal;
+
+      // If selected year is current year and month is in the future (> currentRealMonthIdx)
+      if (selectedYear === currentRealYear && idx > currentRealMonthIdx) {
+        const hasFutureEvents = monthlyStats.slice(idx).some(m => m.inc > 0 || m.dec > 0);
+        if (!hasFutureEvents) {
+          st.totalEnd = null; // Stop plotting trend line at current month
+        } else {
+          st.totalEnd = runningTotal;
+        }
+      } else {
+        st.totalEnd = runningTotal;
+      }
     });
 
     // Slice based on time mode
