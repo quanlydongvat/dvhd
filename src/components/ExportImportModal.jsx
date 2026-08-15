@@ -16,10 +16,17 @@ export default function ExportImportModal({
   if (!isOpen) return null;
 
   const handleExportJSON = () => {
-    const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(appData, null, 2));
+    const backupObj = appData?.facilitiesList
+      ? {
+          exportedAt: new Date().toISOString(),
+          totalFacilities: appData.facilitiesList.length,
+          facilitiesList: appData.facilitiesList,
+        }
+      : appData;
+    const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(backupObj, null, 2));
     const downloadAnchor = document.createElement('a');
     downloadAnchor.setAttribute('href', dataStr);
-    downloadAnchor.setAttribute('download', `Sao_Luu_So_Theo_Doi_${new Date().toISOString().slice(0, 10)}.json`);
+    downloadAnchor.setAttribute('download', `Sao_Luu_Toan_Bo_Co_So_Dong_Vat_${new Date().toISOString().slice(0, 10)}.json`);
     document.body.appendChild(downloadAnchor);
     downloadAnchor.click();
     downloadAnchor.remove();
@@ -32,7 +39,11 @@ export default function ExportImportModal({
       fileReader.onload = (event) => {
         try {
           const parsed = JSON.parse(event.target.result);
-          if (parsed.facilityInfo && parsed.speciesList) {
+          if (parsed.facilitiesList && Array.isArray(parsed.facilitiesList)) {
+            onImportData(parsed);
+            alert(`Khôi phục dữ liệu sao lưu thành công! Đã nạp ${parsed.facilitiesList.length} cơ sở nuôi.`);
+            onClose();
+          } else if (parsed.facilityInfo && parsed.speciesList) {
             onImportData(parsed);
             alert('Khôi phục dữ liệu từ tệp JSON thành công!');
             onClose();

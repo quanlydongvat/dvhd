@@ -1,0 +1,1593 @@
+{
+  "exportedAt": "2026-08-15T13:56:04.359Z",
+  "totalFacilities": 35,
+  "facilitiesList": [
+    {
+      "id": "fac_1",
+      "address": "Thôn 3, xã Hòa Sơn, Huyện Krông Bông, Tỉnh Đắk Lắk",
+      "registrationDate": "2023-03-17",
+      "facilityName": "Cơ sở nuôi Lê Thị Xuân",
+      "purposeCode": "T",
+      "registrationCode": "IIB-DLC-027",
+      "ownerName": "Lê Thị Xuân",
+      "note": "",
+      "speciesList": [
+        {
+          "fluctuations": [],
+          "group": "Động vật rừng nguy cấp, quý, hiếm (Nhóm IIB)",
+          "purposeCode": "T",
+          "baseline": {
+            "date": "2023-03-17",
+            "otherMale": 8,
+            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "note": "Số lượng vật nuôi theo chứng nhận cơ sở",
+            "otherFemale": 10,
+            "father": 4,
+            "mother": 5,
+            "otherUnknown": 2
+          },
+          "citesAppendix": "Phụ lục II CITES",
+          "scientificName": "Paradoxurus hermaphroditus",
+          "vietnameseName": "Cầy vòi Hương",
+          "id": "sp_1_1"
+        }
+      ],
+      "phone": "",
+      "updatedAt": "2026-08-15T13:55:41.437Z",
+      "commune": "xã Hòa Sơn"
+    },
+    {
+      "registrationCode": "52-26/B-DLC",
+      "facilityName": "Cơ sở nuôi Trịnh Lục",
+      "registrationDate": "2026-05-08",
+      "ownerName": "Trịnh Lục",
+      "id": "fac_10",
+      "speciesList": [
+        {
+          "id": "sp_10_1",
+          "baseline": {
+            "otherFemale": 0,
+            "note": "Hiện trạng nuôi ban đầu",
+            "date": "2026-05-08",
+            "otherMale": 0,
+            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "father": 2,
+            "otherUnknown": 0,
+            "mother": 3
+          },
+          "group": "Động vật rừng nguy cấp, quý, hiếm (Nhóm IIB)",
+          "citesAppendix": "Phụ lục II CITES",
+          "scientificName": "Paradoxurus hermaphroditus",
+          "vietnameseName": "Cầy vòi Hương",
+          "purposeCode": "T",
+          "fluctuations": [
+            {
+              "verifier": "",
+              "isPurchaseMode": true,
+              "incMother": 4,
+              "incOtherMale": 0,
+              "date": "2026-06-16",
+              "decOtherMale": 0,
+              "decOtherFemale": 0,
+              "decFather": 0,
+              "incFather": 2,
+              "decMother": 0,
+              "time": "08:51",
+              "incOtherUnknown": 0,
+              "createdAt": 1786413132829,
+              "id": "fluc_1786413132829",
+              "decOtherUnknown": 0,
+              "reason": "Mua từ cơ sở nuôi sinh sản khác",
+              "incOtherFemale": 0,
+              "purpose": "T"
+            },
+            {
+              "decOtherUnknown": 0,
+              "date": "2026-06-09",
+              "incOtherUnknown": 4,
+              "createdAt": 1786413181544,
+              "decMother": 0,
+              "decFather": 0,
+              "incFather": 0,
+              "isPurchaseMode": false,
+              "incMother": 0,
+              "decOtherFemale": 0,
+              "id": "fluc_1786413181544",
+              "decOtherMale": 0,
+              "reason": "Sinh sản lứa F2 mới nở/sinh",
+              "time": "08:52",
+              "incOtherFemale": 0,
+              "verifier": "",
+              "incOtherMale": 0,
+              "purpose": "T"
+            },
+            {
+              "time": "08:53",
+              "decOtherFemale": 0,
+              "incOtherFemale": 14,
+              "createdAt": 1786413220093,
+              "incOtherMale": 1,
+              "decMother": 0,
+              "purpose": "T",
+              "decOtherMale": 0,
+              "incFather": 0,
+              "decFather": 0,
+              "decOtherUnknown": 0,
+              "incMother": 0,
+              "incOtherUnknown": 0,
+              "id": "fluc_1786413220093",
+              "reason": "Mua từ cơ sở nuôi sinh sản khác",
+              "verifier": "",
+              "date": "2026-07-10",
+              "isPurchaseMode": true
+            },
+            {
+              "isPurchaseMode": false,
+              "createdAt": 1786413284623,
+              "reason": "Sinh sản lứa F2 mới nở/sinh",
+              "incOtherUnknown": 12,
+              "incFather": 0,
+              "decFather": 0,
+              "date": "2026-07-11",
+              "decMother": 0,
+              "decOtherUnknown": 0,
+              "verifier": "",
+              "purpose": "T",
+              "decOtherMale": 0,
+              "id": "fluc_1786413284623",
+              "incOtherFemale": 0,
+              "incOtherMale": 0,
+              "time": "08:54",
+              "decOtherFemale": 0,
+              "incMother": 0
+            },
+            {
+              "incFather": 0,
+              "decFather": 0,
+              "incOtherUnknown": 0,
+              "decMother": 0,
+              "createdAt": 1786413405967,
+              "isPurchaseMode": false,
+              "decOtherUnknown": 0,
+              "id": "fluc_1786413405967",
+              "time": "08:56",
+              "date": "2026-08-11",
+              "incOtherFemale": 0,
+              "purpose": "T",
+              "decOtherMale": 0,
+              "incOtherMale": 0,
+              "incMother": 0,
+              "reason": "Xuất bán thương mại cho cơ sở B",
+              "decOtherFemale": 5,
+              "verifier": ""
+            }
+          ]
+        }
+      ],
+      "commune": "xã Cư Pui",
+      "address": "Thôn 3, xã Cư Pui, Huyện Krông Bông, Tỉnh Đắk Lắk",
+      "purposeCode": "T",
+      "updatedAt": "2026-08-15T13:55:41.437Z",
+      "note": "",
+      "phone": ""
+    },
+    {
+      "speciesList": [
+        {
+          "id": "sp_11_1",
+          "scientificName": "Paradoxurus hermaphroditus",
+          "vietnameseName": "Cầy vòi Hương",
+          "group": "Động vật rừng nguy cấp, quý, hiếm (Nhóm IIB)",
+          "citesAppendix": "Phụ lục II CITES",
+          "fluctuations": [
+            {
+              "decOtherFemale": 0,
+              "purpose": "T",
+              "time": "09:22",
+              "incOtherFemale": 0,
+              "id": "fluc_1786414971813",
+              "incMother": 0,
+              "createdAt": 1786414971813,
+              "decOtherUnknown": 0,
+              "decFather": 0,
+              "incFather": 0,
+              "decMother": 0,
+              "reason": "Xuất bán thương mại cho cơ sở B",
+              "incOtherUnknown": 0,
+              "date": "2026-08-11",
+              "isPurchaseMode": false,
+              "decOtherMale": 1,
+              "verifier": "",
+              "incOtherMale": 0
+            }
+          ],
+          "purposeCode": "T",
+          "baseline": {
+            "mother": 7,
+            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "otherUnknown": 19,
+            "note": "Hiện trạng nuôi đăng ký",
+            "father": 4,
+            "date": "2024-09-25",
+            "otherMale": 5,
+            "otherFemale": 16
+          }
+        }
+      ],
+      "ownerName": "Nguyễn Hữu Đô",
+      "phone": "",
+      "facilityName": "Cơ sở nuôi Nguyễn Hữu Đô",
+      "address": "Thôn 3, xã Cư Pui, Huyện Krông Bông, Tỉnh Đắk Lắk",
+      "purposeCode": "T",
+      "note": "",
+      "registrationDate": "2024-09-25",
+      "registrationCode": "IIB-C-DLC-063",
+      "updatedAt": "2026-08-15T13:55:41.438Z",
+      "id": "fac_11",
+      "commune": "xã Cư Pui"
+    },
+    {
+      "facilityName": "Cơ sở nuôi Lê Thanh Đức",
+      "speciesList": [
+        {
+          "citesAppendix": "Phụ lục II CITES",
+          "group": "Động vật rừng nguy cấp, quý, hiếm (Nhóm IIB)",
+          "scientificName": "Paradoxurus hermaphroditus",
+          "vietnameseName": "Cầy vòi Hương",
+          "fluctuations": [],
+          "id": "sp_12_1",
+          "baseline": {
+            "otherUnknown": 6,
+            "otherMale": 11,
+            "note": "Hiện trạng nuôi đăng ký",
+            "date": "2024-09-06",
+            "father": 2,
+            "mother": 7,
+            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "otherFemale": 9
+          },
+          "purposeCode": "T"
+        }
+      ],
+      "commune": "Xã Krông Bông",
+      "updatedAt": "2026-08-15T13:55:41.438Z",
+      "registrationCode": "IIB-C-DLC-060",
+      "registrationDate": "2024-09-06",
+      "id": "fac_12",
+      "purposeCode": "T",
+      "address": "Thôn 5, Xã Krông Bông, Huyện Krông Bông, Tỉnh Đắk Lắk",
+      "note": "",
+      "ownerName": "Lê Thanh Đức",
+      "phone": ""
+    },
+    {
+      "ownerName": "Ngô Thị Trang",
+      "facilityName": "Cơ sở nuôi Ngô Thị Trang",
+      "purposeCode": "T",
+      "commune": "Xã Krông Bông",
+      "note": "",
+      "id": "fac_13",
+      "updatedAt": "2026-08-15T13:55:41.438Z",
+      "phone": "",
+      "address": "Thôn 8, Xã Krông Bông, Huyện Krông Bông, Tỉnh Đắk Lắk",
+      "registrationDate": "2025-07-31",
+      "speciesList": [
+        {
+          "fluctuations": [],
+          "baseline": {
+            "otherMale": 7,
+            "mother": 7,
+            "father": 6,
+            "note": "Hiện trạng nuôi đăng ký",
+            "otherUnknown": 7,
+            "date": "2025-07-31",
+            "otherFemale": 10,
+            "verifier": "Hạt Kiểm lâm Huyện Krông Bông"
+          },
+          "vietnameseName": "Cầy vòi Hương",
+          "scientificName": "Paradoxurus hermaphroditus",
+          "purposeCode": "T",
+          "group": "Động vật rừng nguy cấp, quý, hiếm (Nhóm IIB)",
+          "citesAppendix": "Phụ lục II CITES",
+          "id": "sp_13_1"
+        }
+      ],
+      "registrationCode": "010-25/B-DLC"
+    },
+    {
+      "commune": "Xã Krông Bông",
+      "speciesList": [
+        {
+          "baseline": {
+            "otherFemale": 0,
+            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "otherMale": 0,
+            "note": "Hiện trạng nuôi đăng ký",
+            "father": 5,
+            "date": "2026-03-17",
+            "mother": 23,
+            "otherUnknown": 0
+          },
+          "fluctuations": [],
+          "vietnameseName": "Cầy vòi mốc",
+          "scientificName": "Paguma larvata",
+          "purposeCode": "T",
+          "citesAppendix": "Phụ lục II CITES",
+          "id": "sp_14_1",
+          "group": "Động vật rừng nguy cấp, quý, hiếm (Nhóm IIB)"
+        },
+        {
+          "fluctuations": [],
+          "scientificName": "Rhizomys sumatrensis",
+          "vietnameseName": "Dúi má đào",
+          "baseline": {
+            "date": "2026-01-01",
+            "otherMale": 0,
+            "mother": 34,
+            "note": "Hiện trạng nuôi loài Dúi má đào",
+            "father": 9,
+            "otherUnknown": 0,
+            "otherFemale": 0,
+            "verifier": "Hạt Kiểm lâm Huyện Krông Bông"
+          },
+          "id": "sp_14_2",
+          "citesAppendix": "Phụ lục II CITES",
+          "purposeCode": "T",
+          "group": "Động vật rừng (Nhóm IIB)"
+        }
+      ],
+      "phone": "",
+      "registrationCode": "18-26/B-DLC",
+      "id": "fac_14",
+      "updatedAt": "2026-08-15T13:55:41.438Z",
+      "facilityName": "Cơ sở nuôi Hà Huy Thanh",
+      "note": "",
+      "registrationDate": "2026-03-17",
+      "purposeCode": "T",
+      "address": "TDP4, Xã Krông Bông, Huyện Krông Bông, Tỉnh Đắk Lắk",
+      "ownerName": "Hà Huy Thanh"
+    },
+    {
+      "phone": "",
+      "facilityName": "Cơ sở nuôi Trần Văn Tới",
+      "note": "",
+      "ownerName": "Trần Văn Tới",
+      "id": "fac_15",
+      "speciesList": [
+        {
+          "baseline": {
+            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "otherUnknown": "",
+            "otherFemale": "",
+            "mother": 9,
+            "note": "Số lượng Dúi mốc lớn hiện có",
+            "otherMale": "",
+            "date": "2023-11-02",
+            "father": 9
+          },
+          "group": "Động vật rừng thông thường",
+          "id": "sp_15_1",
+          "citesAppendix": "Khai báo kiểm lâm",
+          "fluctuations": [
+            {
+              "incMother": 0,
+              "time": "20:31",
+              "approvalStatus": "PENDING",
+              "decOtherFemale": 0,
+              "id": "fluc_1786800720711",
+              "incOtherFemale": 0,
+              "isGenderIdentifyMode": false,
+              "reason": "Sinh sản lứa F1 mới nở/sinh.",
+              "purpose": "T",
+              "decOtherUnknown": 0,
+              "decMother": 0,
+              "incOtherMale": 0,
+              "decFather": 0,
+              "incFather": 0,
+              "decOtherMale": 0,
+              "date": "2024-04-30",
+              "verifier": "",
+              "incOtherUnknown": 29,
+              "isPurchaseMode": false,
+              "createdAt": 1786800720711
+            },
+            {
+              "decOtherUnknown": 0,
+              "approvalStatus": "APPROVED",
+              "fluctuationId": "fluc_1786801410414",
+              "decOtherFemale": 0,
+              "incOtherFemale": 0,
+              "date": "2024-10-21",
+              "incOtherUnknown": 4,
+              "incMother": 0,
+              "purpose": "T",
+              "isGenderIdentifyMode": false,
+              "reason": "Sinh sản lứa F1 mới nở/sinh",
+              "id": "fluc_1786801410414",
+              "createdAt": 1786801410414,
+              "decMother": 0,
+              "time": "18:10",
+              "decOtherMale": 0,
+              "incOtherMale": 0,
+              "incFather": 0,
+              "decFather": 0,
+              "verifier": "",
+              "isPurchaseMode": false
+            },
+            {
+              "isPurchaseMode": false,
+              "date": "2025-01-22",
+              "incOtherUnknown": 0,
+              "incMother": 0,
+              "id": "fluc_1786801929836",
+              "fluctuationId": "fluc_1786801929836",
+              "decOtherUnknown": 33,
+              "purpose": "T",
+              "decMother": 0,
+              "incOtherFemale": 19,
+              "verifier": "",
+              "incFather": 0,
+              "decFather": 0,
+              "createdAt": 1786801929836,
+              "time": "10:30",
+              "isGenderIdentifyMode": true,
+              "decOtherMale": 0,
+              "reason": "Xác định giới tính con con",
+              "decOtherFemale": 0,
+              "approvalStatus": "APPROVED",
+              "incOtherMale": 14
+            }
+          ],
+          "scientificName": "Rhizomys pruinosus",
+          "vietnameseName": "Dúi mốc lớn",
+          "purposeCode": "T"
+        }
+      ],
+      "address": "Thôn 1, xã Yang Mao, Huyện Krông Bông, Tỉnh Đắk Lắk",
+      "registrationCode": "Đang cập nhật",
+      "purposeCode": "T",
+      "commune": "xã Yang Mao",
+      "updatedAt": "2026-08-15T13:55:41.438Z",
+      "registrationDate": ""
+    },
+    {
+      "ownerName": "Lê Đình Tâm",
+      "note": "",
+      "registrationCode": "Đang cập nhật",
+      "facilityName": "Cơ sở nuôi Lê Đình Tâm",
+      "commune": "xã Yang Mao",
+      "registrationDate": "",
+      "purposeCode": "T",
+      "phone": "",
+      "updatedAt": "2026-08-15T13:55:41.438Z",
+      "id": "fac_16",
+      "address": "Thôn Cư Drăm, xã Yang Mao, Huyện Krông Bông, Tỉnh Đắk Lắk",
+      "speciesList": [
+        {
+          "group": "Động vật rừng thông thường",
+          "id": "sp_16_1",
+          "fluctuations": [],
+          "vietnameseName": "Dúi mốc lớn",
+          "scientificName": "Rhizomys pruinosus",
+          "purposeCode": "T",
+          "citesAppendix": "Khai báo kiểm lâm",
+          "baseline": {
+            "note": "Số lượng Dúi mốc lớn hiện có",
+            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "date": "2026-01-01",
+            "otherUnknown": 0,
+            "father": 2,
+            "otherMale": 4,
+            "otherFemale": 6,
+            "mother": 2
+          }
+        }
+      ]
+    },
+    {
+      "facilityName": "Cơ sở nuôi Nguyễn Kim Danh",
+      "id": "fac_17",
+      "registrationDate": "",
+      "registrationCode": "Đang cập nhật",
+      "purposeCode": "T",
+      "commune": "xã Yang Mao",
+      "updatedAt": "2026-08-15T13:55:41.438Z",
+      "address": "Buôn Tul, xã Yang Mao, Huyện Krông Bông, Tỉnh Đắk Lắk",
+      "speciesList": [
+        {
+          "id": "sp_17_1",
+          "fluctuations": [],
+          "group": "Động vật rừng thông thường",
+          "baseline": {
+            "date": "2026-01-01",
+            "otherMale": 0,
+            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "otherFemale": 0,
+            "note": "Số lượng Dúi mốc lớn hiện có",
+            "otherUnknown": 0,
+            "mother": 10,
+            "father": 2
+          },
+          "citesAppendix": "Khai báo kiểm lâm",
+          "vietnameseName": "Dúi mốc lớn",
+          "scientificName": "Rhizomys pruinosus",
+          "purposeCode": "T"
+        }
+      ],
+      "note": "",
+      "ownerName": "Nguyễn Kim Danh",
+      "phone": ""
+    },
+    {
+      "speciesList": [
+        {
+          "id": "sp_1786163645775_1",
+          "fluctuations": [
+            {
+              "incOtherMale": 0,
+              "decOtherMale": 0,
+              "date": "2026-07-20",
+              "createdAt": 1786163683953,
+              "decMother": 0,
+              "isPurchaseMode": false,
+              "incFather": 0,
+              "decFather": 0,
+              "reason": "Sinh sản lứa F2 mới nở/sinh",
+              "incOtherUnknown": 5,
+              "incMother": 0,
+              "decOtherFemale": 0,
+              "id": "fluc_1786163683953",
+              "verifier": "",
+              "time": "11:34",
+              "purpose": "T",
+              "decOtherUnknown": 0,
+              "incOtherFemale": 0
+            }
+          ],
+          "purposeCode": "T",
+          "citesAppendix": "Phụ lục II CITES",
+          "scientificName": "Paradoxurus hermaphroditus",
+          "vietnameseName": "Cầy vòi Hương",
+          "baseline": {
+            "otherMale": 0,
+            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "mother": 3,
+            "otherFemale": 0,
+            "otherUnknown": 0,
+            "father": 1,
+            "date": "2026-07-24",
+            "note": "Hiện trạng đăng ký ban đầu"
+          },
+          "group": "Động vật rừng nguy cấp, quý, hiếm (Nhóm IIB)"
+        }
+      ],
+      "facilityName": "Nguyễn Lĩnh",
+      "lng": "",
+      "ownerName": "Nguyễn Lĩnh",
+      "registrationDate": "2026-07-24",
+      "commune": "xã Cư Pui",
+      "registrationCode": "141-26/B-DLC",
+      "lat": "",
+      "updatedAt": "2026-08-15T13:55:41.439Z",
+      "id": "fac_1786163645775",
+      "phone": "0866100652",
+      "address": "thôn 3, xã Cư Pui, tỉnh Đắk Lắk.",
+      "purposeCode": "T",
+      "note": ""
+    },
+    {
+      "lng": 108.321947,
+      "phone": "0342017979",
+      "purposeCode": "T",
+      "updatedAt": "2026-08-15T13:55:41.439Z",
+      "commune": "Xã Dang Kang",
+      "lat": 12.558599,
+      "ownerName": "Nguyễn Hoàng Dũng",
+      "id": "fac_1786419630740",
+      "address": " thôn 6, xã Dang Kang, tỉnh Đắk Lắk",
+      "registrationCode": "142-26/B-DLC",
+      "facilityName": "Nguyễn Hoàng Dũng",
+      "registrationDate": "2026-01-24",
+      "note": "",
+      "speciesList": [
+        {
+          "id": "sp_1786419630740_1",
+          "baseline": {
+            "otherUnknown": 0,
+            "otherFemale": 0,
+            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "mother": 40,
+            "otherMale": 0,
+            "date": "2026-07-24",
+            "father": 2,
+            "note": "Hiện trạng đăng ký ban đầu"
+          },
+          "group": "Động vật rừng nguy cấp, quý, hiếm (Nhóm IIB)",
+          "purposeCode": "T",
+          "fluctuations": [
+            {
+              "purpose": "T",
+              "isPurchaseMode": true,
+              "incOtherMale": 0,
+              "decOtherMale": 0,
+              "time": "10:42",
+              "incMother": 0,
+              "verifier": "",
+              "incFather": 0,
+              "decFather": 0,
+              "decMother": 0,
+              "reason": "Mua từ cơ sở nuôi sinh sản khác",
+              "createdAt": 1786419778624,
+              "incOtherUnknown": 0,
+              "incOtherFemale": 5,
+              "id": "fluc_1786419778624",
+              "date": "2026-08-11",
+              "decOtherFemale": 0,
+              "decOtherUnknown": 0
+            }
+          ],
+          "scientificName": "Paradoxurus hermaphroditus",
+          "vietnameseName": "Cầy vòi Hương",
+          "citesAppendix": "Phụ lục II CITES"
+        },
+        {
+          "baseline": {
+            "otherFemale": 0,
+            "note": "Số lượng vật nuôi hiện có ban đầu",
+            "date": "2026-07-24",
+            "verifier": "",
+            "mother": "13",
+            "otherUnknown": 0,
+            "father": "4",
+            "otherMale": 0
+          },
+          "scientificName": "Paguma larvata",
+          "vietnameseName": "Cầy vòi mốc",
+          "citesAppendix": "Phụ lục II CITES",
+          "purposeCode": "T",
+          "group": "Động vật rừng nguy cấp, quý, hiếm (Nhóm IIB)",
+          "fluctuations": [],
+          "id": "species_1786419708326"
+        }
+      ]
+    },
+    {
+      "lat": 12.520837,
+      "phone": "",
+      "ownerName": "Phạm Duy Thắng",
+      "speciesList": [
+        {
+          "citesAppendix": "Khai báo kiểm lâm",
+          "purposeCode": "T",
+          "fluctuations": [
+            {
+              "createdAt": 1786467765630,
+              "incOtherUnknown": 6,
+              "id": "fluc_1786468153021",
+              "incFather": 0,
+              "decFather": 0,
+              "decMother": 0,
+              "incOtherFemale": 0,
+              "decOtherMale": 0,
+              "decOtherFemale": 0,
+              "decOtherUnknown": 0,
+              "incOtherMale": 0,
+              "reason": "Sinh sản lứa F2 mới nở/sinh",
+              "date": "2026-07-08",
+              "isPurchaseMode": false,
+              "time": "00:02",
+              "verifier": "",
+              "purpose": "T",
+              "incMother": 0
+            }
+          ],
+          "id": "sp_1786432202893_1",
+          "baseline": {
+            "otherMale": 0,
+            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "otherUnknown": 0,
+            "mother": 4,
+            "note": "Hiện trạng đăng ký ban đầu",
+            "date": "2026-06-17",
+            "otherFemale": 0,
+            "father": 2
+          },
+          "group": "Động vật rừng thông thường",
+          "scientificName": "Rhizomys pruinosus",
+          "vietnameseName": "Dúi mốc lớn"
+        }
+      ],
+      "address": "Thôn 23",
+      "facilityName": "Phạm Duy Thắng",
+      "commune": "Xã Krông Bông",
+      "purposeCode": "T",
+      "lng": 108.394137,
+      "note": "",
+      "id": "fac_1786432202893",
+      "registrationDate": "2026-08-11",
+      "updatedAt": "2026-08-15T13:55:41.439Z",
+      "registrationCode": "Chưa có mã số"
+    },
+    {
+      "ownerName": "Nguyễn Kim Tuấn",
+      "facilityName": "Nguyễn Kim Tuấn",
+      "purposeCode": "T",
+      "lat": "12.575576",
+      "commune": "Xã Dang Kang",
+      "id": "fac_1786504114807",
+      "address": "Thôn 6 xã Dang Kang",
+      "note": "",
+      "registrationCode": "Chưa có mã số",
+      "registrationDate": "2025-11-12",
+      "lng": "108.338165",
+      "phone": "",
+      "updatedAt": "2026-08-15T13:55:41.439Z",
+      "speciesList": [
+        {
+          "group": "Động vật rừng thông thường",
+          "purposeCode": "T",
+          "fluctuations": [
+            {
+              "incFather": 0,
+              "decFather": 0,
+              "decMother": 0,
+              "createdAt": 1786504203858,
+              "decOtherMale": 0,
+              "incOtherMale": 38,
+              "isPurchaseMode": false,
+              "time": "10:09",
+              "verifier": "",
+              "id": "fluc_1786504203858",
+              "date": "2026-08-12",
+              "incOtherUnknown": 32,
+              "purpose": "T",
+              "decOtherFemale": 0,
+              "reason": "Sinh sản lứa F2 mới nở/sinh",
+              "decOtherUnknown": 0,
+              "incMother": 0,
+              "incOtherFemale": 53
+            }
+          ],
+          "id": "sp_1786504114807_1",
+          "baseline": {
+            "note": "Hiện trạng đăng ký ban đầu",
+            "date": "2025-11-12",
+            "otherUnknown": 0,
+            "otherMale": 0,
+            "otherFemale": 0,
+            "mother": 30,
+            "father": 10,
+            "verifier": "Hạt Kiểm lâm Huyện Krông Bông"
+          },
+          "scientificName": "Rhizomys pruinosus",
+          "citesAppendix": "Khai báo kiểm lâm",
+          "vietnameseName": "Dúi mốc lớn"
+        }
+      ]
+    },
+    {
+      "ownerName": "Lê Quang Mạnh",
+      "facilityName": "Cơ sở nuôi Lê Quang Mạnh",
+      "purposeCode": "T",
+      "commune": "Xã Krông Bông",
+      "note": "",
+      "id": "fac_18",
+      "updatedAt": "2026-08-15T13:55:41.439Z",
+      "phone": "",
+      "address": "Thôn 29, Xã Krông Bông, Huyện Krông Bông, Tỉnh Đắk Lắk",
+      "registrationDate": "",
+      "speciesList": [
+        {
+          "id": "sp_18_1",
+          "vietnameseName": "Dúi má đào",
+          "scientificName": "Rhizomys sumatrensis",
+          "fluctuations": [],
+          "citesAppendix": "Phụ lục II CITES",
+          "purposeCode": "T",
+          "group": "Động vật rừng (Nhóm IIB)",
+          "baseline": {
+            "father": 3,
+            "mother": 4,
+            "otherMale": 10,
+            "otherUnknown": 0,
+            "otherFemale": 12,
+            "date": "2026-01-01",
+            "note": "Số lượng Dúi má đào hiện có",
+            "verifier": "Hạt Kiểm lâm Huyện Krông Bông"
+          }
+        },
+        {
+          "purposeCode": "T",
+          "id": "sp_18_2",
+          "citesAppendix": "Khai báo kiểm lâm",
+          "fluctuations": [],
+          "group": "Động vật rừng thông thường",
+          "baseline": {
+            "otherUnknown": 58,
+            "mother": 61,
+            "otherMale": 17,
+            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "otherFemale": 15,
+            "father": 19,
+            "date": "2026-01-01",
+            "note": "Số lượng Dúi mốc lớn hiện có"
+          },
+          "vietnameseName": "Dúi mốc lớn",
+          "scientificName": "Rhizomys pruinosus"
+        }
+      ],
+      "registrationCode": "Đang cập nhật"
+    },
+    {
+      "facilityName": "Cơ sở nuôi Nguyễn Trương Đắc Nam",
+      "updatedAt": "2026-08-15T13:55:41.439Z",
+      "note": "",
+      "commune": "Xã Krông Bông",
+      "id": "fac_19",
+      "purposeCode": "T",
+      "registrationCode": "Đang cập nhật",
+      "registrationDate": "",
+      "phone": "",
+      "address": "Thôn 9, Xã Krông Bông, Huyện Krông Bông, Tỉnh Đắk Lắk",
+      "ownerName": "Nguyễn Trương Đắc Nam",
+      "speciesList": [
+        {
+          "citesAppendix": "Khai báo kiểm lâm",
+          "id": "sp_19_1",
+          "group": "Động vật rừng thông thường",
+          "fluctuations": [],
+          "purposeCode": "T",
+          "baseline": {
+            "mother": 15,
+            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "father": 10,
+            "otherFemale": 0,
+            "date": "2026-01-01",
+            "note": "Số lượng Dúi mốc lớn hiện có",
+            "otherUnknown": 0,
+            "otherMale": 0
+          },
+          "vietnameseName": "Dúi mốc lớn",
+          "scientificName": "Rhizomys pruinosus"
+        }
+      ]
+    },
+    {
+      "phone": "",
+      "registrationCode": "IIB-C-DLC-028",
+      "speciesList": [
+        {
+          "fluctuations": [],
+          "citesAppendix": "Phụ lục II CITES",
+          "purposeCode": "T",
+          "group": "Động vật rừng nguy cấp, quý, hiếm (Nhóm IIB)",
+          "id": "sp_2_1",
+          "vietnameseName": "Cầy vòi Hương",
+          "scientificName": "Paradoxurus hermaphroditus",
+          "baseline": {
+            "date": "2023-04-17",
+            "note": "Số lượng vật nuôi đăng ký",
+            "mother": 3,
+            "father": 2,
+            "otherMale": 6,
+            "otherUnknown": 3,
+            "otherFemale": 7,
+            "verifier": "Hạt Kiểm lâm Huyện Krông Bông"
+          }
+        }
+      ],
+      "note": "",
+      "registrationDate": "2023-04-17",
+      "id": "fac_2",
+      "facilityName": "Cơ sở nuôi Nguyễn Văn Thúy",
+      "address": "Thôn Quảng Đông, xã Hòa Sơn, Huyện Krông Bông, Tỉnh Đắk Lắk",
+      "ownerName": "Nguyễn Văn Thúy",
+      "commune": "xã Hòa Sơn",
+      "purposeCode": "T",
+      "updatedAt": "2026-08-15T13:55:41.439Z"
+    },
+    {
+      "note": "",
+      "phone": "",
+      "registrationDate": "",
+      "commune": "Xã Dang Kang",
+      "ownerName": "Trần Văn Lực",
+      "purposeCode": "T",
+      "registrationCode": "Đang cập nhật",
+      "id": "fac_20",
+      "facilityName": "Cơ sở nuôi Trần Văn Lực",
+      "speciesList": [
+        {
+          "purposeCode": "T",
+          "baseline": {
+            "otherMale": 6,
+            "otherUnknown": 11,
+            "note": "Số lượng Dúi má đào hiện có",
+            "date": "2026-01-01",
+            "father": 4,
+            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "mother": 26,
+            "otherFemale": 8
+          },
+          "fluctuations": [],
+          "id": "sp_20_1",
+          "group": "Động vật rừng (Nhóm IIB)",
+          "citesAppendix": "Phụ lục II CITES",
+          "scientificName": "Rhizomys sumatrensis",
+          "vietnameseName": "Dúi má đào"
+        }
+      ],
+      "address": "Buôn Cư Ênun A, Xã Dang Kang, Huyện Krông Bông, Tỉnh Đắk Lắk",
+      "updatedAt": "2026-08-15T13:55:41.439Z"
+    },
+    {
+      "commune": "Xã Dang Kang",
+      "ownerName": "Đinh Tiến Toàn",
+      "registrationCode": "Đang cập nhật",
+      "speciesList": [
+        {
+          "fluctuations": [],
+          "id": "sp_21_1",
+          "group": "Động vật rừng thông thường",
+          "scientificName": "Rhizomys pruinosus",
+          "vietnameseName": "Dúi mốc lớn",
+          "citesAppendix": "Khai báo kiểm lâm",
+          "purposeCode": "T",
+          "baseline": {
+            "otherFemale": 0,
+            "mother": 10,
+            "otherUnknown": 0,
+            "otherMale": 0,
+            "father": 10,
+            "note": "Số lượng Dúi mốc lớn hiện có",
+            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "date": "2026-01-01"
+          }
+        }
+      ],
+      "phone": "",
+      "registrationDate": "",
+      "facilityName": "Cơ sở nuôi Đinh Tiến Toàn",
+      "address": "Thôn 3, Xã Dang Kang, Huyện Krông Bông, Tỉnh Đắk Lắk",
+      "purposeCode": "T",
+      "id": "fac_21",
+      "note": "",
+      "updatedAt": "2026-08-15T13:55:41.439Z"
+    },
+    {
+      "facilityName": "Cơ sở nuôi Nguyễn Thanh",
+      "phone": "",
+      "updatedAt": "2026-08-15T13:55:41.439Z",
+      "registrationCode": "Đang cập nhật",
+      "registrationDate": "",
+      "address": "Thôn 2, xã Hòa Sơn, Huyện Krông Bông, Tỉnh Đắk Lắk",
+      "speciesList": [
+        {
+          "vietnameseName": "Chim Cu gáy",
+          "scientificName": "Streptopelia Chinensis",
+          "citesAppendix": "Khai báo kiểm lâm",
+          "baseline": {
+            "note": "Số lượng Chim Cu gáy nuôi",
+            "otherMale": 0,
+            "otherFemale": 0,
+            "date": "2026-01-01",
+            "otherUnknown": 0,
+            "mother": 1,
+            "father": 1,
+            "verifier": "Hạt Kiểm lâm Huyện Krông Bông"
+          },
+          "group": "Động vật rừng thông thường (Chim)",
+          "purposeCode": "T",
+          "fluctuations": [],
+          "id": "sp_22_1"
+        }
+      ],
+      "note": "",
+      "id": "fac_22",
+      "ownerName": "Nguyễn Thanh",
+      "commune": "xã Hòa Sơn",
+      "purposeCode": "T"
+    },
+    {
+      "purposeCode": "O",
+      "ownerName": "Huỳnh Phúc Lợi",
+      "commune": "xã Hòa Sơn",
+      "note": "Làm cảnh",
+      "registrationCode": "Đang cập nhật",
+      "speciesList": [
+        {
+          "purposeCode": "O",
+          "id": "sp_23_1",
+          "scientificName": "Pycnonotus Jocosus",
+          "fluctuations": [],
+          "vietnameseName": "Chim Chào mào",
+          "group": "Động vật rừng thông thường (Chim)",
+          "citesAppendix": "Khai báo kiểm lâm",
+          "baseline": {
+            "otherUnknown": 0,
+            "mother": 0,
+            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "note": "Số lượng Chim Chào mào nuôi cảnh",
+            "otherMale": 0,
+            "date": "2026-01-01",
+            "father": 3,
+            "otherFemale": 0
+          }
+        }
+      ],
+      "updatedAt": "2026-08-15T13:55:41.439Z",
+      "registrationDate": "",
+      "id": "fac_23",
+      "facilityName": "Cơ sở nuôi Huỳnh Phúc Lợi",
+      "phone": "",
+      "address": "Thôn 2, xã Hòa Sơn, Huyện Krông Bông, Tỉnh Đắk Lắk"
+    },
+    {
+      "id": "fac_24",
+      "facilityName": "Cơ sở nuôi Phan Thanh Trúc",
+      "speciesList": [
+        {
+          "citesAppendix": "Khai báo kiểm lâm",
+          "baseline": {
+            "otherMale": 0,
+            "otherUnknown": 0,
+            "date": "2026-01-01",
+            "mother": 5,
+            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "note": "Số lượng Chim Chào mào nuôi",
+            "otherFemale": 0,
+            "father": 5
+          },
+          "vietnameseName": "Chim Chào mào",
+          "scientificName": "Pycnonotus Jocosus",
+          "purposeCode": "T",
+          "group": "Động vật rừng thông thường (Chim)",
+          "id": "sp_24_1",
+          "fluctuations": []
+        }
+      ],
+      "phone": "",
+      "updatedAt": "2026-08-15T13:55:41.439Z",
+      "address": "Thôn 4, xã Hòa Sơn, Huyện Krông Bông, Tỉnh Đắk Lắk",
+      "registrationDate": "",
+      "registrationCode": "Đang cập nhật",
+      "note": "",
+      "purposeCode": "T",
+      "commune": "xã Hòa Sơn",
+      "ownerName": "Phan Thanh Trúc"
+    },
+    {
+      "ownerName": "Thái Hồng Sơn",
+      "purposeCode": "T",
+      "registrationCode": "Đang cập nhật",
+      "registrationDate": "",
+      "commune": "Xã Krông Bông",
+      "address": "Thôn 4, Xã Krông Bông, Huyện Krông Bông, Tỉnh Đắk Lắk",
+      "speciesList": [
+        {
+          "citesAppendix": "Khai báo kiểm lâm",
+          "purposeCode": "T",
+          "group": "Động vật rừng thông thường (Chim)",
+          "fluctuations": [],
+          "scientificName": "Pycnonotus Jocosus",
+          "vietnameseName": "Chim Chào mào",
+          "baseline": {
+            "otherUnknown": 0,
+            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "father": 5,
+            "otherMale": 0,
+            "mother": 5,
+            "note": "Số lượng Chim Chào mào nuôi",
+            "date": "2026-01-01",
+            "otherFemale": 0
+          },
+          "id": "sp_25_1"
+        }
+      ],
+      "updatedAt": "2026-08-15T13:55:41.439Z",
+      "note": "",
+      "facilityName": "Cơ sở nuôi Thái Hồng Sơn",
+      "id": "fac_25",
+      "phone": ""
+    },
+    {
+      "updatedAt": "2026-08-15T13:55:41.439Z",
+      "registrationCode": "Đang cập nhật",
+      "registrationDate": "",
+      "commune": "Xã Krông Bông",
+      "purposeCode": "T",
+      "note": "",
+      "id": "fac_26",
+      "phone": "",
+      "ownerName": "Nguyễn Trí",
+      "address": "Thôn 7, Xã Krông Bông, Huyện Krông Bông, Tỉnh Đắk Lắk",
+      "speciesList": [
+        {
+          "id": "sp_26_1",
+          "citesAppendix": "Khai báo kiểm lâm",
+          "fluctuations": [],
+          "scientificName": "Streptopelia Chinensis",
+          "vietnameseName": "Chim Cu gáy",
+          "group": "Động vật rừng thông thường (Chim)",
+          "purposeCode": "T",
+          "baseline": {
+            "otherFemale": 1,
+            "father": 11,
+            "note": "Số lượng Chim Cu gáy nuôi",
+            "otherUnknown": 0,
+            "date": "2026-01-01",
+            "mother": 11,
+            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "otherMale": 1
+          }
+        }
+      ],
+      "facilityName": "Cơ sở nuôi Nguyễn Trí"
+    },
+    {
+      "registrationCode": "Đang cập nhật",
+      "registrationDate": "",
+      "phone": "",
+      "commune": "Xã Krông Bông",
+      "purposeCode": "T",
+      "ownerName": "Nguyễn Văn Hòa",
+      "note": "",
+      "facilityName": "Cơ sở nuôi Nguyễn Văn Hòa",
+      "id": "fac_27",
+      "address": "Thôn 2, Xã Krông Bông, Huyện Krông Bông, Tỉnh Đắk Lắk",
+      "speciesList": [
+        {
+          "purposeCode": "T",
+          "id": "sp_27_1",
+          "citesAppendix": "Khai báo kiểm lâm",
+          "baseline": {
+            "date": "2026-01-01",
+            "note": "Số lượng Chim Chào mào nuôi",
+            "otherFemale": 0,
+            "otherMale": 0,
+            "otherUnknown": 0,
+            "mother": 2,
+            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "father": 2
+          },
+          "scientificName": "Pycnonotus Jocosus",
+          "vietnameseName": "Chim Chào mào",
+          "group": "Động vật rừng thông thường (Chim)",
+          "fluctuations": []
+        }
+      ],
+      "updatedAt": "2026-08-15T13:55:41.439Z"
+    },
+    {
+      "purposeCode": "T",
+      "commune": "Xã Krông Bông",
+      "id": "fac_28",
+      "ownerName": "Trần Văn Hà",
+      "note": "",
+      "speciesList": [
+        {
+          "baseline": {
+            "note": "Số lượng Chim Chào mào nuôi",
+            "otherUnknown": 0,
+            "date": "2026-01-01",
+            "otherFemale": 0,
+            "father": 1,
+            "mother": 1,
+            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "otherMale": 0
+          },
+          "vietnameseName": "Chim Chào mào",
+          "scientificName": "Pycnonotus Jocosus",
+          "fluctuations": [],
+          "id": "sp_28_1",
+          "group": "Động vật rừng thông thường (Chim)",
+          "purposeCode": "T",
+          "citesAppendix": "Khai báo kiểm lâm"
+        }
+      ],
+      "address": "Thôn 26, Xã Krông Bông, Huyện Krông Bông, Tỉnh Đắk Lắk",
+      "phone": "",
+      "updatedAt": "2026-08-15T13:55:41.439Z",
+      "registrationCode": "Đang cập nhật",
+      "facilityName": "Cơ sở nuôi Trần Văn Hà",
+      "registrationDate": ""
+    },
+    {
+      "id": "fac_29",
+      "address": "Thôn 2, Xã Krông Bông, Huyện Krông Bông, Tỉnh Đắk Lắk",
+      "purposeCode": "T",
+      "registrationDate": "",
+      "phone": "",
+      "updatedAt": "2026-08-15T13:55:41.439Z",
+      "registrationCode": "Đang cập nhật",
+      "commune": "Xã Krông Bông",
+      "note": "",
+      "facilityName": "Cơ sở nuôi Trần Ngọc Long",
+      "speciesList": [
+        {
+          "citesAppendix": "Khai báo kiểm lâm",
+          "fluctuations": [],
+          "purposeCode": "T",
+          "baseline": {
+            "note": "Số lượng Chim Cu gáy nuôi",
+            "otherUnknown": 0,
+            "date": "2026-01-01",
+            "otherFemale": 0,
+            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "mother": 2,
+            "otherMale": 0,
+            "father": 2
+          },
+          "scientificName": "Streptopelia Chinensis",
+          "vietnameseName": "Chim Cu gáy",
+          "id": "sp_29_1",
+          "group": "Động vật rừng thông thường (Chim)"
+        }
+      ],
+      "ownerName": "Trần Ngọc Long"
+    },
+    {
+      "registrationCode": "028-25/B-DLC",
+      "purposeCode": "T",
+      "address": "Thôn 4, xã Hòa Sơn, Huyện Krông Bông, Tỉnh Đắk Lắk",
+      "registrationDate": "2025-10-03",
+      "ownerName": "Trịnh Viết Long",
+      "phone": "",
+      "commune": "xã Hòa Sơn",
+      "speciesList": [
+        {
+          "citesAppendix": "Phụ lục II CITES",
+          "baseline": {
+            "otherFemale": 0,
+            "otherUnknown": 0,
+            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "otherMale": 0,
+            "date": "2025-10-03",
+            "father": 0,
+            "note": "Cơ sở hiện nghỉ nuôi",
+            "mother": 0
+          },
+          "fluctuations": [],
+          "purposeCode": "T",
+          "group": "Động vật rừng nguy cấp, quý, hiếm (Nhóm IIB)",
+          "id": "sp_3_1",
+          "scientificName": "Paradoxurus hermaphroditus",
+          "vietnameseName": "Cầy vòi Hương"
+        }
+      ],
+      "id": "fac_3",
+      "note": "Nghỉ nuôi",
+      "facilityName": "Cơ sở nuôi Trịnh Viết Long",
+      "updatedAt": "2026-08-15T13:55:41.439Z"
+    },
+    {
+      "registrationCode": "Đang cập nhật",
+      "updatedAt": "2026-08-15T13:55:41.439Z",
+      "purposeCode": "T",
+      "commune": "Xã Dang Kang",
+      "registrationDate": "",
+      "facilityName": "Cơ sở nuôi Hoàng Văn Hải",
+      "address": "Thôn 6, Xã Dang Kang, Huyện Krông Bông, Tỉnh Đắk Lắk",
+      "ownerName": "Hoàng Văn Hải",
+      "id": "fac_30",
+      "note": "",
+      "speciesList": [
+        {
+          "id": "sp_30_1",
+          "vietnameseName": "Chim Chào mào",
+          "scientificName": "Pycnonotus Jocosus",
+          "group": "Động vật rừng thông thường (Chim)",
+          "purposeCode": "T",
+          "fluctuations": [],
+          "baseline": {
+            "mother": 2,
+            "father": 2,
+            "otherUnknown": 3,
+            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "date": "2026-01-01",
+            "otherFemale": 2,
+            "note": "Số lượng Chim Chào mào nuôi",
+            "otherMale": 3
+          },
+          "citesAppendix": "Khai báo kiểm lâm"
+        }
+      ],
+      "phone": ""
+    },
+    {
+      "facilityName": "Cơ sở nuôi Võ Văn Nhơn",
+      "address": "Thôn 7, Xã Dang Kang, Huyện Krông Bông, Tỉnh Đắk Lắk",
+      "speciesList": [
+        {
+          "group": "Động vật rừng thông thường (Chim)",
+          "citesAppendix": "Khai báo kiểm lâm",
+          "id": "sp_31_1",
+          "fluctuations": [],
+          "purposeCode": "O",
+          "vietnameseName": "Chim Chào mào",
+          "scientificName": "Pycnonotus Jocosus",
+          "baseline": {
+            "otherUnknown": 0,
+            "otherMale": 0,
+            "mother": 1,
+            "note": "Số lượng Chim Chào mào nuôi cảnh",
+            "otherFemale": 0,
+            "father": 1,
+            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "date": "2026-01-01"
+          }
+        }
+      ],
+      "ownerName": "Võ Văn Nhơn",
+      "id": "fac_31",
+      "note": "Làm cảnh",
+      "purposeCode": "O",
+      "registrationCode": "Đang cập nhật",
+      "phone": "",
+      "updatedAt": "2026-08-15T13:55:41.439Z",
+      "registrationDate": "",
+      "commune": "Xã Dang Kang"
+    },
+    {
+      "note": "Chưa có mã số",
+      "ownerName": "Phạm Bá Quang",
+      "address": "Thôn 3, xã Hòa Sơn, Huyện Krông Bông, Tỉnh Đắk Lắk",
+      "speciesList": [
+        {
+          "baseline": {
+            "otherUnknown": 0,
+            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "date": "2026-01-01",
+            "note": "Chưa được cấp mã số cơ sở",
+            "mother": 11,
+            "father": 4,
+            "otherFemale": 0,
+            "otherMale": 0
+          },
+          "group": "Động vật rừng nguy cấp, quý, hiếm (Nhóm IIB)",
+          "citesAppendix": "Phụ lục II CITES",
+          "id": "sp_4_1",
+          "vietnameseName": "Cầy vòi Hương",
+          "scientificName": "Paradoxurus hermaphroditus",
+          "purposeCode": "T",
+          "fluctuations": []
+        }
+      ],
+      "phone": "",
+      "facilityName": "Cơ sở nuôi Phạm Bá Quang",
+      "updatedAt": "2026-08-15T13:55:41.439Z",
+      "registrationCode": "Chưa có mã số",
+      "id": "fac_4",
+      "commune": "xã Hòa Sơn",
+      "purposeCode": "T",
+      "registrationDate": ""
+    },
+    {
+      "phone": "",
+      "note": "Nghỉ nuôi",
+      "purposeCode": "T",
+      "updatedAt": "2026-08-15T13:55:41.439Z",
+      "address": "Thôn 1, xã Hòa Sơn, Huyện Krông Bông, Tỉnh Đắk Lắk",
+      "registrationDate": "2022-04-22",
+      "speciesList": [
+        {
+          "vietnameseName": "Cầy vòi Hương",
+          "scientificName": "Paradoxurus hermaphroditus",
+          "purposeCode": "T",
+          "id": "sp_5_1",
+          "group": "Động vật rừng nguy cấp, quý, hiếm (Nhóm IIB)",
+          "fluctuations": [],
+          "baseline": {
+            "mother": 0,
+            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "father": 0,
+            "otherMale": 0,
+            "note": "Cơ sở nghỉ nuôi",
+            "otherUnknown": 0,
+            "otherFemale": 0,
+            "date": "2022-04-22"
+          },
+          "citesAppendix": "Phụ lục II CITES"
+        }
+      ],
+      "id": "fac_5",
+      "facilityName": "Cơ sở nuôi Phan Thanh Hùng",
+      "registrationCode": "IIB-DLC-021",
+      "commune": "xã Hòa Sơn",
+      "ownerName": "Phan Thanh Hùng"
+    },
+    {
+      "registrationCode": "IIB-DLC-025",
+      "facilityName": "Cơ sở nuôi Lê Nguyễn Nhật Tân",
+      "address": "Thôn 6, xã Hòa Sơn, Huyện Krông Bông, Tỉnh Đắk Lắk",
+      "registrationDate": "",
+      "phone": "",
+      "ownerName": "Lê Nguyễn Nhật Tân",
+      "speciesList": [
+        {
+          "id": "sp_6_1",
+          "purposeCode": "T",
+          "baseline": {
+            "note": "Cơ sở nghỉ nuôi",
+            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "date": "2026-01-01",
+            "otherMale": 0,
+            "father": 0,
+            "otherUnknown": 0,
+            "mother": 0,
+            "otherFemale": 0
+          },
+          "citesAppendix": "Phụ lục II CITES",
+          "fluctuations": [],
+          "scientificName": "Paradoxurus hermaphroditus",
+          "vietnameseName": "Cầy vòi Hương",
+          "group": "Động vật rừng nguy cấp, quý, hiếm (Nhóm IIB)"
+        }
+      ],
+      "note": "Nghỉ nuôi",
+      "commune": "xã Hòa Sơn",
+      "id": "fac_6",
+      "purposeCode": "T",
+      "updatedAt": "2026-08-15T13:55:41.440Z"
+    },
+    {
+      "phone": "",
+      "note": "",
+      "speciesList": [
+        {
+          "group": "Động vật rừng nguy cấp, quý, hiếm (Nhóm IIB)",
+          "vietnameseName": "Cầy vòi Hương",
+          "scientificName": "Paradoxurus hermaphroditus",
+          "fluctuations": [],
+          "purposeCode": "T",
+          "citesAppendix": "Phụ lục II CITES",
+          "id": "sp_7_1",
+          "baseline": {
+            "otherMale": 12,
+            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "father": 3,
+            "note": "Số lượng Cầy vòi Hương hiện có",
+            "mother": 5,
+            "otherUnknown": 19,
+            "date": "2024-07-03",
+            "otherFemale": 14
+          }
+        },
+        {
+          "baseline": {
+            "otherUnknown": 0,
+            "mother": 3,
+            "father": 2,
+            "otherMale": 0,
+            "date": "2024-07-03",
+            "note": "Số lượng Cầy vòi mốc hiện có",
+            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "otherFemale": 0
+          },
+          "purposeCode": "T",
+          "citesAppendix": "Phụ lục II CITES",
+          "id": "sp_7_2",
+          "vietnameseName": "Cầy vòi mốc",
+          "scientificName": "Paguma larvata",
+          "fluctuations": [],
+          "group": "Động vật rừng nguy cấp, quý, hiếm (Nhóm IIB)"
+        },
+        {
+          "vietnameseName": "Don",
+          "scientificName": "Atherurus macrourus",
+          "id": "sp_7_3",
+          "group": "Động vật rừng (Nhóm IIB)",
+          "citesAppendix": "Phụ lục II CITES",
+          "purposeCode": "T",
+          "baseline": {
+            "otherUnknown": 0,
+            "note": "Hiện trạng nuôi loài Don",
+            "date": "2026-01-01",
+            "mother": 1,
+            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "father": 1,
+            "otherFemale": 0,
+            "otherMale": 0
+          },
+          "fluctuations": []
+        },
+        {
+          "citesAppendix": "Khai báo kiểm lâm",
+          "id": "sp_7_4",
+          "purposeCode": "T",
+          "fluctuations": [],
+          "group": "Động vật rừng thông thường",
+          "baseline": {
+            "otherFemale": 31,
+            "otherUnknown": 11,
+            "otherMale": 21,
+            "note": "Hiện trạng nuôi loài Nhím",
+            "date": "2026-01-01",
+            "father": 6,
+            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "mother": 12
+          },
+          "vietnameseName": "Nhím",
+          "scientificName": "Hystrix brachyura"
+        }
+      ],
+      "facilityName": "Cơ sở nuôi Nguyễn Tấn Danh Nhân",
+      "updatedAt": "2026-08-15T13:55:41.441Z",
+      "address": "Buôn Tơ Rang, xã Yang Mao, Huyện Krông Bông, Tỉnh Đắk Lắk",
+      "purposeCode": "T",
+      "registrationCode": "IIB-C-DLC-055",
+      "registrationDate": "2024-07-03",
+      "commune": "xã Yang Mao",
+      "id": "fac_7",
+      "ownerName": "Nguyễn Tấn Danh Nhân"
+    },
+    {
+      "commune": "xã Yang Mao",
+      "phone": "",
+      "purposeCode": "T",
+      "note": "",
+      "ownerName": "Huỳnh Công Nam",
+      "speciesList": [
+        {
+          "group": "Động vật rừng nguy cấp, quý, hiếm (Nhóm IIB)",
+          "purposeCode": "T",
+          "id": "sp_8_1",
+          "citesAppendix": "Phụ lục II CITES",
+          "baseline": {
+            "note": "Hiện trạng nuôi ban đầu",
+            "father": 1,
+            "date": "2026-05-05",
+            "otherMale": 0,
+            "otherFemale": 0,
+            "mother": 5,
+            "otherUnknown": 4,
+            "verifier": "Hạt Kiểm lâm Huyện Krông Bông"
+          },
+          "fluctuations": [],
+          "vietnameseName": "Cầy vòi Hương",
+          "scientificName": "Paradoxurus hermaphroditus"
+        }
+      ],
+      "updatedAt": "2026-08-15T13:55:41.441Z",
+      "address": "Buôn chàm A, xã Yang Mao, Huyện Krông Bông, Tỉnh Đắk Lắk",
+      "registrationCode": "53-26/B-DLC",
+      "facilityName": "Cơ sở nuôi Huỳnh Công Nam",
+      "registrationDate": "2026-05-05",
+      "id": "fac_8"
+    },
+    {
+      "id": "fac_9",
+      "facilityName": "Cơ sở nuôi Trần Duy Quân",
+      "speciesList": [
+        {
+          "group": "Động vật rừng nguy cấp, quý, hiếm (Nhóm IIB)",
+          "scientificName": "Paradoxurus hermaphroditus",
+          "vietnameseName": "Cầy vòi Hương",
+          "purposeCode": "T",
+          "id": "sp_9_1",
+          "fluctuations": [],
+          "baseline": {
+            "otherFemale": 0,
+            "otherUnknown": 0,
+            "otherMale": 0,
+            "note": "Hiện trạng nuôi ban đầu",
+            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "date": "2026-03-03",
+            "father": 5,
+            "mother": 8
+          },
+          "citesAppendix": "Phụ lục II CITES"
+        }
+      ],
+      "phone": "",
+      "address": "Thôn Ea Luêh, xã Yang Mao, Huyện Krông Bông, Tỉnh Đắk Lắk",
+      "updatedAt": "2026-08-15T13:55:41.442Z",
+      "registrationDate": "2026-03-03",
+      "registrationCode": "14-26/B-DLC",
+      "note": "",
+      "purposeCode": "T",
+      "commune": "xã Yang Mao",
+      "ownerName": "Trần Duy Quân"
+    }
+  ]
+}
