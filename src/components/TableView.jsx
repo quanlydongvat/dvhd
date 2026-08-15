@@ -12,6 +12,9 @@ export default function TableView({
   onOpenAddSpecies,
   onOpenEditFacility,
   onOpenBackupModal,
+  onApprovePending,
+  onRejectPending,
+  currentUser,
 }) {
   const [showNotes, setShowNotes] = useState(true);
   const [mobileViewMode, setMobileViewMode] = useState('CARDS'); // 'CARDS' | 'TABLE'
@@ -417,9 +420,51 @@ export default function TableView({
                       {formatDateVN(row.date)}
                       {row.time && <span className="text-[9px] text-slate-500 block font-mono font-normal mt-0.5">{row.time}</span>}
                       {row.approvalStatus === 'PENDING' && (
-                        <span className="text-[8px] bg-amber-100 text-amber-800 px-1 py-0.5 rounded border border-amber-300 font-sans font-bold block mt-1 leading-none w-max mx-auto shadow-2xs">
-                          🕒 Chờ duyệt
-                        </span>
+                        <div className="flex flex-col gap-0.5 items-center mt-1">
+                          <span className="text-[8px] bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded border border-amber-300 font-sans font-black block leading-none w-max mx-auto shadow-2xs">
+                            🕒 Chờ duyệt
+                          </span>
+                          {(currentUser?.role === 'ADMIN' || currentUser?.role === 'STAFF') && (
+                            <div className="flex items-center gap-1 mt-0.5 no-print">
+                              <button
+                                type="button"
+                                onClick={() => onApprovePending && onApprovePending({
+                                  id: row.rowId,
+                                  fluctuationId: row.rowId,
+                                  facilityId: facilityInfo?.id,
+                                  speciesId: species?.id,
+                                  facilityName: facilityInfo?.facilityName,
+                                  speciesName: species?.vietnameseName,
+                                  date: row.date,
+                                  reason: row.reason,
+                                  ...row,
+                                })}
+                                className="px-1.5 py-0.5 bg-emerald-600 hover:bg-emerald-700 text-white text-[9px] font-black rounded shadow-2xs cursor-pointer transition-all hover:scale-105"
+                                title="Phê duyệt số liệu biến động này"
+                              >
+                                ✓ Duyệt
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => onRejectPending && onRejectPending({
+                                  id: row.rowId,
+                                  fluctuationId: row.rowId,
+                                  facilityId: facilityInfo?.id,
+                                  speciesId: species?.id,
+                                  facilityName: facilityInfo?.facilityName,
+                                  speciesName: species?.vietnameseName,
+                                  date: row.date,
+                                  reason: row.reason,
+                                  ...row,
+                                })}
+                                className="px-1.5 py-0.5 bg-rose-600 hover:bg-rose-700 text-white text-[9px] font-black rounded shadow-2xs cursor-pointer transition-all hover:scale-105"
+                                title="Từ chối biến động này"
+                              >
+                                ✗ Xóa
+                              </button>
+                            </div>
+                          )}
+                        </div>
                       )}
                     </td>
 

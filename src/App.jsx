@@ -351,14 +351,64 @@ export default function App() {
 
   const fetchPendingRequests = async () => {
     try {
-      const querySnapshot = await getDocs(collection(db, 'fluctuation_requests'));
-      const reqs = [];
-      querySnapshot.forEach((docSnap) => {
-        const data = docSnap.data();
-        if (data.status === 'PENDING') {
-          reqs.push({ id: docSnap.id, ...data });
+      const reqsMap = new Map();
+
+      // 1. Fetch from Firestore fluctuation_requests collection
+      if (db) {
+        try {
+          const querySnapshot = await getDocs(collection(db, 'fluctuation_requests'));
+          querySnapshot.forEach((docSnap) => {
+            const data = docSnap.data();
+            if (data.status === 'PENDING') {
+              const key = data.fluctuationId || docSnap.id;
+              reqsMap.set(key, { id: docSnap.id, ...data });
+            }
+          });
+        } catch (err) {
+          console.warn("Error fetching fluctuation_requests:", err);
         }
+      }
+
+      // 2. Scan all facilities in facilitiesList for any fluctuation with approvalStatus === 'PENDING'
+      (facilitiesList || []).forEach((fac) => {
+        (fac.speciesList || []).forEach((sp) => {
+          (sp.fluctuations || []).forEach((fluc) => {
+            if (fluc.approvalStatus === 'PENDING') {
+              const key = fluc.id;
+              if (!reqsMap.has(key)) {
+                reqsMap.set(key, {
+                  id: 'req_' + fluc.id,
+                  fluctuationId: fluc.id,
+                  facilityId: fac.id,
+                  speciesId: sp.id,
+                  facilityName: fac.facilityName || fac.name,
+                  speciesName: sp.vietnameseName,
+                  submittedBy: fac.ownerName || 'Cơ sở',
+                  status: 'PENDING',
+                  createdAt: fluc.createdAt || Date.now(),
+                  incFather: fluc.incFather || 0,
+                  incMother: fluc.incMother || 0,
+                  incOtherMale: fluc.incOtherMale || 0,
+                  incOtherFemale: fluc.incOtherFemale || 0,
+                  incOtherUnknown: fluc.incOtherUnknown || 0,
+                  decFather: fluc.decFather || 0,
+                  decMother: fluc.decMother || 0,
+                  decOtherMale: fluc.decOtherMale || 0,
+                  decOtherFemale: fluc.decOtherFemale || 0,
+                  decOtherUnknown: fluc.decOtherUnknown || 0,
+                  date: fluc.date,
+                  reason: fluc.reason || fluc.description,
+                  note: fluc.note,
+                  verifier: fluc.verifier,
+                  ...fluc,
+                });
+              }
+            }
+          });
+        });
       });
+
+      const reqs = Array.from(reqsMap.values());
       reqs.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
       setPendingRequests(reqs);
     } catch (err) {
@@ -369,10 +419,10 @@ export default function App() {
   useEffect(() => {
     if (currentUser?.role === 'ADMIN' || currentUser?.role === 'STAFF') {
       fetchPendingRequests();
-      const interval = setInterval(fetchPendingRequests, 15000);
+      const interval = setInterval(fetchPendingRequests, 10000);
       return () => clearInterval(interval);
     }
-  }, [currentUser]);
+  }, [currentUser, facilitiesList]);
 
   // --- APPROVAL WORKFLOW FOR ADMIN ---
   const handleApproveRequest = async (req) => {
@@ -391,7 +441,7 @@ export default function App() {
 
     let found = false;
     const updatedFluctuations = (targetSp.fluctuations || []).map((fluc) => {
-      const isMatch = req.fluctuationId ? (fluc.id === req.fluctuationId) : (fluc.date === req.date && fluc.reason === req.reason);
+      const isMatch = req.fluctuationId ? (fluc.id === req.fluctuationId) : (fluc.id === req.id || (fluc.date === req.date && fluc.reason === req.reason));
       if (isMatch) {
         found = true;
         return { ...fluc, approvalStatus: 'APPROVED' };
@@ -421,11 +471,27 @@ export default function App() {
       ...prev,
       facilitiesList: updatedFacilitiesList
     }));
+
+    if (db) {
+      try {
+        if (req.id && !req.id.startsWith('req_')) {
+          await setDoc(doc(db, 'fluctuation_requests', req.id), { status: 'APPROVED' }, { merge: true });
+        }
+        if (req.fluctuationId) {
+          const q = query(collection(db, 'fluctuation_requests'), where('fluctuationId', '==', req.fluctuationId));
+          const snapshot = await getDocs(q);
+          snapshot.forEach(async (docSnap) => {
+            await setDoc(doc(db, 'fluctuation_requests', docSnap.id), { status: 'APPROVED' }, { merge: true });
+          });
+        }
+      } catch (e) {
+        console.warn("Cloud update approval status:", e);
+      }
+    }
   };
 
   const handleApprovePending = async (req) => {
     try {
-      await setDoc(doc(db, 'fluctuation_requests', req.id), { status: 'APPROVED' }, { merge: true });
       await handleApproveRequest(req);
       alert(`Đã duyệt thành công biến động của cơ sở ${req.facilityName || ''}!`);
       fetchPendingRequests();
@@ -444,7 +510,7 @@ export default function App() {
     if (!targetSp) return;
 
     const updatedFluctuations = (targetSp.fluctuations || []).filter((fluc) => {
-      return !(req.fluctuationId ? (fluc.id === req.fluctuationId) : (fluc.date === req.date && fluc.reason === req.reason));
+      return !(req.fluctuationId ? (fluc.id === req.fluctuationId) : (fluc.id === req.id || (fluc.date === req.date && fluc.reason === req.reason)));
     });
 
     const updatedSpeciesList = targetSpList.map((sp) =>
@@ -459,12 +525,28 @@ export default function App() {
       ...prev,
       facilitiesList: updatedFacilitiesList
     }));
+
+    if (db) {
+      try {
+        if (req.id && !req.id.startsWith('req_')) {
+          await setDoc(doc(db, 'fluctuation_requests', req.id), { status: 'REJECTED' }, { merge: true });
+        }
+        if (req.fluctuationId) {
+          const q = query(collection(db, 'fluctuation_requests'), where('fluctuationId', '==', req.fluctuationId));
+          const snapshot = await getDocs(q);
+          snapshot.forEach(async (docSnap) => {
+            await setDoc(doc(db, 'fluctuation_requests', docSnap.id), { status: 'REJECTED' }, { merge: true });
+          });
+        }
+      } catch (e) {
+        console.warn("Cloud update reject status:", e);
+      }
+    }
   };
 
   const handleRejectPending = async (req) => {
     if (!window.confirm(`Bạn có chắc chắn muốn TỪ CHỐI yêu cầu biến động của ${req.facilityName || 'cơ sở'}? Biến động này sẽ bị XÓA khỏi sổ ghi chép.`)) return;
     try {
-      await setDoc(doc(db, 'fluctuation_requests', req.id), { status: 'REJECTED' }, { merge: true });
       await handleRejectRequest(req);
       alert("Đã từ chối yêu cầu và xóa biến động khỏi cơ sở.");
       fetchPendingRequests();
@@ -503,16 +585,29 @@ export default function App() {
           : item
       );
 
-      // Sync updated fields to the fluctuation request document in Firebase if it is pending
-      if (editingFluctuation.approvalStatus === 'PENDING') {
+      // Sync edited fluctuation request to cloud if facility edited it
+      if (isFacilityUser) {
+        const requestItem = {
+          ...cleanFormData,
+          createdAt: Date.now(),
+          status: 'PENDING',
+          facilityId: targetFacId,
+          speciesId: targetSpId,
+          facilityName: targetFac.facilityName || targetFac.name,
+          speciesName: targetSp.vietnameseName,
+          submittedBy: currentUser.username || 'Cơ sở',
+          fluctuationId: editingFluctuation.id,
+        };
         try {
           const q = query(collection(db, 'fluctuation_requests'), where('fluctuationId', '==', editingFluctuation.id));
           const snapshot = await getDocs(q);
-          snapshot.forEach(async (docSnap) => {
-            await updateDoc(doc(db, 'fluctuation_requests', docSnap.id), {
-              ...cleanFormData,
+          if (!snapshot.empty) {
+            snapshot.forEach(async (docSnap) => {
+              await setDoc(doc(db, 'fluctuation_requests', docSnap.id), requestItem, { merge: true });
             });
-          });
+          } else {
+            await addDoc(collection(db, 'fluctuation_requests'), requestItem);
+          }
         } catch (err) {
           console.warn("Error syncing edited request to cloud:", err);
         }
@@ -529,16 +624,15 @@ export default function App() {
       updatedFluctuations.push(newItem);
 
       if (isFacilityUser) {
-        // Send a request to fluctuation_requests as well so admin sees it in queue
         const requestItem = {
           ...cleanFormData,
           createdAt: Date.now(),
           status: 'PENDING',
           facilityId: targetFacId,
           speciesId: targetSpId,
-          facilityName: targetFac.facilityName,
+          facilityName: targetFac.facilityName || targetFac.name,
           speciesName: targetSp.vietnameseName,
-          submittedBy: currentUser.username,
+          submittedBy: currentUser.username || 'Cơ sở',
           fluctuationId: flucId,
         };
         try {
@@ -1088,6 +1182,9 @@ export default function App() {
                 onOpenAddFacility={handleOpenAddFacility}
                 onOpenEditFacility={handleOpenEditFacility}
                 onOpenBackupModal={() => setIsBackupModalOpen(true)}
+                onApprovePending={handleApprovePending}
+                onRejectPending={handleRejectPending}
+                currentUser={currentUser}
               />
             )}
           </main>
