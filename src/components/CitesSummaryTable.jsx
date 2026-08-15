@@ -252,8 +252,8 @@ export default function CitesSummaryTable({ facilitiesList = [] }) {
                 <td className="p-2.5 text-center font-mono font-bold border-r border-slate-300 text-slate-800">
                   {sp.facilitiesSet.size}
                 </td>
-                <td className="p-2.5 text-center font-mono font-bold border-r border-slate-300 text-indigo-700">
-                  {sp.registeredFacilitiesSet.size || '---'}
+                <td className="p-2.5 text-center font-mono font-bold border-r border-slate-300 text-slate-500">
+                  <span className="text-[11px] text-slate-500 font-medium italic">Không cần mã số</span>
                 </td>
                 <td className="p-2.5 text-slate-500 text-[11px]">
                   Khai báo kiểm lâm

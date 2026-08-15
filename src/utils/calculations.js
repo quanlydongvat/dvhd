@@ -337,48 +337,69 @@ export function formatDateVN(dateStr) {
 }
 
 /**
- * Check if a facility requires a Registration Code under Forestry Regulations (Decree 84/2021 & Circular 85/2025).
- * - Common Wildlife (Động vật rừng thông thường, e.g. Chim Chào mào, Chim Cu gáy): DOES NOT require a Registration Code.
- * - Endangered / CITES / Group IB, IIB (Động vật nguy cấp, quý, hiếm): REQUIRES a Registration Code.
+/**
+ * Helper to determine if a species is Endangered/Precious/Rare (CITES / Group IB / Group IIB)
  */
-export function getRegistrationCodeStatus(facility) {
-  if (!facility) return { text: 'Không thuộc diện cấp mã số', isRequired: false, isAssigned: false };
+export function isCitesOrEndangeredSpecies(sp) {
+  if (!sp) return false;
+  const grp = (sp.group || '').toUpperCase();
+  const cites = (sp.citesAppendix || '').toUpperCase();
+
+  // If explicitly marked as CITES or Group IB / IIB
+  if (grp.includes('IB') || grp.includes('IIB') || grp.includes('1B') || grp.includes('2B')) {
+    return true;
+  }
+  if (cites.includes('CITES') || cites.includes('PHỤ LỤC I') || cites.includes('PHỤ LỤC II') || cites.includes('APPENDIX I') || cites.includes('APPENDIX II')) {
+    if (!cites.includes('KHÔNG')) return true;
+  }
+
+  // If bird species or explicitly common wildlife -> NOT CITES / Endangered
+  if (isBirdSpecies(sp) || grp.includes('THÔNG THƯỜNG') || grp.includes('TT') || grp.includes('THONG THUONG')) {
+    return false;
+  }
+
+  // Mammals / Reptiles (Dúi, Cầy, Nhím) default to Group IIB unless marked common
+  return true;
+}
+
+/**
+ * Check if a facility or specific species requires a Registration Code under Forestry Regulations (Decree 84/2021 & Circular 85/2025).
+ * - Common Wildlife (Động vật rừng thông thường, e.g. Chim Chào mào, Chim Cu gáy): DOES NOT require a Registration Code ("Không cần mã số").
+ * - Endangered / CITES / Group IB, IIB (Động vật nguy cấp, quý, hiếm): REQUIRES a Registration Code ("Chưa cấp" or assigned code).
+ */
+export function getRegistrationCodeStatus(facility, species = null) {
+  if (!facility) return { text: 'Không cần mã số', shortText: 'Không cần mã số', isRequired: false, isAssigned: false };
 
   const code = (facility.registrationCode || '').trim();
   const hasValidCode = code && 
     code !== 'Đang cập nhật' && 
     code !== 'Chưa có' && 
     code !== '---' && 
-    code !== 'Chưa cấp mã số';
-
-  // Check if facility breeds any CITES / Group IB / Group IIB species
-  const hasCitesOrGroup2B = (facility.speciesList || []).some((sp) => {
-    const grp = (sp.group || '').toUpperCase();
-    const cites = (sp.citesAppendix || '').toUpperCase();
-    const isBird = isBirdSpecies(sp);
-
-    if (grp.includes('IB') || grp.includes('IIB') || cites.includes('CITES') || cites.includes('I') || cites.includes('II')) {
-      return true;
-    }
-    // If it's a mammal/reptile and not explicitly marked 'THÔNG THƯỜNG', treat as Group IIB (Dúi, Cầy, Nhím)
-    if (!isBird && !grp.includes('THÔNG THƯỜNG') && !grp.includes('TT')) {
-      return true;
-    }
-    return false;
-  });
+    code !== 'Chưa cấp mã số' &&
+    !code.toLowerCase().includes('chưa');
 
   if (hasValidCode) {
     return {
       text: code,
+      shortText: code,
       isRequired: true,
       isAssigned: true,
     };
   }
 
-  if (!hasCitesOrGroup2B) {
+  // If specific species is passed, evaluate if that species requires a registration code
+  let requiresCode = false;
+  if (species) {
+    requiresCode = isCitesOrEndangeredSpecies(species);
+  } else {
+    // Check if facility breeds any CITES / Group IB / Group IIB species
+    requiresCode = (facility.speciesList || []).some((sp) => isCitesOrEndangeredSpecies(sp));
+  }
+
+  if (!requiresCode) {
     return {
-      text: 'Không thuộc diện cấp mã số',
-      shortText: '---',
+      text: 'Không cần mã số',
+      shortText: 'Không cần mã số',
       isRequired: false,
       isAssigned: false,
     };

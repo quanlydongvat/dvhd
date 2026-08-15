@@ -804,14 +804,14 @@ export default function SummaryView({
                                 className="px-1.5 py-1.5 border-r border-slate-300 text-center"
                               >
                                 {(() => {
-                                  const reg = getRegistrationCodeStatus(fac);
+                                  const reg = getRegistrationCodeStatus(fac, sp);
                                   if (reg.isAssigned) {
                                     return <span className="font-mono font-extrabold text-indigo-700 text-[11px]">{reg.text}</span>;
                                   }
                                   if (!reg.isRequired) {
-                                    return <span className="text-[10px] text-slate-400 font-medium italic block leading-tight">Không thuộc diện cấp mã số</span>;
+                                    return <span className="text-[10px] text-slate-500 font-semibold italic bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200 block leading-tight whitespace-nowrap">Không cần mã số</span>;
                                   }
-                                  return <span className="text-[10px] text-amber-700 font-bold bg-amber-50 px-1 py-0.5 rounded border border-amber-200">Chưa cấp</span>;
+                                  return <span className="text-[10px] text-amber-800 font-extrabold bg-amber-100/90 px-1.5 py-0.5 rounded border border-amber-300 shadow-2xs whitespace-nowrap">Chưa cấp</span>;
                                 })()}
                               </td>
                             )}
@@ -823,7 +823,7 @@ export default function SummaryView({
                                 className="px-1 py-1.5 font-mono border-r border-slate-300 text-slate-600 whitespace-nowrap text-center font-semibold text-[10px]"
                               >
                                 {(() => {
-                                  const reg = getRegistrationCodeStatus(fac);
+                                  const reg = getRegistrationCodeStatus(fac, sp);
                                   if (!reg.isRequired) {
                                     return <span className="text-slate-400 font-normal">---</span>;
                                   }
