@@ -35,37 +35,45 @@ async function exportExcelBackup() {
   const facRows = facilitiesList.map((fac, idx) => ({
     "STT": idx + 1,
     "Mã Cơ Sở": fac.code || fac.id,
-    "Tên Cơ Sở Nuôi": fac.name,
+    "Tên Cơ Sở Nuôi": fac.facilityName || fac.name,
     "Chủ Cơ Sở": fac.ownerName || fac.name,
     "Số Điện Thoại": fac.phone || fac.ownerPhone || '',
     "Địa Chỉ": fac.address,
     "Xã / Thị Trấn": fac.commune || '',
-    "Số Mã Định Danh CITES": fac.citesCode || '',
+    "Vĩ Độ (Lat)": fac.lat || '',
+    "Kinh Độ (Lng)": fac.lng || '',
+    "Mã Số Đăng Ký / CITES": fac.registrationCode || fac.citesCode || '',
     "Loại Hình": fac.facilityType || 'Hộ gia đình',
-    "Tổng Cá Thể Đang Nuôi": fac.animalsCount || 0,
     "Trạng Thái": fac.status || 'Hoạt động'
   }));
 
   // Sheet 2: Chi tiết biến động tất cả động vật (Sổ Mẫu II)
   const allLogRows = [];
   facilitiesList.forEach(fac => {
-    const logs = fac.logs || fac.fluctuations || [];
-    logs.forEach((log, lIdx) => {
-      allLogRows.push({
-        "Mã Cơ Sở": fac.code || fac.id,
-        "Tên Cơ Sở": fac.name,
-        "Ngày Ghi Chép": log.date || log.createdDate || '',
-        "Tên Loài Động Vật": log.speciesName || log.species || '',
-        "Tên Khoa Học": log.scientificName || '',
-        "Mã Nhóm ĐVHD (CITES / NĐ84)": log.group || log.citesGroup || '',
-        "Tồn Đầu Kỳ": log.openingStock || 0,
-        "Tăng Trong Kỳ": log.increaseQuantity || log.imported || 0,
-        "Lý Do Tăng": log.increaseReason || log.importSource || '',
-        "Giảm Trong Kỳ": log.decreaseQuantity || log.exported || 0,
-        "Lý Do Giảm": log.decreaseReason || log.exportDestination || '',
-        "Tồn Cuối Kỳ": log.closingStock || log.currentStock || 0,
-        "Nguồn Gốc Mẫu Vật": log.origin || log.source || '',
-        "Trạng Thái Duyệt": log.approvalStatus === 'PENDING' ? 'Chờ duyệt' : 'Đã duyệt'
+    (fac.speciesList || []).forEach(sp => {
+      const logs = sp.fluctuations || [];
+      logs.forEach((log, lIdx) => {
+        allLogRows.push({
+          "Mã Cơ Sở": fac.code || fac.id,
+          "Tên Cơ Sở": fac.facilityName || fac.name,
+          "Loài Động Vật": sp.vietnameseName,
+          "Tên Khoa Học": sp.scientificName || '',
+          "Nhóm ĐVHD": sp.group || '',
+          "Ngày Ghi Chép": log.date || log.createdDate || '',
+          "Đực Bố (Tăng)": log.incFather || 0,
+          "Cái Mẹ (Tăng)": log.incMother || 0,
+          "Đực Khác (Tăng)": log.incOtherMale || 0,
+          "Cái Khác (Tăng)": log.incOtherFemale || 0,
+          "Chưa XD (Tăng)": log.incOtherUnknown || 0,
+          "Đực Bố (Giảm)": log.decFather || 0,
+          "Cái Mẹ (Giảm)": log.decMother || 0,
+          "Đực Khác (Giảm)": log.decOtherMale || 0,
+          "Cái Khác (Giảm)": log.decOtherFemale || 0,
+          "Chưa XD (Giảm)": log.decOtherUnknown || 0,
+          "Lý Do / Chứng Từ": log.reason || log.description || '',
+          "Người Xác Nhận": log.verifier || '',
+          "Trạng Thái Duyệt": log.approvalStatus === 'PENDING' ? 'Chờ duyệt' : 'Đã duyệt'
+        });
       });
     });
   });
@@ -77,7 +85,7 @@ async function exportExcelBackup() {
 
   if (allLogRows.length > 0) {
     const wsLogs = XLSX.utils.json_to_sheet(allLogRows);
-    XLSX.utils.book_append_sheet(wb, wsLogs, "Sổ Ghi Chép Biến Động (Chi Tiết)");
+    XLSX.utils.book_append_sheet(wb, wsLogs, "So Ghi Chep Bien Dong");
   }
 
   const backupDir = path.join(process.cwd(), 'backups');
