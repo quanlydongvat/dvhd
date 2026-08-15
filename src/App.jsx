@@ -20,7 +20,7 @@ import PWAInstallPrompt from './components/PWAInstallPrompt';
 import { computeLogbookTable } from './utils/calculations';
 import { loadAppData, saveAppData, clearAppData, resetToDemoData, REAL_FACILITIES_DATA, EMPTY_FACILITY_INFO } from './utils/storage';
 import { exportDistrictReport, exportFacilityLogbook } from './utils/exportExcel';
-import { syncAppDataToCloud, loadAppDataFromCloud, deleteFacilityFromCloud } from './firebase';
+import { syncAppDataToCloud, loadAppDataFromCloud, deleteFacilityFromCloud, saveFacilityToCloud } from './firebase';
 import ExportModal from './components/ExportModal';
 import PendingApprovalsModal from './components/PendingApprovalsModal';
 import { auth, db } from './firebase';
@@ -823,8 +823,11 @@ export default function App() {
   const handleSaveFacility = (formData) => {
     if (editingFacility && editingFacility.id) {
       // Edit existing facility
+      const targetFac = facilitiesList.find(f => f.id === editingFacility.id);
+      const updatedFacObj = targetFac ? { ...targetFac, ...formData } : { id: editingFacility.id, ...formData };
+
       const updatedFacilitiesList = facilitiesList.map((fac) =>
-        fac.id === editingFacility.id ? { ...fac, ...formData } : fac
+        fac.id === editingFacility.id ? updatedFacObj : fac
       );
 
       const isCurrentActive = activeFacilityId === editingFacility.id;
@@ -835,6 +838,9 @@ export default function App() {
         facilitiesList: updatedFacilitiesList,
         facilityInfo: updatedFacilityInfo,
       }));
+
+      // PERSIST TO CLOUD FIRESTORE IMMEDIATELY!
+      saveFacilityToCloud(updatedFacObj);
     } else {
       // Create new facility
       const newFacilityId = 'fac_' + Date.now();
@@ -886,6 +892,9 @@ export default function App() {
         speciesList: defaultSpeciesList,
         activeSpeciesId: defaultSpeciesList[0].id,
       }));
+
+      // PERSIST NEW FACILITY TO CLOUD FIRESTORE IMMEDIATELY!
+      saveFacilityToCloud(newFacilityObj);
     }
     setEditingFacility(null);
   };
@@ -1145,6 +1154,9 @@ export default function App() {
                   setCurrentView('LOGBOOK');
                 }}
                 onUpdateFacilityCoords={(facId, newLat, newLng) => {
+                  const targetFac = facilitiesList.find(f => f.id === facId);
+                  const updatedFac = targetFac ? { ...targetFac, lat: newLat, lng: newLng } : null;
+
                   const updatedFacilitiesList = facilitiesList.map((fac) =>
                     fac.id === facId ? { ...fac, lat: newLat, lng: newLng } : fac
                   );
@@ -1156,6 +1168,11 @@ export default function App() {
                         ? { ...prev.facilityInfo, lat: newLat, lng: newLng }
                         : prev.facilityInfo,
                   }));
+
+                  // PERSIST GPS COORDINATES TO CLOUD FIRESTORE IMMEDIATELY!
+                  if (updatedFac) {
+                    saveFacilityToCloud(updatedFac);
+                  }
                 }}
               />
             ) : (

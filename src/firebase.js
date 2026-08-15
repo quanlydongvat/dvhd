@@ -39,6 +39,19 @@ export { app, db, analytics, auth };
 
 import { writeBatch, collection, getDocs, query, where } from "firebase/firestore";
 
+// Helper function to save a single facility document to Cloud Firestore
+export async function saveFacilityToCloud(facilityObj) {
+  try {
+    if (!db || !facilityObj || !facilityObj.id) return false;
+    const docRef = doc(db, "facilities", facilityObj.id);
+    await setDoc(docRef, { ...facilityObj, updatedAt: new Date().toISOString() });
+    return true;
+  } catch (error) {
+    console.warn("Error saving facility to Cloud Firestore:", error);
+    return false;
+  }
+}
+
 // Helper function to sync app data to Firebase Cloud Firestore
 export async function syncAppDataToCloud(appState) {
   try {
