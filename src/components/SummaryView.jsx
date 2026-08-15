@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { Building2, Search, Filter, ArrowRight, Download, Feather, ShieldCheck, MapPin, FileText, Table, ChevronDown, ChevronRight, CheckSquare, Square, Eye, EyeOff, Layers, Check, Trash2 } from 'lucide-react';
 import * as XLSX from 'xlsx';
-import { isBirdSpecies, getFacilityCategory, getRegistrationCodeStatus } from '../utils/calculations';
+import { isBirdSpecies, getFacilityCategory, getRegistrationCodeStatus, computeLogbookTable } from '../utils/calculations';
 import { exportRegionalSummaryTable } from '../utils/exportExcel';
 import CitesSummaryTable from './CitesSummaryTable';
 
@@ -136,14 +136,15 @@ export default function SummaryView({
     else mammalFacilitiesCount++;
 
     fac.speciesList.forEach((sp) => {
-      const b = sp.baseline || {};
-      const father = Number(b.father) || 0;
-      const mother = Number(b.mother) || 0;
-      const otherMale = Number(b.otherMale) || 0;
-      const otherFemale = Number(b.otherFemale) || 0;
-      const otherUnknown = Number(b.otherUnknown) || 0;
+      const processedRows = computeLogbookTable(sp.baseline || {}, sp.fluctuations || []);
+      const lastRow = processedRows[processedRows.length - 1];
 
-      const total = father + mother + otherMale + otherFemale + otherUnknown;
+      const father = lastRow ? (lastRow.father || 0) : 0;
+      const mother = lastRow ? (lastRow.mother || 0) : 0;
+      const otherMale = lastRow ? (lastRow.otherMale || 0) : 0;
+      const otherFemale = lastRow ? (lastRow.otherFemale || 0) : 0;
+      const otherUnknown = lastRow ? (lastRow.otherUnknown || 0) : 0;
+      const total = lastRow ? (lastRow.total || 0) : 0;
 
       grandTotal += total;
       grandFather += father;
@@ -169,8 +170,9 @@ export default function SummaryView({
       else communeMammalFacs++;
 
       fac.speciesList.forEach((sp) => {
-        const b = sp.baseline || {};
-        communeTotalAnimals += (Number(b.father) || 0) + (Number(b.mother) || 0) + (Number(b.otherMale) || 0) + (Number(b.otherFemale) || 0) + (Number(b.otherUnknown) || 0);
+        const processedRows = computeLogbookTable(sp.baseline || {}, sp.fluctuations || []);
+        const lastRow = processedRows[processedRows.length - 1];
+        communeTotalAnimals += lastRow ? (lastRow.total || 0) : 0;
       });
     });
 
@@ -256,8 +258,9 @@ export default function SummaryView({
             else cMammals++;
 
             f.speciesList.forEach((sp) => {
-              const b = sp.baseline || {};
-              cTotalAnimals += (Number(b.father) || 0) + (Number(b.mother) || 0) + (Number(b.otherMale) || 0) + (Number(b.otherFemale) || 0) + (Number(b.otherUnknown) || 0);
+              const processedRows = computeLogbookTable(sp.baseline || {}, sp.fluctuations || []);
+              const lastRow = processedRows[processedRows.length - 1];
+              cTotalAnimals += lastRow ? (lastRow.total || 0) : 0;
             });
           });
 
@@ -701,13 +704,14 @@ export default function SummaryView({
                       const sttForThisFac = communeRunningStt++;
 
                       return fac.speciesList.map((sp, spIdx) => {
-                        const b = sp.baseline || {};
-                        const father = Number(b.father) || 0;
-                        const mother = Number(b.mother) || 0;
-                        const otherMale = Number(b.otherMale) || 0;
-                        const otherFemale = Number(b.otherFemale) || 0;
-                        const otherUnknown = Number(b.otherUnknown) || 0;
-                        const total = father + mother + otherMale + otherFemale + otherUnknown;
+                        const processedRows = computeLogbookTable(sp.baseline || {}, sp.fluctuations || []);
+                        const lastRow = processedRows[processedRows.length - 1];
+                        const father = lastRow ? (lastRow.father || 0) : 0;
+                        const mother = lastRow ? (lastRow.mother || 0) : 0;
+                        const otherMale = lastRow ? (lastRow.otherMale || 0) : 0;
+                        const otherFemale = lastRow ? (lastRow.otherFemale || 0) : 0;
+                        const otherUnknown = lastRow ? (lastRow.otherUnknown || 0) : 0;
+                        const total = lastRow ? (lastRow.total || 0) : 0;
 
                         const isFirstSpeciesRow = spIdx === 0;
 

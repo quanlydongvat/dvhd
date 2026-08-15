@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { Printer, ShieldAlert, FileText, CheckCircle2, Building2, MapPin } from 'lucide-react';
+import { computeLogbookTable } from '../utils/calculations';
 
 export default function CitesSummaryTable({ facilitiesList = [] }) {
   const [selectedCommune, setSelectedCommune] = useState('ALL');
@@ -14,13 +15,9 @@ export default function CitesSummaryTable({ facilitiesList = [] }) {
 
       fac.speciesList.forEach((sp) => {
         const name = sp.vietnameseName;
-        const b = sp.baseline || {};
-        const totalAnimals =
-          (Number(b.father) || 0) +
-          (Number(b.mother) || 0) +
-          (Number(b.otherMale) || 0) +
-          (Number(b.otherFemale) || 0) +
-          (Number(b.otherUnknown) || 0);
+        const processedRows = computeLogbookTable(sp.baseline || {}, sp.fluctuations || []);
+        const lastRow = processedRows[processedRows.length - 1];
+        const totalAnimals = lastRow ? (lastRow.total || 0) : 0;
 
         const isRegistered =
           fac.registrationCode &&

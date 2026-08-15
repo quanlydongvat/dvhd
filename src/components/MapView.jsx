@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import L from 'leaflet';
+import { computeLogbookTable } from '../utils/calculations';
 import {
   MapPin,
   Navigation,
@@ -116,13 +117,9 @@ export default function MapView({
     let hasMammal = false;
 
     fac.speciesList.forEach((sp) => {
-      const b = sp.baseline || {};
-      const spTotal =
-        (Number(b.father) || 0) +
-        (Number(b.mother) || 0) +
-        (Number(b.otherMale) || 0) +
-        (Number(b.otherFemale) || 0) +
-        (Number(b.otherUnknown) || 0);
+      const processedRows = computeLogbookTable(sp.baseline || {}, sp.fluctuations || []);
+      const lastRow = processedRows[processedRows.length - 1];
+      const spTotal = lastRow ? (lastRow.total || 0) : 0;
       totalAnimals += spTotal;
 
       const nameLower = (sp.vietnameseName || '').toLowerCase();
