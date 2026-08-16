@@ -108,6 +108,23 @@ export function isPurchaseFromOutside(reasonStr) {
 }
 
 /**
+ * Generates clean alphabetical row labels according to Excel & standard accounting conventions:
+ * - Baseline: A
+ * - Fluctuations: B, C, D ... Z
+ * - Beyond Z: AA, AB, AC ... AZ, BA, BB ... BZ, CA ...
+ */
+export function getFluctuationRowLabel(index) {
+  if (index < 0) return 'A';
+  let num = index + 1; // 1 = B, 25 = Z, 26 = AA
+  let label = '';
+  while (num >= 0) {
+    label = String.fromCharCode(65 + (num % 26)) + label;
+    num = Math.floor(num / 26) - 1;
+  }
+  return label;
+}
+
+/**
  * Independent validation function for internal group transfers
  */
 export function validateInternalTransfer(formData) {
@@ -197,15 +214,8 @@ export function computeLogbookTable(baseline, fluctuations = []) {
 
   // Process rows B, C, D...
   sortedFluctuations.forEach((item, index) => {
-    // Generate letter or row label B, C, D...
-    const charCode = 66 + index; // 66 is 'B'
-    let rowLabel = '';
-    if (index < 25) {
-      rowLabel = String.fromCharCode(charCode);
-    } else {
-      // B1, B2... if > 26 rows
-      rowLabel = `B${index + 1}`;
-    }
+    // Generate letter or row label B, C, D... Z, AA, AB, AC...
+    const rowLabel = getFluctuationRowLabel(index);
 
     const incF = Math.max(0, parseInt(item.incFather) || 0);
     const incM = Math.max(0, parseInt(item.incMother) || 0);
