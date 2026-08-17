@@ -16,7 +16,7 @@ import {
   Filler,
 } from 'chart.js';
 import { Line, Bar, Doughnut } from 'react-chartjs-2';
-import { TrendingUp, TrendingDown, Calendar, Filter, MapPin, Feather, Download, Award, BarChart3, PieChart, Activity } from 'lucide-react';
+import { TrendingUp, TrendingDown, Calendar, Filter, MapPin, Feather, Download, Award, BarChart3, PieChart, Activity, RefreshCw } from 'lucide-react';
 import * as XLSX from 'xlsx';
 import { isBirdSpecies, getFacilityCategory, computeLogbookTable } from '../utils/calculations';
 
@@ -163,11 +163,14 @@ export default function AnalyticsView({ facilitiesList = [] }) {
     };
   }, [filteredFacilities, timeMode, selectedMonth, selectedYear]);
 
-  // Aggregate Period Totals for KPIs
+  // Aggregate Period Totals for KPIs (Separating Real Decrease from Internal Group Transfers)
   const kpiStats = useMemo(() => {
-    let totalInc = 0;
-    let totalDec = 0;
+    let realInc = 0;
+    let realDec = 0;
+    let internalTransferCount = 0;
     let totalSold = 0;
+    let totalDeath = 0;
+    let totalTransferOut = 0;
 
     filteredFacilities.forEach((fac) => {
       fac.speciesList.forEach((sp) => {
@@ -187,29 +190,60 @@ export default function AnalyticsView({ facilitiesList = [] }) {
           }
 
           if (isTargetPeriod) {
+            const inc =
+              (row.incFather || 0) +
+              (row.incMother || 0) +
+              (row.incOtherMale || 0) +
+              (row.incOtherFemale || 0) +
+              (row.incOtherUnknown || 0);
+
             const dec =
               (row.decFather || 0) +
               (row.decMother || 0) +
               (row.decOtherMale || 0) +
               (row.decOtherFemale || 0) +
               (row.decOtherUnknown || 0);
-            
-            if (dec > 0 && (row.reason || '').toLowerCase().includes('xuất bán')) {
-               totalSold += dec;
+
+            const iF = Math.max(0, parseInt(row.incFather) || 0);
+            const iM = Math.max(0, parseInt(row.incMother) || 0);
+            const dOM = Math.max(0, parseInt(row.decOtherMale) || 0);
+            const dOF = Math.max(0, parseInt(row.decOtherFemale) || 0);
+
+            const isInternal = (iF > 0 || iM > 0) && (iF === dOM && iM === dOF) && (inc === dec);
+
+            if (isInternal) {
+              internalTransferCount += inc;
+            } else {
+              realInc += inc;
+              realDec += dec;
+
+              if (dec > 0) {
+                const reason = (row.reason || '').toLowerCase();
+                if (reason.includes('xuất') || reason.includes('bán')) {
+                  totalSold += dec;
+                } else if (reason.includes('chết') || reason.includes('bệnh') || reason.includes('rủi ro')) {
+                  totalDeath += dec;
+                } else if (reason.includes('tặng') || reason.includes('chuyển') || reason.includes('nhượng')) {
+                  totalTransferOut += dec;
+                }
+              }
             }
           }
         });
       });
     });
 
-    chartData.targetStats.forEach((st) => {
-      totalInc += st.inc;
-      totalDec += st.dec;
-    });
-
-    const netGrowth = totalInc - totalDec;
-    return { totalInc, totalDec, totalSold, netGrowth };
-  }, [chartData, filteredFacilities, selectedYear, timeMode, selectedMonth]);
+    const netGrowth = realInc - realDec;
+    return {
+      realInc,
+      realDec,
+      internalTransferCount,
+      totalSold,
+      totalDeath,
+      totalTransferOut,
+      netGrowth,
+    };
+  }, [filteredFacilities, selectedYear, timeMode, selectedMonth]);
 
   // Commune Distribution Data for Doughnut Chart
   const communeDistribution = useMemo(() => {
@@ -634,8 +668,8 @@ export default function AnalyticsView({ facilitiesList = [] }) {
         </button>
       </div>
 
-      {/* KPI Cards (Key Performance Indicators) - Optimized 2 cols grid on Mobile */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
+      {/* KPI Cards (Key Performance Indicators) - 5 Cards Grid */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 sm:gap-4">
         {/* Total Animals Card */}
         <div className="bg-white border border-slate-200 rounded-2xl p-3 sm:p-4 shadow-sm flex items-center justify-between">
           <div>
@@ -648,27 +682,39 @@ export default function AnalyticsView({ facilitiesList = [] }) {
           </div>
         </div>
 
-        {/* Total Increase Card */}
+        {/* Real Increase Card */}
         <div className="bg-white border border-slate-200 rounded-2xl p-3 sm:p-4 shadow-sm flex items-center justify-between">
           <div>
-            <span className="text-[10px] sm:text-xs font-bold text-teal-700 block uppercase">Tổng Tăng Đàn</span>
-            <div className="text-lg sm:text-2xl font-extrabold text-teal-700 mt-0.5 sm:mt-1 font-mono">+{kpiStats.totalInc} <span className="text-[10px] sm:text-xs font-sans font-normal text-slate-500">con</span></div>
-            <span className="text-[10px] sm:text-[11px] text-slate-500 font-medium hidden sm:block">Sinh sản & Nhập đàn</span>
+            <span className="text-[10px] sm:text-xs font-bold text-teal-700 block uppercase">Tổng Tăng Thực Tế</span>
+            <div className="text-lg sm:text-2xl font-extrabold text-teal-700 mt-0.5 sm:mt-1 font-mono">+{kpiStats.realInc} <span className="text-[10px] sm:text-xs font-sans font-normal text-slate-500">con</span></div>
+            <span className="text-[10px] sm:text-[11px] text-slate-500 font-medium hidden sm:block">Sinh sản & Nhập từ ngoài</span>
           </div>
           <div className="p-2 sm:p-3 bg-teal-50 text-teal-600 rounded-xl sm:rounded-2xl border border-teal-200">
             <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6" />
           </div>
         </div>
 
-        {/* Total Decrease Card */}
+        {/* Real Decrease Card (Leaving Facility) */}
         <div className="bg-white border border-slate-200 rounded-2xl p-3 sm:p-4 shadow-sm flex items-center justify-between">
           <div>
-            <span className="text-[10px] sm:text-xs font-bold text-rose-700 block uppercase">Tổng Giảm Đàn</span>
-            <div className="text-lg sm:text-2xl font-extrabold text-rose-700 mt-0.5 sm:mt-1 font-mono">-{kpiStats.totalDec} <span className="text-[10px] sm:text-xs font-sans font-normal text-slate-500">con</span></div>
-            <span className="text-[10px] sm:text-[11px] text-slate-500 font-medium hidden sm:block">Trong đó xuất bán: <strong className="text-rose-800">{kpiStats.totalSold}</strong> con</span>
+            <span className="text-[10px] sm:text-xs font-bold text-rose-700 block uppercase">Giảm Thực Tế (Rời Đàn)</span>
+            <div className="text-lg sm:text-2xl font-extrabold text-rose-700 mt-0.5 sm:mt-1 font-mono">-{kpiStats.realDec} <span className="text-[10px] sm:text-xs font-sans font-normal text-slate-500">con</span></div>
+            <span className="text-[10px] sm:text-[11px] text-slate-500 font-medium hidden sm:block">Bán: <strong className="text-rose-800">{kpiStats.totalSold}</strong> | Chết: <strong className="text-rose-800">{kpiStats.totalDeath}</strong></span>
           </div>
           <div className="p-2 sm:p-3 bg-rose-50 text-rose-600 rounded-xl sm:rounded-2xl border border-rose-200">
             <TrendingDown className="w-5 h-5 sm:w-6 sm:h-6" />
+          </div>
+        </div>
+
+        {/* Internal Group Transfer Card (Net 0) */}
+        <div className="bg-white border border-slate-200 rounded-2xl p-3 sm:p-4 shadow-sm flex items-center justify-between">
+          <div>
+            <span className="text-[10px] sm:text-xs font-bold text-amber-700 block uppercase">Luân Chuyển Nội Bộ</span>
+            <div className="text-lg sm:text-2xl font-extrabold text-amber-700 mt-0.5 sm:mt-1 font-mono">{kpiStats.internalTransferCount} <span className="text-[10px] sm:text-xs font-sans font-normal text-slate-500">con</span></div>
+            <span className="text-[10px] sm:text-[11px] text-amber-800 font-medium hidden sm:block">Chuyển sang Bố mẹ (Tổng đàn giữ nguyên)</span>
+          </div>
+          <div className="p-2 sm:p-3 bg-amber-50 text-amber-600 rounded-xl sm:rounded-2xl border border-amber-200">
+            <RefreshCw className="w-5 h-5 sm:w-6 sm:h-6" />
           </div>
         </div>
 
@@ -679,7 +725,7 @@ export default function AnalyticsView({ facilitiesList = [] }) {
             <div className={`text-lg sm:text-2xl font-extrabold mt-0.5 sm:mt-1 font-mono ${kpiStats.netGrowth >= 0 ? 'text-emerald-700' : 'text-rose-700'}`}>
               {kpiStats.netGrowth >= 0 ? `+${kpiStats.netGrowth}` : kpiStats.netGrowth} <span className="text-[10px] sm:text-xs font-sans font-normal text-slate-500">con</span>
             </div>
-            <span className="text-[10px] sm:text-[11px] text-slate-500 font-medium hidden sm:block">Số cá thể tăng nét</span>
+            <span className="text-[10px] sm:text-[11px] text-slate-500 font-medium hidden sm:block">Tăng thực - Giảm thực</span>
           </div>
           <div className="p-2 sm:p-3 bg-indigo-50 text-indigo-600 rounded-xl sm:rounded-2xl border border-indigo-200">
             <Award className="w-5 h-5 sm:w-6 sm:h-6" />
