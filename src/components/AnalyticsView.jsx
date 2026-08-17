@@ -171,6 +171,7 @@ export default function AnalyticsView({ facilitiesList = [] }) {
     let totalSold = 0;
     let totalDeath = 0;
     let totalTransferOut = 0;
+    let totalOtherDec = 0;
 
     filteredFacilities.forEach((fac) => {
       fac.speciesList.forEach((sp) => {
@@ -204,27 +205,35 @@ export default function AnalyticsView({ facilitiesList = [] }) {
               (row.decOtherFemale || 0) +
               (row.decOtherUnknown || 0);
 
-            const iF = Math.max(0, parseInt(row.incFather) || 0);
-            const iM = Math.max(0, parseInt(row.incMother) || 0);
-            const dOM = Math.max(0, parseInt(row.decOtherMale) || 0);
-            const dOF = Math.max(0, parseInt(row.decOtherFemale) || 0);
+            if (inc === 0 && dec === 0) return;
 
-            const isInternal = (iF > 0 || iM > 0) && (iF === dOM && iM === dOF) && (inc === dec);
+            const reason = (row.reason || '').toLowerCase();
+            const isInternalByReason =
+              reason.includes('xác định giới tính') ||
+              reason.includes('chuyển cá thể') ||
+              reason.includes('nội bộ') ||
+              reason.includes('chuyển đàn') ||
+              reason.includes('phân loại');
 
-            if (isInternal) {
-              internalTransferCount += inc;
+            // If net total stock change is 0 (inc === dec) OR reason is internal reclassification -> Internal transfer!
+            if (inc === dec || (isInternalByReason && inc > 0 && dec > 0)) {
+              internalTransferCount += Math.max(inc, dec);
             } else {
-              realInc += inc;
-              realDec += dec;
+              // Net real increase or net real decrease for this row
+              if (inc > dec) {
+                realInc += (inc - dec);
+              } else if (dec > inc) {
+                const decAmount = dec - inc;
+                realDec += decAmount;
 
-              if (dec > 0) {
-                const reason = (row.reason || '').toLowerCase();
-                if (reason.includes('xuất') || reason.includes('bán')) {
-                  totalSold += dec;
-                } else if (reason.includes('chết') || reason.includes('bệnh') || reason.includes('rủi ro')) {
-                  totalDeath += dec;
-                } else if (reason.includes('tặng') || reason.includes('chuyển') || reason.includes('nhượng')) {
-                  totalTransferOut += dec;
+                if (reason.includes('xuất') || reason.includes('bán') || reason.includes('thương mại')) {
+                  totalSold += decAmount;
+                } else if (reason.includes('chết') || reason.includes('bệnh') || reason.includes('rủi ro') || reason.includes('hủy')) {
+                  totalDeath += decAmount;
+                } else if (reason.includes('tặng') || reason.includes('chuyển') || reason.includes('nhượng') || reason.includes('cho')) {
+                  totalTransferOut += decAmount;
+                } else {
+                  totalOtherDec += decAmount;
                 }
               }
             }
@@ -241,6 +250,7 @@ export default function AnalyticsView({ facilitiesList = [] }) {
       totalSold,
       totalDeath,
       totalTransferOut,
+      totalOtherDec,
       netGrowth,
     };
   }, [filteredFacilities, selectedYear, timeMode, selectedMonth]);
@@ -699,7 +709,11 @@ export default function AnalyticsView({ facilitiesList = [] }) {
           <div>
             <span className="text-[10px] sm:text-xs font-bold text-rose-700 block uppercase">Giảm Thực Tế (Rời Đàn)</span>
             <div className="text-lg sm:text-2xl font-extrabold text-rose-700 mt-0.5 sm:mt-1 font-mono">-{kpiStats.realDec} <span className="text-[10px] sm:text-xs font-sans font-normal text-slate-500">con</span></div>
-            <span className="text-[10px] sm:text-[11px] text-slate-500 font-medium hidden sm:block">Bán: <strong className="text-rose-800">{kpiStats.totalSold}</strong> | Chết: <strong className="text-rose-800">{kpiStats.totalDeath}</strong></span>
+            <span className="text-[10px] sm:text-[11px] text-slate-500 font-medium hidden sm:block">
+              Bán: <strong className="text-rose-800">{kpiStats.totalSold}</strong> | Chết: <strong className="text-rose-800">{kpiStats.totalDeath}</strong>
+              {kpiStats.totalTransferOut > 0 && <> | Tặng: <strong className="text-rose-800">{kpiStats.totalTransferOut}</strong></>}
+              {kpiStats.totalOtherDec > 0 && <> | Khác: <strong className="text-rose-800">{kpiStats.totalOtherDec}</strong></>}
+            </span>
           </div>
           <div className="p-2 sm:p-3 bg-rose-50 text-rose-600 rounded-xl sm:rounded-2xl border border-rose-200">
             <TrendingDown className="w-5 h-5 sm:w-6 sm:h-6" />
