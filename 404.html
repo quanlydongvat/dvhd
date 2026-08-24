@@ -4,14 +4,13 @@
     <meta charset="utf-8">
     <title>Sổ Theo Dõi Động Vật Hoang Dã - Hạt Kiểm Lâm Krông Bông</title>
     <script type="text/javascript">
-      // GitHub Pages SPA Redirect to fix 404 on PWA launch & subroutes
+      // Redirect legacy subpath /dvhd/ or any 404 to root custom domain
       var l = window.location;
-      var repoPath = '/dvhd/';
-      if (!l.pathname.startsWith(repoPath)) {
-        l.replace(l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') + repoPath);
-      } else {
-        l.replace(l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') + repoPath + '?redirect=' + encodeURIComponent(l.pathname));
+      var cleanPath = l.pathname.replace(/^\/dvhd/, '');
+      if (!cleanPath || cleanPath === '') {
+        cleanPath = '/';
       }
+      l.replace(l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') + cleanPath + l.search + l.hash);
     </script>
   </head>
   <body>
