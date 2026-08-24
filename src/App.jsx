@@ -21,6 +21,7 @@ import { computeLogbookTable } from './utils/calculations';
 import { loadAppData, saveAppData, clearAppData, resetToDemoData, REAL_FACILITIES_DATA, EMPTY_FACILITY_INFO } from './utils/storage';
 import { exportDistrictReport, exportFacilityLogbook } from './utils/exportExcel';
 import { syncAppDataToCloud, loadAppDataFromCloud, deleteFacilityFromCloud, saveFacilityToCloud } from './firebase';
+import QRCodeModal from './components/QRCodeModal';
 import ExportModal from './components/ExportModal';
 import PendingApprovalsModal from './components/PendingApprovalsModal';
 import { auth, db } from './firebase';
@@ -51,12 +52,34 @@ export default function App() {
   });
 
   const [isUISettingsModalOpen, setIsUISettingsModalOpen] = useState(false);
+  const [qrModalFacility, setQrModalFacility] = useState(null);
+  const [isQRCodeModalOpen, setIsQRCodeModalOpen] = useState(false);
+
+  const handleOpenQRCode = (facObj) => {
+    setQrModalFacility(facObj || appState.facilityInfo);
+    setIsQRCodeModalOpen(true);
+  };
 
   useEffect(() => {
     try {
       localStorage.setItem('wildlife_ui_settings', JSON.stringify(uiSettings));
     } catch (e) {}
   }, [uiSettings]);
+
+  // Handle URL parameter for QR Scanning (?facId=xxx or ?facilityId=xxx)
+  useEffect(() => {
+    if (appState.facilitiesList && appState.facilitiesList.length > 0) {
+      const params = new URLSearchParams(window.location.search);
+      const facIdParam = params.get('facId') || params.get('facilityId');
+      if (facIdParam) {
+        const targetFac = appState.facilitiesList.find(f => f.id === facIdParam);
+        if (targetFac) {
+          handleSelectFacility(facIdParam);
+          setCurrentView('LOGBOOK');
+        }
+      }
+    }
+  }, [appState.facilitiesList]);
 
   // Auth Listener
   useEffect(() => {
@@ -1142,6 +1165,7 @@ export default function App() {
                   setTargetFacilityId(facId);
                   setCurrentView('MAP');
                 }}
+                onOpenQRCode={handleOpenQRCode}
                 onDeleteFacility={handleDeleteFacility}
               />
             ) : currentView === 'MAP' ? (
@@ -1307,6 +1331,12 @@ export default function App() {
         species={activeSpecies}
         rows={rows}
         facilityInfo={facilityInfo}
+      />
+
+      <QRCodeModal
+        isOpen={isQRCodeModalOpen}
+        onClose={() => setIsQRCodeModalOpen(false)}
+        facility={qrModalFacility}
       />
 
       {/* PWA Installation Floating Banner */}

@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Building2, Search, Filter, ArrowRight, Download, Feather, ShieldCheck, MapPin, FileText, Table, ChevronDown, ChevronRight, CheckSquare, Square, Eye, EyeOff, Layers, Check, Trash2 } from 'lucide-react';
+import { Building2, Search, Filter, ArrowRight, Download, Feather, ShieldCheck, MapPin, FileText, Table, ChevronDown, ChevronRight, CheckSquare, Square, Eye, EyeOff, Layers, Check, Trash2, QrCode } from 'lucide-react';
 import * as XLSX from 'xlsx';
 import { isBirdSpecies, getFacilityCategory, getRegistrationCodeStatus, computeLogbookTable } from '../utils/calculations';
 import { exportRegionalSummaryTable } from '../utils/exportExcel';
@@ -12,6 +12,7 @@ export default function SummaryView({
   onSelectFacility,
   onOpenAddFacility,
   onOpenMapFacility,
+  onOpenQRCode,
   onDeleteFacility,
 }) {
 
@@ -880,6 +881,17 @@ export default function SummaryView({
                                     >
                                       <MapPin className="w-3 h-3 text-rose-600" />
                                       <span>Định vị GIS</span>
+                                    </button>
+                                  )}
+
+                                  {onOpenQRCode && (
+                                    <button
+                                      onClick={() => onOpenQRCode(fac)}
+                                      className="px-1.5 py-0.5 rounded-lg text-[10px] font-bold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 transition-all flex items-center justify-center gap-0.5 w-full cursor-pointer"
+                                      title="Tạo & in Mã QR Code độc bản cho cơ sở"
+                                    >
+                                      <QrCode className="w-3 h-3 text-indigo-600" />
+                                      <span>Mã QR</span>
                                     </button>
                                   )}
 
