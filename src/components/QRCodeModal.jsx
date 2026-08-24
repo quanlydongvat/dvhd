@@ -48,8 +48,7 @@ export default function QRCodeModal({ isOpen, onClose, facility }) {
 
             {/* Official Header Badge */}
             <div className="border-b border-slate-200 pb-3 space-y-1">
-              <span className="text-[10px] font-black uppercase text-emerald-800 tracking-wider block">CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</span>
-              <h4 className="text-xs font-black uppercase text-slate-900 tracking-tight">HẠT KIỂM LÂM KHU VỰC KRÔNG BÔNG</h4>
+              <h4 className="text-xs sm:text-sm font-black uppercase text-slate-900 tracking-tight">HẠT KIỂM LÂM KHU VỰC KRÔNG BÔNG</h4>
               <div className="inline-block bg-emerald-700 text-white text-[11px] font-black uppercase px-3 py-1 rounded-full shadow-xs mt-1">
                 MÃ QR ĐỊNH DANH CƠ SỞ NUÔI ĐVHD
               </div>
