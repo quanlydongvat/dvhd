@@ -40,30 +40,30 @@ export default function QRCodeModal({ isOpen, onClose, facility }) {
         </div>
 
         {/* Modal Body / Printable Card Area */}
-        <div className="p-6 overflow-y-auto space-y-5 flex-1 bg-slate-50/50">
+        <div className="p-4 sm:p-6 overflow-y-auto space-y-4 sm:space-y-5 flex-1 bg-slate-50/50">
           {/* Printable Badge Frame */}
-          <div className="print-area bg-white border-2 border-emerald-600 rounded-3xl p-6 shadow-xl text-center space-y-4 relative overflow-hidden">
+          <div className="print-area bg-white border-2 border-emerald-600 rounded-3xl p-4 sm:p-6 shadow-xl text-center space-y-3 sm:space-y-4 relative overflow-hidden">
             {/* Background Seal Accent */}
             <div className="absolute -right-12 -top-12 w-36 h-36 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none" />
 
             {/* Official Header Badge */}
-            <div className="border-b border-slate-200 pb-3 space-y-1">
+            <div className="border-b border-slate-200 pb-2.5 sm:pb-3 space-y-1">
               <h4 className="text-xs sm:text-sm font-black uppercase text-slate-900 tracking-tight">HẠT KIỂM LÂM KHU VỰC KRÔNG BÔNG</h4>
-              <div className="inline-block bg-emerald-700 text-white text-[11px] font-black uppercase px-3 py-1 rounded-full shadow-xs mt-1">
+              <div className="inline-block bg-emerald-700 text-white text-[10px] sm:text-[11px] font-black uppercase px-2.5 sm:px-3 py-1 rounded-full shadow-xs mt-1">
                 MÃ QR ĐỊNH DANH CƠ SỞ NUÔI ĐVHD
               </div>
             </div>
 
             {/* Big QR Code Image */}
-            <div className="flex flex-col items-center justify-center my-3">
-              <div className="p-3 bg-white border-4 border-emerald-600 rounded-2xl shadow-md inline-block">
+            <div className="flex flex-col items-center justify-center my-2 sm:my-3">
+              <div className="p-2.5 sm:p-3 bg-white border-3 sm:border-4 border-emerald-600 rounded-2xl shadow-md inline-block">
                 <img
                   src={qrApiUrl}
                   alt={`Mã QR ${facility.facilityName}`}
-                  className="w-48 h-48 object-contain mx-auto"
+                  className="w-40 h-40 sm:w-48 sm:h-48 object-contain mx-auto"
                 />
               </div>
-              <p className="text-[10px] text-slate-400 font-mono mt-2 font-bold">ID: {facility.id}</p>
+              <p className="text-[10px] text-slate-400 font-mono mt-1.5 font-bold">ID: {facility.id}</p>
             </div>
 
             {/* Facility Information Box */}
