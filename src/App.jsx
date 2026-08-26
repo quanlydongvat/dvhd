@@ -189,49 +189,6 @@ export default function App() {
     }
   }, [currentUser]);
 
-  if (isAuthChecking) {
-    return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-slate-600 font-medium animate-pulse">Đang kiểm tra hệ thống...</p>
-        </div>
-      </div>
-    );
-  }
-
-  // Require Login if NOT authenticated AND (not QR public scan OR user clicked login button)
-  if (!currentUser && (isLoginModalOpen || !isQrPublicScan)) {
-    return (
-      <Login
-        onLoginSuccess={setCurrentUser}
-        onCancel={isQrPublicScan ? () => setIsLoginModalOpen(false) : null}
-      />
-    );
-  }
-
-  const handleLogout = async () => {
-    await signOut(auth);
-    setCurrentUser(null);
-  };
-
-  const { facilitiesList = REAL_FACILITIES_DATA, activeFacilityId, facilityInfo, speciesList = [], activeSpeciesId } = appState;
-
-  // Compute total animals across all 31 facilities
-  let grandTotalAnimals = 0;
-  facilitiesList.forEach((fac) => {
-    fac.speciesList?.forEach((sp) => {
-      const b = sp.baseline || {};
-      grandTotalAnimals += (Number(b.father) || 0) + (Number(b.mother) || 0) + (Number(b.otherMale) || 0) + (Number(b.otherFemale) || 0) + (Number(b.otherUnknown) || 0);
-    });
-  });
-
-  // Active species object
-  const activeSpecies = speciesList.find((s) => s.id === activeSpeciesId) || speciesList[0] || null;
-
-  // Compute 19-column table rows automatically
-  const rows = computeLogbookTable(activeSpecies?.baseline || {}, activeSpecies?.fluctuations || []);
-
   // Modal visibility states
   const [isFluctuationModalOpen, setIsFluctuationModalOpen] = useState(false);
   const [editingFluctuation, setEditingFluctuation] = useState(null);
@@ -273,13 +230,8 @@ export default function App() {
 
       const localFacilities = appState.facilitiesList || [];
 
-      // If user is Facility, we force the loaded facility
-      // If user is Admin, we merge/take from cloud if it's larger
       if (currentUser.role === 'FACILITY' || cloudFacilities.length > localFacilities.length) {
-        console.log(`[Firebase Restore] Loaded ${cloudFacilities.length} facilities for role ${currentUser.role}`);
-
         let activeFacId = currentUser.facilityId || cloudData.activeFacilityId || cloudFacilities[0]?.id;
-        // If the facility list doesn't have the activeFacId, pick the first one
         if (!cloudFacilities.find(f => f.id === activeFacId)) {
            activeFacId = cloudFacilities[0]?.id;
         }
@@ -312,6 +264,50 @@ export default function App() {
 
     return () => { cancelled = true; };
   }, [currentUser]); 
+
+  // Early returns for Loading and Login
+  if (isAuthChecking) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-slate-600 font-medium animate-pulse">Đang kiểm tra hệ thống...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Require Login if NOT authenticated AND (not QR public scan OR user clicked login button)
+  if (!currentUser && (isLoginModalOpen || !isQrPublicScan)) {
+    return (
+      <Login
+        onLoginSuccess={setCurrentUser}
+        onCancel={isQrPublicScan ? () => setIsLoginModalOpen(false) : null}
+      />
+    );
+  }
+
+  const handleLogout = async () => {
+    await signOut(auth);
+    setCurrentUser(null);
+  };
+
+  const { facilitiesList = REAL_FACILITIES_DATA, activeFacilityId, facilityInfo, speciesList = [], activeSpeciesId } = appState;
+
+  // Compute total animals across all 31 facilities
+  let grandTotalAnimals = 0;
+  facilitiesList.forEach((fac) => {
+    fac.speciesList?.forEach((sp) => {
+      const b = sp.baseline || {};
+      grandTotalAnimals += (Number(b.father) || 0) + (Number(b.mother) || 0) + (Number(b.otherMale) || 0) + (Number(b.otherFemale) || 0) + (Number(b.otherUnknown) || 0);
+    });
+  });
+
+  // Active species object
+  const activeSpecies = speciesList.find((s) => s.id === activeSpeciesId) || speciesList[0] || null;
+
+  // Compute 19-column table rows automatically
+  const rows = computeLogbookTable(activeSpecies?.baseline || {}, activeSpecies?.fluctuations || []); 
 
 
   // Global Desktop Keyboard Shortcuts Listener
