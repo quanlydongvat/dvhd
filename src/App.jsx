@@ -1095,13 +1095,77 @@ export default function App() {
     );
   }
 
-  // Require Login if NOT authenticated AND (not QR public scan OR user clicked login button)
-  if (!currentUser && (isLoginModalOpen || !isQrPublicScan)) {
+  // Render Dedicated Ultra-Compact Public QR Logbook View when NOT logged in
+  if (!currentUser) {
     return (
-      <Login
-        onLoginSuccess={setCurrentUser}
-        onCancel={isQrPublicScan ? () => setIsLoginModalOpen(false) : null}
-      />
+      <div className="min-h-screen bg-slate-50 text-slate-800 flex flex-col font-sans antialiased selection:bg-emerald-500 selection:text-white">
+        {/* Ultra-compact Public QR Header */}
+        <header className="bg-gradient-to-r from-emerald-950 via-teal-900 to-slate-900 text-white px-3 sm:px-6 py-3 shadow-md border-b border-emerald-700/40 sticky top-0 z-30">
+          <div className="max-w-[1720px] mx-auto flex items-center justify-between gap-3">
+            {/* Facility Title & Address Info */}
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="w-9 h-9 bg-white p-1 rounded-xl border border-emerald-400/40 shadow-inner flex items-center justify-center flex-shrink-0">
+                <img
+                  src="./images/logo.jpg"
+                  alt="Logo Kiểm Lâm"
+                  className="w-full h-full object-contain rounded-lg"
+                  onError={(e) => { e.target.style.display = 'none'; }}
+                />
+              </div>
+              <div className="min-w-0 space-y-0.5">
+                <div className="flex items-center gap-2">
+                  <h1 className="text-xs sm:text-base font-black text-white truncate">
+                    {facilityInfo?.facilityName || 'Cơ sở nuôi ĐVHD'}
+                  </h1>
+                  {facilityInfo?.registrationCode && (
+                    <span className="hidden sm:inline-block text-[10px] bg-amber-400 text-slate-950 font-black px-2 py-0.5 rounded font-mono">
+                      {facilityInfo.registrationCode}
+                    </span>
+                  )}
+                </div>
+                <p className="text-[11px] sm:text-xs text-emerald-200 truncate">
+                  📍 {facilityInfo?.address} {facilityInfo?.commune ? `(${facilityInfo.commune})` : ''} • Chủ CS: <strong>{facilityInfo?.ownerName || '---'}</strong>
+                </p>
+              </div>
+            </div>
+
+            {/* Right: Login Button */}
+            <button
+              onClick={() => setIsLoginModalOpen(true)}
+              className="flex items-center gap-1.5 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-slate-950 px-3.5 py-2 rounded-xl text-xs font-black shadow-md transition-all active:scale-95 cursor-pointer flex-shrink-0"
+              title="Đăng nhập tài khoản để khai báo biến động tăng giảm đàn"
+            >
+              <span>🔐 Đăng nhập</span>
+            </button>
+          </div>
+        </header>
+
+        {/* Main Logbook Table Area */}
+        <main className="flex-1 max-w-[1720px] w-full mx-auto px-2 sm:px-6 py-3">
+          <TableView
+            rows={rows}
+            species={activeSpecies}
+            speciesList={speciesList}
+            onSelectSpecies={handleSelectSpecies}
+            facilityInfo={facilityInfo}
+            currentUser={currentUser}
+            isReadOnly={true}
+            onOpenLogin={() => setIsLoginModalOpen(true)}
+          />
+        </main>
+
+        {/* Login Modal Popup */}
+        {isLoginModalOpen && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
+            <div className="max-w-md w-full">
+              <Login
+                onLoginSuccess={setCurrentUser}
+                onCancel={() => setIsLoginModalOpen(false)}
+              />
+            </div>
+          </div>
+        )}
+      </div>
     );
   }
 
