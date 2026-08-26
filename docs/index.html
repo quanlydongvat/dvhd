@@ -31,6 +31,20 @@
       })();
     </script>
 
+    <!-- SPA redirect decode script for GitHub Pages custom domain routing -->
+    <script type="text/javascript">
+      (function(l) {
+        if (l.search[1] === '/' ) {
+          var decoded = l.search.slice(1).split('&').map(function(s) { 
+            return s.replace(/~and~/g, '&')
+          }).join('?');
+          window.history.replaceState(null, null,
+              l.pathname.slice(0, -1) + decoded + l.hash
+          );
+        }
+      }(window.location))
+    </script>
+
     <!-- Web App & PWA Meta Tags -->
     <meta name="theme-color" content="#059669" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -59,7 +73,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
 
     <!-- Vite Source Entrypoint -->
-    <script type="module" crossorigin src="./assets/index-DSMSb9Yw.js"></script>
+    <script type="module" crossorigin src="./assets/index-rAfsIvM3.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-DsRflZRk.css">
   </head>
 

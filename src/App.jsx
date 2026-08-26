@@ -70,7 +70,22 @@ export default function App() {
     return data;
   });
 
-  const [currentView, setCurrentView] = useState(() => (isQrPublicScan ? 'LOGBOOK' : 'HOME'));
+  const [currentView, setCurrentView] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const path = window.location.pathname.toLowerCase();
+      const params = new URLSearchParams(window.location.search);
+      const viewParam = params.get('view')?.toUpperCase();
+      if (viewParam && ['HOME', 'SUMMARY', 'LOGBOOK', 'MAP', 'ADMIN_USERS'].includes(viewParam)) {
+        return viewParam;
+      }
+      if (path.includes('/tong-hop') || path.includes('/summary')) return 'SUMMARY';
+      if (path.includes('/so-mau-2') || path.includes('/logbook')) return 'LOGBOOK';
+      if (path.includes('/ban-do') || path.includes('/map')) return 'MAP';
+      if (path.includes('/quan-tri') || path.includes('/admin')) return 'ADMIN_USERS';
+      if (path.includes('/trang-chu') || path.includes('/home')) return 'HOME';
+    }
+    return isQrPublicScan ? 'LOGBOOK' : 'HOME';
+  });
   const [targetFacilityId, setTargetFacilityId] = useState(null);
 
   // Desktop App UI & Workspace Settings States
@@ -161,6 +176,86 @@ export default function App() {
       }
     }
   }, [appState.facilitiesList, currentUser]);
+
+  // Synchronize dynamic URL path in browser address bar (e.g. /trang-chu, /tong-hop, /so-mau-2, /ban-do, /quan-tri)
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    try {
+      let path = '/';
+      const params = new URLSearchParams(window.location.search);
+
+      if (currentView === 'HOME') {
+        path = '/trang-chu';
+        params.delete('view');
+        params.delete('facId');
+        params.delete('facilityId');
+      } else if (currentView === 'SUMMARY') {
+        path = '/tong-hop';
+        params.delete('view');
+        params.delete('facId');
+        params.delete('facilityId');
+      } else if (currentView === 'LOGBOOK') {
+        path = '/so-mau-2';
+        if (appState.activeFacilityId) {
+          params.set('facId', appState.activeFacilityId);
+        }
+      } else if (currentView === 'MAP') {
+        path = '/ban-do';
+        params.delete('view');
+        params.delete('facId');
+        params.delete('facilityId');
+      } else if (currentView === 'ADMIN_USERS') {
+        path = '/quan-tri';
+        params.delete('view');
+        params.delete('facId');
+        params.delete('facilityId');
+      }
+
+      if (isQrReadOnlyMode) {
+        params.set('view', 'readOnly');
+      }
+
+      const queryString = params.toString() ? `?${params.toString()}` : '';
+      const newUrl = `${path}${queryString}`;
+
+      if (window.location.pathname + window.location.search !== newUrl) {
+        window.history.pushState({ view: currentView, facId: appState.activeFacilityId }, '', newUrl);
+      }
+    } catch (e) {
+      console.warn("History pushState error:", e);
+    }
+  }, [currentView, appState.activeFacilityId, isQrReadOnlyMode]);
+
+  // Handle Browser Back / Forward Button Navigation
+  useEffect(() => {
+    const handlePopState = () => {
+      const path = window.location.pathname.toLowerCase();
+      const params = new URLSearchParams(window.location.search);
+      const viewParam = params.get('view')?.toUpperCase();
+      const facIdParam = params.get('facId') || params.get('facilityId');
+
+      if (viewParam && ['HOME', 'SUMMARY', 'LOGBOOK', 'MAP', 'ADMIN_USERS'].includes(viewParam)) {
+        setCurrentView(viewParam);
+      } else if (path.includes('/tong-hop') || path.includes('/summary')) {
+        setCurrentView('SUMMARY');
+      } else if (path.includes('/so-mau-2') || path.includes('/logbook')) {
+        setCurrentView('LOGBOOK');
+      } else if (path.includes('/ban-do') || path.includes('/map')) {
+        setCurrentView('MAP');
+      } else if (path.includes('/quan-tri') || path.includes('/admin')) {
+        setCurrentView('ADMIN_USERS');
+      } else if (path.includes('/trang-chu') || path.includes('/home')) {
+        setCurrentView('HOME');
+      }
+
+      if (facIdParam && appState.facilitiesList) {
+        handleSelectFacility(facIdParam);
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [appState.facilitiesList]);
 
   // Auth Listener
   useEffect(() => {

@@ -4,16 +4,16 @@
     <meta charset="utf-8">
     <title>Sổ Theo Dõi Động Vật Hoang Dã - Hạt Kiểm Lâm Krông Bông</title>
     <script type="text/javascript">
-      // Clean redirect for 404 routes or legacy /dvhd/ subpath back to root home
+      // GitHub Pages SPA Single Page App redirect
+      var segmentCount = 0;
       var l = window.location;
-      if (l.pathname.includes('/assets/') || l.pathname.endsWith('.js') || l.pathname.endsWith('.css')) {
-        // Break 404 asset redirect loop and load home
-        l.replace(l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') + '/' + l.search + l.hash);
-      } else {
-        var cleanPath = l.pathname.replace(/^\/dvhd/, '');
-        if (!cleanPath || cleanPath === '') cleanPath = '/';
-        l.replace(l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') + cleanPath + l.search + l.hash);
-      }
+      l.replace(
+        l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+        l.pathname.split('/').slice(0, 1 + segmentCount).join('/') + '/?/' +
+        l.pathname.slice(1).split('/').slice(segmentCount).join('/').replace(/&/g, '~and~') +
+        (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+        l.hash
+      );
     </script>
   </head>
   <body>
