@@ -40,9 +40,11 @@ export default function QRCodeModal({ isOpen, onClose, facility }) {
   };
 
   const handlePrint = () => {
+    document.documentElement.classList.add('printing-qr-badge');
     document.body.classList.add('printing-qr-badge');
     window.print();
     setTimeout(() => {
+      document.documentElement.classList.remove('printing-qr-badge');
       document.body.classList.remove('printing-qr-badge');
     }, 1000);
   };

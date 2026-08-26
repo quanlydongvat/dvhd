@@ -19,7 +19,16 @@
     display: none !important;
   }
 
-  /* Specific Print Style when printing QR Badge Modal */
+  /* Specific Print Style when printing QR Badge Modal (Strictly 1 Page) */
+  html.printing-qr-badge,
+  body.printing-qr-badge {
+    height: 100vh !important;
+    max-height: 100vh !important;
+    overflow: hidden !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
   body.printing-qr-badge * {
     visibility: hidden !important;
   }
@@ -30,24 +39,25 @@
   }
 
   body.printing-qr-badge .print-area {
-    position: absolute !important;
+    position: fixed !important;
+    top: 50% !important;
     left: 50% !important;
-    top: 30px !important;
-    transform: translateX(-50%) !important;
-    width: 480px !important;
-    max-width: 95% !important;
+    transform: translate(-50%, -50%) !important;
+    width: 440px !important;
+    max-width: 90% !important;
     border: 3px solid #047857 !important;
-    padding: 24px !important;
-    border-radius: 28px !important;
+    padding: 20px !important;
+    border-radius: 24px !important;
     box-shadow: none !important;
     background: white !important;
     margin: 0 !important;
     page-break-inside: avoid !important;
+    break-inside: avoid !important;
   }
 
   @page {
     size: A4 portrait;
-    margin: 10mm;
+    margin: 5mm;
   }
 }
 
