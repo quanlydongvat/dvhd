@@ -8,34 +8,6 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   build: {
     target: 'es2020',
-    cssCodeSplit: true,
-    rollupOptions: {
-      output: {
-        manualChunks(id) {
-          if (id.includes('node_modules')) {
-            if (id.includes('react') || id.includes('react-dom')) {
-              return 'vendor-react';
-            }
-            if (id.includes('firebase')) {
-              return 'vendor-firebase';
-            }
-            if (id.includes('chart.js') || id.includes('react-chartjs-2')) {
-              return 'vendor-charts';
-            }
-            if (id.includes('xlsx') || id.includes('exceljs')) {
-              return 'vendor-excel';
-            }
-            if (id.includes('leaflet') || id.includes('react-leaflet')) {
-              return 'vendor-leaflet';
-            }
-            if (id.includes('lucide-react')) {
-              return 'vendor-icons';
-            }
-            return 'vendor-libs';
-          }
-        },
-      },
-    },
-    chunkSizeWarningLimit: 1500,
+    chunkSizeWarningLimit: 4000,
   },
 });

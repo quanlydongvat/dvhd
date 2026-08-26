@@ -4,13 +4,16 @@
     <meta charset="utf-8">
     <title>Sổ Theo Dõi Động Vật Hoang Dã - Hạt Kiểm Lâm Krông Bông</title>
     <script type="text/javascript">
-      // Redirect legacy subpath /dvhd/ or any 404 to root custom domain
+      // Clean redirect for 404 routes or legacy /dvhd/ subpath back to root home
       var l = window.location;
-      var cleanPath = l.pathname.replace(/^\/dvhd/, '');
-      if (!cleanPath || cleanPath === '') {
-        cleanPath = '/';
+      if (l.pathname.includes('/assets/') || l.pathname.endsWith('.js') || l.pathname.endsWith('.css')) {
+        // Break 404 asset redirect loop and load home
+        l.replace(l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') + '/' + l.search + l.hash);
+      } else {
+        var cleanPath = l.pathname.replace(/^\/dvhd/, '');
+        if (!cleanPath || cleanPath === '') cleanPath = '/';
+        l.replace(l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') + cleanPath + l.search + l.hash);
       }
-      l.replace(l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') + cleanPath + l.search + l.hash);
     </script>
   </head>
   <body>
