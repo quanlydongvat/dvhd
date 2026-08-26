@@ -40,14 +40,18 @@ export default function QRCodeModal({ isOpen, onClose, facility }) {
   };
 
   const handlePrint = () => {
+    document.body.classList.add('printing-qr-badge');
     window.print();
+    setTimeout(() => {
+      document.body.classList.remove('printing-qr-badge');
+    }, 1000);
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-fade-in no-print font-sans">
-      <div className="bg-white rounded-3xl shadow-2xl border border-slate-200 w-full max-w-lg overflow-hidden flex flex-col max-h-[90vh]">
+    <div className="qr-modal-wrapper fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-fade-in font-sans">
+      <div className="qr-modal-content bg-white rounded-3xl shadow-2xl border border-slate-200 w-full max-w-lg overflow-hidden flex flex-col max-h-[90vh]">
         {/* Modal Header */}
-        <div className="bg-gradient-to-r from-emerald-900 via-teal-900 to-slate-900 text-white px-6 py-4 flex items-center justify-between border-b border-emerald-800/40">
+        <div className="qr-modal-header bg-gradient-to-r from-emerald-900 via-teal-900 to-slate-900 text-white px-6 py-4 flex items-center justify-between border-b border-emerald-800/40">
           <div className="flex items-center gap-3">
             <div className="p-2.5 bg-emerald-500/20 text-emerald-400 border border-emerald-400/30 rounded-2xl">
               <QrCode className="w-5 h-5 animate-pulse" />
@@ -128,7 +132,7 @@ export default function QRCodeModal({ isOpen, onClose, facility }) {
         </div>
 
         {/* Modal Footer Controls */}
-        <div className="bg-slate-100 p-4 border-t border-slate-200 flex flex-wrap items-center justify-between gap-2 text-xs">
+        <div className="qr-modal-footer bg-slate-100 p-4 border-t border-slate-200 flex flex-wrap items-center justify-between gap-2 text-xs">
           <button
             type="button"
             onClick={handleCopyLink}
