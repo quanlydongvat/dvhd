@@ -30,11 +30,47 @@ import { doc, setDoc, addDoc, updateDoc, deleteDoc, getDoc, collection, getDocs,
 import Login from './components/Login';
 
 export default function App() {
+  const urlParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+  const isQrPublicScan = urlParams?.get('facId') || urlParams?.get('facilityId');
+
   const [currentUser, setCurrentUser] = useState(null);
   const [isAuthChecking, setIsAuthChecking] = useState(true);
   
-  const [appState, setAppState] = useState(() => loadAppData());
-  const [currentView, setCurrentView] = useState('HOME'); // Default to HOME dashboard
+  const [appState, setAppState] = useState(() => {
+    const data = loadAppData();
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const facIdParam = params.get('facId') || params.get('facilityId');
+      if (facIdParam && data.facilitiesList) {
+        const targetFac = data.facilitiesList.find(f => f.id === facIdParam);
+        if (targetFac) {
+          return {
+            ...data,
+            activeFacilityId: targetFac.id,
+            facilityInfo: {
+              id: targetFac.id,
+              facilityName: targetFac.facilityName,
+              ownerName: targetFac.ownerName,
+              registrationCode: targetFac.registrationCode,
+              registrationDate: targetFac.registrationDate,
+              commune: targetFac.commune || 'xã Hòa Sơn',
+              address: targetFac.address,
+              phone: targetFac.phone,
+              purposeCode: targetFac.purposeCode,
+              note: targetFac.note,
+              lat: targetFac.lat || '',
+              lng: targetFac.lng || '',
+            },
+            speciesList: targetFac.speciesList || [],
+            activeSpeciesId: targetFac.speciesList?.[0]?.id || null,
+          };
+        }
+      }
+    }
+    return data;
+  });
+
+  const [currentView, setCurrentView] = useState(() => (isQrPublicScan ? 'LOGBOOK' : 'HOME'));
   const [targetFacilityId, setTargetFacilityId] = useState(null);
 
   // Desktop App UI & Workspace Settings States
@@ -54,7 +90,7 @@ export default function App() {
   const [isUISettingsModalOpen, setIsUISettingsModalOpen] = useState(false);
   const [qrModalFacility, setQrModalFacility] = useState(null);
   const [isQRCodeModalOpen, setIsQRCodeModalOpen] = useState(false);
-  const [isQrReadOnlyMode, setIsQrReadOnlyMode] = useState(false);
+  const [isQrReadOnlyMode, setIsQrReadOnlyMode] = useState(() => !!isQrPublicScan);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   const [pendingRequests, setPendingRequests] = useState([]);
@@ -125,10 +161,6 @@ export default function App() {
       }
     }
   }, [appState.facilitiesList, currentUser]);
-
-  // Check if current page is opened via QR Public Scan
-  const urlParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
-  const isQrPublicScan = urlParams?.get('facId') || urlParams?.get('facilityId');
 
   // Auth Listener
   useEffect(() => {

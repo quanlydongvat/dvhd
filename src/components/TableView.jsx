@@ -21,7 +21,7 @@ export default function TableView({
   onOpenLogin,
 }) {
   const [showNotes, setShowNotes] = useState(true);
-  const [mobileViewMode, setMobileViewMode] = useState('CARDS'); // 'CARDS' | 'TABLE'
+  const [mobileViewMode, setMobileViewMode] = useState('TABLE'); // 'TABLE' | 'CARDS'
 
   if (!species) {
     return (
