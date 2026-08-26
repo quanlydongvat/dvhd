@@ -57,6 +57,10 @@ export default function App() {
   const [isQrReadOnlyMode, setIsQrReadOnlyMode] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
+  const [pendingRequests, setPendingRequests] = useState([]);
+  const [isPendingModalOpen, setIsPendingModalOpen] = useState(false);
+  const [isExportModalOpen, setIsExportModalOpen] = useState(false);
+
   const handleOpenQRCode = (facObj) => {
     setQrModalFacility(facObj || appState.facilityInfo);
     setIsQRCodeModalOpen(true);
@@ -401,9 +405,6 @@ export default function App() {
     setAppState(demo);
   };
   // Pending Fluctuation Requests State & Handlers
-  const [pendingRequests, setPendingRequests] = useState([]);
-  const [isPendingModalOpen, setIsPendingModalOpen] = useState(false);
-
   const fetchPendingRequests = async () => {
     try {
       const reqsMap = new Map();
@@ -1044,8 +1045,6 @@ export default function App() {
       activeSpeciesId: activeFac?.speciesList?.[0]?.id || null,
     });
   };
-
-  const [isExportModalOpen, setIsExportModalOpen] = useState(false);
 
   // Export Excel
   const handleExportExcelClick = () => {
