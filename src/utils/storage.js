@@ -2,7 +2,7 @@
  * LocalStorage manager and sample demo data for Wildlife Monitoring Application
  */
 
-const STORAGE_KEY = 'wildlife_manager_data_v5';
+const STORAGE_KEY = 'wildlife_manager_data_v6';
 
 export async function forceClearAllCache() {
   try {
@@ -2181,19 +2181,64 @@ export function resetToDemoData() {
 
 export function loadAppData() {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    let urlFacId = null;
+    if (typeof window !== "undefined") {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        urlFacId = params.get("facId") || params.get("facilityId");
+      } catch (e) {}
+    }
+
+    let raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) {
+      const oldRaw = localStorage.getItem("wildlife_manager_data_v5");
+      if (oldRaw) {
+        try {
+          const oldData = JSON.parse(oldRaw);
+          if (oldData && Array.isArray(oldData.facilitiesList)) {
+            const merged = oldData.facilitiesList.map((f) => {
+              const fresh = REAL_FACILITIES_DATA.find((rf) => rf.id === f.id);
+              if (fresh && fresh.speciesList) {
+                const freshCount = fresh.speciesList.reduce((acc, s) => acc + (s.fluctuations?.length || 0), 0);
+                const oldCount = f.speciesList?.reduce((acc, s) => acc + (s.fluctuations?.length || 0), 0) || 0;
+                if (freshCount > oldCount) {
+                  return { ...f, speciesList: fresh.speciesList, baseline: fresh.baseline };
+                }
+              }
+              return f;
+            });
+            const migrated = { ...oldData, facilitiesList: merged };
+            saveAppData(migrated);
+            raw = JSON.stringify(migrated);
+          }
+        } catch (e) {}
+      }
+    }
+
     if (!raw) {
       return resetToDemoData();
     }
+
     const parsed = JSON.parse(raw);
 
-    // Load saved facilities list from localStorage if present, otherwise fallback to REAL_FACILITIES_DATA
-    const facilitiesList =
+    let facilitiesList =
       parsed.facilitiesList && Array.isArray(parsed.facilitiesList) && parsed.facilitiesList.length > 0
         ? parsed.facilitiesList
         : REAL_FACILITIES_DATA;
 
-    const activeFacilityId = parsed.activeFacilityId || facilitiesList[0]?.id || null;
+    facilitiesList = facilitiesList.map((f) => {
+      const fresh = REAL_FACILITIES_DATA.find((rf) => rf.id === f.id);
+      if (fresh && fresh.speciesList) {
+        const freshCount = fresh.speciesList.reduce((acc, s) => acc + (s.fluctuations?.length || 0), 0);
+        const currentCount = f.speciesList?.reduce((acc, s) => acc + (s.fluctuations?.length || 0), 0) || 0;
+        if (freshCount > currentCount) {
+          return { ...f, speciesList: fresh.speciesList, baseline: fresh.baseline };
+        }
+      }
+      return f;
+    });
+
+    const activeFacilityId = urlFacId || parsed.activeFacilityId || facilitiesList[0]?.id || null;
     const activeFacility = facilitiesList.find((f) => f.id === activeFacilityId) || facilitiesList[0] || null;
 
     const facilityInfo = activeFacility

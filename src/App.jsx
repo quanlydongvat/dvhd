@@ -215,14 +215,26 @@ export default function App() {
           });
 
           if (cloudFacilities.length > 0) {
-            console.log(`[Firebase Guest Restore] Loaded ${cloudFacilities.length} facilities publicly.`);
+            const mergedCloudFacilities = cloudFacilities.map((f) => {
+              const fresh = REAL_FACILITIES_DATA.find((rf) => rf.id === f.id);
+              if (fresh && fresh.speciesList) {
+                const freshCount = fresh.speciesList.reduce((acc, s) => acc + (s.fluctuations?.length || 0), 0);
+                const currentCount = f.speciesList?.reduce((acc, s) => acc + (s.fluctuations?.length || 0), 0) || 0;
+                if (freshCount > currentCount) {
+                  return { ...f, speciesList: fresh.speciesList, baseline: fresh.baseline };
+                }
+              }
+              return f;
+            });
+
+            console.log(`[Firebase Guest Restore] Loaded ${mergedCloudFacilities.length} facilities.`);
             setSkipNextSync(true);
             setAppState(prev => {
-              const activeFacId = prev.activeFacilityId || cloudFacilities[0]?.id;
-              const activeFac = cloudFacilities.find((f) => f.id === activeFacId) || cloudFacilities[0];
+              const activeFacId = prev.activeFacilityId || mergedCloudFacilities[0]?.id;
+              const activeFac = mergedCloudFacilities.find((f) => f.id === activeFacId) || mergedCloudFacilities[0];
               return {
                 ...prev,
-                facilitiesList: cloudFacilities,
+                facilitiesList: mergedCloudFacilities,
                 activeFacilityId: activeFacId,
                 facilityInfo: activeFac ? {
                   id: activeFac.id,
@@ -300,17 +312,29 @@ export default function App() {
 
       const localFacilities = appState.facilitiesList || [];
 
-      if (currentUser.role === 'FACILITY' || cloudFacilities.length > localFacilities.length) {
-        let activeFacId = currentUser.facilityId || cloudData.activeFacilityId || cloudFacilities[0]?.id;
-        if (!cloudFacilities.find(f => f.id === activeFacId)) {
-           activeFacId = cloudFacilities[0]?.id;
+      const mergedCloudFacilities = cloudFacilities.map((f) => {
+        const fresh = REAL_FACILITIES_DATA.find((rf) => rf.id === f.id);
+        if (fresh && fresh.speciesList) {
+          const freshCount = fresh.speciesList.reduce((acc, s) => acc + (s.fluctuations?.length || 0), 0);
+          const currentCount = f.speciesList?.reduce((acc, s) => acc + (s.fluctuations?.length || 0), 0) || 0;
+          if (freshCount > currentCount) {
+            return { ...f, speciesList: fresh.speciesList, baseline: fresh.baseline };
+          }
+        }
+        return f;
+      });
+
+      if (currentUser.role === 'FACILITY' || mergedCloudFacilities.length >= localFacilities.length) {
+        let activeFacId = currentUser.facilityId || cloudData.activeFacilityId || mergedCloudFacilities[0]?.id;
+        if (!mergedCloudFacilities.find(f => f.id === activeFacId)) {
+           activeFacId = mergedCloudFacilities[0]?.id;
         }
         
-        const activeFac = cloudFacilities.find((f) => f.id === activeFacId) || cloudFacilities[0];
+        const activeFac = mergedCloudFacilities.find((f) => f.id === activeFacId) || mergedCloudFacilities[0];
 
         setSkipNextSync(true);
         setAppState({
-          facilitiesList: cloudFacilities,
+          facilitiesList: mergedCloudFacilities,
           activeFacilityId: activeFacId,
           facilityInfo: activeFac ? {
             id: activeFac.id,
