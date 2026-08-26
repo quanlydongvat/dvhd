@@ -1,12 +1,38 @@
-import React from 'react';
-import { X, Printer, Copy, QrCode, Building, User, FileText, MapPin } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { X, Printer, Copy, QrCode, Building, User, FileText, MapPin, Loader2 } from 'lucide-react';
+import QRCode from 'qrcode';
 
 export default function QRCodeModal({ isOpen, onClose, facility }) {
-  if (!isOpen || !facility) return null;
+  const [qrDataUrl, setQrDataUrl] = useState('');
+  const [isGenerating, setIsGenerating] = useState(false);
 
   const appDomain = typeof window !== 'undefined' ? window.location.origin : 'https://quanlydongvat.xyz';
-  const qrUrl = `${appDomain}/?facId=${facility.id}`;
-  const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(qrUrl)}`;
+  const qrUrl = facility ? `${appDomain}/?facId=${facility.id}` : '';
+
+  useEffect(() => {
+    if (isOpen && facility) {
+      setIsGenerating(true);
+      QRCode.toDataURL(qrUrl, {
+        width: 300,
+        margin: 2,
+        color: {
+          dark: '#064e3b',
+          light: '#ffffff',
+        },
+      })
+        .then((url) => {
+          setQrDataUrl(url);
+          setIsGenerating(false);
+        })
+        .catch((err) => {
+          console.warn('Local QR Code generation error:', err);
+          setQrDataUrl(`https://quickchart.io/qr?text=${encodeURIComponent(qrUrl)}&size=300`);
+          setIsGenerating(false);
+        });
+    }
+  }, [isOpen, facility, qrUrl]);
+
+  if (!isOpen || !facility) return null;
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(qrUrl);
@@ -54,14 +80,23 @@ export default function QRCodeModal({ isOpen, onClose, facility }) {
               </div>
             </div>
 
-            {/* Big QR Code Image */}
+            {/* Big QR Code Image (Local Offline Rendered) */}
             <div className="flex flex-col items-center justify-center my-2 sm:my-3">
-              <div className="p-2.5 sm:p-3 bg-white border-3 sm:border-4 border-emerald-600 rounded-2xl shadow-md inline-block">
-                <img
-                  src={qrApiUrl}
-                  alt={`Mã QR ${facility.facilityName}`}
-                  className="w-40 h-40 sm:w-48 sm:h-48 object-contain mx-auto"
-                />
+              <div className="p-2.5 sm:p-3 bg-white border-3 sm:border-4 border-emerald-600 rounded-2xl shadow-md inline-block min-w-[180px] min-h-[180px] flex items-center justify-center">
+                {isGenerating ? (
+                  <div className="flex flex-col items-center gap-2 py-8 text-emerald-700 font-bold text-xs">
+                    <Loader2 className="w-8 h-8 animate-spin text-emerald-600" />
+                    <span>Đang tạo mã QR...</span>
+                  </div>
+                ) : qrDataUrl ? (
+                  <img
+                    src={qrDataUrl}
+                    alt={`Mã QR ${facility.facilityName}`}
+                    className="w-40 h-40 sm:w-48 sm:h-48 object-contain mx-auto"
+                  />
+                ) : (
+                  <div className="text-xs text-rose-500 font-bold p-4">Không thể tạo mã QR</div>
+                )}
               </div>
               <p className="text-[10px] text-slate-400 font-mono mt-1.5 font-bold">ID: {facility.id}</p>
             </div>
