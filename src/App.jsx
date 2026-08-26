@@ -1221,7 +1221,7 @@ export default function App() {
               <TableView
                 rows={rows}
                 species={activeSpecies}
-                speciesList={activeFacilitySpeciesList}
+                speciesList={speciesList}
                 onSelectSpecies={handleSelectSpecies}
                 facilityInfo={facilityInfo}
                 onEditRow={(row) => {
