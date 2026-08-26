@@ -1133,6 +1133,7 @@ export default function App() {
                     loop
                     muted
                     playsInline
+                    preload="metadata"
                     poster="./images/banner.jpg"
                     className="w-full h-full object-cover object-center block rounded-2xl"
                   >
