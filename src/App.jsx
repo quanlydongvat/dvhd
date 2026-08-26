@@ -1240,8 +1240,14 @@ export default function App() {
               <TableView
                 rows={rows}
                 species={activeSpecies}
+                speciesList={activeFacilitySpeciesList}
+                onSelectSpecies={handleSelectSpecies}
                 facilityInfo={facilityInfo}
                 onEditRow={(row) => {
+                  if (!currentUser) {
+                    setIsLoginModalOpen(true);
+                    return;
+                  }
                   const rawFluctuation = activeSpecies?.fluctuations?.find((item) => item.id === row.rowId);
                   if (rawFluctuation) {
                     setEditingFluctuation(rawFluctuation);
@@ -1250,10 +1256,18 @@ export default function App() {
                 }}
                 onDeleteRow={handleDeleteFluctuation}
                 onEditBaseline={() => {
+                  if (!currentUser) {
+                    setIsLoginModalOpen(true);
+                    return;
+                  }
                   setEditingSpecies(activeSpecies);
                   setIsSpeciesModalOpen(true);
                 }}
                 onOpenAddSpecies={() => {
+                  if (!currentUser) {
+                    setIsLoginModalOpen(true);
+                    return;
+                  }
                   setEditingSpecies(null);
                   setIsSpeciesModalOpen(true);
                 }}
@@ -1263,7 +1277,8 @@ export default function App() {
                 onApprovePending={handleApprovePending}
                 onRejectPending={handleRejectPending}
                 currentUser={currentUser}
-                isReadOnly={isQrReadOnlyMode || (currentUser?.role === 'FACILITY' && facilityInfo.id !== activeFacilityId)}
+                isReadOnly={!currentUser || isQrReadOnlyMode || (currentUser?.role === 'FACILITY' && facilityInfo?.id !== activeFacilityId)}
+                onOpenLogin={() => setIsLoginModalOpen(true)}
               />
             )}
           </main>
