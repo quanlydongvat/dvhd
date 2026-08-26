@@ -66,6 +66,40 @@ export default function App() {
     setIsQRCodeModalOpen(true);
   };
 
+  // Handler: Select Facility from dropdown or summary table
+  const handleSelectFacility = (facId) => {
+    setAppState((prev) => {
+      const facs = prev.facilitiesList || [];
+      const fac = facs.find((f) => f.id === facId);
+      if (!fac) return prev;
+
+      return {
+        ...prev,
+        activeFacilityId: fac.id,
+        facilityInfo: {
+          id: fac.id,
+          facilityName: fac.facilityName,
+          ownerName: fac.ownerName,
+          registrationCode: fac.registrationCode,
+          registrationDate: fac.registrationDate,
+          address: fac.address,
+          phone: fac.phone,
+          purposeCode: fac.purposeCode,
+          note: fac.note,
+          lat: fac.lat,
+          lng: fac.lng,
+        },
+        speciesList: fac.speciesList || [],
+        activeSpeciesId: fac.speciesList?.[0]?.id || null,
+      };
+    });
+  };
+
+  // Handler: Select Active Species Tab
+  const handleSelectSpecies = (id) => {
+    setAppState((prev) => ({ ...prev, activeSpeciesId: id }));
+  };
+
   useEffect(() => {
     try {
       localStorage.setItem('wildlife_ui_settings', JSON.stringify(uiSettings));
@@ -359,38 +393,6 @@ export default function App() {
         setIsFullscreen(false);
       }
     }
-  };
-
-
-  // Handler: Select Facility from dropdown or summary table
-  const handleSelectFacility = (facId) => {
-    const fac = facilitiesList.find((f) => f.id === facId);
-    if (!fac) return;
-
-    setAppState((prev) => ({
-      ...prev,
-      activeFacilityId: fac.id,
-      facilityInfo: {
-        id: fac.id,
-        facilityName: fac.facilityName,
-        ownerName: fac.ownerName,
-        registrationCode: fac.registrationCode,
-        registrationDate: fac.registrationDate,
-        address: fac.address,
-        phone: fac.phone,
-        purposeCode: fac.purposeCode,
-        note: fac.note,
-        lat: fac.lat,
-        lng: fac.lng,
-      },
-      speciesList: fac.speciesList || [],
-      activeSpeciesId: fac.speciesList?.[0]?.id || null,
-    }));
-  };
-
-  // Handler: Select Active Species Tab
-  const handleSelectSpecies = (id) => {
-    setAppState((prev) => ({ ...prev, activeSpeciesId: id }));
   };
 
   // Handler: Clear all data (Xóa trắng)
