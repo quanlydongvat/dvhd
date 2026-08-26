@@ -55,6 +55,7 @@ export default function App() {
   const [qrModalFacility, setQrModalFacility] = useState(null);
   const [isQRCodeModalOpen, setIsQRCodeModalOpen] = useState(false);
   const [isQrReadOnlyMode, setIsQrReadOnlyMode] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   const handleOpenQRCode = (facObj) => {
     setQrModalFacility(facObj || appState.facilityInfo);
@@ -87,6 +88,10 @@ export default function App() {
     }
   }, [appState.facilitiesList, currentUser]);
 
+  // Check if current page is opened via QR Public Scan
+  const urlParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+  const isQrPublicScan = urlParams?.get('facId') || urlParams?.get('facilityId');
+
   // Auth Listener
   useEffect(() => {
     import('./firebase').then(({ db }) => {
@@ -114,6 +119,7 @@ export default function App() {
               role,
               facilityId,
             });
+            setIsLoginModalOpen(false);
           } catch (err) {
             console.error("Error fetching user role", err);
           }
@@ -177,8 +183,32 @@ export default function App() {
   useEffect(() => {
     if (currentUser?.role === 'FACILITY') {
       setCurrentView('LOGBOOK');
+      if (currentUser.facilityId) {
+        handleSelectFacility(currentUser.facilityId);
+      }
     }
   }, [currentUser]);
+
+  if (isAuthChecking) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-slate-600 font-medium animate-pulse">Đang kiểm tra hệ thống...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Require Login if NOT authenticated AND (not QR public scan OR user clicked login button)
+  if (!currentUser && (isLoginModalOpen || !isQrPublicScan)) {
+    return (
+      <Login
+        onLoginSuccess={setCurrentUser}
+        onCancel={isQrPublicScan ? () => setIsLoginModalOpen(false) : null}
+      />
+    );
+  }
 
   const handleLogout = async () => {
     await signOut(auth);

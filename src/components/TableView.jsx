@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { Edit2, Trash2, Info, ArrowUpRight, ArrowDownRight, ChevronDown, ChevronUp, AlertTriangle, Eye } from 'lucide-react';
+import { Edit2, Trash2, Info, ArrowUpRight, ArrowDownRight, ChevronDown, ChevronUp, AlertTriangle, Eye, Building2, Lock, UserCheck, MapPin, FileText, User } from 'lucide-react';
 import { formatDateVN, PURPOSE_CODES } from '../utils/calculations';
 
 export default function TableView({
   rows = [],
   species,
+  speciesList = [],
+  onSelectSpecies,
   facilityInfo,
   onEditRow,
   onDeleteRow,
@@ -16,6 +18,7 @@ export default function TableView({
   onRejectPending,
   currentUser,
   isReadOnly = false,
+  onOpenLogin,
 }) {
   const [showNotes, setShowNotes] = useState(true);
   const [mobileViewMode, setMobileViewMode] = useState('CARDS'); // 'CARDS' | 'TABLE'
@@ -83,7 +86,86 @@ export default function TableView({
           </span>
         </div>
       )}
-      {/* Species Header Banner for Display */}
+
+      {/* Short Facility Banner for QR Reader / Public View */}
+      <div className="bg-gradient-to-br from-emerald-900 via-teal-900 to-slate-900 text-white rounded-2xl p-4 sm:p-5 shadow-lg space-y-3 border border-emerald-700/50">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-emerald-700/50 pb-3">
+          <div className="space-y-1">
+            <span className="text-[10px] font-black uppercase tracking-wider text-emerald-400 bg-emerald-950/80 px-2.5 py-0.5 rounded-full border border-emerald-500/30 inline-block">
+              HẠT KIỂM LÂM KHU VỰC KRÔNG BÔNG
+            </span>
+            <h2 className="text-lg sm:text-2xl font-black text-white flex items-center gap-2">
+              <Building2 className="w-6 h-6 text-emerald-400 flex-shrink-0" />
+              <span>{facilityInfo?.facilityName || 'Cơ sở nuôi động vật hoang dã'}</span>
+            </h2>
+          </div>
+
+          {!currentUser ? (
+            <button
+              onClick={onOpenLogin}
+              className="flex items-center justify-center gap-2 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-slate-950 px-4 py-2.5 rounded-xl text-xs font-black shadow-md transition-all active:scale-95 cursor-pointer whitespace-nowrap"
+              title="Đăng nhập tài khoản để khai báo biến động tăng giảm đàn"
+            >
+              <Lock className="w-4 h-4 text-slate-950" />
+              <span>🔐 Khai báo biến động (Đăng nhập)</span>
+            </button>
+          ) : (
+            <div className="flex items-center gap-2 text-xs text-emerald-300 font-bold bg-emerald-950/80 px-3 py-1.5 rounded-xl border border-emerald-500/40">
+              <UserCheck className="w-4 h-4 text-emerald-400" />
+              <span>Đang đăng nhập: {currentUser.username || currentUser.name}</span>
+            </div>
+          )}
+        </div>
+
+        {/* Short Facility Details Grid */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+          <div className="bg-white/10 p-2.5 rounded-xl border border-white/10 flex items-center gap-2">
+            <User className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+            <div>
+              <span className="text-[10px] text-emerald-200 block">Chủ cơ sở</span>
+              <strong className="text-white font-bold">{facilityInfo?.ownerName || '---'}</strong>
+            </div>
+          </div>
+
+          <div className="bg-white/10 p-2.5 rounded-xl border border-white/10 flex items-center gap-2">
+            <FileText className="w-4 h-4 text-indigo-400 flex-shrink-0" />
+            <div>
+              <span className="text-[10px] text-indigo-200 block">Mã số đăng ký</span>
+              <strong className="text-amber-300 font-mono font-bold">{facilityInfo?.registrationCode || 'Chưa cấp'}</strong>
+            </div>
+          </div>
+
+          <div className="bg-white/10 p-2.5 rounded-xl border border-white/10 col-span-2 flex items-center gap-2">
+            <MapPin className="w-4 h-4 text-rose-400 flex-shrink-0" />
+            <div>
+              <span className="text-[10px] text-rose-200 block">Địa chỉ cơ sở</span>
+              <strong className="text-white font-semibold">{facilityInfo?.address} ({facilityInfo?.commune || 'Xã Krông Bông'})</strong>
+            </div>
+          </div>
+        </div>
+
+        {/* Species Switcher Tabs (If facility has multiple species) */}
+        {speciesList && speciesList.length > 1 && (
+          <div className="pt-2 border-t border-emerald-800/60 flex items-center gap-1.5 overflow-x-auto">
+            <span className="text-xs font-bold text-slate-300 mr-1 whitespace-nowrap">Loài nuôi ({speciesList.length}):</span>
+            {speciesList.map((sp) => (
+              <button
+                key={sp.id}
+                onClick={() => onSelectSpecies && onSelectSpecies(sp.id)}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
+                  species?.id === sp.id
+                    ? 'bg-emerald-500 text-slate-950 font-black shadow-md scale-105'
+                    : 'bg-white/10 text-slate-200 hover:bg-white/20'
+                }`}
+              >
+                {sp.vietnameseName}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Species Sub-Header for Display */}
       <div className="bg-gradient-to-r from-emerald-500/10 via-teal-500/10 to-slate-100 border border-emerald-200/80 rounded-2xl p-5 shadow-sm">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>

@@ -4,7 +4,7 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth, db } from '../firebase';
 import { doc, getDoc, collection, query, where, getDocs } from 'firebase/firestore';
 
-export default function Login({ onLoginSuccess }) {
+export default function Login({ onLoginSuccess, onCancel }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -125,6 +125,16 @@ export default function Login({ onLoginSuccess }) {
         {/* Header */}
         <div className="bg-gradient-to-br from-emerald-800 via-emerald-700 to-teal-800 p-7 sm:p-8 text-center text-white relative overflow-hidden">
           <div className="absolute -right-8 -top-8 w-32 h-32 bg-white/10 rounded-full blur-xl pointer-events-none" />
+
+          {onCancel && (
+            <button
+              type="button"
+              onClick={onCancel}
+              className="absolute top-4 right-4 p-2 text-white/90 hover:text-white bg-white/10 hover:bg-white/20 rounded-xl transition-colors text-xs font-bold flex items-center gap-1 cursor-pointer z-20"
+            >
+              <span>Quay lại xem Sổ ✕</span>
+            </button>
+          )}
           
           <div className="relative z-10 flex flex-col items-center">
             {/* Official Vietnam Forest Protection Badge Logo */}
