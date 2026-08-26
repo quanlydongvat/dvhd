@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Edit2, Trash2, Info, ArrowUpRight, ArrowDownRight, ChevronDown, ChevronUp, AlertTriangle, Eye, Building2, Lock, UserCheck, MapPin, FileText, User } from 'lucide-react';
+import { Edit2, Trash2, Info, ArrowUpRight, ArrowDownRight, ChevronDown, ChevronUp, AlertTriangle, Eye, Building2, Lock, UserCheck, MapPin, FileText, User, RotateCw, Maximize2 } from 'lucide-react';
 import { formatDateVN, PURPOSE_CODES } from '../utils/calculations';
 
 export default function TableView({
@@ -22,6 +22,26 @@ export default function TableView({
 }) {
   const [showNotes, setShowNotes] = useState(true);
   const [mobileViewMode, setMobileViewMode] = useState('TABLE'); // 'TABLE' | 'CARDS'
+
+  const handleToggleRotateLandscape = () => {
+    try {
+      if (!document.fullscreenElement) {
+        if (document.documentElement.requestFullscreen) {
+          document.documentElement.requestFullscreen().then(() => {
+            if (window.screen?.orientation?.lock) {
+              window.screen.orientation.lock('landscape').catch(() => {});
+            }
+          }).catch(() => {});
+        }
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen().catch(() => {});
+        }
+      }
+    } catch (e) {
+      console.warn("Rotate landscape error:", e);
+    }
+  };
 
   if (!species) {
     return (
@@ -197,29 +217,49 @@ export default function TableView({
         </div>
       </div>
 
-      {/* Mobile Display Mode Switcher (Chế độ Thẻ di động vs Bảng 19 cột A4) */}
-      <div className="flex sm:hidden items-center justify-between bg-slate-100 p-2 rounded-2xl border border-slate-200 shadow-inner text-xs">
-        <span className="font-extrabold text-slate-700">Chế độ xem Sổ di động:</span>
-        <div className="flex items-center gap-1.5">
+      {/* Mobile Display Mode Switcher & Landscape Rotation Bar */}
+      <div className="flex flex-col sm:hidden gap-2 bg-gradient-to-r from-emerald-950 via-teal-950 to-slate-900 text-white p-3 rounded-2xl border border-emerald-700/50 shadow-md text-xs">
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-1.5 font-black text-emerald-300">
+            <RotateCw className="w-4 h-4 text-emerald-400" />
+            <span>Chế độ xem:</span>
+          </div>
+
+          <div className="flex items-center gap-1.5">
+            <button
+              onClick={() => setMobileViewMode('TABLE')}
+              className={`px-3 py-1.5 rounded-xl font-extrabold transition-all cursor-pointer ${
+                mobileViewMode === 'TABLE'
+                  ? 'bg-emerald-500 text-slate-950 shadow-md scale-105 font-black'
+                  : 'bg-white/10 text-slate-200 border border-white/10'
+              }`}
+            >
+              📊 Bảng 19 Cột
+            </button>
+            <button
+              onClick={() => setMobileViewMode('CARDS')}
+              className={`px-3 py-1.5 rounded-xl font-extrabold transition-all cursor-pointer ${
+                mobileViewMode === 'CARDS'
+                  ? 'bg-emerald-500 text-slate-950 shadow-md scale-105 font-black'
+                  : 'bg-white/10 text-slate-200 border border-white/10'
+              }`}
+            >
+              📋 Thẻ di động
+            </button>
+          </div>
+        </div>
+
+        {/* Rotation & Landscape Helper Trigger */}
+        <div className="flex items-center justify-between pt-2 border-t border-emerald-800/60 text-[11px] text-slate-300">
+          <span>🔄 <strong>Mẹo:</strong> Xoay ngang điện thoại để xem trọn vẹn 19 cột.</span>
           <button
-            onClick={() => setMobileViewMode('CARDS')}
-            className={`px-3 py-1.5 rounded-xl font-extrabold transition-all ${
-              mobileViewMode === 'CARDS'
-                ? 'bg-emerald-600 text-white shadow-md'
-                : 'bg-white text-slate-700 border border-slate-200'
-            }`}
+            type="button"
+            onClick={handleToggleRotateLandscape}
+            className="flex items-center gap-1 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-400/40 px-2.5 py-1 rounded-lg font-bold transition-all active:scale-95 cursor-pointer whitespace-nowrap"
+            title="Bật chế độ xoay ngang toàn màn hình"
           >
-            📋 Thẻ di động
-          </button>
-          <button
-            onClick={() => setMobileViewMode('TABLE')}
-            className={`px-3 py-1.5 rounded-xl font-extrabold transition-all ${
-              mobileViewMode === 'TABLE'
-                ? 'bg-emerald-600 text-white shadow-md'
-                : 'bg-white text-slate-700 border border-slate-200'
-            }`}
-          >
-            📊 Bảng A4
+            <Maximize2 className="w-3.5 h-3.5" />
+            <span>Toàn cảnh</span>
           </button>
         </div>
       </div>
