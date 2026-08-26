@@ -54,6 +54,7 @@ export default function App() {
   const [isUISettingsModalOpen, setIsUISettingsModalOpen] = useState(false);
   const [qrModalFacility, setQrModalFacility] = useState(null);
   const [isQRCodeModalOpen, setIsQRCodeModalOpen] = useState(false);
+  const [isQrReadOnlyMode, setIsQrReadOnlyMode] = useState(false);
 
   const handleOpenQRCode = (facObj) => {
     setQrModalFacility(facObj || appState.facilityInfo);
@@ -71,15 +72,20 @@ export default function App() {
     if (appState.facilitiesList && appState.facilitiesList.length > 0) {
       const params = new URLSearchParams(window.location.search);
       const facIdParam = params.get('facId') || params.get('facilityId');
+      const isReadOnlyParam = params.get('view') === 'readOnly' || params.get('readOnly') === 'true' || !!facIdParam;
+
       if (facIdParam) {
         const targetFac = appState.facilitiesList.find(f => f.id === facIdParam);
         if (targetFac) {
           handleSelectFacility(facIdParam);
           setCurrentView('LOGBOOK');
+          if (isReadOnlyParam && (!currentUser || currentUser.role !== 'ADMIN')) {
+            setIsQrReadOnlyMode(true);
+          }
         }
       }
     }
-  }, [appState.facilitiesList]);
+  }, [appState.facilitiesList, currentUser]);
 
   // Auth Listener
   useEffect(() => {
@@ -1227,6 +1233,7 @@ export default function App() {
                 onApprovePending={handleApprovePending}
                 onRejectPending={handleRejectPending}
                 currentUser={currentUser}
+                isReadOnly={isQrReadOnlyMode || (currentUser?.role === 'FACILITY' && facilityInfo.id !== activeFacilityId)}
               />
             )}
           </main>

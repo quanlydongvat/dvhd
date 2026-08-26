@@ -7,7 +7,7 @@ export default function QRCodeModal({ isOpen, onClose, facility }) {
   const [isGenerating, setIsGenerating] = useState(false);
 
   const appDomain = typeof window !== 'undefined' ? window.location.origin : 'https://quanlydongvat.xyz';
-  const qrUrl = facility ? `${appDomain}/?facId=${facility.id}` : '';
+  const qrUrl = facility ? `${appDomain}/?facId=${facility.id}&view=readOnly` : '';
 
   useEffect(() => {
     if (isOpen && facility) {

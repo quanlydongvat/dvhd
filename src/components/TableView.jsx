@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Edit2, Trash2, Info, ArrowUpRight, ArrowDownRight, ChevronDown, ChevronUp, AlertTriangle } from 'lucide-react';
+import { Edit2, Trash2, Info, ArrowUpRight, ArrowDownRight, ChevronDown, ChevronUp, AlertTriangle, Eye } from 'lucide-react';
 import { formatDateVN, PURPOSE_CODES } from '../utils/calculations';
 
 export default function TableView({
@@ -15,6 +15,7 @@ export default function TableView({
   onApprovePending,
   onRejectPending,
   currentUser,
+  isReadOnly = false,
 }) {
   const [showNotes, setShowNotes] = useState(true);
   const [mobileViewMode, setMobileViewMode] = useState('CARDS'); // 'CARDS' | 'TABLE'
@@ -61,6 +62,27 @@ export default function TableView({
 
   return (
     <div className="space-y-6">
+      {/* QR Code Scan Read-Only Notification Banner */}
+      {isReadOnly && (
+        <div className="bg-amber-500/10 border-2 border-amber-400 text-amber-950 p-4 rounded-2xl flex items-center justify-between gap-3 shadow-md animate-fade-in">
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 bg-amber-400 text-slate-950 rounded-xl font-bold flex-shrink-0">
+              <Eye className="w-5 h-5 animate-pulse" />
+            </div>
+            <div>
+              <h4 className="font-black text-sm text-slate-900">
+                Chế Độ Quét Mã QR Code: Chỉ Xem Sổ Theo Dõi Mẫu II (Read-Only)
+              </h4>
+              <p className="text-xs text-slate-700 font-semibold mt-0.5">
+                Dữ liệu thuộc về cơ sở <strong>{facilityInfo?.facilityName}</strong> (Chủ cơ sở: {facilityInfo?.ownerName}). Bạn đang truy cập ở chế độ chỉ đọc và không thể chỉnh sửa hay xóa số liệu.
+              </p>
+            </div>
+          </div>
+          <span className="hidden sm:inline-block text-xs font-black text-amber-900 bg-amber-200 border border-amber-300 px-3 py-1.5 rounded-xl whitespace-nowrap">
+            🔒 Khóa chỉnh sửa
+          </span>
+        </div>
+      )}
       {/* Species Header Banner for Display */}
       <div className="bg-gradient-to-r from-emerald-500/10 via-teal-500/10 to-slate-100 border border-emerald-200/80 rounded-2xl p-5 shadow-sm">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -234,31 +256,33 @@ export default function TableView({
                     <span className="font-semibold text-slate-900 truncate block">{row.reason}</span>
                   </div>
 
-                  <div className="flex items-center gap-1 flex-shrink-0">
-                    {isBaseline ? (
-                      <button
-                        onClick={onEditBaseline}
-                        className="px-2.5 py-1 bg-indigo-100 hover:bg-indigo-200 text-indigo-800 rounded-lg text-xs font-bold border border-indigo-300"
-                      >
-                        Sửa Dòng A
-                      </button>
-                    ) : (
-                      <>
+                  {!isReadOnly && (
+                    <div className="flex items-center gap-1 flex-shrink-0">
+                      {isBaseline ? (
                         <button
-                          onClick={() => onEditRow(row)}
-                          className="px-2.5 py-1 bg-emerald-100 hover:bg-emerald-200 text-emerald-800 rounded-lg text-xs font-bold border border-emerald-300"
+                          onClick={onEditBaseline}
+                          className="px-2.5 py-1 bg-indigo-100 hover:bg-indigo-200 text-indigo-800 rounded-lg text-xs font-bold border border-indigo-300"
                         >
-                          Sửa
+                          Sửa Dòng A
                         </button>
-                        <button
-                          onClick={() => onDeleteRow(row.rowId)}
-                          className="px-2.5 py-1 bg-rose-100 hover:bg-rose-200 text-rose-800 rounded-lg text-xs font-bold border border-rose-300"
-                        >
-                          Xóa
-                        </button>
-                      </>
-                    )}
-                  </div>
+                      ) : (
+                        <>
+                          <button
+                            onClick={() => onEditRow(row)}
+                            className="px-2.5 py-1 bg-emerald-100 hover:bg-emerald-200 text-emerald-800 rounded-lg text-xs font-bold border border-emerald-300"
+                          >
+                            Sửa
+                          </button>
+                          <button
+                            onClick={() => onDeleteRow(row.rowId)}
+                            className="px-2.5 py-1 bg-rose-100 hover:bg-rose-200 text-rose-800 rounded-lg text-xs font-bold border border-rose-300"
+                          >
+                            Xóa
+                          </button>
+                        </>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
             );
@@ -529,36 +553,38 @@ export default function TableView({
 
 
                     {/* Actions */}
-                    <td className="px-0.5 py-0.5 no-print text-center">
-                      <div className="flex items-center justify-center gap-0.5">
-                        {isBaseline ? (
-                          <button
-                            onClick={onEditBaseline}
-                            className="p-1 text-indigo-600 hover:bg-indigo-100 rounded transition-colors"
-                            title="Sửa dòng A (Số liệu ban đầu)"
-                          >
-                            <Edit2 className="w-3.5 h-3.5" />
-                          </button>
-                        ) : (
-                          <>
+                    {!isReadOnly && (
+                      <td className="px-0.5 py-0.5 no-print text-center">
+                        <div className="flex items-center justify-center gap-0.5">
+                          {isBaseline ? (
                             <button
-                              onClick={() => onEditRow(row)}
-                              className="p-1 text-emerald-600 hover:bg-emerald-100 rounded transition-colors"
-                              title="Sửa thông tin dòng này"
+                              onClick={onEditBaseline}
+                              className="p-1 text-indigo-600 hover:bg-indigo-100 rounded transition-colors"
+                              title="Sửa dòng A (Số liệu ban đầu)"
                             >
                               <Edit2 className="w-3.5 h-3.5" />
                             </button>
-                            <button
-                              onClick={() => onDeleteRow(row.rowId)}
-                              className="p-1 text-rose-600 hover:bg-rose-100 rounded transition-colors"
-                              title="Xóa biến động này"
-                            >
-                              <Trash2 className="w-3.5 h-3.5" />
-                            </button>
-                          </>
-                        )}
-                      </div>
-                    </td>
+                          ) : (
+                            <>
+                              <button
+                                onClick={() => onEditRow(row)}
+                                className="p-1 text-emerald-600 hover:bg-emerald-100 rounded transition-colors"
+                                title="Sửa thông tin dòng này"
+                              >
+                                <Edit2 className="w-3.5 h-3.5" />
+                              </button>
+                              <button
+                                onClick={() => onDeleteRow(row.rowId)}
+                                className="p-1 text-rose-600 hover:bg-rose-100 rounded transition-colors"
+                                title="Xóa biến động này"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            </>
+                          )}
+                        </div>
+                      </td>
+                    )}
                   </tr>
                 );
               })}
