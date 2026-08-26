@@ -158,15 +158,16 @@ export function validateInternalTransfer(formData) {
  * @param {Array} fluctuations - Array of fluctuation objects
  * @returns {Array} List of processed rows with computed totals and running balances
  */
-export function computeLogbookTable(baseline, fluctuations = []) {
+export function computeLogbookTable(baseline = {}, fluctuations = []) {
   const processedRows = [];
+  const safeBaseline = baseline || {};
 
   // Parse baseline numbers
-  const bFather = Math.max(0, parseInt(baseline.father) || 0);
-  const bMother = Math.max(0, parseInt(baseline.mother) || 0);
-  const bOtherMale = Math.max(0, parseInt(baseline.otherMale) || 0);
-  const bOtherFemale = Math.max(0, parseInt(baseline.otherFemale) || 0);
-  const bOtherUnknown = Math.max(0, parseInt(baseline.otherUnknown) || 0);
+  const bFather = Math.max(0, parseInt(safeBaseline.father) || 0);
+  const bMother = Math.max(0, parseInt(safeBaseline.mother) || 0);
+  const bOtherMale = Math.max(0, parseInt(safeBaseline.otherMale) || 0);
+  const bOtherFemale = Math.max(0, parseInt(safeBaseline.otherFemale) || 0);
+  const bOtherUnknown = Math.max(0, parseInt(safeBaseline.otherUnknown) || 0);
   const bTotal = bFather + bMother + bOtherMale + bOtherFemale + bOtherUnknown;
 
   // Dòng A (Khởi tạo hiện trạng ban đầu)
@@ -174,7 +175,7 @@ export function computeLogbookTable(baseline, fluctuations = []) {
     rowId: 'A',
     label: 'A',
     isBaseline: true,
-    date: baseline.date || '',
+    date: safeBaseline.date || '',
     // Current status (Cols 2 - 7)
     total: bTotal,
     father: bFather,
@@ -194,14 +195,15 @@ export function computeLogbookTable(baseline, fluctuations = []) {
     decOtherMale: 0,
     decOtherFemale: 0,
     decOtherUnknown: 0,
-    reason: baseline.note || 'Số lượng vật nuôi hiện có ban đầu',
-    verifier: baseline.verifier || '',
+    reason: safeBaseline.note || 'Số lượng vật nuôi hiện có ban đầu',
+    verifier: safeBaseline.verifier || '',
   };
 
   processedRows.push(rowA);
 
   // Sort fluctuations chronologically (Date ascending, then created timestamp or order index)
-  const sortedFluctuations = [...fluctuations].sort((a, b) => {
+  const safeFluctuations = Array.isArray(fluctuations) ? fluctuations : [];
+  const sortedFluctuations = [...safeFluctuations].sort((a, b) => {
     const dateA = new Date(a.date + (a.time ? `T${a.time}` : 'T00:00:00'));
     const dateB = new Date(b.date + (b.time ? `T${b.time}` : 'T00:00:00'));
     if (dateA.getTime() !== dateB.getTime()) {
