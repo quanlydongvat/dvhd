@@ -303,28 +303,6 @@ export default function App() {
     return () => { cancelled = true; };
   }, [currentUser]); 
 
-  // Early returns for Loading and Login
-  if (isAuthChecking) {
-    return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-slate-600 font-medium animate-pulse">Đang kiểm tra hệ thống...</p>
-        </div>
-      </div>
-    );
-  }
-
-  // Require Login if NOT authenticated AND (not QR public scan OR user clicked login button)
-  if (!currentUser && (isLoginModalOpen || !isQrPublicScan)) {
-    return (
-      <Login
-        onLoginSuccess={setCurrentUser}
-        onCancel={isQrPublicScan ? () => setIsLoginModalOpen(false) : null}
-      />
-    );
-  }
-
   const handleLogout = async () => {
     await signOut(auth);
     setCurrentUser(null);
@@ -1085,8 +1063,14 @@ export default function App() {
     );
   }
 
-  if (!currentUser) {
-    return <Login onLoginSuccess={setCurrentUser} />;
+  // Require Login if NOT authenticated AND (not QR public scan OR user clicked login button)
+  if (!currentUser && (isLoginModalOpen || !isQrPublicScan)) {
+    return (
+      <Login
+        onLoginSuccess={setCurrentUser}
+        onCancel={isQrPublicScan ? () => setIsLoginModalOpen(false) : null}
+      />
+    );
   }
 
   return (
