@@ -16,7 +16,7 @@ import {
   Filler,
 } from 'chart.js';
 import { Line, Bar, Doughnut } from 'react-chartjs-2';
-import { TrendingUp, TrendingDown, Calendar, Filter, MapPin, Feather, Download, Award, BarChart3, PieChart, Activity, RefreshCw } from 'lucide-react';
+import { TrendingUp, TrendingDown, Calendar, Filter, MapPin, Feather, Download, Award, BarChart3, PieChart, Activity, RefreshCw, Layers, ChevronDown, ChevronUp } from 'lucide-react';
 import * as XLSX from 'xlsx';
 import { isBirdSpecies, getFacilityCategory, computeLogbookTable } from '../utils/calculations';
 
@@ -44,6 +44,8 @@ export default function AnalyticsView({ facilitiesList = [] }) {
   const [selectedCommune, setSelectedCommune] = useState('ALL');
   const [selectedCategory, setSelectedCategory] = useState('ALL'); // 'ALL' | 'MAMMAL_REPTILE' | 'BIRD'
   const [selectedFacilityId, setSelectedFacilityId] = useState('ALL');
+  const [selectedBreedingSpecies, setSelectedBreedingSpecies] = useState('ALL');
+  const [showSpeciesBreedingTable, setShowSpeciesBreedingTable] = useState(false);
 
   const COMMUNES = ['xã Hòa Sơn', 'xã Yang Mao', 'xã Cư Pui', 'Xã Krông Bông', 'Xã Dang Kang'];
 
@@ -331,49 +333,116 @@ export default function AnalyticsView({ facilitiesList = [] }) {
     return list.slice(0, 5);
   }, [filteredFacilities]);
 
-  // 2. Gender & Breeding Structure Breakdown
-  const genderAgeBreakdown = useMemo(() => {
-    let father = 0;
-    let mother = 0;
-    let otherMale = 0;
-    let otherFemale = 0;
-    let otherUnknown = 0;
+  // 2. Gender & Breeding Structure Breakdown per Species
+  const speciesBreedingStats = useMemo(() => {
+    const speciesMap = {};
+    let allFather = 0;
+    let allMother = 0;
+    let allOtherMale = 0;
+    let allOtherFemale = 0;
+    let allOtherUnknown = 0;
 
     filteredFacilities.forEach((fac) => {
-      fac.speciesList.forEach((sp) => {
+      fac.speciesList?.forEach((sp) => {
+        const name = sp.vietnameseName?.trim() || 'Khác';
+        if (!speciesMap[name]) {
+          speciesMap[name] = {
+            name,
+            scientificName: sp.scientificName || '',
+            group: sp.group || '',
+            father: 0,
+            mother: 0,
+            otherMale: 0,
+            otherFemale: 0,
+            otherUnknown: 0,
+            facilitiesCount: new Set(),
+          };
+        }
+        speciesMap[name].facilitiesCount.add(fac.id);
+
         const processedRows = computeLogbookTable(sp.baseline || {}, sp.fluctuations || []);
         const lastRow = processedRows[processedRows.length - 1];
         if (lastRow) {
-          father += (lastRow.father || 0);
-          mother += (lastRow.mother || 0);
-          otherMale += (lastRow.otherMale || 0);
-          otherFemale += (lastRow.otherFemale || 0);
-          otherUnknown += (lastRow.otherUnknown || 0);
+          const f = lastRow.father || 0;
+          const m = lastRow.mother || 0;
+          const om = lastRow.otherMale || 0;
+          const of = lastRow.otherFemale || 0;
+          const ou = lastRow.otherUnknown || 0;
+
+          speciesMap[name].father += f;
+          speciesMap[name].mother += m;
+          speciesMap[name].otherMale += om;
+          speciesMap[name].otherFemale += of;
+          speciesMap[name].otherUnknown += ou;
+
+          allFather += f;
+          allMother += m;
+          allOtherMale += om;
+          allOtherFemale += of;
+          allOtherUnknown += ou;
         }
       });
     });
 
-    const grandTotal = father + mother + otherMale + otherFemale + otherUnknown || 1;
-    const breedingTotal = father + mother;
-    const youngTotal = otherMale + otherFemale + otherUnknown;
+    const speciesList = Object.values(speciesMap).map((item) => {
+      const grandTotal = item.father + item.mother + item.otherMale + item.otherFemale + item.otherUnknown;
+      const breedingTotal = item.father + item.mother;
+      const youngTotal = item.otherMale + item.otherFemale + item.otherUnknown;
+      const ratioMotherToFather = item.father > 0 ? (item.mother / item.father).toFixed(1) : (item.mother > 0 ? '---' : '0');
+      return {
+        ...item,
+        facilitiesCount: item.facilitiesCount.size,
+        grandTotal,
+        breedingTotal,
+        youngTotal,
+        ratioMotherToFather,
+        fatherPct: grandTotal > 0 ? Math.round((item.father / grandTotal) * 100) : 0,
+        motherPct: grandTotal > 0 ? Math.round((item.mother / grandTotal) * 100) : 0,
+        youngPct: grandTotal > 0 ? Math.round((youngTotal / grandTotal) * 100) : 0,
+      };
+    });
 
-    const ratioMotherToFather = father > 0 ? (mother / father).toFixed(1) : 0;
+    // Sort by largest total population
+    speciesList.sort((a, b) => b.grandTotal - a.grandTotal);
+
+    const allGrandTotal = allFather + allMother + allOtherMale + allOtherFemale + allOtherUnknown || 1;
+    const allBreedingTotal = allFather + allMother;
+    const allYoungTotal = allOtherMale + allOtherFemale + allOtherUnknown;
+    const allRatio = allFather > 0 ? (allMother / allFather).toFixed(1) : 0;
+
+    const allStats = {
+      name: 'Tất cả loài',
+      scientificName: 'Tổng hợp toàn huyện',
+      father: allFather,
+      mother: allMother,
+      otherMale: allOtherMale,
+      otherFemale: allOtherFemale,
+      otherUnknown: allOtherUnknown,
+      grandTotal: allGrandTotal,
+      breedingTotal: allBreedingTotal,
+      youngTotal: allYoungTotal,
+      ratioMotherToFather: allRatio,
+      fatherPct: Math.round((allFather / allGrandTotal) * 100),
+      motherPct: Math.round((allMother / allGrandTotal) * 100),
+      youngPct: Math.round((allYoungTotal / allGrandTotal) * 100),
+      facilitiesCount: filteredFacilities.length,
+    };
 
     return {
-      father,
-      mother,
-      otherMale,
-      otherFemale,
-      otherUnknown,
-      grandTotal,
-      breedingTotal,
-      youngTotal,
-      ratioMotherToFather,
-      fatherPct: Math.round((father / grandTotal) * 100),
-      motherPct: Math.round((mother / grandTotal) * 100),
-      youngPct: Math.round((youngTotal / grandTotal) * 100),
+      speciesList,
+      speciesMap,
+      allStats,
     };
   }, [filteredFacilities]);
+
+  // Active breakdown depending on user selection
+  const currentBreedingData = useMemo(() => {
+    if (selectedBreedingSpecies === 'ALL') {
+      return speciesBreedingStats.allStats;
+    }
+    const found = speciesBreedingStats.speciesList.find(s => s.name === selectedBreedingSpecies);
+    return found || speciesBreedingStats.allStats;
+  }, [selectedBreedingSpecies, speciesBreedingStats]);
 
   // 3. Legal & CITES Species Classification (Nghị định 84/2021/NĐ-CP & CITES)
   const legalCitesBreakdown = useMemo(() => {
@@ -991,49 +1060,191 @@ export default function AnalyticsView({ facilitiesList = [] }) {
           </div>
         </div>
 
-        {/* Gender & Breed Ratio Breakdown (5 cols) */}
-        <div className="lg:col-span-5 bg-white border border-slate-200 rounded-2xl p-3.5 sm:p-5 shadow-sm space-y-3.5">
-          <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
-            <div>
-              <h3 className="text-xs sm:text-sm font-extrabold text-slate-900 flex items-center gap-2">
-                <Feather className="w-4 h-4 text-emerald-600 flex-shrink-0" />
-                <span>Cấu Trúc Đàn & Giới Tính</span>
-              </h3>
-              <p className="text-[10px] sm:text-[11px] text-slate-500 font-medium">
-                Tỷ lệ Bố / Mẹ sinh sản & Động vật non / Hậu bị
-              </p>
-            </div>
-          </div>
+        {/* Gender & Breed Ratio Breakdown per Species (5 cols) */}
+        <div className="lg:col-span-5 bg-white border border-slate-200 rounded-2xl p-3.5 sm:p-5 shadow-sm space-y-3 flex flex-col justify-between">
+          <div className="space-y-3">
+            {/* Card Header with Title and Species Select Dropdown */}
+            <div className="flex items-center justify-between border-b border-slate-100 pb-2.5 gap-2 flex-wrap">
+              <div>
+                <h3 className="text-xs sm:text-sm font-extrabold text-slate-900 flex items-center gap-1.5">
+                  <Feather className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+                  <span>Cấu Trúc Đàn & Giới Tính</span>
+                </h3>
+                <p className="text-[10px] sm:text-[11px] text-slate-500 font-medium">
+                  Tỷ lệ Bố / Mẹ sinh sản & Động vật non / Hậu bị
+                </p>
+              </div>
 
-          <div className="grid grid-cols-2 gap-2 text-center">
-            <div className="bg-sky-50 border border-sky-200 rounded-xl p-2.5">
-              <span className="text-[10px] font-bold text-sky-700 uppercase block">Đực Bố (♂️)</span>
-              <span className="text-lg font-black text-sky-900 font-mono">{genderAgeBreakdown.father}</span>
-              <span className="text-[10px] text-sky-600 block mt-0.5">{genderAgeBreakdown.fatherPct}% tổng đàn</span>
+              {/* Species Selector Dropdown */}
+              <select
+                value={selectedBreedingSpecies}
+                onChange={(e) => setSelectedBreedingSpecies(e.target.value)}
+                className="text-xs bg-emerald-50 border border-emerald-300 font-bold text-emerald-950 px-2.5 py-1 rounded-xl shadow-2xs outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer max-w-[200px] truncate"
+              >
+                <option value="ALL">🌐 Tất cả loài (Toàn huyện)</option>
+                {speciesBreedingStats.speciesList.map((sp) => (
+                  <option key={sp.name} value={sp.name}>
+                    🐾 {sp.name} ({sp.grandTotal} con)
+                  </option>
+                ))}
+              </select>
             </div>
 
-            <div className="bg-pink-50 border border-pink-200 rounded-xl p-2.5">
-              <span className="text-[10px] font-bold text-pink-700 uppercase block">Cái Mẹ (♀️)</span>
-              <span className="text-lg font-black text-pink-900 font-mono">{genderAgeBreakdown.mother}</span>
-              <span className="text-[10px] text-pink-600 block mt-0.5">{genderAgeBreakdown.motherPct}% tổng đàn</span>
+            {/* Quick Horizontal Species Tabs / Pills */}
+            <div className="flex items-center gap-1 overflow-x-auto pb-1 text-[11px] scrollbar-none">
+              <button
+                type="button"
+                onClick={() => setSelectedBreedingSpecies('ALL')}
+                className={`px-2.5 py-1 rounded-lg font-bold transition-all whitespace-nowrap cursor-pointer ${
+                  selectedBreedingSpecies === 'ALL'
+                    ? 'bg-emerald-600 text-white shadow-xs'
+                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                }`}
+              >
+                Tất cả loài
+              </button>
+              {speciesBreedingStats.speciesList.map((sp) => (
+                <button
+                  type="button"
+                  key={sp.name}
+                  onClick={() => setSelectedBreedingSpecies(sp.name)}
+                  className={`px-2.5 py-1 rounded-lg font-bold transition-all whitespace-nowrap cursor-pointer ${
+                    selectedBreedingSpecies === sp.name
+                      ? 'bg-emerald-600 text-white shadow-xs'
+                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                  }`}
+                >
+                  {sp.name}
+                </button>
+              ))}
             </div>
-          </div>
 
-          <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3 flex items-center justify-between text-xs">
-            <div>
-              <span className="font-bold text-emerald-900 block">Tỷ lệ Phối Giống Sinh Sản</span>
-              <span className="text-[10px] text-emerald-700">Trung bình 1 Đực Bố phối với</span>
+            {/* Selected Species Information Header Badge */}
+            <div className="bg-slate-50 border border-slate-200/80 rounded-xl px-3 py-2 flex items-center justify-between text-xs">
+              <div className="min-w-0">
+                <span className="font-extrabold text-slate-900 truncate block">
+                  {currentBreedingData.name}
+                  {currentBreedingData.scientificName && currentBreedingData.scientificName !== 'Tổng hợp toàn huyện' && (
+                    <span className="text-[11px] font-normal italic text-slate-500 ml-1.5">
+                      ({currentBreedingData.scientificName})
+                    </span>
+                  )}
+                </span>
+                <span className="text-[10px] text-slate-500">
+                  {selectedBreedingSpecies === 'ALL' ? '37 cơ sở toàn huyện' : `Phân bố tại ${currentBreedingData.facilitiesCount} cơ sở nuôi`}
+                </span>
+              </div>
+              <div className="text-right flex-shrink-0">
+                <span className="text-[10px] font-bold text-slate-500 block">Tổng đàn</span>
+                <strong className="text-sm font-black text-emerald-800 font-mono">
+                  {currentBreedingData.grandTotal} <span className="text-[10px] font-sans font-normal">con</span>
+                </strong>
+              </div>
             </div>
-            <span className="text-base font-extrabold text-emerald-900 font-mono bg-white px-2.5 py-1 rounded-lg border border-emerald-300">
-              1 ♂ : {genderAgeBreakdown.ratioMotherToFather} ♀
-            </span>
-          </div>
 
-          <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 space-y-1 text-xs">
-            <div className="flex items-center justify-between text-slate-700 font-medium">
-              <span>🐣 Đàn non / Hậu bị / Khác:</span>
-              <strong className="font-mono text-slate-900">{genderAgeBreakdown.youngTotal} con ({genderAgeBreakdown.youngPct}%)</strong>
+            {/* Father & Mother 2-col Grid */}
+            <div className="grid grid-cols-2 gap-2 text-center">
+              <div className="bg-sky-50 border border-sky-200 rounded-xl p-2.5">
+                <span className="text-[10px] font-bold text-sky-700 uppercase block">Đực Bố (♂️)</span>
+                <span className="text-lg font-black text-sky-900 font-mono">{currentBreedingData.father}</span>
+                <span className="text-[10px] text-sky-600 block mt-0.5">{currentBreedingData.fatherPct}% đàn</span>
+              </div>
+
+              <div className="bg-pink-50 border border-pink-200 rounded-xl p-2.5">
+                <span className="text-[10px] font-bold text-pink-700 uppercase block">Cái Mẹ (♀️)</span>
+                <span className="text-lg font-black text-pink-900 font-mono">{currentBreedingData.mother}</span>
+                <span className="text-[10px] text-pink-600 block mt-0.5">{currentBreedingData.motherPct}% đàn</span>
+              </div>
             </div>
+
+            {/* Breeding Ratio Box for this specific species */}
+            <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3 flex items-center justify-between text-xs">
+              <div>
+                <span className="font-bold text-emerald-900 block">Tỷ lệ Phối Giống Sinh Sản</span>
+                <span className="text-[10px] text-emerald-700">
+                  {selectedBreedingSpecies === 'ALL' ? 'Trung bình chung: 1 Đực Bố phối với' : `Tỷ lệ ghép giống của ${currentBreedingData.name}:`}
+                </span>
+              </div>
+              <span className="text-base font-extrabold text-emerald-900 font-mono bg-white px-2.5 py-1 rounded-lg border border-emerald-300 shadow-2xs">
+                {currentBreedingData.father > 0 ? `1 ♂ : ${currentBreedingData.ratioMotherToFather} ♀` : 'Chưa có đực bố'}
+              </span>
+            </div>
+
+            {/* Young / Sub-adults breakdown */}
+            <div className="bg-slate-50 border border-slate-200 rounded-xl p-2.5 space-y-1.5 text-xs">
+              <div className="flex items-center justify-between text-slate-700 font-medium">
+                <span>🐣 Đàn non / Hậu bị / Khác:</span>
+                <strong className="font-mono text-slate-900">{currentBreedingData.youngTotal} con ({currentBreedingData.youngPct}%)</strong>
+              </div>
+              <div className="grid grid-cols-3 gap-1 pt-1.5 border-t border-slate-200/80 text-[11px] text-slate-600">
+                <div className="bg-white p-1 rounded border border-slate-200 text-center">
+                  <span className="block text-[10px] text-slate-400">Đực hậu bị</span>
+                  <strong className="font-mono text-sky-700">{currentBreedingData.otherMale || 0}</strong>
+                </div>
+                <div className="bg-white p-1 rounded border border-slate-200 text-center">
+                  <span className="block text-[10px] text-slate-400">Cái hậu bị</span>
+                  <strong className="font-mono text-pink-700">{currentBreedingData.otherFemale || 0}</strong>
+                </div>
+                <div className="bg-white p-1 rounded border border-slate-200 text-center">
+                  <span className="block text-[10px] text-slate-400">Chưa rõ tính</span>
+                  <strong className="font-mono text-slate-700">{currentBreedingData.otherUnknown || 0}</strong>
+                </div>
+              </div>
+            </div>
+
+            {/* Toggle Button for Species Comparison Table */}
+            <button
+              type="button"
+              onClick={() => setShowSpeciesBreedingTable(!showSpeciesBreedingTable)}
+              className="w-full flex items-center justify-between px-3 py-2 bg-slate-100 hover:bg-slate-200/80 rounded-xl text-xs font-bold text-slate-700 transition-all cursor-pointer"
+            >
+              <div className="flex items-center gap-1.5 text-emerald-800">
+                <Layers className="w-3.5 h-3.5" />
+                <span>Bảng so sánh cơ cấu đàn tất cả các loài ({speciesBreedingStats.speciesList.length} loài)</span>
+              </div>
+              {showSpeciesBreedingTable ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+            </button>
+
+            {/* Expandable Species Comparison Table */}
+            {showSpeciesBreedingTable && (
+              <div className="overflow-x-auto border border-slate-200 rounded-xl max-h-60 overflow-y-auto">
+                <table className="w-full text-left text-xs border-collapse">
+                  <thead className="bg-slate-100 text-slate-700 font-extrabold sticky top-0 border-b border-slate-200 text-[10px] uppercase">
+                    <tr>
+                      <th className="p-2">Tên loài</th>
+                      <th className="p-2 text-center">Tổng</th>
+                      <th className="p-2 text-center text-sky-700">Đực bố</th>
+                      <th className="p-2 text-center text-pink-700">Cái mẹ</th>
+                      <th className="p-2 text-center text-emerald-800">Tỷ lệ ♂:♀</th>
+                      <th className="p-2 text-center">Hậu bị/Non</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 text-[11px]">
+                    {speciesBreedingStats.speciesList.map((sp) => (
+                      <tr
+                        key={sp.name}
+                        onClick={() => setSelectedBreedingSpecies(sp.name)}
+                        className={`hover:bg-emerald-50/50 cursor-pointer transition-colors ${
+                          selectedBreedingSpecies === sp.name ? 'bg-emerald-50 font-bold' : ''
+                        }`}
+                      >
+                        <td className="p-2">
+                          <strong className="text-slate-900">{sp.name}</strong>
+                          <span className="block text-[10px] text-slate-400 font-normal italic">{sp.scientificName}</span>
+                        </td>
+                        <td className="p-2 text-center font-mono font-bold text-slate-800">{sp.grandTotal}</td>
+                        <td className="p-2 text-center font-mono text-sky-700">{sp.father}</td>
+                        <td className="p-2 text-center font-mono text-pink-700">{sp.mother}</td>
+                        <td className="p-2 text-center font-mono font-black text-emerald-700">
+                          {sp.father > 0 ? `1 : ${sp.ratioMotherToFather}` : '---'}
+                        </td>
+                        <td className="p-2 text-center font-mono text-slate-600">{sp.youngTotal}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
         </div>
       </div>
