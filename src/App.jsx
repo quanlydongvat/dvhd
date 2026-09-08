@@ -1434,6 +1434,37 @@ export default function App() {
                   }
                 }}
               />
+            ) : (!currentUser && !isQrPublicScan) ? (
+              <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-12 text-center space-y-6 max-w-2xl mx-auto my-8 shadow-xl animate-in fade-in duration-300">
+                <div className="w-16 h-16 bg-emerald-100 text-emerald-700 border border-emerald-300 rounded-2xl flex items-center justify-center mx-auto shadow-md">
+                  <span className="text-3xl">📱</span>
+                </div>
+                <div className="space-y-2">
+                  <h3 className="text-lg sm:text-2xl font-black text-slate-900 tracking-tight">
+                    HẠT KIỂM LÂM KHU VỰC KRÔNG BÔNG
+                  </h3>
+                  <p className="text-xs sm:text-sm font-bold text-emerald-800">
+                    Ứng dụng Quản lý & Sổ theo dõi Động vật hoang dã điện tử (Mẫu II)
+                  </p>
+                  <p className="text-xs sm:text-sm text-slate-500 max-w-md mx-auto leading-relaxed pt-2">
+                    Để xem Sổ Mẫu II chi tiết của một cơ sở nuôi cụ thể, vui lòng <strong>quét mã QR định danh</strong> dán tại cơ sở đó hoặc <strong>Đăng nhập tài khoản</strong> để quản lý.
+                  </p>
+                </div>
+                <div className="flex flex-wrap items-center justify-center gap-3 pt-3">
+                  <button
+                    onClick={() => setIsLoginModalOpen(true)}
+                    className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-2xl font-extrabold text-xs shadow-lg transition-all hover:scale-105 active:scale-95 cursor-pointer"
+                  >
+                    <span>🔑 Đăng nhập tài khoản</span>
+                  </button>
+                  <button
+                    onClick={() => setCurrentView('HOME')}
+                    className="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 px-5 py-3 rounded-2xl font-bold text-xs transition-all cursor-pointer"
+                  >
+                    <span>🏠 Xem Trang Chủ & Thống kê</span>
+                  </button>
+                </div>
+              </div>
             ) : (
               <TableView
                 rows={rows}

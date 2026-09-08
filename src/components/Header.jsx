@@ -249,22 +249,31 @@ export default function Header({
         {/* 2-Level Hierarchical Facility Info Card & Species Tabs */}
         {currentView === 'LOGBOOK' && (
           isCompactHeaderMode ? (
-            /* Sleek 1-Line Compact Facility Banner for QR Scan Mode */
-            <div className="mt-2 bg-gradient-to-r from-slate-900 via-emerald-950 to-slate-900 text-white rounded-xl px-3 py-2 border border-emerald-500/40 shadow-sm flex flex-wrap items-center justify-between gap-2 text-xs animate-in fade-in duration-300">
-              <div className="flex items-center gap-2 flex-wrap min-w-0">
-                <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 px-2 py-0.5 rounded-md font-black text-[10px] uppercase tracking-wider">
-                  🏢 CƠ SỞ NUÔI
-                </span>
-                <strong className="text-sm text-emerald-300 font-black tracking-tight">{facilityInfo.ownerName || 'Chưa chọn cơ sở'}</strong>
-                {facilityInfo.registrationCode && (
-                  <span className="text-slate-300 font-mono text-[11px] bg-white/10 px-2 py-0.5 rounded border border-white/10 font-bold">
-                    Mã: {facilityInfo.registrationCode}
+            /* Sleek 1-Line Compact Banner */
+            <div className="mt-2 bg-gradient-to-r from-slate-900 via-emerald-950 to-slate-900 text-white rounded-xl px-3.5 py-2 border border-emerald-500/40 shadow-sm flex flex-wrap items-center justify-between gap-2 text-xs animate-in fade-in duration-300">
+              {!currentUser && !isQrPublicScan ? (
+                <div className="flex items-center gap-2 flex-wrap min-w-0">
+                  <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 px-2 py-0.5 rounded-md font-black text-[10px] uppercase tracking-wider">
+                    🏛️ HẠT KIỂM LÂM KHU VỰC KRÔNG BÔNG
                   </span>
-                )}
-                <span className="text-slate-300 text-[11px] truncate max-w-md font-medium">
-                  📍 {facilityInfo.address || 'Chưa có địa chỉ'} {facilityInfo.commune ? `(${facilityInfo.commune})` : ''}
-                </span>
-              </div>
+                  <strong className="text-xs sm:text-sm text-emerald-300 font-extrabold tracking-tight">Hệ thống Quản lý Động vật hoang dã điện tử (TT 85)</strong>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2 flex-wrap min-w-0">
+                  <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 px-2 py-0.5 rounded-md font-black text-[10px] uppercase tracking-wider">
+                    🏢 CƠ SỞ NUÔI
+                  </span>
+                  <strong className="text-sm text-emerald-300 font-black tracking-tight">{facilityInfo.ownerName || 'Chưa chọn cơ sở'}</strong>
+                  {facilityInfo.registrationCode && (
+                    <span className="text-slate-300 font-mono text-[11px] bg-white/10 px-2 py-0.5 rounded border border-white/10 font-bold">
+                      Mã: {facilityInfo.registrationCode}
+                    </span>
+                  )}
+                  <span className="text-slate-300 text-[11px] truncate max-w-md font-medium">
+                    📍 {facilityInfo.address || 'Chưa có địa chỉ'} {facilityInfo.commune ? `(${facilityInfo.commune})` : ''}
+                  </span>
+                </div>
+              )}
             </div>
           ) : (
             /* Full Facility Selector Controls & Dropdowns */
