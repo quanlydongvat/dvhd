@@ -12,7 +12,7 @@
     <!-- Inline Auto-Purge Cache & Unregister SW Script to fix white screen -->
     <script>
       (function() {
-        const CURRENT_APP_VERSION = 'v2026.08.26_FORCE_PURGE_v9999';
+        const CURRENT_APP_VERSION = 'v2026.09.08_FORCE_PURGE_v10001';
         if (localStorage.getItem('wildlife_app_ver') !== CURRENT_APP_VERSION) {
           localStorage.setItem('wildlife_app_ver', CURRENT_APP_VERSION);
           if ('caches' in window) {
@@ -27,6 +27,8 @@
               }
             });
           }
+          // Force reload page once to load new index.html & JS bundle
+          window.location.reload(true);
         }
       })();
     </script>
