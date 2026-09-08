@@ -1353,6 +1353,8 @@ export default function App() {
             pendingRequestsCount={pendingRequests.length}
             onOpenPendingModal={() => setIsPendingModalOpen(true)}
             onLogout={handleLogout}
+            isQrPublicScan={!!isQrPublicScan}
+            onOpenLogin={() => setIsLoginModalOpen(true)}
           />
 
             {/* Main Content Area */}
