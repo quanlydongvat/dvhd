@@ -13,7 +13,7 @@ export default function CitesSummaryTable({ facilitiesList = [] }) {
     facilitiesList.forEach((fac) => {
       if (selectedCommune !== 'ALL' && fac.commune !== selectedCommune) return;
 
-      fac.speciesList.forEach((sp) => {
+      (fac.speciesList || []).forEach((sp) => {
         const canonical = getCanonicalSpecies(sp.vietnameseName, sp.scientificName);
         const key = canonical.key;
         const displayName = canonical.vietnameseName;

@@ -116,7 +116,7 @@ export default function MapView({
     let hasBird = false;
     let hasMammal = false;
 
-    fac.speciesList.forEach((sp) => {
+    (fac.speciesList || []).forEach((sp) => {
       const processedRows = computeLogbookTable(sp.baseline || {}, sp.fluctuations || []);
       const lastRow = processedRows[processedRows.length - 1];
       const spTotal = lastRow ? (lastRow.total || 0) : 0;

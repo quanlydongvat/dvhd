@@ -82,7 +82,7 @@ export default function AnalyticsView({ facilitiesList = [] }) {
     let initialTotal = 0; // Accumulated total right before the start of selectedYear
 
     filteredFacilities.forEach((fac) => {
-      fac.speciesList.forEach((sp) => {
+      (fac.speciesList || []).forEach((sp) => {
         const b = sp.baseline || {};
         let currentSpTotal =
           (Number(b.father) || 0) +
@@ -176,7 +176,7 @@ export default function AnalyticsView({ facilitiesList = [] }) {
     let totalOtherDec = 0;
 
     filteredFacilities.forEach((fac) => {
-      fac.speciesList.forEach((sp) => {
+      (fac.speciesList || []).forEach((sp) => {
         const processedRows = computeLogbookTable(sp.baseline || {}, sp.fluctuations || []);
         processedRows.forEach((row) => {
           if (row.isBaseline || !row.date) return;
@@ -266,7 +266,7 @@ export default function AnalyticsView({ facilitiesList = [] }) {
       facilitiesList.forEach((fac) => {
         if ((fac.commune || '') === cName) {
           facCount++;
-          fac.speciesList.forEach((sp) => {
+          (fac.speciesList || []).forEach((sp) => {
             const processedRows = computeLogbookTable(sp.baseline || {}, sp.fluctuations || []);
             const lastRow = processedRows[processedRows.length - 1];
             if (lastRow) total += lastRow.total;
@@ -285,7 +285,7 @@ export default function AnalyticsView({ facilitiesList = [] }) {
     const speciesMap = {};
 
     filteredFacilities.forEach((fac) => {
-      fac.speciesList.forEach((sp) => {
+      (fac.speciesList || []).forEach((sp) => {
         const canonical = getCanonicalSpecies(sp.vietnameseName, sp.scientificName);
         const name = canonical.vietnameseName;
         const processedRows = computeLogbookTable(sp.baseline || {}, sp.fluctuations || []);
@@ -308,7 +308,7 @@ export default function AnalyticsView({ facilitiesList = [] }) {
       let facTotal = 0;
       const spList = [];
 
-      fac.speciesList.forEach((sp) => {
+      (fac.speciesList || []).forEach((sp) => {
         const processedRows = computeLogbookTable(sp.baseline || {}, sp.fluctuations || []);
         const lastRow = processedRows[processedRows.length - 1];
         const count = lastRow ? lastRow.total : 0;
@@ -365,18 +365,18 @@ export default function AnalyticsView({ facilitiesList = [] }) {
 
         const processedRows = computeLogbookTable(sp.baseline || {}, sp.fluctuations || []);
         const lastRow = processedRows[processedRows.length - 1];
-        if (lastRow) {
-          const f = lastRow.father || 0;
-          const m = lastRow.mother || 0;
-          const om = lastRow.otherMale || 0;
-          const of = lastRow.otherFemale || 0;
-          const ou = lastRow.otherUnknown || 0;
+        if (lastRow && speciesMap[key]) {
+          const f = Number(lastRow.father) || 0;
+          const m = Number(lastRow.mother) || 0;
+          const om = Number(lastRow.otherMale) || 0;
+          const of = Number(lastRow.otherFemale) || 0;
+          const ou = Number(lastRow.otherUnknown) || 0;
 
-          speciesMap[name].father += f;
-          speciesMap[name].mother += m;
-          speciesMap[name].otherMale += om;
-          speciesMap[name].otherFemale += of;
-          speciesMap[name].otherUnknown += ou;
+          speciesMap[key].father += f;
+          speciesMap[key].mother += m;
+          speciesMap[key].otherMale += om;
+          speciesMap[key].otherFemale += of;
+          speciesMap[key].otherUnknown += ou;
 
           allFather += f;
           allMother += m;
@@ -453,7 +453,7 @@ export default function AnalyticsView({ facilitiesList = [] }) {
     let groupNormalCount = 0; // ĐV Thông thường (Chim chào mào, chim cu gáy...)
 
     filteredFacilities.forEach((fac) => {
-      fac.speciesList.forEach((sp) => {
+      (fac.speciesList || []).forEach((sp) => {
         const processedRows = computeLogbookTable(sp.baseline || {}, sp.fluctuations || []);
         const lastRow = processedRows[processedRows.length - 1];
         const count = lastRow ? lastRow.total : 0;
@@ -484,7 +484,7 @@ export default function AnalyticsView({ facilitiesList = [] }) {
     let other = 0;
 
     filteredFacilities.forEach((fac) => {
-      fac.speciesList.forEach((sp) => {
+      (fac.speciesList || []).forEach((sp) => {
         const processedRows = computeLogbookTable(sp.baseline || {}, sp.fluctuations || []);
         processedRows.forEach((row) => {
           if (row.isBaseline || !row.date) return;

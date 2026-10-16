@@ -136,7 +136,7 @@ export default function SummaryView({
     if (cat === 'BIRD') birdFacilitiesCount++;
     else mammalFacilitiesCount++;
 
-    fac.speciesList.forEach((sp) => {
+    (fac.speciesList || []).forEach((sp) => {
       const processedRows = computeLogbookTable(sp.baseline || {}, sp.fluctuations || []);
       const lastRow = processedRows[processedRows.length - 1];
 
@@ -170,7 +170,7 @@ export default function SummaryView({
       if (cat === 'BIRD') communeBirdFacs++;
       else communeMammalFacs++;
 
-      fac.speciesList.forEach((sp) => {
+      (fac.speciesList || []).forEach((sp) => {
         const processedRows = computeLogbookTable(sp.baseline || {}, sp.fluctuations || []);
         const lastRow = processedRows[processedRows.length - 1];
         communeTotalAnimals += lastRow ? (lastRow.total || 0) : 0;
