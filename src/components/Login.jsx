@@ -118,7 +118,7 @@ export default function Login({ onLoginSuccess, onCancel, isEmbedded = false }) 
   const loginCard = (
     <div className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl w-full max-w-md overflow-hidden border border-emerald-500/20 z-10 mx-auto">
       {/* Header */}
-        <div className="bg-gradient-to-br from-emerald-800 via-emerald-700 to-teal-800 p-7 sm:p-8 text-center text-white relative overflow-hidden">
+        <div className={`bg-gradient-to-br from-emerald-800 via-emerald-700 to-teal-800 ${isEmbedded ? 'p-5 sm:p-6' : 'p-7 sm:p-8'} text-center text-white relative overflow-hidden`}>
           <div className="absolute -right-8 -top-8 w-32 h-32 bg-white/10 rounded-full blur-xl pointer-events-none" />
 
           {onCancel && (
@@ -133,8 +133,8 @@ export default function Login({ onLoginSuccess, onCancel, isEmbedded = false }) 
           
           <div className="relative z-10 flex flex-col items-center">
             {/* Official Vietnam Forest Protection Badge Logo */}
-            <div className="mb-3.5 relative group">
-              <div className="w-20 h-20 sm:w-24 sm:h-24 mx-auto flex items-center justify-center p-1.5 bg-white/15 rounded-2xl border border-white/30 shadow-xl backdrop-blur-md">
+            <div className="mb-2.5 relative group">
+              <div className={`${isEmbedded ? 'w-14 h-14 sm:w-16 sm:h-16' : 'w-20 h-20 sm:w-24 sm:h-24'} mx-auto flex items-center justify-center p-1 bg-white/15 rounded-2xl border border-white/30 shadow-xl backdrop-blur-md`}>
                 <img
                   src="./images/logo_kiem_lam.png"
                   alt="Phù Hiệu Kiểm Lâm Việt Nam"

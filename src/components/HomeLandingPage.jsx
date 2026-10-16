@@ -1,44 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { ShieldCheck, Sparkles, MapPin, LogIn, QrCode, ChevronRight, Trees, Leaf } from 'lucide-react';
+import React from 'react';
+import { LogIn, Trees, Lock } from 'lucide-react';
 import Login from './Login';
 
 export default function HomeLandingPage({ onLoginSuccess }) {
-  // Animated text state - cycle through flash colors
-  const [glowPhase, setGlowPhase] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setGlowPhase((prev) => (prev + 1) % 360);
-    }, 50);
-    return () => clearInterval(interval);
-  }, []);
-
-  // Split title into individual characters for staggered animation
-  const titleText = 'HẠT KIỂM LÂM KHU VỰC KRÔNG BÔNG';
-  const titleChars = titleText.split('');
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-emerald-950 to-slate-950 text-white flex flex-col font-sans antialiased overflow-hidden relative">
-      
-      {/* ===== ANIMATED BACKGROUND PARTICLES ===== */}
-      <div className="landing-particles pointer-events-none" aria-hidden="true">
-        <div className="landing-particle landing-particle-1" />
-        <div className="landing-particle landing-particle-2" />
-        <div className="landing-particle landing-particle-3" />
-        <div className="landing-particle landing-particle-4" />
-        <div className="landing-particle landing-particle-5" />
-        <div className="landing-particle landing-particle-6" />
-      </div>
-
-      {/* ===== AMBIENT GLOW ORBS ===== */}
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-emerald-950 to-slate-950 text-white flex flex-col font-sans antialiased overflow-x-hidden relative">
+      {/* Background ambient glow orbs */}
       <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-emerald-500/10 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-amber-500/8 rounded-full blur-[100px] pointer-events-none" />
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-teal-500/5 rounded-full blur-[150px] pointer-events-none" />
 
       {/* ===== TOP NAV BAR ===== */}
-      <nav className="relative z-20 px-4 sm:px-8 py-4 flex items-center justify-between border-b border-white/5">
+      <nav className="relative z-20 px-4 sm:px-8 py-3.5 flex items-center justify-between border-b border-white/5 backdrop-blur-md">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 p-1.5 shadow-lg flex items-center justify-center">
+          <div className="w-10 h-10 sm:w-11 sm:h-11 bg-white/10 backdrop-blur-xl rounded-xl border border-white/20 p-1.5 shadow-lg flex items-center justify-center flex-shrink-0">
             <img
               src="./images/logo_kiem_lam.png"
               alt="Logo Kiểm Lâm"
@@ -46,167 +21,127 @@ export default function HomeLandingPage({ onLoginSuccess }) {
               onError={(e) => { e.target.style.display = 'none'; }}
             />
           </div>
-          <div>
-            <p className="text-[10px] sm:text-xs font-bold text-emerald-300/80 uppercase tracking-widest">Chi cục Kiểm lâm Đắk Lắk</p>
-            <p className="text-[10px] text-white/50 font-medium">Ứng dụng Quản lý ĐVHD Mẫu II</p>
-          </div>
+          <span className="text-sm sm:text-base font-black text-emerald-200 tracking-wide uppercase">
+            HẠT KIỂM LÂM KHU VỰC KRÔNG BÔNG
+          </span>
         </div>
+
         <button
           onClick={() => document.getElementById('login-form-section')?.scrollIntoView({ behavior: 'smooth' })}
-          className="flex items-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-xl text-white px-4 py-2.5 rounded-xl text-xs font-bold border border-white/15 hover:border-white/30 transition-all duration-300 active:scale-95 cursor-pointer"
+          className="flex items-center gap-2 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold border border-emerald-400/30 transition-all duration-300 active:scale-95 cursor-pointer"
         >
           <LogIn className="w-4 h-4" />
-          <span className="hidden sm:inline">Đăng nhập</span>
+          <span>Đăng nhập</span>
         </button>
       </nav>
 
-      {/* ===== HERO SECTION ===== */}
-      <main className="flex-1 flex flex-col items-center justify-center relative z-10 px-4 sm:px-8 py-6 sm:py-10">
-        
-        {/* VIDEO BANNER */}
-        <div className="w-full max-w-5xl mb-6 sm:mb-8 relative group">
-          <div className="relative rounded-3xl overflow-hidden border border-emerald-500/20 shadow-2xl shadow-emerald-900/30 aspect-video max-h-[380px] sm:max-h-[420px]">
-            <video
-              autoPlay
-              loop
-              muted
-              playsInline
-              preload="metadata"
-              poster="./images/banner.jpg"
-              className="w-full h-full object-cover object-center block"
-            >
-              <source src="./banner.mp4" type="video/mp4" />
-              <source src="./images/banner.mp4" type="video/mp4" />
-              <img
-                src="./images/banner.jpg"
-                alt="Banner Hạt Kiểm lâm khu vực Krông Bông"
-                className="w-full h-full object-cover object-center block"
-              />
-            </video>
-            {/* Gradient overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-transparent pointer-events-none" />
-            <div className="absolute inset-0 bg-gradient-to-r from-emerald-950/40 via-transparent to-emerald-950/40 pointer-events-none" />
-            
-            {/* Decorative corner accents */}
-            <div className="absolute top-3 left-3 w-8 h-8 border-t-2 border-l-2 border-emerald-400/40 rounded-tl-xl pointer-events-none" />
-            <div className="absolute top-3 right-3 w-8 h-8 border-t-2 border-r-2 border-emerald-400/40 rounded-tr-xl pointer-events-none" />
-            <div className="absolute bottom-3 left-3 w-8 h-8 border-b-2 border-l-2 border-amber-400/40 rounded-bl-xl pointer-events-none" />
-            <div className="absolute bottom-3 right-3 w-8 h-8 border-b-2 border-r-2 border-amber-400/40 rounded-br-xl pointer-events-none" />
-          </div>
-        </div>
-
-        {/* ===== FLASH TITLE ===== */}
-        <div className="text-center space-y-4 sm:space-y-5 max-w-4xl mx-auto mb-6 sm:mb-8">
+      {/* ===== MAIN CONTENT: 2-COLUMN ON DESKTOP, STACKED ON MOBILE ===== */}
+      <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 lg:py-10 flex flex-col justify-center relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
           
-          {/* Badge pills */}
-          <div className="flex flex-wrap items-center justify-center gap-2 text-[10px] sm:text-xs landing-fade-in" style={{ animationDelay: '0.2s' }}>
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/15 border border-emerald-400/30 text-emerald-300 font-extrabold backdrop-blur-md">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-              <span>TT 85/2025/TT-BNNMT</span>
-            </span>
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/15 border border-amber-400/30 text-amber-300 font-extrabold backdrop-blur-md">
-              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-              <span>Nuôi Sinh Sản & Sinh Trưởng</span>
-            </span>
-          </div>
-
-          {/* Logo chính thức */}
-          <div className="landing-fade-in" style={{ animationDelay: '0.4s' }}>
-            <div className="w-20 h-20 sm:w-24 sm:h-24 mx-auto bg-white/10 backdrop-blur-xl rounded-3xl border border-white/20 p-2.5 shadow-2xl landing-logo-pulse">
-              <img
-                src="./images/logo_kiem_lam.png"
-                alt="Phù Hiệu Kiểm Lâm Việt Nam"
-                className="w-full h-full object-contain drop-shadow-lg"
-                onError={(e) => { e.target.style.display = 'none'; }}
-              />
-            </div>
-          </div>
-
-          {/* ===== ANIMATED FLASH TITLE ===== */}
-          <div className="landing-fade-in" style={{ animationDelay: '0.6s' }}>
-            <h1 className="landing-flash-title text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight uppercase leading-tight" aria-label={titleText}>
-              {titleChars.map((char, i) => (
-                <span
-                  key={i}
-                  className="landing-flash-char"
-                  style={{ animationDelay: `${i * 0.05}s` }}
-                >
-                  {char === ' ' ? '\u00A0' : char}
-                </span>
-              ))}
-            </h1>
-            {/* Shimmer overlay on title */}
-            <div className="landing-shimmer-overlay" aria-hidden="true" />
-          </div>
-
-          {/* Subtitle */}
-          <div className="landing-fade-in" style={{ animationDelay: '0.8s' }}>
-            <p className="text-sm sm:text-base md:text-lg text-emerald-100/80 font-semibold max-w-2xl mx-auto leading-relaxed">
-              Ứng Dụng <span className="text-amber-300 font-extrabold">Sổ Theo Dõi Quản Lý</span> Động Vật Hoang Dã Điện Tử
-            </p>
-            <p className="text-xs sm:text-sm text-white/40 font-medium mt-1.5">
-              Hệ thống quản lý hiện trạng & biến động tăng giảm đàn theo Thông tư 85/2025/TT-BNNMT
-            </p>
-          </div>
-        </div>
-
-        {/* ===== KHUNG ĐĂNG NHẬP TRỰC TIẾP ===== */}
-        <div id="login-form-section" className="w-full max-w-md mx-auto mb-8 sm:mb-10 z-20 landing-fade-in" style={{ animationDelay: '0.9s' }}>
-          <Login onLoginSuccess={onLoginSuccess} isEmbedded={true} />
-        </div>
-
-        {/* ===== WILDLIFE SHOWCASE CARDS ===== */}
-        <div className="w-full max-w-4xl grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-6 landing-fade-in" style={{ animationDelay: '1.2s' }}>
-          {[
-            { emoji: '🐆', name: 'Cầy Vòi Hương', img: './images/cay_voi.jpg', color: 'emerald' },
-            { emoji: '🦔', name: 'Nhím', img: './images/nhim.jpg', color: 'amber' },
-            { emoji: '🐦', name: 'Chào Mào', img: './images/chao_mao.jpg', color: 'teal' },
-            { emoji: '🐁', name: 'Dúi Mốc', img: './images/dui_moc.jpg', color: 'rose' },
-          ].map((animal, idx) => (
-            <div
-              key={idx}
-              className="landing-animal-card group relative rounded-2xl overflow-hidden border border-white/10 hover:border-emerald-400/30 bg-white/5 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-500 cursor-default"
-              style={{ animationDelay: `${1.2 + idx * 0.1}s` }}
-            >
-              <div className="aspect-[4/3] overflow-hidden">
+          {/* LEFT COLUMN: BANNER, TITLE & WILDLIFE CARDS */}
+          <div className="lg:col-span-7 flex flex-col space-y-6">
+            
+            {/* VIDEO BANNER */}
+            <div className="relative rounded-3xl overflow-hidden border border-emerald-500/20 shadow-2xl shadow-emerald-950/60 aspect-video max-h-[380px] w-full bg-slate-900/60 group">
+              <video
+                autoPlay
+                loop
+                muted
+                playsInline
+                preload="metadata"
+                poster="./images/banner.jpg"
+                className="w-full h-full object-cover object-center block"
+              >
+                <source src="./banner.mp4" type="video/mp4" />
+                <source src="./images/banner.mp4" type="video/mp4" />
                 <img
-                  src={animal.img}
-                  alt={animal.name}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                  loading="lazy"
+                  src="./images/banner.jpg"
+                  alt="Banner Hạt Kiểm lâm khu vực Krông Bông"
+                  className="w-full h-full object-cover object-center block"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent" />
-              </div>
-              <div className="absolute bottom-0 left-0 right-0 p-2.5 sm:p-3">
-                <div className="flex items-center gap-1.5">
-                  <span className="text-base sm:text-lg">{animal.emoji}</span>
-                  <span className="text-xs sm:text-sm font-extrabold text-white truncate drop-shadow-md">{animal.name}</span>
-                </div>
-              </div>
+              </video>
+              
+              {/* Subtle gradient overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent pointer-events-none" />
+              
+              {/* Corner accents */}
+              <div className="absolute top-3 left-3 w-7 h-7 border-t-2 border-l-2 border-emerald-400/40 rounded-tl-lg pointer-events-none" />
+              <div className="absolute top-3 right-3 w-7 h-7 border-t-2 border-r-2 border-emerald-400/40 rounded-tr-lg pointer-events-none" />
+              <div className="absolute bottom-3 left-3 w-7 h-7 border-b-2 border-l-2 border-amber-400/40 rounded-bl-lg pointer-events-none" />
+              <div className="absolute bottom-3 right-3 w-7 h-7 border-b-2 border-r-2 border-amber-400/40 rounded-br-lg pointer-events-none" />
             </div>
-          ))}
-        </div>
 
-        {/* Info note */}
-        <div className="text-center landing-fade-in" style={{ animationDelay: '1.4s' }}>
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-white/50 text-[10px] sm:text-xs font-semibold backdrop-blur-sm">
-            <Trees className="w-3.5 h-3.5 text-emerald-400/60" />
-            <span>Vui lòng <strong className="text-emerald-300">đăng nhập</strong> hoặc <strong className="text-amber-300">quét mã QR</strong> dán tại cơ sở nuôi để xem thông tin chi tiết</span>
+            {/* TITLE & DESCRIPTION */}
+            <div className="space-y-2">
+              <h1 className="text-xl sm:text-2xl lg:text-3xl font-black uppercase tracking-tight bg-gradient-to-r from-amber-300 via-emerald-300 to-teal-200 bg-clip-text text-transparent">
+                Hạt Kiểm lâm khu vực Krông Bông
+              </h1>
+              <p className="text-sm sm:text-base text-emerald-100/90 font-semibold leading-relaxed">
+                Ứng Dụng <span className="text-amber-300 font-extrabold">Sổ Theo Dõi Quản Lý</span> Động Vật Hoang Dã Điện Tử
+              </p>
+              <p className="text-xs sm:text-sm text-white/50 font-medium">
+                Hệ thống theo dõi hiện trạng & biến động tăng giảm đàn động vật hoang dã trên địa bàn quản lý.
+              </p>
+            </div>
+
+            {/* WILDLIFE SHOWCASE CARDS */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
+              {[
+                { emoji: '🐆', name: 'Cầy Vòi Hương', img: './images/cay_voi.jpg' },
+                { emoji: '🦔', name: 'Nhím', img: './images/nhim.jpg' },
+                { emoji: '🐦', name: 'Chào Mào', img: './images/chao_mao.jpg' },
+                { emoji: '🐁', name: 'Dúi Mốc', img: './images/dui_moc.jpg' },
+              ].map((animal, idx) => (
+                <div
+                  key={idx}
+                  className="group relative rounded-2xl overflow-hidden border border-white/10 hover:border-emerald-400/40 bg-white/5 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300 cursor-default"
+                >
+                  <div className="aspect-[4/3] overflow-hidden">
+                    <img
+                      src={animal.img}
+                      alt={animal.name}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/20 to-transparent" />
+                  </div>
+                  <div className="absolute bottom-0 left-0 right-0 p-2 sm:p-2.5">
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-sm sm:text-base">{animal.emoji}</span>
+                      <span className="text-xs font-extrabold text-white truncate drop-shadow-md">{animal.name}</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Hint Note */}
+            <div className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-white/60 text-xs font-medium backdrop-blur-sm w-fit">
+              <Trees className="w-4 h-4 text-emerald-400/80 flex-shrink-0" />
+              <span>Cán bộ Kiểm lâm hoặc Chủ cơ sở vui lòng đăng nhập để thực hiện quản lý và khai báo biến động.</span>
+            </div>
           </div>
+
+          {/* RIGHT COLUMN: KHUNG ĐĂNG NHẬP (EYE-LEVEL ON DESKTOP) */}
+          <div id="login-form-section" className="lg:col-span-5 flex justify-center w-full">
+            <div className="w-full max-w-md">
+              <Login onLoginSuccess={onLoginSuccess} isEmbedded={true} />
+            </div>
+          </div>
+
         </div>
       </main>
 
       {/* ===== FOOTER ===== */}
       <footer className="relative z-10 border-t border-white/5 py-4 text-center">
         <div className="space-y-1 px-4">
-          <p className="text-xs font-extrabold text-emerald-400/70">© Hạt Kiểm lâm khu vực Krông Bông</p>
-          <p className="text-[10px] text-white/30 font-medium">
+          <p className="text-xs font-extrabold text-emerald-400/80">© Hạt Kiểm lâm khu vực Krông Bông</p>
+          <p className="text-[10px] text-white/40 font-medium">
             Sử dụng và lưu hành trong phạm vi quản lý của đơn vị.
           </p>
         </div>
       </footer>
-
-      {/* Login Modal handled by parent */}
     </div>
   );
 }
