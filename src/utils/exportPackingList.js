@@ -7,7 +7,7 @@ import { saveAs } from 'file-saver';
  */
 export async function exportPackingListToExcel(packingListData = []) {
   const workbook = new ExcelJS.Workbook();
-  workbook.creator = 'Hạt Kiểm Lâm Krông Bông';
+  workbook.creator = 'Hạt Kiểm lâm khu vực Krông Bông';
   workbook.created = new Date();
 
   const worksheet = workbook.addWorksheet('Sổ theo dõi', {

@@ -1100,7 +1100,7 @@ export default function App() {
             otherFemale: Number(formData.otherFemale) || 0,
             otherUnknown: Number(formData.otherUnknown) || 0,
             note: 'Hiện trạng đăng ký ban đầu',
-            verifier: 'Hạt Kiểm lâm Huyện Krông Bông',
+            verifier: 'Hạt Kiểm lâm khu vực Krông Bông',
           },
           fluctuations: [],
         },

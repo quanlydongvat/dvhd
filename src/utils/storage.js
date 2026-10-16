@@ -1,4 +1,4 @@
-/**
+﻿/**
  * LocalStorage manager and sample demo data for Wildlife Monitoring Application
  */
 
@@ -213,7 +213,7 @@ export const REAL_FACILITIES_DATA = [
           "mother": 5,
           "otherMale": 8,
           "father": 4,
-          "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+          "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
           "date": "2023-03-17",
           "note": "Số lượng vật nuôi theo chứng nhận cơ sở",
           "otherUnknown": 2
@@ -463,7 +463,7 @@ export const REAL_FACILITIES_DATA = [
           "father": 2,
           "otherMale": 0,
           "date": "2026-05-08",
-          "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+          "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
           "otherUnknown": 0,
           "note": "Hiện trạng nuôi ban đầu"
         }
@@ -488,7 +488,7 @@ export const REAL_FACILITIES_DATA = [
           "mother": 7,
           "note": "Hiện trạng nuôi đăng ký",
           "otherFemale": 16,
-          "verifier": "Hạt Kiểm lâm Huyện Krông Bông"
+          "verifier": "Hạt Kiểm lâm khu vực Krông Bông"
         },
         "scientificName": "Paradoxurus hermaphroditus",
         "vietnameseName": "Cầy vòi Hương",
@@ -626,7 +626,7 @@ export const REAL_FACILITIES_DATA = [
         "vietnameseName": "Cầy vòi Hương",
         "scientificName": "Paradoxurus hermaphroditus",
         "baseline": {
-          "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+          "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
           "otherFemale": 9,
           "father": 2,
           "otherMale": 11,
@@ -670,7 +670,7 @@ export const REAL_FACILITIES_DATA = [
           "date": "2025-07-31",
           "father": 6,
           "note": "Hiện trạng nuôi đăng ký",
-          "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+          "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
           "mother": 7,
           "otherMale": 7,
           "otherFemale": 10
@@ -699,7 +699,7 @@ export const REAL_FACILITIES_DATA = [
         "scientificName": "Paguma larvata",
         "baseline": {
           "date": "2026-03-17",
-          "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+          "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
           "note": "Hiện trạng nuôi đăng ký",
           "otherFemale": 0,
           "otherMale": 0,
@@ -718,7 +718,7 @@ export const REAL_FACILITIES_DATA = [
           "otherUnknown": 0,
           "father": 9,
           "mother": 34,
-          "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+          "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
           "otherMale": 0,
           "note": "Hiện trạng nuôi loài Dúi má đào",
           "date": "2026-01-01",
@@ -1066,7 +1066,7 @@ export const REAL_FACILITIES_DATA = [
         "citesAppendix": "Khai báo kiểm lâm",
         "baseline": {
           "note": "Số lượng Dúi mốc lớn hiện có",
-          "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+          "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
           "otherMale": 0,
           "date": "2023-11-02",
           "father": 9,
@@ -1100,7 +1100,7 @@ export const REAL_FACILITIES_DATA = [
           "otherUnknown": 0,
           "otherMale": 4,
           "mother": 2,
-          "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+          "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
           "date": "2026-01-01",
           "note": "Số lượng Dúi mốc lớn hiện có",
           "father": 2
@@ -1143,7 +1143,7 @@ export const REAL_FACILITIES_DATA = [
           "otherFemale": 0,
           "note": "Số lượng Dúi mốc lớn hiện có",
           "date": "2026-01-01",
-          "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+          "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
           "otherMale": 0,
           "otherUnknown": 0,
           "father": 2,
@@ -1195,7 +1195,7 @@ export const REAL_FACILITIES_DATA = [
         "group": "Động vật rừng nguy cấp, quý, hiếm (Nhóm IIB)",
         "baseline": {
           "father": 1,
-          "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+          "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
           "mother": 3,
           "otherFemale": 0,
           "otherMale": 0,
@@ -1238,7 +1238,7 @@ export const REAL_FACILITIES_DATA = [
           "otherUnknown": 0,
           "mother": 4,
           "note": "Hiện trạng đăng ký ban đầu",
-          "verifier": "Hạt Kiểm lâm Huyện Krông Bông"
+          "verifier": "Hạt Kiểm lâm khu vực Krông Bông"
         },
         "scientificName": "Paradoxurus hermaphroditus",
         "vietnameseName": "Cầy vòi Hương"
@@ -1295,7 +1295,7 @@ export const REAL_FACILITIES_DATA = [
           "mother": 40,
           "otherFemale": 0,
           "note": "Hiện trạng đăng ký ban đầu",
-          "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+          "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
           "otherUnknown": 0,
           "date": "2026-07-24",
           "father": 2
@@ -1358,7 +1358,7 @@ export const REAL_FACILITIES_DATA = [
       {
         "group": "Động vật rừng thông thường",
         "baseline": {
-          "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+          "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
           "otherUnknown": 0,
           "otherMale": 0,
           "otherFemale": 0,
@@ -1488,7 +1488,7 @@ export const REAL_FACILITIES_DATA = [
         "baseline": {
           "date": "2025-11-12",
           "otherUnknown": 0,
-          "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+          "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
           "otherMale": 0,
           "note": "Hiện trạng đăng ký ban đầu",
           "father": 10,
@@ -1522,7 +1522,7 @@ export const REAL_FACILITIES_DATA = [
           "otherFemale": 0,
           "father": 1,
           "mother": 1,
-          "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+          "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
           "date": "2026-05-25"
         },
         "id": "sp_1787585236556_1",
@@ -1557,7 +1557,7 @@ export const REAL_FACILITIES_DATA = [
           "otherFemale": 0,
           "otherMale": 0,
           "mother": 0,
-          "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+          "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
           "otherUnknown": 2,
           "father": 0
         },
@@ -1595,7 +1595,7 @@ export const REAL_FACILITIES_DATA = [
         "id": "sp_1787794070148_1",
         "baseline": {
           "otherMale": 1,
-          "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+          "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
           "otherFemale": 1,
           "mother": 0,
           "otherUnknown": 2,
@@ -1633,7 +1633,7 @@ export const REAL_FACILITIES_DATA = [
           "mother": 0,
           "otherFemale": 0,
           "note": "Hiện trạng đăng ký ban đầu",
-          "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+          "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
           "date": "2026-07-27"
         },
         "scientificName": "Pycnonotus jocosus",
@@ -1693,7 +1693,7 @@ export const REAL_FACILITIES_DATA = [
           "father": 2,
           "otherFemale": "0",
           "date": "2026-08-27",
-          "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+          "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
           "note": "Hiện trạng đăng ký ban đầu"
         },
         "purposeCode": "T"
@@ -1746,7 +1746,7 @@ export const REAL_FACILITIES_DATA = [
           "note": "Hiện trạng đăng ký ban đầu",
           "father": 0,
           "otherFemale": 0,
-          "verifier": "Hạt Kiểm lâm Huyện Krông Bông"
+          "verifier": "Hạt Kiểm lâm khu vực Krông Bông"
         },
         "citesAppendix": "Khai báo kiểm lâm"
       }
@@ -1781,7 +1781,7 @@ export const REAL_FACILITIES_DATA = [
         "vietnameseName": "Dúi mốc lớn",
         "baseline": {
           "date": "2026-10-05",
-          "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+          "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
           "otherMale": 42,
           "note": "Hiện trạng đăng ký ban đầu",
           "otherUnknown": 40,
@@ -1803,7 +1803,7 @@ export const REAL_FACILITIES_DATA = [
           "otherMale": 10,
           "otherFemale": 12,
           "note": "Số lượng Dúi má đào hiện có",
-          "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+          "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
           "date": "2026-01-01",
           "otherUnknown": 0
         },
@@ -1820,7 +1820,7 @@ export const REAL_FACILITIES_DATA = [
           "otherMale": 17,
           "otherUnknown": 58,
           "mother": 61,
-          "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+          "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
           "note": "Số lượng Dúi mốc lớn hiện có",
           "otherFemale": 15,
           "date": "2026-01-01",
@@ -1871,7 +1871,7 @@ export const REAL_FACILITIES_DATA = [
         "baseline": {
           "father": 10,
           "note": "Số lượng Dúi mốc lớn hiện có",
-          "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+          "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
           "otherMale": 0,
           "date": "2026-01-01",
           "mother": 15,
@@ -1905,7 +1905,7 @@ export const REAL_FACILITIES_DATA = [
           "otherFemale": 7,
           "otherMale": 6,
           "date": "2023-04-17",
-          "verifier": "Hạt Kiểm lâm Huyện Krông Bông"
+          "verifier": "Hạt Kiểm lâm khu vực Krông Bông"
         },
         "group": "Động vật rừng nguy cấp, quý, hiếm (Nhóm IIB)"
       }
@@ -1941,7 +1941,7 @@ export const REAL_FACILITIES_DATA = [
           "father": 4,
           "mother": 26,
           "otherUnknown": 11,
-          "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+          "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
           "note": "Số lượng Dúi má đào hiện có",
           "date": "2026-01-01"
         },
@@ -1971,7 +1971,7 @@ export const REAL_FACILITIES_DATA = [
           "note": "Số lượng Dúi mốc lớn hiện có",
           "date": "2026-01-01",
           "mother": 10,
-          "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+          "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
           "otherMale": 0,
           "otherFemale": 0
         },
@@ -2013,7 +2013,7 @@ export const REAL_FACILITIES_DATA = [
           "date": "2026-01-01",
           "mother": 1,
           "father": 1,
-          "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+          "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
           "note": "Số lượng Chim Cu gáy nuôi",
           "otherMale": 0,
           "otherFemale": 0,
@@ -2039,7 +2039,7 @@ export const REAL_FACILITIES_DATA = [
           "mother": 0,
           "otherUnknown": 0,
           "otherMale": 0,
-          "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+          "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
           "father": 3,
           "date": "2026-01-01",
           "otherFemale": 0,
@@ -2073,7 +2073,7 @@ export const REAL_FACILITIES_DATA = [
         "scientificName": "Pycnonotus Jocosus",
         "baseline": {
           "otherUnknown": 0,
-          "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+          "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
           "otherMale": 0,
           "date": "2026-01-01",
           "mother": 5,
@@ -2110,7 +2110,7 @@ export const REAL_FACILITIES_DATA = [
         "vietnameseName": "Chim Chào mào",
         "fluctuations": [],
         "baseline": {
-          "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+          "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
           "date": "2026-01-01",
           "otherMale": 0,
           "otherFemale": 0,
@@ -2149,7 +2149,7 @@ export const REAL_FACILITIES_DATA = [
           "date": "2026-01-01",
           "mother": 11,
           "otherUnknown": 0,
-          "verifier": "Hạt Kiểm lâm Huyện Krông Bông"
+          "verifier": "Hạt Kiểm lâm khu vực Krông Bông"
         },
         "id": "sp_26_1",
         "fluctuations": [],
@@ -2180,7 +2180,7 @@ export const REAL_FACILITIES_DATA = [
         "citesAppendix": "Khai báo kiểm lâm",
         "group": "Động vật rừng thông thường (Chim)",
         "baseline": {
-          "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+          "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
           "mother": 2,
           "otherFemale": 0,
           "note": "Số lượng Chim Chào mào nuôi",
@@ -2221,7 +2221,7 @@ export const REAL_FACILITIES_DATA = [
           "note": "Số lượng Chim Chào mào nuôi",
           "mother": 1,
           "father": 1,
-          "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+          "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
           "date": "2026-01-01",
           "otherUnknown": 0,
           "otherFemale": 0,
@@ -2252,7 +2252,7 @@ export const REAL_FACILITIES_DATA = [
           "otherMale": 0,
           "note": "Số lượng Chim Cu gáy nuôi",
           "otherUnknown": 0,
-          "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+          "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
           "mother": 2,
           "father": 2
         },
@@ -2283,7 +2283,7 @@ export const REAL_FACILITIES_DATA = [
           "otherFemale": 0,
           "father": 0,
           "otherUnknown": 0,
-          "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+          "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
           "mother": 0,
           "otherMale": 0,
           "date": "2025-10-03",
@@ -2328,7 +2328,7 @@ export const REAL_FACILITIES_DATA = [
           "otherMale": 3,
           "otherUnknown": 3,
           "otherFemale": 2,
-          "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+          "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
           "date": "2026-01-01",
           "father": 2,
           "mother": 2,
@@ -2367,7 +2367,7 @@ export const REAL_FACILITIES_DATA = [
           "otherFemale": 0,
           "otherUnknown": 0,
           "otherMale": 0,
-          "verifier": "Hạt Kiểm lâm Huyện Krông Bông"
+          "verifier": "Hạt Kiểm lâm khu vực Krông Bông"
         }
       }
     ],
@@ -2388,7 +2388,7 @@ export const REAL_FACILITIES_DATA = [
       {
         "fluctuations": [],
         "baseline": {
-          "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+          "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
           "mother": 11,
           "otherMale": 0,
           "note": "Chưa được cấp mã số cơ sở",
@@ -2429,7 +2429,7 @@ export const REAL_FACILITIES_DATA = [
         "baseline": {
           "father": 0,
           "mother": 0,
-          "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+          "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
           "otherMale": 0,
           "otherUnknown": 0,
           "otherFemale": 0,
@@ -2460,7 +2460,7 @@ export const REAL_FACILITIES_DATA = [
           "otherFemale": 0,
           "mother": 0,
           "otherMale": 0,
-          "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+          "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
           "otherUnknown": 0
         },
         "group": "Động vật rừng nguy cấp, quý, hiếm (Nhóm IIB)",
@@ -2494,7 +2494,7 @@ export const REAL_FACILITIES_DATA = [
           "father": 3,
           "date": "2024-07-03",
           "note": "Số lượng Cầy vòi Hương hiện có",
-          "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+          "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
           "otherMale": 12,
           "mother": 5,
           "otherUnknown": 19,
@@ -2515,7 +2515,7 @@ export const REAL_FACILITIES_DATA = [
           "otherUnknown": 0,
           "otherFemale": 0,
           "otherMale": 0,
-          "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+          "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
           "father": 2,
           "note": "Số lượng Cầy vòi mốc hiện có",
           "date": "2024-07-03",
@@ -2539,7 +2539,7 @@ export const REAL_FACILITIES_DATA = [
           "otherFemale": 0,
           "date": "2026-01-01",
           "otherMale": 0,
-          "verifier": "Hạt Kiểm lâm Huyện Krông Bông"
+          "verifier": "Hạt Kiểm lâm khu vực Krông Bông"
         },
         "fluctuations": []
       },
@@ -2556,7 +2556,7 @@ export const REAL_FACILITIES_DATA = [
           "note": "Hiện trạng nuôi loài Nhím",
           "otherFemale": 31,
           "date": "2026-01-01",
-          "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+          "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
           "father": 6,
           "otherUnknown": 11,
           "mother": 12
@@ -2580,7 +2580,7 @@ export const REAL_FACILITIES_DATA = [
     "speciesList": [
       {
         "baseline": {
-          "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+          "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
           "otherFemale": 0,
           "otherUnknown": 4,
           "mother": 5,
@@ -2637,7 +2637,7 @@ export const REAL_FACILITIES_DATA = [
           "otherFemale": 0,
           "otherMale": 0,
           "note": "Hiện trạng nuôi ban đầu",
-          "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+          "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
           "date": "2026-03-03"
         },
         "id": "sp_9_1",

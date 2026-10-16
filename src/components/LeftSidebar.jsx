@@ -67,7 +67,7 @@ export default function LeftSidebar({
               </span>
             </div>
             <h1 className="text-xs sm:text-sm font-black tracking-wide uppercase text-white leading-tight truncate">
-              HẠT KIỂM LÂM KRÔNG BÔNG
+              HẠT KIỂM LÂM KHU VỰC KRÔNG BÔNG
             </h1>
             <p className="text-[11px] text-emerald-200/90 font-bold flex items-center gap-1 mt-0.5">
               <Sparkles className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />
@@ -533,7 +533,7 @@ export default function LeftSidebar({
                 <div className="font-black text-slate-900 truncate text-xs">{currentUser.username}</div>
                 <div className="text-[10px] font-extrabold text-emerald-700 mt-0.5 truncate">
                   {currentUser.role === 'ADMIN'
-                    ? '🛡️ Hạt Kiểm Lâm (Admin)'
+                    ? '🛡️ Hạt Kiểm lâm khu vực (Admin)'
                     : currentUser.role === 'STAFF'
                     ? '🌲 Cán Bộ Lâm Nghiệp (dlc-krb)'
                     : '🏠 Cơ sở nuôi'}
