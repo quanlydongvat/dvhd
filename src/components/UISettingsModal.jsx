@@ -12,6 +12,8 @@ import {
   Moon,
   Sun,
   Layers,
+  Smartphone,
+  Download,
 } from 'lucide-react';
 
 export const DEFAULT_UI_SETTINGS = {
@@ -262,6 +264,37 @@ export default function UISettingsModal({
                     uiSettings.underlineColNumbers ? 'translate-x-6' : 'translate-x-1'
                   }`}
                 />
+              </button>
+            </div>
+          </div>
+
+          {/* 5. PWA Mobile App & Offline Mode */}
+          <div className="border-t border-slate-200/80 pt-4">
+            <div className="p-4 bg-gradient-to-r from-emerald-50 to-teal-50 rounded-2xl border border-emerald-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <div className="p-2.5 bg-emerald-600 text-white rounded-xl shadow-md">
+                  <Smartphone className="w-5 h-5" />
+                </div>
+                <div>
+                  <h4 className="text-xs font-black text-slate-800 uppercase tracking-wide">
+                    Ứng Dụng Điện Thoại & Ngoại Tuyến (PWA)
+                  </h4>
+                  <p className="text-[11px] text-slate-600 font-medium mt-0.5">
+                    Cài đặt lên màn hình chính điện thoại, mở không cần mạng 4G khi đi thực địa.
+                  </p>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => {
+                  window.dispatchEvent(new CustomEvent('open-pwa-install'));
+                  onClose();
+                }}
+                className="flex items-center justify-center gap-1.5 px-3.5 py-2 bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold rounded-xl shadow-sm transition-all cursor-pointer flex-shrink-0 active:scale-95"
+              >
+                <Download className="w-3.5 h-3.5" />
+                <span>Hướng dẫn cài đặt</span>
               </button>
             </div>
           </div>

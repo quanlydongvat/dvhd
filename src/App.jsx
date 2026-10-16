@@ -6,6 +6,7 @@ import SummaryView from './components/SummaryView';
 import DesktopAppHeader from './components/DesktopAppHeader';
 import MobileBottomNav from './components/MobileBottomNav';
 import PWAInstallPrompt from './components/PWAInstallPrompt';
+import OfflineSyncManager from './components/OfflineSyncManager';
 import { computeLogbookTable } from './utils/calculations';
 import {
   loadAppData,
@@ -470,6 +471,20 @@ export default function App() {
     }
     syncAppDataToCloud(appState);
   }, [appState]);
+
+  // Auto-sync when reconnecting from offline
+  const handleOfflineSyncWithCloud = React.useCallback(async () => {
+    try {
+      if (appState) {
+        await syncAppDataToCloud(appState);
+      }
+      if (packingListData) {
+        await syncPackingListToCloud(packingListData);
+      }
+    } catch (e) {
+      console.warn('Auto-sync to cloud failed:', e);
+    }
+  }, [appState, packingListData]);
 
   // Load data from Firebase Cloud after authentication
   useEffect(() => {
@@ -1848,6 +1863,9 @@ export default function App() {
           Ctrl K
         </kbd>
       </button>
+
+      {/* Offline Status & Cloud Auto-Sync Banner */}
+      <OfflineSyncManager onSyncWithCloud={handleOfflineSyncWithCloud} />
 
       {/* PWA Installation Floating Banner */}
       <PWAInstallPrompt />

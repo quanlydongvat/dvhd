@@ -9,28 +9,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
     <title>Quản Lý Sổ Theo Dõi Động Vật Hoang Dã (Mẫu II - Nuôi Sinh Sản)</title>
 
-    <!-- Inline Auto-Purge Cache & Unregister SW Script to fix white screen -->
+    <!-- Service Worker Registration for PWA & Offline Support -->
     <script>
-      (function() {
-        const CURRENT_APP_VERSION = 'v2026.09.08_FORCE_PURGE_v10001';
-        if (localStorage.getItem('wildlife_app_ver') !== CURRENT_APP_VERSION) {
-          localStorage.setItem('wildlife_app_ver', CURRENT_APP_VERSION);
-          if ('caches' in window) {
-            caches.keys().then(function(keys) {
-              return Promise.all(keys.map(function(k) { return caches.delete(k); }));
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('./sw.js')
+            .then(function(reg) {
+              console.log('[PWA] Service Worker registered with scope:', reg.scope);
+            })
+            .catch(function(err) {
+              console.warn('[PWA] Service Worker registration failed:', err);
             });
-          }
-          if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.getRegistrations().then(function(regs) {
-              for (var i = 0; i < regs.length; i++) {
-                regs[i].unregister();
-              }
-            });
-          }
-          // Force reload page once to load new index.html & JS bundle
-          window.location.reload(true);
-        }
-      })();
+        });
+      }
     </script>
 
     <!-- SPA redirect decode script for GitHub Pages custom domain routing -->
@@ -48,25 +39,26 @@
     </script>
 
     <!-- Web App & PWA Meta Tags -->
-    <meta name="theme-color" content="#059669" />
+    <meta name="theme-color" content="#064e3b" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content="Sổ ĐVHD" />
-    <meta name="application-name" content="Sổ Theo Dõi ĐVHD" />
+    <meta name="apple-mobile-web-app-title" content="Kiểm lâm Krông Bông" />
+    <meta name="application-name" content="Quản lý ĐVHD Krông Bông" />
     <meta name="format-detection" content="telephone=no" />
     <meta name="mobile-web-app-capable" content="yes" />
 
     <!-- Open Graph Metadata -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Quản Lý Sổ Theo Dõi Động Vật Hoang Dã (Mẫu II)" />
+    <meta property="og:title" content="Quản Lý Sổ Theo Dõi Động Vật Hoang Dã (Mẫu II) - Hạt Kiểm lâm Krông Bông" />
     <meta property="og:description" content="Ứng dụng quản lý hiện trạng & biến động tăng giảm đàn động vật hoang dã nuôi sinh sản theo Thông tư 85/2025/TT-BNNMT." />
 
     <!-- PWA Manifest & App Icons -->
     <link rel="manifest" href="./manifest.json" />
-    <link rel="manifest" href="./app.json" />
+    <link rel="icon" type="image/png" sizes="192x192" href="./pwa-192x192.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="./pwa-512x512.png" />
     <link rel="icon" type="image/jpeg" href="./images/logo.jpg" />
-    <link rel="apple-touch-icon" href="./images/logo.jpg" />
-    <link rel="apple-touch-icon" sizes="180x180" href="./images/logo.jpg" />
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png" />
 
     <!-- Google Fonts & Leaflet CSS -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
