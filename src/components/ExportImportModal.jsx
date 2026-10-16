@@ -30,6 +30,7 @@ export default function ExportImportModal({
     document.body.appendChild(downloadAnchor);
     downloadAnchor.click();
     downloadAnchor.remove();
+    localStorage.setItem('wildlife_last_backup_date', new Date().toISOString().slice(0, 10));
   };
 
   const handleJSONFileChange = (e) => {

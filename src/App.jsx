@@ -55,6 +55,7 @@ const UISettingsModal = lazy(() => import('./components/UISettingsModal'));
 const Login = lazy(() => import('./components/Login'));
 const HomeLandingPage = lazy(() => import('./components/HomeLandingPage'));
 const QuickSearchModal = lazy(() => import('./components/QuickSearchModal'));
+const BackupReminderBanner = lazy(() => import('./components/BackupReminderBanner'));
 
 export const DEFAULT_UI_SETTINGS = {
   theme: 'EMERALD',
@@ -1825,6 +1826,12 @@ export default function App() {
           }}
           onOpenExportExcel={handleExportExcelClick}
           onOpenUISettings={() => setIsUISettingsModalOpen(true)}
+        />
+
+        <BackupReminderBanner
+          appData={appState}
+          facilitiesList={facilitiesList}
+          packingListData={packingListData}
         />
       </Suspense>
 
