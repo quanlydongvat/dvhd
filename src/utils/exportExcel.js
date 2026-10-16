@@ -1,7 +1,7 @@
 import ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
-import { computeLogbookTable, getRegistrationCodeStatus } from './calculations';
+import { computeLogbookTable, getRegistrationCodeStatus, isCitesSpecies } from './calculations';
 
 export const COMMUNES = ['xã Hòa Sơn', 'xã Yang Mao', 'xã Cư Pui', 'Xã Krông Bông', 'Xã Dang Kang'];
 
@@ -385,13 +385,7 @@ function buildSheet2(ws, speciesTotals) {
   const commonGroup = [];
 
   Object.values(speciesTotals).forEach((sp) => {
-    const groupStr = (sp.group || '') + ' ' + (sp.citesAppendix || '');
-    const isCites =
-      groupStr.includes('IB') ||
-      groupStr.includes('IIB') ||
-      groupStr.toLowerCase().includes('cites') ||
-      groupStr.toLowerCase().includes('nguy cấp') ||
-      groupStr.toLowerCase().includes('quý');
+    const isCites = isCitesSpecies(sp);
 
     if (isCites) {
       citesGroup.push(sp);

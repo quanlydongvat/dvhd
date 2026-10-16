@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { ShieldCheck, Sparkles, MapPin, LogIn, QrCode, ChevronRight, Trees, Leaf } from 'lucide-react';
+import Login from './Login';
 
-export default function HomeLandingPage({ onOpenLogin }) {
+export default function HomeLandingPage({ onLoginSuccess }) {
   // Animated text state - cycle through flash colors
   const [glowPhase, setGlowPhase] = useState(0);
 
@@ -51,7 +52,7 @@ export default function HomeLandingPage({ onOpenLogin }) {
           </div>
         </div>
         <button
-          onClick={onOpenLogin}
+          onClick={() => document.getElementById('login-form-section')?.scrollIntoView({ behavior: 'smooth' })}
           className="flex items-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-xl text-white px-4 py-2.5 rounded-xl text-xs font-bold border border-white/15 hover:border-white/30 transition-all duration-300 active:scale-95 cursor-pointer"
         >
           <LogIn className="w-4 h-4" />
@@ -149,30 +150,9 @@ export default function HomeLandingPage({ onOpenLogin }) {
           </div>
         </div>
 
-        {/* ===== CTA BUTTONS ===== */}
-        <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 mb-8 sm:mb-10 landing-fade-in" style={{ animationDelay: '1s' }}>
-          <button
-            onClick={onOpenLogin}
-            className="group flex items-center gap-3 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white px-7 sm:px-8 py-3.5 sm:py-4 rounded-2xl font-extrabold text-sm sm:text-base shadow-xl shadow-emerald-500/25 hover:shadow-emerald-500/40 transition-all duration-300 active:scale-95 cursor-pointer border border-emerald-400/40"
-          >
-            <LogIn className="w-5 h-5 transition-transform group-hover:scale-110" />
-            <span>Đăng Nhập Tài Khoản</span>
-            <ChevronRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-          </button>
-
-          <div className="flex items-center gap-2 text-white/30 text-xs font-bold">
-            <div className="w-6 h-px bg-white/20" />
-            hoặc
-            <div className="w-6 h-px bg-white/20" />
-          </div>
-
-          <button
-            onClick={onOpenLogin}
-            className="group flex items-center gap-3 bg-white/5 hover:bg-white/10 backdrop-blur-xl text-white px-7 sm:px-8 py-3.5 sm:py-4 rounded-2xl font-extrabold text-sm sm:text-base border border-white/15 hover:border-amber-400/40 transition-all duration-300 active:scale-95 cursor-pointer shadow-lg"
-          >
-            <QrCode className="w-5 h-5 text-amber-400 transition-transform group-hover:scale-110" />
-            <span>Quét Mã QR Cơ Sở</span>
-          </button>
+        {/* ===== KHUNG ĐĂNG NHẬP TRỰC TIẾP ===== */}
+        <div id="login-form-section" className="w-full max-w-md mx-auto mb-8 sm:mb-10 z-20 landing-fade-in" style={{ animationDelay: '0.9s' }}>
+          <Login onLoginSuccess={onLoginSuccess} isEmbedded={true} />
         </div>
 
         {/* ===== WILDLIFE SHOWCASE CARDS ===== */}

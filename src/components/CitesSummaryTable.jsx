@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { Printer, ShieldAlert, FileText, CheckCircle2, Building2, MapPin } from 'lucide-react';
-import { computeLogbookTable } from '../utils/calculations';
+import { computeLogbookTable, isCitesSpecies } from '../utils/calculations';
 
 export default function CitesSummaryTable({ facilitiesList = [] }) {
   const [selectedCommune, setSelectedCommune] = useState('ALL');
@@ -26,12 +26,7 @@ export default function CitesSummaryTable({ facilitiesList = [] }) {
           !fac.registrationCode.toLowerCase().includes('cập nhật');
 
         // Check if Endangered / Quý hiếm / CITES
-        const groupStr = (sp.group || '') + ' ' + (sp.citesAppendix || '');
-        const isCites =
-          groupStr.includes('IB') ||
-          groupStr.includes('IIB') ||
-          groupStr.toLowerCase().includes('cites') ||
-          groupStr.toLowerCase().includes('nguy cấp');
+        const isCites = isCitesSpecies(sp);
 
         if (!speciesMap[name]) {
           speciesMap[name] = {

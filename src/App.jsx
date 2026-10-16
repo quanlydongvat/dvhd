@@ -28,6 +28,7 @@ import { auth, db } from './firebase';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { doc, setDoc, addDoc, updateDoc, deleteDoc, getDoc, collection, getDocs, query, where, writeBatch } from 'firebase/firestore';
 import Login from './components/Login';
+import HomeLandingPage from './components/HomeLandingPage';
 
 export default function App() {
   const urlParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
@@ -1216,6 +1217,12 @@ export default function App() {
 
   // Render Dedicated Ultra-Compact Public QR Logbook View when NOT logged in
   if (!currentUser) {
+    if (!isQrPublicScan) {
+      return (
+        <HomeLandingPage onLoginSuccess={setCurrentUser} />
+      );
+    }
+
     return (
       <div className="min-h-screen bg-slate-50 text-slate-800 flex flex-col font-sans antialiased selection:bg-emerald-500 selection:text-white">
         {/* Ultra-compact Public QR Header */}

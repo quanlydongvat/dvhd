@@ -313,6 +313,40 @@ export function isBirdSpecies(sp) {
 }
 
 /**
+ * Determine if a species is CITES / Endangered / Quý hiếm
+ */
+export function isCitesSpecies(sp) {
+  if (!sp) return false;
+  
+  // Explicitly exclude known common species that might be misclassified
+  // due to vague group or citesAppendix strings
+  const name = (sp.vietnameseName || '').toLowerCase();
+  const commonNames = [
+    'chim cu gáy', 'cu gáy', 
+    'chim chào mào', 'chào mào', 
+    'chim sáo', 'sáo', 
+    'chích chòe', 
+    'họa mi', 
+    'khướu',
+    'dúi má đào', 'dúi',
+    'don'
+  ];
+  
+  if (commonNames.some(cn => name.includes(cn))) {
+    return false;
+  }
+
+  const groupStr = (sp.group || '') + ' ' + (sp.citesAppendix || '');
+  return (
+    groupStr.includes('IB') ||
+    groupStr.includes('IIB') ||
+    groupStr.toLowerCase().includes('cites') ||
+    groupStr.toLowerCase().includes('nguy cấp') ||
+    groupStr.toLowerCase().includes('quý')
+  );
+}
+
+/**
  * Helper function to categorize a facility: 'BIRD', 'MAMMAL_REPTILE', or 'MIXED'
  */
 export function getFacilityCategory(facility) {

@@ -4,7 +4,7 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth, db } from '../firebase';
 import { doc, getDoc, collection, query, where, getDocs } from 'firebase/firestore';
 
-export default function Login({ onLoginSuccess, onCancel }) {
+export default function Login({ onLoginSuccess, onCancel, isEmbedded = false }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -115,14 +115,9 @@ export default function Login({ onLoginSuccess, onCancel }) {
     }
   };
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-950 via-teal-950 to-slate-900 flex items-center justify-center p-4 relative overflow-hidden font-sans">
-      {/* Background Glowing Orbs */}
-      <div className="absolute top-10 left-1/2 -translate-x-1/2 w-96 h-96 bg-emerald-500/15 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-10 right-10 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
-
-      <div className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl w-full max-w-md overflow-hidden border border-emerald-500/20 z-10">
-        {/* Header */}
+  const loginCard = (
+    <div className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl w-full max-w-md overflow-hidden border border-emerald-500/20 z-10 mx-auto">
+      {/* Header */}
         <div className="bg-gradient-to-br from-emerald-800 via-emerald-700 to-teal-800 p-7 sm:p-8 text-center text-white relative overflow-hidden">
           <div className="absolute -right-8 -top-8 w-32 h-32 bg-white/10 rounded-full blur-xl pointer-events-none" />
 
@@ -236,6 +231,18 @@ export default function Login({ onLoginSuccess, onCancel }) {
           </div>
         </div>
       </div>
+  );
+
+  if (isEmbedded) {
+    return loginCard;
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-emerald-950 via-teal-950 to-slate-900 flex items-center justify-center p-4 relative overflow-hidden font-sans">
+      {/* Background Glowing Orbs */}
+      <div className="absolute top-10 left-1/2 -translate-x-1/2 w-96 h-96 bg-emerald-500/15 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-10 right-10 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+      {loginCard}
     </div>
   );
 }

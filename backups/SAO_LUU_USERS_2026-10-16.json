@@ -1,0 +1,189 @@
+[
+  {
+    "id": "0WdmOIJDs4MGc7PWB8cZK8wl1Wv2",
+    "username": "dinhtientoan",
+    "role": "FACILITY",
+    "facilityId": "fac_21",
+    "createdAt": "2026-08-11T14:54:12.222Z",
+    "email": "dinhtientoan@krongbong.gov.vn"
+  },
+  {
+    "id": "0l7ghkZORHMbQAEVg0FySAwZrWh2",
+    "createdAt": "2026-08-11T14:51:46.293Z",
+    "email": "lethanhduc@krongbong.gov.vn",
+    "role": "FACILITY",
+    "facilityId": "fac_12",
+    "username": "lethanhduc"
+  },
+  {
+    "id": "6vnPcvHVoxU2HhlVy3z4RZkCRfI3",
+    "facilityId": "fac_26",
+    "email": "nguyentri@krongbong.gov.vn",
+    "role": "FACILITY",
+    "createdAt": "2026-08-11T14:55:17.450Z",
+    "username": "nguyentri"
+  },
+  {
+    "id": "9OtyVPrLhtTPeR7WZGAe4VGKD6t2",
+    "email": "huynhcongnam@krongbong.gov.vn",
+    "facilityId": "fac_8",
+    "createdAt": "2026-08-11T14:50:54.470Z",
+    "role": "FACILITY",
+    "username": "huynhcongnam"
+  },
+  {
+    "id": "BrXB2eXpPeOm6N7WSFrrVE9OMcm2",
+    "createdAt": "2026-08-11T14:53:38.207Z",
+    "role": "FACILITY",
+    "facilityId": "fac_19",
+    "username": "nguyentruongdacnam",
+    "email": "nguyentruongdacnam@krongbong.gov.vn"
+  },
+  {
+    "id": "DressjtI3necO2kZ7qJkCDf5ziV2",
+    "createdAt": "2026-08-11T14:49:37.402Z",
+    "email": "lethixuan@krongbong.gov.vn",
+    "role": "FACILITY",
+    "username": "lethixuan",
+    "facilityId": "fac_1"
+  },
+  {
+    "id": "DyQXKqI5cqdftdRY8bbfnFL0gB62",
+    "role": "FACILITY",
+    "createdAt": "2026-08-11T14:54:48.182Z",
+    "email": "hoangvanhai@krongbong.gov.vn",
+    "username": "hoangvanhai",
+    "facilityId": "fac_30"
+  },
+  {
+    "id": "FAmfUEtXXKNkni8iAQVOOVAlQRE2",
+    "username": "tranvanluc",
+    "role": "FACILITY",
+    "email": "tranvanluc@krongbong.gov.vn",
+    "facilityId": "fac_20",
+    "createdAt": "2026-08-11T14:53:59.368Z"
+  },
+  {
+    "id": "KRUfgCRwPoYlyS8XUdkAiatILv93",
+    "role": "FACILITY",
+    "createdAt": "2026-08-11T14:51:33.468Z",
+    "email": "nguyenhuudo@krongbong.gov.vn",
+    "username": "nguyenhuudo",
+    "facilityId": "fac_11"
+  },
+  {
+    "id": "NhrTSlrFU3ZJYS8SEIh0Ka4axEs2",
+    "email": "phanthanhtruc@krongbong.gov.vn",
+    "customPassword": "@123456",
+    "createdAt": "2026-08-16T14:17:32.542Z",
+    "role": "FACILITY",
+    "facilityId": "fac_24",
+    "username": "phanthanhtruc"
+  },
+  {
+    "id": "NlycYxQN82XdGDVFx8Bn0p6a4Az2",
+    "facilityId": "fac_2",
+    "role": "FACILITY",
+    "createdAt": "2026-08-11T14:49:55.772Z",
+    "email": "nguyenvanthuy@krongbong.gov.vn",
+    "username": "nguyenvanthuy"
+  },
+  {
+    "id": "SGdEydovDkTGkb3XlKCW3lsoEuU2",
+    "username": "tranduyquan",
+    "facilityId": "fac_9",
+    "role": "FACILITY",
+    "createdAt": "2026-08-11T14:51:11.032Z",
+    "email": "tranduyquan@krongbong.gov.vn"
+  },
+  {
+    "id": "VCmFkR0Ca2PbTe6DXTk15gaOxa63",
+    "username": "nguyentandanhnhan",
+    "facilityId": "fac_7",
+    "email": "nguyentandanhnhan@krongbong.gov.vn",
+    "createdAt": "2026-08-11T14:50:40.852Z",
+    "role": "FACILITY"
+  },
+  {
+    "id": "ZzaWxsNbLVRGbHhJDBi0WDS8ljV2",
+    "createdAt": "2026-08-11T14:52:54.878Z",
+    "email": "lequangmanh@krongbong.gov.vn",
+    "role": "FACILITY",
+    "username": "lequangmanh",
+    "facilityId": "fac_18"
+  },
+  {
+    "id": "aXksDLO4wUdpSOBlTCar6WRvCjc2",
+    "email": "vovannhon@krongbong.gov.vn",
+    "createdAt": "2026-08-11T14:54:38.645Z",
+    "username": "vovannhon",
+    "role": "FACILITY",
+    "facilityId": "fac_31"
+  },
+  {
+    "id": "dRr5buLQVthcygtwaqvH1nSleGX2",
+    "facilityId": "fac_27",
+    "username": "nguyenvanhoa",
+    "email": "nguyenvanhoa@krongbong.gov.vn",
+    "role": "FACILITY",
+    "createdAt": "2026-08-11T14:55:03.699Z"
+  },
+  {
+    "id": "efXjSnU3lBYu0avBrpMd2NvnUgX2",
+    "email": "trinhluc@krongbong.gov.vn",
+    "createdAt": "2026-08-11T14:51:22.667Z",
+    "username": "trinhluc",
+    "facilityId": "fac_10",
+    "role": "FACILITY"
+  },
+  {
+    "id": "koIQkudWnBeyuJSZ2ZPiCe4Y7uV2",
+    "email": "phambaquang@krongbong.gov.vn",
+    "createdAt": "2026-08-11T14:50:11.368Z",
+    "facilityId": "fac_4",
+    "username": "phambaquang",
+    "role": "FACILITY"
+  },
+  {
+    "id": "qaSOEijbArZ4AeSIvboyOsr2YA73",
+    "facilityId": "fac_1786432202893",
+    "role": "FACILITY",
+    "email": "phamduythang@krongbong.gov.vn",
+    "createdAt": "2026-08-11T16:52:24.536Z",
+    "username": "phamduythang"
+  },
+  {
+    "id": "que7LpZ6D9SjZxKE8PKMRWLBK353",
+    "createdAt": "2026-08-11T14:51:59.572Z",
+    "email": "ngothitrang@krongbong.gov.vn",
+    "username": "ngothitrang",
+    "facilityId": "fac_13",
+    "role": "FACILITY"
+  },
+  {
+    "id": "vv8jYjJ1cEZoUOSYn4ozQUcUNF02",
+    "createdAt": "2026-08-11T14:52:32.534Z",
+    "email": "tranvantoi@krongbong.gov.vn",
+    "facilityId": "fac_15",
+    "username": "tranvantoi",
+    "role": "FACILITY"
+  },
+  {
+    "id": "wNFlExQ6zbOtcqfUvbetsJjukeH2",
+    "username": "nguyenduythong",
+    "email": "nguyenduythong@krongbong.gov.vn",
+    "createdAt": "2026-09-07T07:09:20.377Z",
+    "updatedAt": "2026-09-07T07:24:02.286Z",
+    "customPassword": "@123456",
+    "role": "FACILITY",
+    "facilityId": "fac_1787794338130"
+  },
+  {
+    "id": "wU2WCTE5UyRkW9OYLKgiHLf4ldj2",
+    "createdAt": "2026-08-11T14:52:12.401Z",
+    "email": "hahuythanh@krongbong.gov.vn",
+    "role": "FACILITY",
+    "username": "hahuythanh",
+    "facilityId": "fac_14"
+  }
+]
