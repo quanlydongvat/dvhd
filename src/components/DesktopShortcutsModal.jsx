@@ -5,14 +5,14 @@ export default function DesktopShortcutsModal({ isOpen, onClose }) {
   if (!isOpen) return null;
 
   const shortcutsList = [
+    { key: 'Ctrl + K', desc: '🔍 Tìm kiếm nhanh cơ sở, loài, số bảng kê' },
     { key: 'Alt + 1', desc: 'Chuyển sang Sổ Theo Dõi Mẫu II (19 cột)' },
-    { key: 'Alt + 2', desc: 'Chuyển sang Bảng Tổng Hợp 31 Cơ Sở Phân Theo 5 Xã' },
+    { key: 'Alt + 2', desc: 'Chuyển sang Bảng Tổng Hợp 43 Cơ Sở Phân Theo 5 Xã' },
     { key: 'Alt + 3', desc: 'Chuyển sang Biểu Đồ Thống Kê & Phân Tích Tăng Trưởng' },
     { key: 'Alt + 4', desc: 'Chuyển sang Bản Đồ Định Vị GIS Google Hybrid' },
     { key: 'Alt + N', desc: 'Mở cửa sổ Thêm Nhật Ký Biến Động Đàn Mới' },
     { key: 'Alt + E', desc: 'Xuất file Báo Cáo Excel chuẩn 19 cột' },
     { key: 'Alt + P', desc: 'Xem & In Sổ Theo Dõi khổ A4 Ngang' },
-    { key: 'Alt + F', desc: 'Mở thanh tìm kiếm cơ sở nhanh' },
     { key: 'F11', desc: 'Bật / Tắt chế độ Toàn Màn Hình máy tính (Fullscreen)' },
   ];
 

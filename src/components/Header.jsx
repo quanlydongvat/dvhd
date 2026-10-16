@@ -1,5 +1,5 @@
 import React from 'react';
-import { Settings, Edit3, FolderPlus, Table, LayoutList, BarChart3, MapPin, Building2, Download, Printer, Database, PlusCircle, Bell, LogOut, Sliders, FileCheck2 } from 'lucide-react';
+import { Settings, Edit3, FolderPlus, Table, LayoutList, BarChart3, MapPin, Building2, Download, Printer, Database, PlusCircle, Bell, LogOut, Sliders, FileCheck2, Search, Command } from 'lucide-react';
 import { PURPOSE_CODES } from '../utils/calculations';
 
 export default function Header({
@@ -26,6 +26,7 @@ export default function Header({
   onLogout,
   isQrPublicScan = false,
   onOpenLogin,
+  onOpenQuickSearch,
 }) {
   const COMMUNES = ['xã Hòa Sơn', 'xã Yang Mao', 'xã Cư Pui', 'Xã Krông Bông', 'Xã Dang Kang'];
 
@@ -117,8 +118,22 @@ export default function Header({
               </div>
             </div>
 
-            {/* Top Right Action Group: Notifications, Login/Logout, Toggle Minimal */}
+            {/* Top Right Action Group: Notifications, Quick Search, Login/Logout, Toggle Minimal */}
             <div className="flex items-center gap-1.5 flex-shrink-0">
+              {/* Quick Search Button (Ctrl + K) */}
+              <button
+                type="button"
+                onClick={onOpenQuickSearch}
+                className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 hover:bg-emerald-50 hover:border-emerald-300 border border-slate-200 rounded-xl text-xs text-slate-700 hover:text-emerald-900 transition-all cursor-pointer shadow-2xs group"
+                title="Tìm kiếm nhanh cơ sở, loài, bảng kê (Phím tắt: Ctrl + K)"
+              >
+                <Search className="w-3.5 h-3.5 text-slate-500 group-hover:text-emerald-600 stroke-[2.2]" />
+                <span className="font-extrabold text-[11px] hidden md:inline">Tìm nhanh</span>
+                <kbd className="hidden lg:inline-flex items-center text-[9px] font-black font-mono bg-white text-slate-500 px-1.5 py-0.5 rounded border border-slate-300 shadow-2xs group-hover:border-emerald-300 group-hover:text-emerald-700">
+                  Ctrl K
+                </kbd>
+              </button>
+
               {(currentUser?.role === 'ADMIN' || currentUser?.role === 'STAFF') && (
                 <button
                   type="button"

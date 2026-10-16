@@ -32,6 +32,8 @@ import { auth, db } from './firebase';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { doc, setDoc, addDoc, updateDoc, deleteDoc, getDoc, collection, getDocs, query, where, writeBatch } from 'firebase/firestore';
 
+import { Search } from 'lucide-react';
+
 // LAZY-LOADED VIEWS (Chỉ tải thư viện khi người dùng chuyển tab)
 const AnalyticsView = lazy(() => import('./components/AnalyticsView'));
 const MapView = lazy(() => import('./components/MapView'));
@@ -52,6 +54,7 @@ const DesktopShortcutsModal = lazy(() => import('./components/DesktopShortcutsMo
 const UISettingsModal = lazy(() => import('./components/UISettingsModal'));
 const Login = lazy(() => import('./components/Login'));
 const HomeLandingPage = lazy(() => import('./components/HomeLandingPage'));
+const QuickSearchModal = lazy(() => import('./components/QuickSearchModal'));
 
 export const DEFAULT_UI_SETTINGS = {
   theme: 'EMERALD',
@@ -155,6 +158,7 @@ export default function App() {
   const [pendingRequests, setPendingRequests] = useState([]);
   const [isPendingModalOpen, setIsPendingModalOpen] = useState(false);
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
+  const [isQuickSearchOpen, setIsQuickSearchOpen] = useState(false);
 
   const handleOpenQRCode = (facObj) => {
     setQrModalFacility(facObj || appState.facilityInfo);
@@ -552,7 +556,21 @@ export default function App() {
   // Global Desktop Keyboard Shortcuts Listener
   useEffect(() => {
     const handleKeyDown = (e) => {
+      // Ctrl + K hoặc Cmd + K: Mở tìm kiếm nhanh từ bất kỳ đâu
+      if ((e.ctrlKey || e.metaKey) && (e.key === 'k' || e.key === 'K')) {
+        e.preventDefault();
+        setIsQuickSearchOpen((prev) => !prev);
+        return;
+      }
+
       if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) return;
+
+      // Phím '/' mở tìm kiếm khi không gõ chữ
+      if (e.key === '/') {
+        e.preventDefault();
+        setIsQuickSearchOpen(true);
+        return;
+      }
 
       if (e.altKey && (e.key === '1' || e.key === '!')) {
         e.preventDefault();
@@ -572,7 +590,7 @@ export default function App() {
         setIsFluctuationModalOpen(true);
       } else if (e.altKey && (e.key === 'e' || e.key === 'E')) {
         e.preventDefault();
-        if (activeSpecies) exportToExcel(activeSpecies, rows, facilityInfo);
+        handleExportExcelClick();
       } else if (e.altKey && (e.key === 'p' || e.key === 'P')) {
         e.preventDefault();
         setIsPrintViewOpen(true);
@@ -1479,6 +1497,7 @@ export default function App() {
             onLogout={handleLogout}
             isQrPublicScan={!!isQrPublicScan}
             onOpenLogin={() => setIsLoginModalOpen(true)}
+            onOpenQuickSearch={() => setIsQuickSearchOpen(true)}
           />
 
             {/* Main Content Area */}
@@ -1780,7 +1799,48 @@ export default function App() {
           nextDefaultSoVaoSo={nextDefaultSoVaoSo}
           nextDefaultStt={nextDefaultStt}
         />
+
+        <QuickSearchModal
+          isOpen={isQuickSearchOpen}
+          onClose={() => setIsQuickSearchOpen(false)}
+          facilitiesList={facilitiesList}
+          packingListData={packingListData}
+          onSelectFacility={(facId) => {
+            handleSelectFacility(facId);
+          }}
+          onSelectSpecies={(spId) => {
+            handleSelectSpecies(spId);
+          }}
+          onChangeView={(view) => {
+            setCurrentView(view);
+          }}
+          onOpenAddPackingList={() => {
+            setEditingPackingListItem(null);
+            setIsPackingListModalOpen(true);
+          }}
+          onOpenAddFacility={handleOpenAddFacility}
+          onOpenAddFluctuation={() => {
+            setEditingFluctuation(null);
+            setIsFluctuationModalOpen(true);
+          }}
+          onOpenExportExcel={handleExportExcelClick}
+          onOpenUISettings={() => setIsUISettingsModalOpen(true)}
+        />
       </Suspense>
+
+      {/* Floating Quick Search Button for Mobile & Desktop (Ctrl + K) */}
+      <button
+        type="button"
+        onClick={() => setIsQuickSearchOpen(true)}
+        className="fixed bottom-20 right-4 lg:bottom-6 lg:right-6 z-40 bg-gradient-to-tr from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-700 hover:to-teal-700 text-white p-3 sm:px-4 sm:py-2.5 rounded-full shadow-xl shadow-emerald-950/30 border-2 border-white/80 hover:scale-105 active:scale-95 transition-all cursor-pointer flex items-center gap-2 group"
+        title="Tìm kiếm nhanh cơ sở, loài, số bảng kê (Ctrl + K)"
+      >
+        <Search className="w-5 h-5 stroke-[2.5]" />
+        <span className="text-xs font-black hidden sm:inline">Tìm nhanh</span>
+        <kbd className="hidden sm:inline-flex items-center text-[10px] font-black font-mono bg-black/20 text-white/95 px-1.5 py-0.5 rounded border border-white/30">
+          Ctrl K
+        </kbd>
+      </button>
 
       {/* PWA Installation Floating Banner */}
       <PWAInstallPrompt />
