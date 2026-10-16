@@ -157,6 +157,30 @@ export default function Header({
                 </button>
               )}
 
+              {/* UI Settings & PWA Button */}
+              {onOpenUISettings && (
+                <button
+                  type="button"
+                  onClick={onOpenUISettings}
+                  className="flex items-center gap-1 p-2 bg-slate-100 hover:bg-emerald-50 hover:border-emerald-300 border border-slate-200 text-slate-700 hover:text-emerald-800 rounded-xl transition-all cursor-pointer shadow-2xs"
+                  title="Cài đặt giao diện & Cài đặt App (PWA)"
+                >
+                  <Sliders className="w-3.5 h-3.5 text-slate-600" />
+                </button>
+              )}
+
+              {/* Backup & Restore Button */}
+              {onOpenBackupModal && (
+                <button
+                  type="button"
+                  onClick={onOpenBackupModal}
+                  className="hidden sm:flex items-center gap-1 p-2 bg-slate-100 hover:bg-indigo-50 hover:border-indigo-300 border border-slate-200 text-slate-700 hover:text-indigo-800 rounded-xl transition-all cursor-pointer shadow-2xs"
+                  title="Sao lưu & Phục hồi dữ liệu"
+                >
+                  <Database className="w-3.5 h-3.5 text-slate-600" />
+                </button>
+              )}
+
               {/* Login / Logout Button */}
               {currentUser ? (
                 onLogout && (
