@@ -1,8 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { Building2, Search, Filter, ArrowRight, Download, Feather, ShieldCheck, MapPin, FileText, Table, ChevronDown, ChevronRight, CheckSquare, Square, Eye, EyeOff, Layers, Check, Trash2, QrCode } from 'lucide-react';
-import * as XLSX from 'xlsx';
 import { isBirdSpecies, getFacilityCategory, getRegistrationCodeStatus, computeLogbookTable } from '../utils/calculations';
-import { exportRegionalSummaryTable } from '../utils/exportExcel';
 import CitesSummaryTable from './CitesSummaryTable';
 
 export default function SummaryView({
@@ -186,7 +184,8 @@ export default function SummaryView({
     };
   });
 
-  const handleExportSummaryExcel = () => {
+  const handleExportSummaryExcel = async () => {
+    const { exportRegionalSummaryTable } = await import('../utils/exportExcel');
     exportRegionalSummaryTable(facilitiesList);
   };
 

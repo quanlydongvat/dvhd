@@ -29,7 +29,6 @@ import {
   ArrowUpRight,
   X,
 } from 'lucide-react';
-import { exportPackingListToExcel } from '../utils/exportPackingList';
 
 // Helper: Phân tích chi tiết một dòng bảng kê (Lớp, Số cá thể, Khối lượng, Loài)
 export function parsePackingItem(item) {
@@ -287,7 +286,8 @@ export default function PackingListView({
     });
   }, [packingListData, selectedCommune, selectedYear, searchTerm, filterOwner]);
 
-  const handleExportExcel = () => {
+  const handleExportExcel = async () => {
+    const { exportPackingListToExcel } = await import('../utils/exportPackingList');
     exportPackingListToExcel(filteredData);
   };
 

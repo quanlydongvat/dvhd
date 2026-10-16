@@ -17,7 +17,6 @@ import {
 } from 'chart.js';
 import { Line, Bar, Doughnut } from 'react-chartjs-2';
 import { TrendingUp, TrendingDown, Calendar, Filter, MapPin, Feather, Download, Award, BarChart3, PieChart, Activity, RefreshCw, Layers, ChevronDown, ChevronUp } from 'lucide-react';
-import * as XLSX from 'xlsx';
 import { isBirdSpecies, getFacilityCategory, computeLogbookTable, getCanonicalSpecies } from '../utils/calculations';
 
 // Register Chart.js modules
@@ -696,7 +695,8 @@ export default function AnalyticsView({ facilitiesList = [] }) {
   };
 
   // Export Analytics to Excel
-  const handleExportAnalyticsExcel = () => {
+  const handleExportAnalyticsExcel = async () => {
+    const XLSX = await import('xlsx');
     const sheetData = [];
     sheetData.push([`BẢNG THỐNG KÊ PHÁT TRIỂN & BIẾN ĐỘNG ĐÀN CƠ SỞ NUÔI NĂM ${selectedYear}`]);
     sheetData.push([`Kỳ thống kê: ${timeMode === 'YEAR' ? 'Cả năm' : timeMode === 'H1' ? '6 tháng đầu năm (H1)' : timeMode === 'H2' ? '6 tháng cuối năm (H2)' : `Tháng ${selectedMonth}`}`]);

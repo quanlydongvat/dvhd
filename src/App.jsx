@@ -1,23 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import Header from './components/Header';
 import LeftSidebar from './components/LeftSidebar';
 import TableView from './components/TableView';
 import SummaryView from './components/SummaryView';
-import AnalyticsView from './components/AnalyticsView';
-import MapView from './components/MapView';
-import AdminDashboard from './components/AdminDashboard';
 import DesktopAppHeader from './components/DesktopAppHeader';
-import DesktopShortcutsModal from './components/DesktopShortcutsModal';
 import MobileBottomNav from './components/MobileBottomNav';
-import UISettingsModal, { DEFAULT_UI_SETTINGS } from './components/UISettingsModal';
-import FluctuationModal from './components/FluctuationModal';
-import PackingListView from './components/PackingListView';
-import PackingListModal from './components/PackingListModal';
-
-import SpeciesModal from './components/SpeciesModal';
-import FacilityModal from './components/FacilityModal';
-import ExportImportModal from './components/ExportImportModal';
-import PrintView from './components/PrintView';
 import PWAInstallPrompt from './components/PWAInstallPrompt';
 import { computeLogbookTable } from './utils/calculations';
 import {
@@ -31,7 +18,6 @@ import {
   savePackingListData,
   INITIAL_PACKING_LIST_DATA,
 } from './utils/storage';
-import { exportDistrictReport, exportFacilityLogbook } from './utils/exportExcel';
 import {
   syncAppDataToCloud,
   loadAppDataFromCloud,
@@ -42,14 +28,49 @@ import {
   loadPackingListFromCloud,
   syncPackingListToCloud,
 } from './firebase';
-import QRCodeModal from './components/QRCodeModal';
-import ExportModal from './components/ExportModal';
-import PendingApprovalsModal from './components/PendingApprovalsModal';
 import { auth, db } from './firebase';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { doc, setDoc, addDoc, updateDoc, deleteDoc, getDoc, collection, getDocs, query, where, writeBatch } from 'firebase/firestore';
-import Login from './components/Login';
-import HomeLandingPage from './components/HomeLandingPage';
+
+// LAZY-LOADED VIEWS (Chỉ tải thư viện khi người dùng chuyển tab)
+const AnalyticsView = lazy(() => import('./components/AnalyticsView'));
+const MapView = lazy(() => import('./components/MapView'));
+const PackingListView = lazy(() => import('./components/PackingListView'));
+const AdminDashboard = lazy(() => import('./components/AdminDashboard'));
+const PrintView = lazy(() => import('./components/PrintView'));
+
+// LAZY-LOADED MODALS (Chỉ tải khi người dùng bấm mở modal)
+const FluctuationModal = lazy(() => import('./components/FluctuationModal'));
+const PackingListModal = lazy(() => import('./components/PackingListModal'));
+const SpeciesModal = lazy(() => import('./components/SpeciesModal'));
+const FacilityModal = lazy(() => import('./components/FacilityModal'));
+const ExportImportModal = lazy(() => import('./components/ExportImportModal'));
+const QRCodeModal = lazy(() => import('./components/QRCodeModal'));
+const ExportModal = lazy(() => import('./components/ExportModal'));
+const PendingApprovalsModal = lazy(() => import('./components/PendingApprovalsModal'));
+const DesktopShortcutsModal = lazy(() => import('./components/DesktopShortcutsModal'));
+const UISettingsModal = lazy(() => import('./components/UISettingsModal'));
+const Login = lazy(() => import('./components/Login'));
+const HomeLandingPage = lazy(() => import('./components/HomeLandingPage'));
+
+export const DEFAULT_UI_SETTINGS = {
+  theme: 'EMERALD',
+  density: 'STANDARD',
+  fontSize: 'MEDIUM',
+  underlineColNumbers: true,
+  defaultMapTile: 'HYBRID',
+};
+
+// Loading fallback component gọn gàng
+function ViewLoadingFallback({ text = 'Đang tải dữ liệu...' }) {
+  return (
+    <div className="bg-white rounded-3xl p-10 sm:p-14 border border-slate-200/90 text-center shadow-xs space-y-3 animate-in fade-in duration-200 my-4 max-w-xl mx-auto">
+      <div className="w-10 h-10 border-3 border-emerald-600 border-t-transparent rounded-full animate-spin mx-auto" />
+      <p className="text-xs font-black text-slate-800 tracking-tight">{text}</p>
+      <p className="text-[11px] text-slate-400 font-medium">Đang nạp nhanh thành phần theo yêu cầu...</p>
+    </div>
+  );
+}
 
 export default function App() {
   const urlParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
@@ -289,48 +310,46 @@ export default function App() {
 
   // Auth Listener
   useEffect(() => {
-    import('./firebase').then(({ db }) => {
-      const unsubscribe = onAuthStateChanged(auth, async (user) => {
-        if (user) {
-          try {
-            const userDoc = await getDoc(doc(db, 'users', user.uid));
-            let role = 'FACILITY';
-            let facilityId = null;
-            const cleanUsername = user.email ? user.email.split('@')[0] : 'user';
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        try {
+          const userDoc = await getDoc(doc(db, 'users', user.uid));
+          let role = 'FACILITY';
+          let facilityId = null;
+          const cleanUsername = user.email ? user.email.split('@')[0] : 'user';
 
-            if (userDoc.exists()) {
-              const data = userDoc.data();
-              role = data.role || 'FACILITY';
-              facilityId = data.facilityId || null;
-            } else {
-              if (cleanUsername === 'admin') role = 'ADMIN';
-              if (cleanUsername === 'dlc-krb') role = 'STAFF';
-            }
-
-            setCurrentUser({
-              uid: user.uid,
-              email: user.email,
-              username: cleanUsername,
-              role,
-              facilityId,
-            });
-            setIsLoginModalOpen(false);
-          } catch (err) {
-            console.error("Error fetching user role", err);
+          if (userDoc.exists()) {
+            const data = userDoc.data();
+            role = data.role || 'FACILITY';
+            facilityId = data.facilityId || null;
+          } else {
+            if (cleanUsername === 'admin') role = 'ADMIN';
+            if (cleanUsername === 'dlc-krb') role = 'STAFF';
           }
-        } else {
-          setCurrentUser(null);
+
+          setCurrentUser({
+            uid: user.uid,
+            email: user.email,
+            username: cleanUsername,
+            role,
+            facilityId,
+          });
+          setIsLoginModalOpen(false);
+        } catch (err) {
+          console.error("Error fetching user role", err);
         }
-        setIsAuthChecking(false);
-      });
-      return () => unsubscribe();
+      } else {
+        setCurrentUser(null);
+      }
+      setIsAuthChecking(false);
     });
+    return () => unsubscribe();
   }, []);
 
   // Public Cloud Sync on Mount (For Guest / Demo users across different computers)
   useEffect(() => {
-    import('./firebase').then(async ({ db }) => {
-      if (!db) return;
+    if (!db) return;
+    (async () => {
       try {
         const snapshot = await getDocs(collection(db, "facilities"));
         if (!snapshot.empty) {
@@ -384,7 +403,7 @@ export default function App() {
       } catch (err) {
         console.warn("Public load from Firebase Cloud failed:", err);
       }
-    });
+    })();
   }, []);
 
   useEffect(() => {
@@ -1266,12 +1285,13 @@ export default function App() {
   };
 
   // Export Excel
-  const handleExportExcelClick = () => {
+  const handleExportExcelClick = async () => {
     if (currentUser?.role === 'ADMIN' || currentUser?.role === 'STAFF') {
       // Admin và Cán bộ (dlc-krb) có quyền mở modal xuất báo cáo tổng hợp mẫu (Toàn huyện / 5 Xã)
       setIsExportModalOpen(true);
     } else {
       // Cơ sở nuôi chỉ xuất sổ ghi chép Mẫu II của chính cơ sở đó
+      const { exportFacilityLogbook } = await import('./utils/exportExcel');
       const userFac =
         facilitiesList.find(
           (f) => (currentUser?.assignedFacilityIds || []).includes(f.id) || f.ownerName === currentUser?.username
@@ -1288,6 +1308,7 @@ export default function App() {
   };
 
   const handleExportExecute = async (selectedCommune) => {
+    const { exportDistrictReport } = await import('./utils/exportExcel');
     await exportDistrictReport(facilitiesList, selectedCommune);
   };
 
@@ -1306,7 +1327,9 @@ export default function App() {
   if (!currentUser) {
     if (!isQrPublicScan) {
       return (
-        <HomeLandingPage onLoginSuccess={setCurrentUser} />
+        <Suspense fallback={<ViewLoadingFallback text="Đang khởi động hệ thống..." />}>
+          <HomeLandingPage onLoginSuccess={setCurrentUser} />
+        </Suspense>
       );
     }
 
@@ -1371,10 +1394,12 @@ export default function App() {
         {isLoginModalOpen && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
             <div className="max-w-md w-full">
-              <Login
-                onLoginSuccess={setCurrentUser}
-                onCancel={() => setIsLoginModalOpen(false)}
-              />
+              <Suspense fallback={<ViewLoadingFallback text="Đang mở khung đăng nhập..." />}>
+                <Login
+                  onLoginSuccess={setCurrentUser}
+                  onCancel={() => setIsLoginModalOpen(false)}
+                />
+              </Suspense>
             </div>
           </div>
         )}
@@ -1482,73 +1507,81 @@ export default function App() {
               )}
 
               {currentView === 'ADMIN_USERS' && currentUser?.role === 'ADMIN' ? (
-                <AdminDashboard facilitiesList={facilitiesList} onApproveRequest={handleApproveRequest} onDeleteFacility={handleDeleteFacility} />
+                <Suspense fallback={<ViewLoadingFallback text="Đang nạp Bảng Quản trị Hệ thống..." />}>
+                  <AdminDashboard facilitiesList={facilitiesList} onApproveRequest={handleApproveRequest} onDeleteFacility={handleDeleteFacility} />
+                </Suspense>
               ) : currentView === 'HOME' ? (
-                <AnalyticsView facilitiesList={facilitiesList} />
-            ) : currentView === 'SUMMARY' ? (
-              <SummaryView
-                currentUser={currentUser}
-                facilitiesList={facilitiesList}
-                activeFacilityId={activeFacilityId}
-                onSelectFacility={(facId) => {
-                  handleSelectFacility(facId);
-                  setCurrentView('LOGBOOK');
-                }}
-                onOpenAddFacility={handleOpenAddFacility}
-                onOpenMapFacility={(facId) => {
-                  setTargetFacilityId(facId);
-                  setCurrentView('MAP');
-                }}
-                onOpenQRCode={handleOpenQRCode}
-                onDeleteFacility={handleDeleteFacility}
-              />
-            ) : currentView === 'PACKING_LIST' ? (
-              <PackingListView
-                packingListData={packingListData}
-                onOpenAdd={() => {
-                  setEditingPackingListItem(null);
-                  setIsPackingListModalOpen(true);
-                }}
-                onOpenEdit={(item) => {
-                  setEditingPackingListItem(item);
-                  setIsPackingListModalOpen(true);
-                }}
-                onDelete={handleDeletePackingListItem}
-                facilitiesList={facilitiesList}
-                currentUser={currentUser}
-              />
-            ) : currentView === 'MAP' ? (
-              <MapView
-                facilitiesList={facilitiesList}
-                activeFacilityId={activeFacilityId}
-                targetFacilityId={targetFacilityId}
-                onSelectFacility={(facId) => {
-                  handleSelectFacility(facId);
-                  setCurrentView('LOGBOOK');
-                }}
-                onUpdateFacilityCoords={(facId, newLat, newLng) => {
-                  const targetFac = facilitiesList.find(f => f.id === facId);
-                  const updatedFac = targetFac ? { ...targetFac, lat: newLat, lng: newLng } : null;
+                <Suspense fallback={<ViewLoadingFallback text="Đang nạp Biểu đồ Thống kê Tăng trưởng..." />}>
+                  <AnalyticsView facilitiesList={facilitiesList} />
+                </Suspense>
+              ) : currentView === 'SUMMARY' ? (
+                <SummaryView
+                  currentUser={currentUser}
+                  facilitiesList={facilitiesList}
+                  activeFacilityId={activeFacilityId}
+                  onSelectFacility={(facId) => {
+                    handleSelectFacility(facId);
+                    setCurrentView('LOGBOOK');
+                  }}
+                  onOpenAddFacility={handleOpenAddFacility}
+                  onOpenMapFacility={(facId) => {
+                    setTargetFacilityId(facId);
+                    setCurrentView('MAP');
+                  }}
+                  onOpenQRCode={handleOpenQRCode}
+                  onDeleteFacility={handleDeleteFacility}
+                />
+              ) : currentView === 'PACKING_LIST' ? (
+                <Suspense fallback={<ViewLoadingFallback text="Đang nạp Sổ theo dõi xác nhận Bảng kê Lâm sản..." />}>
+                  <PackingListView
+                    packingListData={packingListData}
+                    onOpenAdd={() => {
+                      setEditingPackingListItem(null);
+                      setIsPackingListModalOpen(true);
+                    }}
+                    onOpenEdit={(item) => {
+                      setEditingPackingListItem(item);
+                      setIsPackingListModalOpen(true);
+                    }}
+                    onDelete={handleDeletePackingListItem}
+                    facilitiesList={facilitiesList}
+                    currentUser={currentUser}
+                  />
+                </Suspense>
+              ) : currentView === 'MAP' ? (
+                <Suspense fallback={<ViewLoadingFallback text="Đang tải Bản đồ Vệ tinh GIS & Tọa độ cơ sở..." />}>
+                  <MapView
+                    facilitiesList={facilitiesList}
+                    activeFacilityId={activeFacilityId}
+                    targetFacilityId={targetFacilityId}
+                    onSelectFacility={(facId) => {
+                      handleSelectFacility(facId);
+                      setCurrentView('LOGBOOK');
+                    }}
+                    onUpdateFacilityCoords={(facId, newLat, newLng) => {
+                      const targetFac = facilitiesList.find(f => f.id === facId);
+                      const updatedFac = targetFac ? { ...targetFac, lat: newLat, lng: newLng } : null;
 
-                  const updatedFacilitiesList = facilitiesList.map((fac) =>
-                    fac.id === facId ? { ...fac, lat: newLat, lng: newLng } : fac
-                  );
-                  setAppState((prev) => ({
-                    ...prev,
-                    facilitiesList: updatedFacilitiesList,
-                    facilityInfo:
-                      prev.facilityInfo?.id === facId
-                        ? { ...prev.facilityInfo, lat: newLat, lng: newLng }
-                        : prev.facilityInfo,
-                  }));
+                      const updatedFacilitiesList = facilitiesList.map((fac) =>
+                        fac.id === facId ? { ...fac, lat: newLat, lng: newLng } : fac
+                      );
+                      setAppState((prev) => ({
+                        ...prev,
+                        facilitiesList: updatedFacilitiesList,
+                        facilityInfo:
+                          prev.facilityInfo?.id === facId
+                            ? { ...prev.facilityInfo, lat: newLat, lng: newLng }
+                            : prev.facilityInfo,
+                      }));
 
-                  // PERSIST GPS COORDINATES TO CLOUD FIRESTORE IMMEDIATELY!
-                  if (updatedFac) {
-                    saveFacilityToCloud(updatedFac);
-                  }
-                }}
-              />
-            ) : (!currentUser && !isQrPublicScan) ? (
+                      // PERSIST GPS COORDINATES TO CLOUD FIRESTORE IMMEDIATELY!
+                      if (updatedFac) {
+                        saveFacilityToCloud(updatedFac);
+                      }
+                    }}
+                  />
+                </Suspense>
+              ) : (!currentUser && !isQrPublicScan) ? (
               <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-12 text-center space-y-6 max-w-2xl mx-auto my-8 shadow-xl animate-in fade-in duration-300">
                 <div className="w-16 h-16 bg-emerald-100 text-emerald-700 border border-emerald-300 rounded-2xl flex items-center justify-center mx-auto shadow-md">
                   <span className="text-3xl">📱</span>
@@ -1657,96 +1690,97 @@ export default function App() {
         onExportExcel={handleExportExcelClick}
       />
 
-      {isExportModalOpen && (
-        <ExportModal
-          onClose={() => setIsExportModalOpen(false)}
-          onExport={handleExportExecute}
+      <Suspense fallback={null}>
+        {isExportModalOpen && (
+          <ExportModal
+            onClose={() => setIsExportModalOpen(false)}
+            onExport={handleExportExecute}
+          />
+        )}
+
+        <PendingApprovalsModal
+          isOpen={isPendingModalOpen}
+          onClose={() => setIsPendingModalOpen(false)}
+          pendingRequests={pendingRequests}
+          onApprove={handleApprovePending}
+          onReject={handleRejectPending}
         />
-      )}
 
-      <PendingApprovalsModal
-        isOpen={isPendingModalOpen}
-        onClose={() => setIsPendingModalOpen(false)}
-        pendingRequests={pendingRequests}
-        onApprove={handleApprovePending}
-        onReject={handleRejectPending}
-      />
+        {/* Settings Modals */}
+        <UISettingsModal
+          isOpen={isUISettingsModalOpen}
+          onClose={() => setIsUISettingsModalOpen(false)}
+          uiSettings={uiSettings}
+          onUpdateSettings={setUiSettings}
+          onResetSettings={() => setUiSettings(DEFAULT_UI_SETTINGS)}
+        />
 
-      {/* Settings Modals */}
-      <UISettingsModal
-        isOpen={isUISettingsModalOpen}
-        onClose={() => setIsUISettingsModalOpen(false)}
-        uiSettings={uiSettings}
-        onUpdateSettings={setUiSettings}
-        onResetSettings={() => setUiSettings(DEFAULT_UI_SETTINGS)}
-      />
+        <DesktopShortcutsModal
+          isOpen={isShortcutsModalOpen}
+          onClose={() => setIsShortcutsModalOpen(false)}
+        />
 
-      <DesktopShortcutsModal
-        isOpen={isShortcutsModalOpen}
-        onClose={() => setIsShortcutsModalOpen(false)}
-      />
+        <FluctuationModal
+          isOpen={isFluctuationModalOpen}
+          onClose={() => setIsFluctuationModalOpen(false)}
+          onSave={handleSaveFluctuation}
+          editData={editingFluctuation}
+          facilitiesList={facilitiesList}
+          activeFacilityId={activeFacilityId}
+          species={activeSpecies}
+          lastRowState={rows[rows.length - 1]}
+        />
 
+        <SpeciesModal
+          isOpen={isSpeciesModalOpen}
+          onClose={() => setIsSpeciesModalOpen(false)}
+          onSave={handleSaveSpecies}
+          editSpecies={editingSpecies}
+        />
 
-      <FluctuationModal
-        isOpen={isFluctuationModalOpen}
-        onClose={() => setIsFluctuationModalOpen(false)}
-        onSave={handleSaveFluctuation}
-        editData={editingFluctuation}
-        facilitiesList={facilitiesList}
-        activeFacilityId={activeFacilityId}
-        species={activeSpecies}
-        lastRowState={rows[rows.length - 1]}
-      />
+        <FacilityModal
+          isOpen={isFacilityModalOpen}
+          onClose={() => setIsFacilityModalOpen(false)}
+          onSave={handleSaveFacility}
+          editFacility={editingFacility}
+        />
 
-      <SpeciesModal
-        isOpen={isSpeciesModalOpen}
-        onClose={() => setIsSpeciesModalOpen(false)}
-        onSave={handleSaveSpecies}
-        editSpecies={editingSpecies}
-      />
+        <ExportImportModal
+          isOpen={isBackupModalOpen}
+          onClose={() => setIsBackupModalOpen(false)}
+          appData={appState}
+          onImportData={handleImportData}
+          onClearData={handleClearAllData}
+          onResetDemoData={handleResetDemo}
+        />
 
-      <FacilityModal
-        isOpen={isFacilityModalOpen}
-        onClose={() => setIsFacilityModalOpen(false)}
-        onSave={handleSaveFacility}
-        editFacility={editingFacility}
-      />
+        <PrintView
+          isOpen={isPrintViewOpen}
+          onClose={() => setIsPrintViewOpen(false)}
+          species={activeSpecies}
+          rows={rows}
+          facilityInfo={facilityInfo}
+        />
 
-      <ExportImportModal
-        isOpen={isBackupModalOpen}
-        onClose={() => setIsBackupModalOpen(false)}
-        appData={appState}
-        onImportData={handleImportData}
-        onClearData={handleClearAllData}
-        onResetDemoData={handleResetDemo}
-      />
+        <QRCodeModal
+          isOpen={isQRCodeModalOpen}
+          onClose={() => setIsQRCodeModalOpen(false)}
+          facility={qrModalFacility}
+        />
 
-      <PrintView
-        isOpen={isPrintViewOpen}
-        onClose={() => setIsPrintViewOpen(false)}
-        species={activeSpecies}
-        rows={rows}
-        facilityInfo={facilityInfo}
-      />
-
-      <QRCodeModal
-        isOpen={isQRCodeModalOpen}
-        onClose={() => setIsQRCodeModalOpen(false)}
-        facility={qrModalFacility}
-      />
-
-      <PackingListModal
-        isOpen={isPackingListModalOpen}
-        onClose={() => {
-          setIsPackingListModalOpen(false);
-          setEditingPackingListItem(null);
-        }}
-        onSave={handleSavePackingListItem}
-        editItem={editingPackingListItem}
-        facilitiesList={facilitiesList}
-        nextDefaultSoVaoSo={nextDefaultSoVaoSo}
-        nextDefaultStt={nextDefaultStt}
-      />
+        <PackingListModal
+          isOpen={isPackingListModalOpen}
+          onClose={() => {
+            setIsPackingListModalOpen(false);
+            setEditingPackingListItem(null);
+          }}
+          onSave={handleSavePackingListItem}
+          editItem={editingPackingListItem}
+          facilitiesList={facilitiesList}
+          nextDefaultSoVaoSo={nextDefaultSoVaoSo}
+          nextDefaultStt={nextDefaultStt}
+        />
+      </Suspense>
 
       {/* PWA Installation Floating Banner */}
       <PWAInstallPrompt />
