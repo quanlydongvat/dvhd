@@ -18,6 +18,7 @@ import {
   FileSpreadsheet,
   Headphones,
   FileCheck2,
+  ExternalLink,
 } from 'lucide-react';
 import MusicPlayer from './MusicPlayer';
 
@@ -490,16 +491,23 @@ export default function LeftSidebar({
         <section>
           <div className="flex items-center justify-between px-1 mb-2">
             <div className="flex items-center gap-2">
-              <div className="w-5 h-5 rounded-md bg-teal-100 text-teal-800 flex items-center justify-center shadow-2xs">
+              <div className="w-5 h-5 rounded-md bg-purple-100 text-purple-800 flex items-center justify-center shadow-2xs">
                 <Headphones className="w-3.5 h-3.5 stroke-[2.5]" />
               </div>
               <h2 className="text-xs font-black text-slate-700 uppercase tracking-wider">
                 Góc Nhạc Thư Giãn
               </h2>
             </div>
-            <span className="text-[10px] font-extrabold text-teal-800 bg-teal-100/80 border border-teal-200 px-2 py-0.5 rounded-full">
-              Audio
-            </span>
+            <a
+              href="https://zingmp3.vn/zing-chart"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[10px] font-black text-purple-700 hover:text-purple-900 bg-purple-100/90 hover:bg-purple-200 border border-purple-300 px-2 py-0.5 rounded-full flex items-center gap-1 transition-all shadow-2xs"
+              title="Mở Bảng Xếp Hạng #zingchart trên Zing MP3"
+            >
+              <span>MP3 Zing</span>
+              <ExternalLink className="w-2.5 h-2.5" />
+            </a>
           </div>
 
           <MusicPlayer />
