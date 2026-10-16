@@ -138,3 +138,58 @@ export function subscribeToCloudChanges(callback) {
   // Just returning dummy unsubscribe
   return () => {};
 }
+
+// Cloud Firestore helpers for Packing List (Sổ theo dõi bảng kê lâm sản)
+export async function syncPackingListToCloud(packingList) {
+  try {
+    if (!db || !Array.isArray(packingList)) return false;
+    const batch = writeBatch(db);
+    packingList.forEach((item) => {
+      const docRef = doc(db, 'packing_lists', item.id);
+      batch.set(docRef, { ...item, updatedAt: new Date().toISOString() });
+    });
+    await batch.commit();
+    return true;
+  } catch (error) {
+    console.warn('Error syncing packing list to Cloud Firestore:', error);
+    return false;
+  }
+}
+
+export async function savePackingListItemToCloud(item) {
+  try {
+    if (!db || !item || !item.id) return false;
+    const docRef = doc(db, 'packing_lists', item.id);
+    await setDoc(docRef, { ...item, updatedAt: new Date().toISOString() });
+    return true;
+  } catch (error) {
+    console.warn('Error saving packing list item to Cloud:', error);
+    return false;
+  }
+}
+
+export async function deletePackingListItemFromCloud(id) {
+  try {
+    if (!db || !id) return false;
+    await deleteDoc(doc(db, 'packing_lists', id));
+    return true;
+  } catch (error) {
+    console.warn('Error deleting packing list item from Cloud:', error);
+    return false;
+  }
+}
+
+export async function loadPackingListFromCloud() {
+  try {
+    if (!db) return null;
+    const snapshot = await getDocs(collection(db, 'packing_lists'));
+    if (snapshot.empty) return null;
+    const list = [];
+    snapshot.forEach((d) => list.push(d.data()));
+    list.sort((a, b) => (Number(a.stt) || 0) - (Number(b.stt) || 0));
+    return list;
+  } catch (error) {
+    console.warn('Error loading packing list from Cloud:', error);
+    return null;
+  }
+}

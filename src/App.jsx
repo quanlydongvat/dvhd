@@ -11,6 +11,8 @@ import DesktopShortcutsModal from './components/DesktopShortcutsModal';
 import MobileBottomNav from './components/MobileBottomNav';
 import UISettingsModal, { DEFAULT_UI_SETTINGS } from './components/UISettingsModal';
 import FluctuationModal from './components/FluctuationModal';
+import PackingListView from './components/PackingListView';
+import PackingListModal from './components/PackingListModal';
 
 import SpeciesModal from './components/SpeciesModal';
 import FacilityModal from './components/FacilityModal';
@@ -18,9 +20,28 @@ import ExportImportModal from './components/ExportImportModal';
 import PrintView from './components/PrintView';
 import PWAInstallPrompt from './components/PWAInstallPrompt';
 import { computeLogbookTable } from './utils/calculations';
-import { loadAppData, saveAppData, clearAppData, resetToDemoData, REAL_FACILITIES_DATA, EMPTY_FACILITY_INFO } from './utils/storage';
+import {
+  loadAppData,
+  saveAppData,
+  clearAppData,
+  resetToDemoData,
+  REAL_FACILITIES_DATA,
+  EMPTY_FACILITY_INFO,
+  loadPackingListData,
+  savePackingListData,
+  INITIAL_PACKING_LIST_DATA,
+} from './utils/storage';
 import { exportDistrictReport, exportFacilityLogbook } from './utils/exportExcel';
-import { syncAppDataToCloud, loadAppDataFromCloud, deleteFacilityFromCloud, saveFacilityToCloud } from './firebase';
+import {
+  syncAppDataToCloud,
+  loadAppDataFromCloud,
+  deleteFacilityFromCloud,
+  saveFacilityToCloud,
+  savePackingListItemToCloud,
+  deletePackingListItemFromCloud,
+  loadPackingListFromCloud,
+  syncPackingListToCloud,
+} from './firebase';
 import QRCodeModal from './components/QRCodeModal';
 import ExportModal from './components/ExportModal';
 import PendingApprovalsModal from './components/PendingApprovalsModal';
@@ -76,9 +97,10 @@ export default function App() {
       const path = window.location.pathname.toLowerCase();
       const params = new URLSearchParams(window.location.search);
       const viewParam = params.get('view')?.toUpperCase();
-      if (viewParam && ['HOME', 'SUMMARY', 'LOGBOOK', 'MAP', 'ADMIN_USERS'].includes(viewParam)) {
+      if (viewParam && ['HOME', 'SUMMARY', 'LOGBOOK', 'MAP', 'ADMIN_USERS', 'PACKING_LIST'].includes(viewParam)) {
         return viewParam;
       }
+      if (path.includes('/bang-ke') || path.includes('/packing-list')) return 'PACKING_LIST';
       if (path.includes('/tong-hop') || path.includes('/summary')) return 'SUMMARY';
       if (path.includes('/so-mau-2') || path.includes('/logbook')) return 'LOGBOOK';
       if (path.includes('/ban-do') || path.includes('/map')) return 'MAP';
@@ -210,6 +232,11 @@ export default function App() {
         params.delete('view');
         params.delete('facId');
         params.delete('facilityId');
+      } else if (currentView === 'PACKING_LIST') {
+        path = '/bang-ke';
+        params.delete('view');
+        params.delete('facId');
+        params.delete('facilityId');
       }
 
       if (isQrReadOnlyMode) {
@@ -235,8 +262,10 @@ export default function App() {
       const viewParam = params.get('view')?.toUpperCase();
       const facIdParam = params.get('facId') || params.get('facilityId');
 
-      if (viewParam && ['HOME', 'SUMMARY', 'LOGBOOK', 'MAP', 'ADMIN_USERS'].includes(viewParam)) {
+      if (viewParam && ['HOME', 'SUMMARY', 'LOGBOOK', 'MAP', 'ADMIN_USERS', 'PACKING_LIST'].includes(viewParam)) {
         setCurrentView(viewParam);
+      } else if (path.includes('/bang-ke') || path.includes('/packing-list')) {
+        setCurrentView('PACKING_LIST');
       } else if (path.includes('/tong-hop') || path.includes('/summary')) {
         setCurrentView('SUMMARY');
       } else if (path.includes('/so-mau-2') || path.includes('/logbook')) {
@@ -378,6 +407,29 @@ export default function App() {
   const [editingFacility, setEditingFacility] = useState(null);
   const [isBackupModalOpen, setIsBackupModalOpen] = useState(false);
   const [isPrintViewOpen, setIsPrintViewOpen] = useState(false);
+
+  // Sổ theo dõi xuất bảng kê lâm sản state
+  const [packingListData, setPackingListData] = useState(() => loadPackingListData());
+  const [isPackingListModalOpen, setIsPackingListModalOpen] = useState(false);
+  const [editingPackingListItem, setEditingPackingListItem] = useState(null);
+
+  // Sync packing list from Cloud on mount
+  useEffect(() => {
+    loadPackingListFromCloud().then((cloudList) => {
+      if (cloudList && cloudList.length > 0) {
+        setPackingListData((prev) => {
+          if (cloudList.length >= prev.length) {
+            savePackingListData(cloudList);
+            return cloudList;
+          }
+          return prev;
+        });
+      } else {
+        syncPackingListToCloud(INITIAL_PACKING_LIST_DATA);
+      }
+    });
+  }, []);
+
   const [skipNextSync, setSkipNextSync] = useState(false);
   const isInitialMount = React.useRef(true);
 
@@ -1178,6 +1230,41 @@ export default function App() {
     });
   };
 
+  // Packing List Next Auto Numbering
+  const nextDefaultStt = packingListData.length > 0 
+    ? Math.max(...packingListData.map(d => Number(d.stt) || 0)) + 1 
+    : 1;
+  const nextDefaultSoVaoSo = `${String(nextDefaultStt).padStart(2, '0')}/2026/14`;
+
+  // Handler: Save Packing List Item
+  const handleSavePackingListItem = async (item) => {
+    let updated;
+    const exists = packingListData.some((i) => i.id === item.id);
+    if (exists) {
+      updated = packingListData.map((i) => (i.id === item.id ? item : i));
+    } else {
+      const newItem = {
+        ...item,
+        id: item.id || `BKLs-${Date.now()}`,
+      };
+      updated = [newItem, ...packingListData];
+      item = newItem;
+    }
+    setPackingListData(updated);
+    savePackingListData(updated);
+    await savePackingListItemToCloud(item);
+    setIsPackingListModalOpen(false);
+    setEditingPackingListItem(null);
+  };
+
+  // Handler: Delete Packing List Item
+  const handleDeletePackingListItem = async (id) => {
+    const updated = packingListData.filter((i) => i.id !== id);
+    setPackingListData(updated);
+    savePackingListData(updated);
+    await deletePackingListItemFromCloud(id);
+  };
+
   // Export Excel
   const handleExportExcelClick = () => {
     if (currentUser?.role === 'ADMIN' || currentUser?.role === 'STAFF') {
@@ -1314,11 +1401,16 @@ export default function App() {
             currentView={currentView}
             onChangeView={setCurrentView}
             facilitiesCount={facilitiesList.length}
+            packingListCount={packingListData.length}
             onOpenAddFluctuation={() => {
               setEditingFluctuation(null);
               setIsFluctuationModalOpen(true);
             }}
             onOpenAddFacility={handleOpenAddFacility}
+            onOpenAddPackingList={() => {
+              setEditingPackingListItem(null);
+              setIsPackingListModalOpen(true);
+            }}
             onExportExcel={handleExportExcelClick}
             onOpenPrintView={() => setIsPrintViewOpen(true)}
             onOpenBackupModal={() => setIsBackupModalOpen(true)}
@@ -1409,6 +1501,21 @@ export default function App() {
                 }}
                 onOpenQRCode={handleOpenQRCode}
                 onDeleteFacility={handleDeleteFacility}
+              />
+            ) : currentView === 'PACKING_LIST' ? (
+              <PackingListView
+                packingListData={packingListData}
+                onOpenAdd={() => {
+                  setEditingPackingListItem(null);
+                  setIsPackingListModalOpen(true);
+                }}
+                onOpenEdit={(item) => {
+                  setEditingPackingListItem(item);
+                  setIsPackingListModalOpen(true);
+                }}
+                onDelete={handleDeletePackingListItem}
+                facilitiesList={facilitiesList}
+                currentUser={currentUser}
               />
             ) : currentView === 'MAP' ? (
               <MapView
@@ -1626,6 +1733,19 @@ export default function App() {
         isOpen={isQRCodeModalOpen}
         onClose={() => setIsQRCodeModalOpen(false)}
         facility={qrModalFacility}
+      />
+
+      <PackingListModal
+        isOpen={isPackingListModalOpen}
+        onClose={() => {
+          setIsPackingListModalOpen(false);
+          setEditingPackingListItem(null);
+        }}
+        onSave={handleSavePackingListItem}
+        editItem={editingPackingListItem}
+        facilitiesList={facilitiesList}
+        nextDefaultSoVaoSo={nextDefaultSoVaoSo}
+        nextDefaultStt={nextDefaultStt}
       />
 
       {/* PWA Installation Floating Banner */}

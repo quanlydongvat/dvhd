@@ -1,5 +1,5 @@
 import React from 'react';
-import { Settings, Edit3, FolderPlus, Table, LayoutList, BarChart3, MapPin, Building2, Download, Printer, Database, PlusCircle, Bell, LogOut, Sliders } from 'lucide-react';
+import { Settings, Edit3, FolderPlus, Table, LayoutList, BarChart3, MapPin, Building2, Download, Printer, Database, PlusCircle, Bell, LogOut, Sliders, FileCheck2 } from 'lucide-react';
 import { PURPOSE_CODES } from '../utils/calculations';
 
 export default function Header({
@@ -82,6 +82,8 @@ export default function Header({
         return { title: 'Trang Chủ & Thống Kê Tổng Quan', icon: BarChart3, color: 'text-amber-600' };
       case 'MAP':
         return { title: 'Bản Đồ Định Vị GIS Cơ Sở Nuôi (Google Hybrid)', icon: MapPin, color: 'text-rose-600' };
+      case 'PACKING_LIST':
+        return { title: 'Sổ Theo Dõi Xuất Bảng Kê Lâm Sản', icon: FileCheck2, color: 'text-amber-700' };
       default:
         return { title: 'Sổ Theo Dõi Động Vật Hoang Dã', icon: Table, color: 'text-emerald-700' };
     }
@@ -220,6 +222,15 @@ export default function Header({
                   }`}
                 >
                   Bản đồ
+                </button>
+                <button
+                  type="button"
+                  onClick={() => onChangeView && onChangeView('PACKING_LIST')}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-black whitespace-nowrap transition-all ${
+                    currentView === 'PACKING_LIST' ? 'bg-amber-500 text-slate-950 shadow-xs' : 'text-slate-700 hover:text-slate-950'
+                  }`}
+                >
+                  Sổ Bảng Kê
                 </button>
               </div>
 

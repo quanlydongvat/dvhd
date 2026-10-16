@@ -17,6 +17,7 @@ import {
   Compass,
   FileSpreadsheet,
   Headphones,
+  FileCheck2,
 } from 'lucide-react';
 import MusicPlayer from './MusicPlayer';
 
@@ -24,8 +25,10 @@ export default function LeftSidebar({
   currentView = 'SUMMARY',
   onChangeView,
   facilitiesCount = 31,
+  packingListCount = 33,
   onOpenAddFluctuation,
   onOpenAddFacility,
+  onOpenAddPackingList,
   onExportExcel,
   onOpenPrintView,
   onOpenBackupModal,
@@ -215,7 +218,43 @@ export default function LeftSidebar({
                   <ChevronRight className={`w-4 h-4 ${isNavActive('LOGBOOK') ? 'text-white' : 'text-slate-400'}`} />
                 </button>
 
-                {/* 4. Bản Đồ GIS */}
+                {/* 4. Sổ Theo Dõi Bảng Kê Lâm Sản (Mới) */}
+                <button
+                  type="button"
+                  onClick={() => onChangeView('PACKING_LIST')}
+                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-extrabold transition-all cursor-pointer ${
+                    isNavActive('PACKING_LIST')
+                      ? 'bg-gradient-to-r from-emerald-600 via-emerald-700 to-teal-700 text-white shadow-md shadow-emerald-700/20 translate-x-0.5'
+                      : 'text-slate-700 hover:text-emerald-950 hover:bg-emerald-50/70 border border-transparent hover:border-emerald-200/60'
+                  }`}
+                >
+                  <div className="flex items-center gap-2.5">
+                    <div className={`w-7 h-7 rounded-lg flex items-center justify-center transition-colors ${
+                      isNavActive('PACKING_LIST')
+                        ? 'bg-white/20 text-white'
+                        : 'bg-amber-50 text-amber-700 border border-amber-200/60'
+                    }`}>
+                      <FileCheck2 className="w-4 h-4" />
+                    </div>
+                    <div className="text-left leading-tight">
+                      <div className="font-black">Sổ Theo Dõi Bảng Kê</div>
+                      <div className={`text-[10px] font-medium ${isNavActive('PACKING_LIST') ? 'text-emerald-100' : 'text-slate-400'}`}>
+                        Lâm sản xuất bán
+                      </div>
+                    </div>
+                  </div>
+                  <span
+                    className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full transition-colors ${
+                      isNavActive('PACKING_LIST')
+                        ? 'bg-white/20 text-white'
+                        : 'bg-amber-100 text-amber-900 border border-amber-200'
+                    }`}
+                  >
+                    {packingListCount} BK
+                  </span>
+                </button>
+
+                {/* 5. Bản Đồ GIS */}
                 <button
                   type="button"
                   onClick={() => onChangeView('MAP')}
@@ -310,6 +349,28 @@ export default function LeftSidebar({
                 </div>
                 <span className="text-[10px] text-emerald-700 bg-emerald-100 font-extrabold px-2 py-0.5 rounded-md border border-emerald-200">
                   + Thêm
+                </span>
+              </button>
+            )}
+
+            {/* Action 3: Ghi Bảng Kê Xuất Bán Mới */}
+            {currentUser?.role !== 'FACILITY' && onOpenAddPackingList && (
+              <button
+                type="button"
+                onClick={onOpenAddPackingList}
+                className="w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-xs font-extrabold text-amber-950 bg-white hover:bg-amber-50/80 border border-amber-300 hover:border-amber-400 transition-all shadow-2xs cursor-pointer group"
+              >
+                <div className="flex items-center gap-2.5">
+                  <div className="w-7 h-7 rounded-lg bg-amber-50 text-amber-700 border border-amber-200 flex items-center justify-center group-hover:scale-105 transition-transform">
+                    <FileCheck2 className="w-4 h-4" />
+                  </div>
+                  <div className="text-left">
+                    <div className="leading-tight text-slate-800 group-hover:text-amber-950">Ghi Bảng Kê Xuất Bán</div>
+                    <div className="text-[10px] text-slate-500 font-medium">Cấp số vào sổ & xác nhận</div>
+                  </div>
+                </div>
+                <span className="text-[10px] text-amber-800 bg-amber-100 font-extrabold px-2 py-0.5 rounded-md border border-amber-200">
+                  + Sổ BK
                 </span>
               </button>
             )}

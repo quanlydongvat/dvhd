@@ -1,0 +1,299 @@
+[
+  {
+    "id": "BKLs-001",
+    "stt": 1,
+    "soVaoSo": "03/2026/14",
+    "ngayXacNhan": "04/03/2026",
+    "tenChuLamSan": "Nguyễn Hữu Đô",
+    "diaChi": "Thôn 3, xã Cư Pui, Đắk Lắk",
+    "tongLamSan": "02 cá thể Cầy vòi hương; khối lượng 4 kg"
+  },
+  {
+    "id": "BKLs-002",
+    "stt": 2,
+    "soVaoSo": "04/2026/14",
+    "ngayXacNhan": "10/03/2026",
+    "tenChuLamSan": "Ngô Thị Trang",
+    "diaChi": "Thôn 27, xã Krông Bông, Đắk Lắk",
+    "tongLamSan": "05 cá thể Cầy vòi hương; khối lượng 11,5 kg"
+  },
+  {
+    "id": "BKLs-003",
+    "stt": 3,
+    "soVaoSo": "05/2026/14",
+    "ngayXacNhan": "18/03/2026",
+    "tenChuLamSan": "Lê Quang Mạnh",
+    "diaChi": "Thôn 29, xã Krông Bông, Đắk Lắk",
+    "tongLamSan": "30 cá thể Dúi má đào; tổng trọng lượng 32 kg"
+  },
+  {
+    "id": "BKLs-004",
+    "stt": 4,
+    "soVaoSo": "06/2026/14",
+    "ngayXacNhan": "09/04/2026",
+    "tenChuLamSan": "Ngô Thị Trang",
+    "diaChi": "Thôn 27, xã Krông Bông, Đắk Lắk",
+    "tongLamSan": "05 cá thể Cầy vòi hương; khối lượng 11,5 kg"
+  },
+  {
+    "id": "BKLs-005",
+    "stt": 5,
+    "soVaoSo": "07/2026/14",
+    "ngayXacNhan": "16/04/2026",
+    "tenChuLamSan": "Nguyễn Trí",
+    "diaChi": "Thôn 7, xã Krông Bông, Đắk Lắk",
+    "tongLamSan": "04 cá thể Chim cu gáy; khối lượng 0,4 kg"
+  },
+  {
+    "id": "BKLs-006",
+    "stt": 6,
+    "soVaoSo": "08/2026/14",
+    "ngayXacNhan": "16/04/2026",
+    "tenChuLamSan": "Nguyễn Trí",
+    "diaChi": "Thôn 7, xã Krông Bông, Đắk Lắk",
+    "tongLamSan": "02 cá thể Chim cu gáy; khối lượng 0,2 kg"
+  },
+  {
+    "id": "BKLs-007",
+    "stt": 7,
+    "soVaoSo": "09/2026/14",
+    "ngayXacNhan": "22/04/2026",
+    "tenChuLamSan": "Lê Thanh Đức",
+    "diaChi": "Thôn 8, xã Krông Bông, Đắk Lắk",
+    "tongLamSan": "05 cá thể Cầy vòi hương; khối lượng 15,4 kg"
+  },
+  {
+    "id": "BKLs-008",
+    "stt": 8,
+    "soVaoSo": "10/2026/14",
+    "ngayXacNhan": "13/05/2026",
+    "tenChuLamSan": "Phan Thanh Trúc",
+    "diaChi": "Thôn 4, xã Hòa Sơn, Đắk Lắk",
+    "tongLamSan": "03 cá thể Chim chào mào; khối lượng 0,1 kg"
+  },
+  {
+    "id": "BKLs-009",
+    "stt": 9,
+    "soVaoSo": "11/2026/14",
+    "ngayXacNhan": "13/05/2026",
+    "tenChuLamSan": "Phan Thanh Trúc",
+    "diaChi": "Thôn 4, xã Hòa Sơn, Đắk Lắk",
+    "tongLamSan": "02 cá thể Chim chào mào; khối lượng 0,06 kg"
+  },
+  {
+    "id": "BKLs-010",
+    "stt": 10,
+    "soVaoSo": "12/2026/14",
+    "ngayXacNhan": "13/05/2026",
+    "tenChuLamSan": "Phan Thanh Trúc",
+    "diaChi": "Thôn 4, xã Hòa Sơn, Đắk Lắk",
+    "tongLamSan": "02 cá thể Chim chào mào; khối lượng 0,06 kg"
+  },
+  {
+    "id": "BKLs-011",
+    "stt": 11,
+    "soVaoSo": "13/2026/14",
+    "ngayXacNhan": "13/05/2026",
+    "tenChuLamSan": "Phan Thanh Trúc",
+    "diaChi": "Thôn 4, xã Hòa Sơn, Đắk Lắk",
+    "tongLamSan": "02 cá thể Chim chào mào; khối lượng 0,06 kg"
+  },
+  {
+    "id": "BKLs-012",
+    "stt": 12,
+    "soVaoSo": "14/2026/14",
+    "ngayXacNhan": "13/05/2026",
+    "tenChuLamSan": "Phan Thanh Trúc",
+    "diaChi": "Thôn 4, xã Hòa Sơn, Đắk Lắk",
+    "tongLamSan": "02 cá thể Chim chào mào; khối lượng 0,06 kg"
+  },
+  {
+    "id": "BKLs-013",
+    "stt": 13,
+    "soVaoSo": "15/2026/14",
+    "ngayXacNhan": "14/05/2026",
+    "tenChuLamSan": "Trần Văn Lực",
+    "diaChi": "Buôn Cư Ênu A, xã Dang Kang, Đắk Lắk",
+    "tongLamSan": "24 cá thể Dúi má đào; khối lượng 19,5 kg"
+  },
+  {
+    "id": "BKLs-014",
+    "stt": 14,
+    "soVaoSo": "16/2026/14",
+    "ngayXacNhan": "20/05/2026",
+    "tenChuLamSan": "Hoàng Văn Hải",
+    "diaChi": "Thôn 6, xã Dang Kang, Đắk Lắk",
+    "tongLamSan": "02 cá thể Chim chào mào; khối lượng 0,06 kg"
+  },
+  {
+    "id": "BKLs-015",
+    "stt": 15,
+    "soVaoSo": "17/2026/14",
+    "ngayXacNhan": "20/05/2026",
+    "tenChuLamSan": "Hoàng Văn Hải",
+    "diaChi": "Thôn 6, xã Dang Kang, Đắk Lắk",
+    "tongLamSan": "02 cá thể Chim chào mào; khối lượng 0,06 kg"
+  },
+  {
+    "id": "BKLs-016",
+    "stt": 16,
+    "soVaoSo": "18/2026/14",
+    "ngayXacNhan": "20/05/2026",
+    "tenChuLamSan": "Hoàng Văn Hải",
+    "diaChi": "Thôn 6, xã Dang Kang, Đắk Lắk",
+    "tongLamSan": "02 cá thể Chim chào mào; khối lượng 0,06 kg"
+  },
+  {
+    "id": "BKLs-017",
+    "stt": 17,
+    "soVaoSo": "20/2026/14",
+    "ngayXacNhan": "28/05/2026",
+    "tenChuLamSan": "Nguyễn Trí",
+    "diaChi": "Thôn 7, xã Krông Bông, Đắk Lắk",
+    "tongLamSan": "02 cá thể Chim cu gáy; khối lượng 0,15 kg"
+  },
+  {
+    "id": "BKLs-018",
+    "stt": 18,
+    "soVaoSo": "21/2026/14",
+    "ngayXacNhan": "09/06/2026",
+    "tenChuLamSan": "Nguyễn Hữu Đô",
+    "diaChi": "Thôn 3, xã Cư Pui, Đắk Lắk",
+    "tongLamSan": "02 cá thể Cầy vòi hương; khối lượng 4 kg"
+  },
+  {
+    "id": "BKLs-019",
+    "stt": 19,
+    "soVaoSo": "23/2026/14",
+    "ngayXacNhan": "16/06/2026",
+    "tenChuLamSan": "Nguyễn Kim Tuấn",
+    "diaChi": "Thôn 6, xã Dang Kang, Đắk Lắk",
+    "tongLamSan": "06 cá thể Dúi mốc lớn; khối lượng 08 kg"
+  },
+  {
+    "id": "BKLs-020",
+    "stt": 20,
+    "soVaoSo": "25/2026/14",
+    "ngayXacNhan": "17/07/2026",
+    "tenChuLamSan": "Trần Văn Lực",
+    "diaChi": "Buôn Cư Ênu A, xã Dang Kang, Đắk Lắk",
+    "tongLamSan": "06 cá thể Dúi má đào; khối lượng 6 kg"
+  },
+  {
+    "id": "BKLs-021",
+    "stt": 21,
+    "soVaoSo": "27/2026/14",
+    "ngayXacNhan": "21/07/2026",
+    "tenChuLamSan": "Hoàng Văn Hải",
+    "diaChi": "Thôn 6, xã Dang Kang, Đắk Lắk",
+    "tongLamSan": "01 cá thể Chim chào mào; khối lượng 0,04 kg"
+  },
+  {
+    "id": "BKLs-022",
+    "stt": 22,
+    "soVaoSo": "28/2026/14",
+    "ngayXacNhan": "10/08/2026",
+    "tenChuLamSan": "Nguyễn Hữu Đô",
+    "diaChi": "Thôn 3, xã Cư Pui, Đắk Lắk",
+    "tongLamSan": "01 cá thể Cầy vòi hương; khối lượng 3 kg"
+  },
+  {
+    "id": "BKLs-023",
+    "stt": 23,
+    "soVaoSo": "29/2026/14",
+    "ngayXacNhan": "10/08/2026",
+    "tenChuLamSan": "Trịnh Lục",
+    "diaChi": "Thôn 3, xã Cư Pui, Đắk Lắk",
+    "tongLamSan": "05 cá thể Cầy vòi hương; khối lượng 8 kg"
+  },
+  {
+    "id": "BKLs-024",
+    "stt": 24,
+    "soVaoSo": "30/2026/14",
+    "ngayXacNhan": "14/08/2026",
+    "tenChuLamSan": "Trần Văn Lực",
+    "diaChi": "Thôn 3, xã Dang Kang, Đắk Lắk",
+    "tongLamSan": "14 cá thể Dúi mốc đuôi; khối lượng 07 kg"
+  },
+  {
+    "id": "BKLs-025",
+    "stt": 25,
+    "soVaoSo": "32/2026/14",
+    "ngayXacNhan": "21/08/2026",
+    "tenChuLamSan": "Hoàng Văn Hải",
+    "diaChi": "Thôn 9, xã Dang Kang, Đắk Lắk",
+    "tongLamSan": "02 cá thể Chim chào mào; khối lượng 0,06 kg"
+  },
+  {
+    "id": "BKLs-026",
+    "stt": 26,
+    "soVaoSo": "33/2026/14",
+    "ngayXacNhan": "10/09/2026",
+    "tenChuLamSan": "Nguyễn Trí",
+    "diaChi": "Thôn 4, xã Krông Bông, Đắk Lắk",
+    "tongLamSan": "04 cá thể Chim cu gáy; khối lượng 0,4 kg"
+  },
+  {
+    "id": "BKLs-027",
+    "stt": 27,
+    "soVaoSo": "34/2026/14",
+    "ngayXacNhan": "10/09/2026",
+    "tenChuLamSan": "Hoàng Văn Hải",
+    "diaChi": "Thôn 9, xã Dang Kang, Đắk Lắk",
+    "tongLamSan": "02 cá thể Chim chào mào; khối lượng 0,06 kg"
+  },
+  {
+    "id": "BKLs-028",
+    "stt": 28,
+    "soVaoSo": "35/2026/14",
+    "ngayXacNhan": "10/09/2026",
+    "tenChuLamSan": "Hoàng Văn Hải",
+    "diaChi": "Thôn 9, xã Dang Kang, Đắk Lắk",
+    "tongLamSan": "02 cá thể Chim chào mào; khối lượng 0,06 kg"
+  },
+  {
+    "id": "BKLs-029",
+    "stt": 29,
+    "soVaoSo": "36/2026/14",
+    "ngayXacNhan": "10/09/2026",
+    "tenChuLamSan": "Hoàng Văn Hải",
+    "diaChi": "Thôn 9, xã Dang Kang, Đắk Lắk",
+    "tongLamSan": "02 cá thể Chim chào mào; khối lượng 0,06 kg"
+  },
+  {
+    "id": "BKLs-030",
+    "stt": 30,
+    "soVaoSo": "37/2026/14",
+    "ngayXacNhan": "16/09/2026",
+    "tenChuLamSan": "Phan Thanh Trúc",
+    "diaChi": "Thôn 9, xã Hòa Sơn, Đắk Lắk",
+    "tongLamSan": "02 cá thể Chim chào mào; khối lượng 0,06 kg"
+  },
+  {
+    "id": "BKLs-031",
+    "stt": 31,
+    "soVaoSo": "39/2026/14",
+    "ngayXacNhan": "24/09/2026",
+    "tenChuLamSan": "Nguyễn Hữu Đô",
+    "diaChi": "Thôn 3, xã Cư Pui, Đắk Lắk",
+    "tongLamSan": "10 cá thể Cầy vòi hương; khối lượng 30 kg"
+  },
+  {
+    "id": "BKLs-032",
+    "stt": 32,
+    "soVaoSo": "41/2026/14",
+    "ngayXacNhan": "08/10/2026",
+    "tenChuLamSan": "Trần Văn Tới",
+    "diaChi": "Thôn 1, xã Yang Mao, Đắk Lắk",
+    "tongLamSan": "40 con Dúi mốc lớn; khối lượng 34 kg"
+  },
+  {
+    "id": "BKLs-033",
+    "stt": 33,
+    "soVaoSo": "43/2026/14",
+    "ngayXacNhan": "14/10/2026",
+    "tenChuLamSan": "Lê Thị Xuân",
+    "diaChi": "Thôn 2, xã Hòa Sơn, Đắk Lắk",
+    "tongLamSan": "04 cá thể Cầy vòi hương; khối lượng 08 kg"
+  }
+]

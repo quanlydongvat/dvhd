@@ -2819,3 +2819,33 @@ export function saveAppData(data) {
     console.error('Failed to save to local storage:', err);
   }
 }
+
+
+import INITIAL_PACKING_LIST_DATA from './packingListInitialData.json';
+
+const PACKING_LIST_STORAGE_KEY = 'wildlife_packing_list_v1';
+
+export { INITIAL_PACKING_LIST_DATA };
+
+export function loadPackingListData() {
+  try {
+    const raw = localStorage.getItem(PACKING_LIST_STORAGE_KEY);
+    if (!raw) {
+      localStorage.setItem(PACKING_LIST_STORAGE_KEY, JSON.stringify(INITIAL_PACKING_LIST_DATA));
+      return INITIAL_PACKING_LIST_DATA;
+    }
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) && parsed.length > 0 ? parsed : INITIAL_PACKING_LIST_DATA;
+  } catch (err) {
+    console.error('Failed to load packing list data:', err);
+    return INITIAL_PACKING_LIST_DATA;
+  }
+}
+
+export function savePackingListData(list) {
+  try {
+    localStorage.setItem(PACKING_LIST_STORAGE_KEY, JSON.stringify(list));
+  } catch (err) {
+    console.error('Failed to save packing list data:', err);
+  }
+}
