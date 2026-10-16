@@ -1418,6 +1418,11 @@ export default function App() {
             speciesList={speciesList}
             onSelectSpecies={handleSelectSpecies}
             facilityInfo={facilityInfo}
+            facilitiesList={facilitiesList}
+            activeFacilityId={activeFacilityId}
+            onSelectFacility={handleSelectFacility}
+            onOpenPrintView={() => setIsPrintViewOpen(true)}
+            onOpenQRCode={handleOpenQRCode}
             currentUser={currentUser}
             isReadOnly={true}
             onOpenLogin={() => setIsLoginModalOpen(true)}
@@ -1654,6 +1659,24 @@ export default function App() {
                 speciesList={speciesList}
                 onSelectSpecies={handleSelectSpecies}
                 facilityInfo={facilityInfo}
+                facilitiesList={facilitiesList}
+                activeFacilityId={activeFacilityId}
+                onSelectFacility={handleSelectFacility}
+                onOpenAddFluctuation={() => {
+                  if (!currentUser) {
+                    setIsLoginModalOpen(true);
+                    return;
+                  }
+                  setEditingFluctuation(null);
+                  setIsFluctuationModalOpen(true);
+                }}
+                onOpenQRCode={handleOpenQRCode}
+                onOpenPrintView={() => setIsPrintViewOpen(true)}
+                onExportExcel={handleExportExcelClick}
+                onOpenMapFacility={(facId) => {
+                  setTargetFacilityId(facId || activeFacilityId);
+                  setCurrentView('MAP');
+                }}
                 onEditRow={(row) => {
                   if (!currentUser) {
                     setIsLoginModalOpen(true);
