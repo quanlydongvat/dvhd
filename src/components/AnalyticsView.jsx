@@ -18,7 +18,7 @@ import {
 import { Line, Bar, Doughnut } from 'react-chartjs-2';
 import { TrendingUp, TrendingDown, Calendar, Filter, MapPin, Feather, Download, Award, BarChart3, PieChart, Activity, RefreshCw, Layers, ChevronDown, ChevronUp } from 'lucide-react';
 import * as XLSX from 'xlsx';
-import { isBirdSpecies, getFacilityCategory, computeLogbookTable } from '../utils/calculations';
+import { isBirdSpecies, getFacilityCategory, computeLogbookTable, getCanonicalSpecies } from '../utils/calculations';
 
 // Register Chart.js modules
 ChartJS.register(
@@ -286,15 +286,16 @@ export default function AnalyticsView({ facilitiesList = [] }) {
 
     filteredFacilities.forEach((fac) => {
       fac.speciesList.forEach((sp) => {
-        const name = sp.vietnameseName;
+        const canonical = getCanonicalSpecies(sp.vietnameseName, sp.scientificName);
+        const name = canonical.vietnameseName;
         const processedRows = computeLogbookTable(sp.baseline || {}, sp.fluctuations || []);
         const lastRow = processedRows[processedRows.length - 1];
         const total = lastRow ? lastRow.total : 0;
 
-        if (!speciesMap[name]) {
-          speciesMap[name] = { name, total: 0, isBird: isBirdSpecies(sp) };
+        if (!speciesMap[canonical.key]) {
+          speciesMap[canonical.key] = { name, total: 0, isBird: canonical.isBird || isBirdSpecies(sp) };
         }
-        speciesMap[name].total += total;
+        speciesMap[canonical.key].total += total;
       });
     });
 
@@ -344,12 +345,14 @@ export default function AnalyticsView({ facilitiesList = [] }) {
 
     filteredFacilities.forEach((fac) => {
       fac.speciesList?.forEach((sp) => {
-        const name = sp.vietnameseName?.trim() || 'Khác';
-        if (!speciesMap[name]) {
-          speciesMap[name] = {
+        const canonical = getCanonicalSpecies(sp.vietnameseName, sp.scientificName);
+        const key = canonical.key;
+        const name = canonical.vietnameseName || sp.vietnameseName?.trim() || 'Khác';
+        if (!speciesMap[key]) {
+          speciesMap[key] = {
             name,
-            scientificName: sp.scientificName || '',
-            group: sp.group || '',
+            scientificName: canonical.scientificName || sp.scientificName || '',
+            group: canonical.group || sp.group || '',
             father: 0,
             mother: 0,
             otherMale: 0,
@@ -358,7 +361,7 @@ export default function AnalyticsView({ facilitiesList = [] }) {
             facilitiesCount: new Set(),
           };
         }
-        speciesMap[name].facilitiesCount.add(fac.id);
+        speciesMap[key].facilitiesCount.add(fac.id);
 
         const processedRows = computeLogbookTable(sp.baseline || {}, sp.fluctuations || []);
         const lastRow = processedRows[processedRows.length - 1];

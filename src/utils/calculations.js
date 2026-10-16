@@ -347,6 +347,129 @@ export function isCitesSpecies(sp) {
 }
 
 /**
+ * Canonical species mapping to merge duplicate names with different casing / accents / spelling
+ */
+export function getCanonicalSpecies(vietnameseName, scientificName = '') {
+  const cleanVn = (vietnameseName || '').trim();
+  const lowerVn = cleanVn.toLowerCase().replace(/\s+/g, ' ');
+  const cleanSci = (scientificName || '').trim();
+
+  // 1. Chim Cu gáy (merge all variants: "Chim Cu Gáy", "chim cu gáy", "cu gáy", etc.)
+  if (lowerVn.includes('cu gáy') || lowerVn.includes('cu gay')) {
+    return {
+      key: 'CHIM_CU_GAY',
+      vietnameseName: 'Chim Cu gáy',
+      scientificName: 'Streptopelia chinensis',
+      group: 'Động vật rừng thông thường (Lớp Chim)',
+      citesAppendix: 'Khai báo kiểm lâm',
+      isBird: true,
+      isCites: false,
+    };
+  }
+
+  // 2. Chim Chào mào
+  if (lowerVn.includes('chào mào') || lowerVn.includes('chao mao')) {
+    return {
+      key: 'CHIM_CHAO_MAO',
+      vietnameseName: 'Chim Chào mào',
+      scientificName: 'Pycnonotus jocosus',
+      group: 'Động vật rừng thông thường (Lớp Chim)',
+      citesAppendix: 'Khai báo kiểm lâm',
+      isBird: true,
+      isCites: false,
+    };
+  }
+
+  // 3. Cầy vòi Hương
+  if (lowerVn.includes('cầy vòi hương') || lowerVn.includes('cay voi huong')) {
+    return {
+      key: 'CAY_VOI_HUONG',
+      vietnameseName: 'Cầy vòi Hương',
+      scientificName: 'Paradoxurus hermaphroditus',
+      group: 'Động vật rừng nguy cấp, quý, hiếm (Nhóm IIB)',
+      citesAppendix: 'Phụ lục II CITES',
+      isBird: false,
+      isCites: true,
+    };
+  }
+
+  // 4. Cầy vòi mốc
+  if (lowerVn.includes('cầy vòi mốc') || lowerVn.includes('cay voi moc')) {
+    return {
+      key: 'CAY_VOI_MOC',
+      vietnameseName: 'Cầy vòi mốc',
+      scientificName: 'Paguma larvata',
+      group: 'Động vật rừng nguy cấp, quý, hiếm (Nhóm IIB)',
+      citesAppendix: 'Phụ lục II CITES',
+      isBird: false,
+      isCites: true,
+    };
+  }
+
+  // 5. Dúi má đào
+  if (lowerVn.includes('dúi má đào') || lowerVn.includes('dui ma dao')) {
+    return {
+      key: 'DUI_MA_DAO',
+      vietnameseName: 'Dúi má đào',
+      scientificName: 'Rhizomys sumatrensis',
+      group: 'Động vật rừng thông thường',
+      citesAppendix: 'Khai báo kiểm lâm',
+      isBird: false,
+      isCites: false,
+    };
+  }
+
+  // 6. Dúi mốc lớn / Dúi mốc
+  if (lowerVn.includes('dúi mốc') || lowerVn.includes('dui moc')) {
+    return {
+      key: 'DUI_MOC_LON',
+      vietnameseName: 'Dúi mốc lớn',
+      scientificName: 'Rhizomys pruinosus',
+      group: 'Động vật rừng thông thường',
+      citesAppendix: 'Khai báo kiểm lâm',
+      isBird: false,
+      isCites: false,
+    };
+  }
+
+  // 7. Don
+  if (lowerVn === 'don' || lowerVn.startsWith('don ') || lowerVn.endsWith(' don')) {
+    return {
+      key: 'DON',
+      vietnameseName: 'Don',
+      scientificName: 'Atherurus macrourus',
+      group: 'Động vật rừng thông thường',
+      citesAppendix: 'Khai báo kiểm lâm',
+      isBird: false,
+      isCites: false,
+    };
+  }
+
+  // 8. Nhím
+  if (lowerVn.includes('nhím') || lowerVn.includes('nhim')) {
+    return {
+      key: 'NHIM',
+      vietnameseName: 'Nhím',
+      scientificName: 'Hystrix brachyura',
+      group: 'Động vật rừng thông thường',
+      citesAppendix: 'Khai báo kiểm lâm',
+      isBird: false,
+      isCites: false,
+    };
+  }
+
+  return {
+    key: lowerVn,
+    vietnameseName: cleanVn,
+    scientificName: cleanSci,
+    group: '',
+    citesAppendix: '',
+    isBird: false,
+    isCites: isCitesSpecies({ vietnameseName: cleanVn, scientificName: cleanSci }),
+  };
+}
+
+/**
  * Helper function to categorize a facility: 'BIRD', 'MAMMAL_REPTILE', or 'MIXED'
  */
 export function getFacilityCategory(facility) {

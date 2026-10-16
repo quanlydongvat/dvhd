@@ -20,7 +20,7 @@ export default function TableView({
   isReadOnly = false,
   onOpenLogin,
 }) {
-  const [showNotes, setShowNotes] = useState(true);
+  const [showNotes, setShowNotes] = useState(false);
   const [mobileViewMode, setMobileViewMode] = useState('TABLE'); // 'TABLE' | 'CARDS'
 
   const handleToggleRotateLandscape = () => {
@@ -619,61 +619,63 @@ export default function TableView({
         </div>
       </div>
 
-      {/* Accordion Footer: Official Guidelines & Notes */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-4 text-xs text-slate-700 shadow-sm">
-        <button
-          onClick={() => setShowNotes(!showNotes)}
-          className="w-full flex items-center justify-between font-bold text-slate-800 hover:text-emerald-700 transition-colors"
-        >
-          <div className="flex items-center gap-2">
-            <Info className="w-4 h-4 text-emerald-600" />
-            <span>GHI CHÚ HƯỚNG DẪN ĐIỀN NỘI DUNG (Trích Thông tư số 85/2025/TT-BNNMT / Sổ Mẫu II)</span>
-          </div>
-          {showNotes ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-        </button>
+      {/* Accordion Footer: Official Guidelines & Notes (Ẩn hoàn toàn khi quét mã QR vào xem sổ) */}
+      {!isReadOnly && (
+        <div className="bg-white border border-slate-200 rounded-2xl p-4 text-xs text-slate-700 shadow-sm">
+          <button
+            onClick={() => setShowNotes(!showNotes)}
+            className="w-full flex items-center justify-between font-bold text-slate-800 hover:text-emerald-700 transition-colors"
+          >
+            <div className="flex items-center gap-2">
+              <Info className="w-4 h-4 text-emerald-600" />
+              <span>GHI CHÚ HƯỚNG DẪN ĐIỀN NỘI DUNG (Trích Thông tư số 85/2025/TT-BNNMT / Sổ Mẫu II)</span>
+            </div>
+            {showNotes ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+          </button>
 
-        {showNotes && (
-          <div className="mt-3 pt-3 border-t border-slate-100 space-y-2 text-slate-600 leading-relaxed font-sans">
-            <p>
-              <strong>1. Mã mục đích nuôi được quy định:</strong> (T) Thương mại; (Z) Vườn thú, trưng bày; (Q) Biểu diễn xiếc; (R) Cứu hộ; (S) Nghiên cứu khoa học; (C) Bảo tồn; (E) Du lịch sinh thái; (O) Khác (ví dụ làm cảnh).
-            </p>
-            <p>
-              <strong>2. Cột 1:</strong> Ghi ngày/tháng/năm biến động đàn. Trường hợp trong cùng một ngày vừa có nhập vừa có xuất hoặc nhiều lần nhập/xuất phải ghi đầy đủ theo từng lần nhập, xuất và theo trình tự thời gian, không ghi gộp thông tin trong ngày.
-            </p>
-            <p>
-              <strong>3. Tổng số cá thể (cột 2):</strong> Tự động tính toán = (3) + (4) + (5) + (6) + (7).
-            </p>
-            <p>
-              <strong>4. Dòng A:</strong> Ghi chép số lượng vật nuôi hiện có ban đầu.
-            </p>
-            <p>
-              <strong>5. Dòng B, C, D...:</strong> Ghi chép đầy đủ thông tin khi có biến động tăng/giảm đàn.
-              <br />
-              <span className="font-mono text-[11px] text-emerald-800 bg-emerald-50 px-2 py-1 rounded border border-emerald-200 inline-block mt-1">
-                a) (B3) = (A3) + (B8) - (B13) &nbsp;|&nbsp; b) (B4) = (A4) + (B9) - (B14) &nbsp;|&nbsp; c) (B5) = (A5) + (B10) - (B15) &nbsp;|&nbsp; d) (B6) = (A6) + (B11) - (B16) &nbsp;|&nbsp; đ) (B7) = (A7) + (B12) - (B17)
-              </span>
-            </p>
-            <p className="bg-emerald-50/80 border border-emerald-200 rounded-lg p-2 text-emerald-950 font-medium">
-              <strong> Quy tắc chuyển đàn theo Thông tư 85/2025/TT-BNNMT:</strong> Khi cá thể đủ điều kiện sinh sản (ví dụ cầy vòi hương từ 12 tháng tuổi), đây là chuyển nhóm nội bộ (không phải nhập mới/xuat bán). Phải ghi đồng thời: 
-              <br />
-              + Cá thể đực: Tăng Bố (B8) = X, Giảm Đực khác (B15) = X
-              <br />
-              + Cá thể cái: Tăng Mẹ (B9) = Y, Giảm Cái khác (B16) = Y
-              <br />
-              Đảm bảo tổng số cá thể cơ sở không thay đổi: (B3+B4+B5+B6+B7) = (A3+A4+A5+A6+A7).
-            </p>
-            <p>
-              <strong>6. Trường hợp nuôi sinh sản:</strong> Tổ chức, cá nhân phải ghi đầy đủ thông tin của đàn bố, mẹ vào các cột 3, 4, 8, 9, 13 và 14.
-            </p>
-            <p>
-              <strong>7. Cột 19:</strong> Cơ quan kiểm lâm sở tại/Cơ quan quản lý nhà nước về thủy sản ký xác nhận, ghi rõ họ tên, đóng dấu khi kiểm tra đột xuất, định kỳ hoặc khi tổ chức xuất bán động vật.
-            </p>
-            <p>
-              <strong>8. Quản lý sổ:</strong> Mỗi loài động vật được lập 01 sổ theo dõi riêng biệt.
-            </p>
-          </div>
-        )}
-      </div>
+          {showNotes && (
+            <div className="mt-3 pt-3 border-t border-slate-100 space-y-2 text-slate-600 leading-relaxed font-sans">
+              <p>
+                <strong>1. Mã mục đích nuôi được quy định:</strong> (T) Thương mại; (Z) Vườn thú, trưng bày; (Q) Biểu diễn xiếc; (R) Cứu hộ; (S) Nghiên cứu khoa học; (C) Bảo tồn; (E) Du lịch sinh thái; (O) Khác (ví dụ làm cảnh).
+              </p>
+              <p>
+                <strong>2. Cột 1:</strong> Ghi ngày/tháng/năm biến động đàn. Trường hợp trong cùng một ngày vừa có nhập vừa có xuất hoặc nhiều lần nhập/xuất phải ghi đầy đủ theo từng lần nhập, xuất và theo trình tự thời gian, không ghi gộp thông tin trong ngày.
+              </p>
+              <p>
+                <strong>3. Tổng số cá thể (cột 2):</strong> Tự động tính toán = (3) + (4) + (5) + (6) + (7).
+              </p>
+              <p>
+                <strong>4. Dòng A:</strong> Ghi chép số lượng vật nuôi hiện có ban đầu.
+              </p>
+              <p>
+                <strong>5. Dòng B, C, D...:</strong> Ghi chép đầy đủ thông tin khi có biến động tăng/giảm đàn.
+                <br />
+                <span className="font-mono text-[11px] text-emerald-800 bg-emerald-50 px-2 py-1 rounded border border-emerald-200 inline-block mt-1">
+                  a) (B3) = (A3) + (B8) - (B13) &nbsp;|&nbsp; b) (B4) = (A4) + (B9) - (B14) &nbsp;|&nbsp; c) (B5) = (A5) + (B10) - (B15) &nbsp;|&nbsp; d) (B6) = (A6) + (B11) - (B16) &nbsp;|&nbsp; đ) (B7) = (A7) + (B12) - (B17)
+                </span>
+              </p>
+              <p className="bg-emerald-50/80 border border-emerald-200 rounded-lg p-2 text-emerald-950 font-medium">
+                <strong> Quy tắc chuyển đàn theo Thông tư 85/2025/TT-BNNMT:</strong> Khi cá thể đủ điều kiện sinh sản (ví dụ cầy vòi hương từ 12 tháng tuổi), đây là chuyển nhóm nội bộ (không phải nhập mới/xuat bán). Phải ghi đồng thời: 
+                <br />
+                + Cá thể đực: Tăng Bố (B8) = X, Giảm Đực khác (B15) = X
+                <br />
+                + Cá thể cái: Tăng Mẹ (B9) = Y, Giảm Cái khác (B16) = Y
+                <br />
+                Đảm bảo tổng số cá thể cơ sở không thay đổi: (B3+B4+B5+B6+B7) = (A3+A4+A5+A6+A7).
+              </p>
+              <p>
+                <strong>6. Trường hợp nuôi sinh sản:</strong> Tổ chức, cá nhân phải ghi đầy đủ thông tin của đàn bố, mẹ vào các cột 3, 4, 8, 9, 13 và 14.
+              </p>
+              <p>
+                <strong>7. Cột 19:</strong> Cơ quan kiểm lâm sở tại/Cơ quan quản lý nhà nước về thủy sản ký xác nhận, ghi rõ họ tên, đóng dấu khi kiểm tra đột xuất, định kỳ hoặc khi tổ chức xuất bán động vật.
+              </p>
+              <p>
+                <strong>8. Quản lý sổ:</strong> Mỗi loài động vật được lập 01 sổ theo dõi riêng biệt.
+              </p>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

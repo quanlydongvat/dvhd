@@ -321,11 +321,27 @@ export default function FacilityModal({
                   className="w-full bg-slate-50 border border-slate-300 rounded-lg px-2.5 py-1.5 text-xs font-extrabold text-slate-900 focus:outline-none focus:border-amber-500 cursor-pointer"
                 >
                   <option value="">✏️ -- Tự nhập loài mới (Chưa có trong danh mục) --</option>
-                  {PRESET_SPECIES_CATALOG.map((sp) => (
-                    <option key={sp.vietnameseName} value={sp.vietnameseName}>
-                      {sp.vietnameseName} ({sp.scientificName}) - {sp.group}
-                    </option>
-                  ))}
+                  <optgroup label="🦔 Lớp Thú (Mammalia)">
+                    {PRESET_SPECIES_CATALOG.filter((s) => s.category === 'MAMMAL').map((sp) => (
+                      <option key={sp.vietnameseName} value={sp.vietnameseName}>
+                        {sp.vietnameseName} ({sp.scientificName}) - {sp.group}
+                      </option>
+                    ))}
+                  </optgroup>
+                  <optgroup label="🦎 Lớp Bò Sát & Lưỡng Cư (Reptilia & Amphibia)">
+                    {PRESET_SPECIES_CATALOG.filter((s) => s.category === 'REPTILE').map((sp) => (
+                      <option key={sp.vietnameseName} value={sp.vietnameseName}>
+                        {sp.vietnameseName} ({sp.scientificName}) - {sp.group}
+                      </option>
+                    ))}
+                  </optgroup>
+                  <optgroup label="🦜 Lớp Chim (Aves)">
+                    {PRESET_SPECIES_CATALOG.filter((s) => s.category === 'BIRD' || s.isBird).map((sp) => (
+                      <option key={sp.vietnameseName} value={sp.vietnameseName}>
+                        {sp.vietnameseName} ({sp.scientificName}) - {sp.group}
+                      </option>
+                    ))}
+                  </optgroup>
                 </select>
               </div>
 

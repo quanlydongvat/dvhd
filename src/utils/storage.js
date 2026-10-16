@@ -711,8 +711,8 @@ export const REAL_FACILITIES_DATA = [
       {
         "scientificName": "Rhizomys sumatrensis",
         "vietnameseName": "Dúi má đào",
-        "citesAppendix": "Phụ lục II CITES",
-        "group": "Động vật rừng (Nhóm IIB)",
+        "citesAppendix": "Khai báo kiểm lâm",
+        "group": "Động vật rừng thông thường",
         "purposeCode": "T",
         "baseline": {
           "otherUnknown": 0,
@@ -1603,8 +1603,8 @@ export const REAL_FACILITIES_DATA = [
           "note": "Hiện trạng đăng ký ban đầu",
           "father": 0
         },
-        "scientificName": "Streptopelia Chinensis",
-        "vietnameseName": "Chim Cu Gáy",
+        "scientificName": "Streptopelia chinensis",
+        "vietnameseName": "Chim Cu gáy",
         "group": "Động vật rừng thông thường (Lớp Chim)"
       }
     ],
@@ -1641,13 +1641,13 @@ export const REAL_FACILITIES_DATA = [
         "citesAppendix": "Khai báo kiểm lâm"
       },
       {
-        "citesAppendix": "Phụ lục II CITES",
-        "vietnameseName": "chim cu gáy",
-        "scientificName": "streptopelia chinenis",
+        "citesAppendix": "Khai báo kiểm lâm",
+        "vietnameseName": "Chim Cu gáy",
+        "scientificName": "Streptopelia chinensis",
         "id": "species_1790753399574",
         "purposeCode": "T",
         "fluctuations": [],
-        "group": "Động vật rừng nguy cấp, quý, hiếm (Nhóm IIB)",
+        "group": "Động vật rừng thông thường (Lớp Chim)",
         "baseline": {
           "verifier": "",
           "father": 0,
@@ -1710,7 +1710,7 @@ export const REAL_FACILITIES_DATA = [
           "otherMale": "2",
           "otherFemale": "2"
         },
-        "scientificName": "Streptopelia Chinensis",
+        "scientificName": "Streptopelia chinensis",
         "vietnameseName": "Chim Cu gáy",
         "fluctuations": [],
         "id": "species_1788765271274",
@@ -1808,12 +1808,12 @@ export const REAL_FACILITIES_DATA = [
           "otherUnknown": 0
         },
         "fluctuations": [],
-        "group": "Động vật rừng (Nhóm IIB)",
+        "group": "Động vật rừng thông thường",
         "vietnameseName": "Dúi má đào",
         "scientificName": "Rhizomys sumatrensis",
         "purposeCode": "T",
         "id": "sp_18_1",
-        "citesAppendix": "Phụ lục II CITES"
+        "citesAppendix": "Khai báo kiểm lâm"
       },
       {
         "baseline": {
@@ -1934,7 +1934,7 @@ export const REAL_FACILITIES_DATA = [
         "purposeCode": "T",
         "id": "sp_20_1",
         "fluctuations": [],
-        "group": "Động vật rừng (Nhóm IIB)",
+        "group": "Động vật rừng thông thường",
         "baseline": {
           "otherFemale": 8,
           "otherMale": 6,
@@ -1945,7 +1945,7 @@ export const REAL_FACILITIES_DATA = [
           "note": "Số lượng Dúi má đào hiện có",
           "date": "2026-01-01"
         },
-        "citesAppendix": "Phụ lục II CITES"
+        "citesAppendix": "Khai báo kiểm lâm"
       }
     ],
     "address": "Buôn Cư Ênun A, Xã Dang Kang, Huyện Krông Bông, Tỉnh Đắk Lắk",
@@ -2002,11 +2002,11 @@ export const REAL_FACILITIES_DATA = [
     "purposeCode": "T",
     "speciesList": [
       {
-        "group": "Động vật rừng thông thường (Chim)",
+        "group": "Động vật rừng thông thường (Lớp Chim)",
         "fluctuations": [],
         "purposeCode": "T",
         "vietnameseName": "Chim Cu gáy",
-        "scientificName": "Streptopelia Chinensis",
+        "scientificName": "Streptopelia chinensis",
         "citesAppendix": "Khai báo kiểm lâm",
         "id": "sp_22_1",
         "baseline": {
@@ -2139,7 +2139,7 @@ export const REAL_FACILITIES_DATA = [
     "speciesList": [
       {
         "citesAppendix": "Khai báo kiểm lâm",
-        "scientificName": "Streptopelia Chinensis",
+        "scientificName": "Streptopelia chinensis",
         "vietnameseName": "Chim Cu gáy",
         "baseline": {
           "otherFemale": 1,
@@ -2154,7 +2154,7 @@ export const REAL_FACILITIES_DATA = [
         "id": "sp_26_1",
         "fluctuations": [],
         "purposeCode": "T",
-        "group": "Động vật rừng thông thường (Chim)"
+        "group": "Động vật rừng thông thường (Lớp Chim)"
       }
     ],
     "lat": 12.523945,
@@ -2257,10 +2257,10 @@ export const REAL_FACILITIES_DATA = [
           "father": 2
         },
         "fluctuations": [],
-        "scientificName": "Streptopelia Chinensis",
+        "scientificName": "Streptopelia chinensis",
         "vietnameseName": "Chim Cu gáy",
         "id": "sp_29_1",
-        "group": "Động vật rừng thông thường (Chim)"
+        "group": "Động vật rừng thông thường (Lớp Chim)"
       }
     ],
     "updatedAt": "2026-10-16T13:50:43.773Z",
@@ -2526,11 +2526,11 @@ export const REAL_FACILITIES_DATA = [
       },
       {
         "id": "sp_7_3",
-        "citesAppendix": "Phụ lục II CITES",
+        "citesAppendix": "Khai báo kiểm lâm",
         "vietnameseName": "Don",
         "scientificName": "Atherurus macrourus",
         "purposeCode": "T",
-        "group": "Động vật rừng (Nhóm IIB)",
+        "group": "Động vật rừng thông thường",
         "baseline": {
           "mother": 1,
           "otherUnknown": 0,
@@ -2726,8 +2726,52 @@ export function loadAppData() {
         const freshCount = fresh.speciesList.reduce((acc, s) => acc + (s.fluctuations?.length || 0), 0);
         const currentCount = f.speciesList?.reduce((acc, s) => acc + (s.fluctuations?.length || 0), 0) || 0;
         if (freshCount > currentCount) {
-          return { ...f, speciesList: fresh.speciesList, baseline: fresh.baseline };
+          f = { ...f, speciesList: fresh.speciesList, baseline: fresh.baseline };
         }
+      }
+      
+      // Auto-normalize species names and groups
+      if (f.speciesList) {
+        f.speciesList = f.speciesList.map((s) => {
+          const lower = (s.vietnameseName || '').trim().toLowerCase();
+          if (lower.includes('cu gáy') || lower.includes('cu gay')) {
+            return {
+              ...s,
+              vietnameseName: 'Chim Cu gáy',
+              scientificName: 'Streptopelia chinensis',
+              group: 'Động vật rừng thông thường (Lớp Chim)',
+              citesAppendix: 'Khai báo kiểm lâm',
+            };
+          }
+          if (lower.includes('chào mào') || lower.includes('chao mao')) {
+            return {
+              ...s,
+              vietnameseName: 'Chim Chào mào',
+              scientificName: 'Pycnonotus jocosus',
+              group: 'Động vật rừng thông thường (Lớp Chim)',
+              citesAppendix: 'Khai báo kiểm lâm',
+            };
+          }
+          if (lower === 'don' || lower.startsWith('don ') || lower.endsWith(' don')) {
+            return {
+              ...s,
+              vietnameseName: 'Don',
+              scientificName: 'Atherurus macrourus',
+              group: 'Động vật rừng thông thường',
+              citesAppendix: 'Khai báo kiểm lâm',
+            };
+          }
+          if (lower.includes('dúi má đào') || lower.includes('dui ma dao')) {
+            return {
+              ...s,
+              vietnameseName: 'Dúi má đào',
+              scientificName: 'Rhizomys sumatrensis',
+              group: 'Động vật rừng thông thường',
+              citesAppendix: 'Khai báo kiểm lâm',
+            };
+          }
+          return s;
+        });
       }
       return f;
     });

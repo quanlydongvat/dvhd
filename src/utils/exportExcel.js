@@ -1,7 +1,7 @@
 import ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
-import { computeLogbookTable, getRegistrationCodeStatus, isCitesSpecies } from './calculations';
+import { computeLogbookTable, getRegistrationCodeStatus, isCitesSpecies, getCanonicalSpecies } from './calculations';
 
 export const COMMUNES = ['xã Hòa Sơn', 'xã Yang Mao', 'xã Cư Pui', 'Xã Krông Bông', 'Xã Dang Kang'];
 
@@ -63,16 +63,17 @@ export async function exportDistrictReport(facilitiesList, selectedCommune = 'AL
       });
 
       // Aggregate for Sheet 2
-      const key = `${species.vietnameseName}_${species.scientificName}`;
+      const canonical = getCanonicalSpecies(species.vietnameseName, species.scientificName);
+      const key = canonical.key;
       if (!speciesTotals[key]) {
         speciesTotals[key] = {
-          vnName: species.vietnameseName || '',
-          sciName: species.scientificName || '',
+          vnName: canonical.vietnameseName || species.vietnameseName || '',
+          sciName: canonical.scientificName || species.scientificName || '',
           totalAnimals: 0,
           facIds: new Set(),
           facWithCodeIds: new Set(),
-          group: species.group || '',
-          citesAppendix: species.citesAppendix || '',
+          group: canonical.group || species.group || '',
+          citesAppendix: canonical.citesAppendix || species.citesAppendix || '',
         };
       }
       speciesTotals[key].totalAnimals += currentState.total;

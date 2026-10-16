@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { Printer, ShieldAlert, FileText, CheckCircle2, Building2, MapPin } from 'lucide-react';
-import { computeLogbookTable, isCitesSpecies } from '../utils/calculations';
+import { computeLogbookTable, isCitesSpecies, getCanonicalSpecies } from '../utils/calculations';
 
 export default function CitesSummaryTable({ facilitiesList = [] }) {
   const [selectedCommune, setSelectedCommune] = useState('ALL');
@@ -14,7 +14,11 @@ export default function CitesSummaryTable({ facilitiesList = [] }) {
       if (selectedCommune !== 'ALL' && fac.commune !== selectedCommune) return;
 
       fac.speciesList.forEach((sp) => {
-        const name = sp.vietnameseName;
+        const canonical = getCanonicalSpecies(sp.vietnameseName, sp.scientificName);
+        const key = canonical.key;
+        const displayName = canonical.vietnameseName;
+        const displaySciName = canonical.scientificName || sp.scientificName || '';
+
         const processedRows = computeLogbookTable(sp.baseline || {}, sp.fluctuations || []);
         const lastRow = processedRows[processedRows.length - 1];
         const totalAnimals = lastRow ? (lastRow.total || 0) : 0;
@@ -26,25 +30,25 @@ export default function CitesSummaryTable({ facilitiesList = [] }) {
           !fac.registrationCode.toLowerCase().includes('cập nhật');
 
         // Check if Endangered / Quý hiếm / CITES
-        const isCites = isCitesSpecies(sp);
+        const isCites = canonical.isCites !== undefined ? canonical.isCites : isCitesSpecies(sp);
 
-        if (!speciesMap[name]) {
-          speciesMap[name] = {
-            vietnameseName: name,
-            scientificName: sp.scientificName || '',
+        if (!speciesMap[key]) {
+          speciesMap[key] = {
+            vietnameseName: displayName,
+            scientificName: displaySciName,
             isCites,
-            group: sp.group || '',
-            citesAppendix: sp.citesAppendix || '',
+            group: canonical.group || sp.group || '',
+            citesAppendix: canonical.citesAppendix || sp.citesAppendix || '',
             totalAnimals: 0,
             facilitiesSet: new Set(),
             registeredFacilitiesSet: new Set(),
           };
         }
 
-        speciesMap[name].totalAnimals += totalAnimals;
-        speciesMap[name].facilitiesSet.add(fac.id);
+        speciesMap[key].totalAnimals += totalAnimals;
+        speciesMap[key].facilitiesSet.add(fac.id);
         if (isRegistered) {
-          speciesMap[name].registeredFacilitiesSet.add(fac.id);
+          speciesMap[key].registeredFacilitiesSet.add(fac.id);
         }
       });
     });
