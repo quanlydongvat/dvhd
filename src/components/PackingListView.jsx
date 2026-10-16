@@ -433,28 +433,28 @@ export default function PackingListView({
         </div>
       </div>
 
-      {/* 3. BẢNG XẾP HẠNG TOP KINH DOANH & XUẤT BÁN (LỚP THÚ & LỚP CHIM) - VIVID LEADERBOARD */}
+      {/* 3. BẢNG XẾP HẠNG TOP KINH DOANH & XUẤT BÁN (LỚP THÚ & LỚP CHIM) - BRIGHT & VIVID LEADERBOARD */}
       {isLeaderboardOpen && (
-        <section className="bg-gradient-to-br from-slate-900 via-slate-950 to-emerald-950 text-white rounded-3xl p-5 sm:p-6 border border-emerald-500/30 shadow-2xl relative overflow-hidden animate-in fade-in slide-in-from-top-4 duration-300">
-          {/* Background Ambient Glow */}
-          <div className="absolute -top-16 -right-16 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute -bottom-16 -left-16 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+        <section className="bg-gradient-to-br from-emerald-50/80 via-white to-amber-50/70 text-slate-900 rounded-3xl p-5 sm:p-6 border-2 border-emerald-200/90 shadow-md relative overflow-hidden animate-in fade-in slide-in-from-top-4 duration-300">
+          {/* Subtle Ambient Glow */}
+          <div className="absolute -top-16 -right-16 w-64 h-64 bg-amber-400/15 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -bottom-16 -left-16 w-64 h-64 bg-emerald-400/15 rounded-full blur-3xl pointer-events-none" />
 
           {/* Leaderboard Header with Controls */}
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-white/10 relative z-10">
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-slate-200/90 relative z-10">
             <div>
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-amber-400 to-amber-600 text-slate-950 flex items-center justify-center font-black shadow-lg">
-                  <Crown className="w-5 h-5 fill-slate-950" />
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-2xl bg-gradient-to-tr from-amber-400 to-amber-500 text-amber-950 flex items-center justify-center font-black shadow-md shadow-amber-500/20">
+                  <Crown className="w-5 h-5 fill-amber-950 text-amber-950" />
                 </div>
                 <div>
-                  <h2 className="text-base sm:text-lg font-black tracking-tight text-white flex items-center gap-2">
+                  <h2 className="text-base sm:text-lg font-black tracking-tight text-slate-900 flex items-center gap-2">
                     <span>TOP CƠ SỞ KINH DOANH & XUẤT BÁN NHIỀU NHẤT</span>
-                    <span className="text-[10px] font-extrabold uppercase bg-amber-400 text-slate-950 px-2 py-0.5 rounded-full shadow-2xs">
+                    <span className="text-[10px] font-extrabold uppercase bg-amber-500 text-white px-2.5 py-0.5 rounded-full shadow-2xs">
                       Bảng Xếp Hạng
                     </span>
                   </h2>
-                  <p className="text-xs text-emerald-200/80 font-medium">
+                  <p className="text-xs text-slate-600 font-medium">
                     Phân tích thị phần và quy mô thương mại động vật hoang dã trên toàn địa bàn huyện
                   </p>
                 </div>
@@ -464,14 +464,14 @@ export default function PackingListView({
             {/* Class Tabs & Sort Metric Selector */}
             <div className="flex items-center gap-2 flex-wrap">
               {/* Tabs: Lớp Thú vs Lớp Chim vs Tất Cả */}
-              <div className="flex items-center p-1 bg-black/40 rounded-2xl border border-white/10">
+              <div className="flex items-center p-1 bg-white rounded-2xl border border-slate-200 shadow-2xs">
                 <button
                   type="button"
                   onClick={() => setRankClassTab('THU')}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer ${
                     rankClassTab === 'THU'
-                      ? 'bg-gradient-to-r from-amber-500 to-orange-600 text-slate-950 shadow-md font-extrabold'
-                      : 'text-slate-300 hover:text-white'
+                      ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-sm font-extrabold'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                   }`}
                 >
                   <PawPrint className="w-3.5 h-3.5" />
@@ -483,8 +483,8 @@ export default function PackingListView({
                   onClick={() => setRankClassTab('CHIM')}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer ${
                     rankClassTab === 'CHIM'
-                      ? 'bg-gradient-to-r from-emerald-400 to-teal-500 text-slate-950 shadow-md font-extrabold'
-                      : 'text-slate-300 hover:text-white'
+                      ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-sm font-extrabold'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                   }`}
                 >
                   <Feather className="w-3.5 h-3.5" />
@@ -496,8 +496,8 @@ export default function PackingListView({
                   onClick={() => setRankClassTab('ALL')}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer ${
                     rankClassTab === 'ALL'
-                      ? 'bg-white text-slate-950 shadow-md font-extrabold'
-                      : 'text-slate-300 hover:text-white'
+                      ? 'bg-slate-900 text-white shadow-sm font-extrabold'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                   }`}
                 >
                   <Trophy className="w-3.5 h-3.5 text-amber-500" />
@@ -506,13 +506,13 @@ export default function PackingListView({
               </div>
 
               {/* Metric Selector */}
-              <div className="flex items-center gap-1 bg-black/40 px-2 py-1.5 rounded-2xl border border-white/10 text-xs">
-                <span className="text-[10px] text-slate-400 font-bold hidden sm:inline">Xếp theo:</span>
+              <div className="flex items-center gap-1 bg-white px-2 py-1.5 rounded-2xl border border-slate-200 text-xs shadow-2xs">
+                <span className="text-[10px] text-slate-500 font-bold hidden sm:inline">Xếp theo:</span>
                 <button
                   type="button"
                   onClick={() => setRankSortMetric('COUNT')}
                   className={`px-2 py-1 rounded-lg font-bold text-[11px] transition-colors cursor-pointer ${
-                    rankSortMetric === 'COUNT' ? 'bg-emerald-500 text-slate-950 font-black' : 'text-slate-400 hover:text-white'
+                    rankSortMetric === 'COUNT' ? 'bg-emerald-700 text-white font-black shadow-2xs' : 'text-slate-600 hover:text-slate-900'
                   }`}
                 >
                   Cá thể
@@ -521,7 +521,7 @@ export default function PackingListView({
                   type="button"
                   onClick={() => setRankSortMetric('WEIGHT')}
                   className={`px-2 py-1 rounded-lg font-bold text-[11px] transition-colors cursor-pointer ${
-                    rankSortMetric === 'WEIGHT' ? 'bg-emerald-500 text-slate-950 font-black' : 'text-slate-400 hover:text-white'
+                    rankSortMetric === 'WEIGHT' ? 'bg-emerald-700 text-white font-black shadow-2xs' : 'text-slate-600 hover:text-slate-900'
                   }`}
                 >
                   Khối lượng (Kg)
@@ -530,7 +530,7 @@ export default function PackingListView({
                   type="button"
                   onClick={() => setRankSortMetric('BATCHES')}
                   className={`px-2 py-1 rounded-lg font-bold text-[11px] transition-colors cursor-pointer ${
-                    rankSortMetric === 'BATCHES' ? 'bg-emerald-500 text-slate-950 font-black' : 'text-slate-400 hover:text-white'
+                    rankSortMetric === 'BATCHES' ? 'bg-emerald-700 text-white font-black shadow-2xs' : 'text-slate-600 hover:text-slate-900'
                   }`}
                 >
                   Số đợt xuất
@@ -540,24 +540,24 @@ export default function PackingListView({
           </div>
 
           {/* Class Ratio Proportion Bar */}
-          <div className="my-4 bg-white/5 p-3 rounded-2xl border border-white/10">
-            <div className="flex items-center justify-between text-xs font-bold mb-1.5">
+          <div className="my-4 bg-white/95 p-3.5 rounded-2xl border border-slate-200/90 shadow-2xs">
+            <div className="flex items-center justify-between text-xs font-bold mb-1.5 flex-wrap gap-2">
               <div className="flex items-center gap-2">
-                <span className="text-amber-400 font-black flex items-center gap-1">
+                <span className="text-amber-800 font-black flex items-center gap-1">
                   <PawPrint className="w-3.5 h-3.5" /> Lớp Thú: {analytics.thuStats.count} con (~{analytics.thuStats.weight} kg)
                 </span>
-                <span className="text-[11px] text-slate-400">({analytics.thuStats.uniqueFacilities} cơ sở xuất bán)</span>
+                <span className="text-[11px] text-slate-500 font-medium">({analytics.thuStats.uniqueFacilities} cơ sở xuất bán)</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-emerald-400 font-black flex items-center gap-1">
+                <span className="text-emerald-800 font-black flex items-center gap-1">
                   <Feather className="w-3.5 h-3.5" /> Lớp Chim: {analytics.chimStats.count} con (~{analytics.chimStats.weight} kg)
                 </span>
-                <span className="text-[11px] text-slate-400">({analytics.chimStats.uniqueFacilities} cơ sở • {analytics.chimStats.batches} đợt)</span>
+                <span className="text-[11px] text-slate-500 font-medium">({analytics.chimStats.uniqueFacilities} cơ sở • {analytics.chimStats.batches} đợt)</span>
               </div>
             </div>
 
             {/* Split Progress Bar */}
-            <div className="w-full h-3 rounded-full bg-slate-800 overflow-hidden flex shadow-inner">
+            <div className="w-full h-3.5 rounded-full bg-slate-100 overflow-hidden flex shadow-inner border border-slate-200/80">
               <div
                 style={{
                   width: `${Math.round((analytics.thuStats.count / (analytics.totalCount || 1)) * 100)}%`,
@@ -570,7 +570,7 @@ export default function PackingListView({
                 style={{
                   width: `${Math.round((analytics.chimStats.count / (analytics.totalCount || 1)) * 100)}%`,
                 }}
-                className="bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-500 h-full transition-all duration-500 relative group cursor-pointer"
+                className="bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-600 h-full transition-all duration-500 relative group cursor-pointer"
                 onClick={() => setRankClassTab('CHIM')}
                 title={`Lớp Chim chiếm ${Math.round((analytics.chimStats.count / (analytics.totalCount || 1)) * 100)}% tổng cá thể`}
               />
@@ -582,17 +582,17 @@ export default function PackingListView({
             {/* TOP 1 - QUÁN QUÂN XUẤT BÁN */}
             {top1Facility && (
               <div
-                className={`bg-gradient-to-b from-amber-500/20 via-yellow-500/10 to-transparent rounded-2xl p-4 border-2 border-amber-400/80 shadow-lg relative overflow-hidden transition-all hover:scale-[1.01] ${
-                  filterOwner === top1Facility.name ? 'ring-2 ring-amber-400 shadow-amber-500/30' : ''
+                className={`bg-gradient-to-b from-amber-100/80 via-amber-50/50 to-white rounded-2xl p-4 border-2 border-amber-400 shadow-sm relative overflow-hidden transition-all hover:shadow-md hover:-translate-y-0.5 ${
+                  filterOwner === top1Facility.name ? 'ring-2 ring-amber-500 shadow-amber-500/20' : ''
                 }`}
               >
-                <div className="absolute -right-4 -bottom-4 w-20 h-20 bg-amber-400/10 rounded-full blur-xl pointer-events-none" />
+                <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-amber-300/20 rounded-full blur-xl pointer-events-none" />
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-1.5">
-                    <span className="w-7 h-7 rounded-xl bg-amber-400 text-slate-950 font-black text-xs flex items-center justify-center shadow-md">
+                    <span className="w-7 h-7 rounded-xl bg-gradient-to-tr from-amber-400 to-yellow-500 text-slate-950 font-black text-xs flex items-center justify-center shadow-2xs">
                       👑 1
                     </span>
-                    <span className="text-[10px] font-black uppercase text-amber-300 tracking-wider">
+                    <span className="text-[10px] font-black uppercase text-amber-800 tracking-wider">
                       QUÁN QUÂN XUẤT BÁN
                     </span>
                   </div>
@@ -600,43 +600,43 @@ export default function PackingListView({
                 </div>
 
                 <div className="space-y-1">
-                  <h3 className="text-base sm:text-lg font-black text-white hover:text-amber-300 transition-colors">
+                  <h3 className="text-base sm:text-lg font-black text-slate-900 hover:text-amber-700 transition-colors">
                     {top1Facility.name}
                   </h3>
-                  <p className="text-[11px] text-slate-300 flex items-center gap-1 truncate">
-                    <MapPin className="w-3 h-3 text-amber-400 flex-shrink-0" />
+                  <p className="text-[11px] text-slate-600 flex items-center gap-1 truncate">
+                    <MapPin className="w-3 h-3 text-amber-600 flex-shrink-0" />
                     <span>{top1Facility.diaChi}</span>
                   </p>
                 </div>
 
                 {/* Big Metric Display */}
-                <div className="my-3 p-2.5 bg-black/40 rounded-xl border border-amber-400/30 flex items-center justify-between">
+                <div className="my-3 p-3 bg-white/95 rounded-xl border border-amber-200/90 shadow-2xs flex items-center justify-between">
                   <div>
-                    <div className="text-[10px] text-amber-300/80 font-bold uppercase">Sản lượng xuất bán</div>
-                    <div className="text-xl sm:text-2xl font-black text-amber-400 font-mono">
-                      {top1Facility.count} <span className="text-xs font-bold text-white">cá thể</span>
+                    <div className="text-[10px] text-amber-800 font-bold uppercase">Sản lượng xuất bán</div>
+                    <div className="text-xl sm:text-2xl font-black text-amber-600 font-mono">
+                      {top1Facility.count} <span className="text-xs font-bold text-slate-500">cá thể</span>
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="text-[10px] text-slate-400 font-medium">Khối lượng</div>
-                    <div className="text-sm font-black text-white font-mono">{top1Facility.weight} kg</div>
-                    <div className="text-[10px] text-emerald-300 font-bold">{top1Facility.batches} đợt xuất</div>
+                    <div className="text-[10px] text-slate-500 font-medium">Khối lượng</div>
+                    <div className="text-sm font-black text-slate-900 font-mono">{top1Facility.weight} kg</div>
+                    <div className="text-[10px] text-emerald-700 font-black">{top1Facility.batches} đợt xuất</div>
                   </div>
                 </div>
 
-                <div className="text-[11px] text-slate-300 mb-2 truncate">
-                  <span className="text-slate-400 font-medium">Loài chủ lực:</span>{' '}
-                  <strong className="text-amber-200">{top1Facility.topSpeciesText}</strong>
+                <div className="text-[11px] text-slate-600 mb-2 truncate">
+                  <span className="text-slate-500 font-medium">Loài chủ lực:</span>{' '}
+                  <strong className="text-amber-900 font-bold">{top1Facility.topSpeciesText}</strong>
                 </div>
 
                 {/* Filter Table Button */}
                 <button
                   type="button"
                   onClick={() => handleSelectOwnerFilter(top1Facility.name)}
-                  className={`w-full py-1.5 px-3 rounded-xl text-xs font-extrabold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                  className={`w-full py-2 px-3 rounded-xl text-xs font-black flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
                     filterOwner === top1Facility.name
-                      ? 'bg-amber-400 text-slate-950 font-black'
-                      : 'bg-white/10 hover:bg-white/20 text-amber-200 border border-amber-400/30'
+                      ? 'bg-amber-500 text-white shadow-xs'
+                      : 'bg-amber-100/90 hover:bg-amber-200 text-amber-900 border border-amber-300'
                   }`}
                 >
                   <span>{filterOwner === top1Facility.name ? 'Đang lọc cơ sở này' : 'Xem chi tiết các đợt xuất'}</span>
@@ -648,16 +648,17 @@ export default function PackingListView({
             {/* TOP 2 - Á QUÂN */}
             {top2Facility && (
               <div
-                className={`bg-gradient-to-b from-slate-300/20 via-sky-200/10 to-transparent rounded-2xl p-4 border border-slate-300/60 shadow-md relative overflow-hidden transition-all hover:scale-[1.01] ${
-                  filterOwner === top2Facility.name ? 'ring-2 ring-sky-300' : ''
+                className={`bg-gradient-to-b from-sky-100/80 via-sky-50/50 to-white rounded-2xl p-4 border-2 border-sky-300 shadow-sm relative overflow-hidden transition-all hover:shadow-md hover:-translate-y-0.5 ${
+                  filterOwner === top2Facility.name ? 'ring-2 ring-sky-400 shadow-sky-400/20' : ''
                 }`}
               >
+                <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-sky-300/20 rounded-full blur-xl pointer-events-none" />
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-1.5">
-                    <span className="w-7 h-7 rounded-xl bg-slate-300 text-slate-950 font-black text-xs flex items-center justify-center shadow-md">
+                    <span className="w-7 h-7 rounded-xl bg-gradient-to-tr from-sky-200 to-slate-200 text-slate-800 font-black text-xs flex items-center justify-center shadow-2xs">
                       2
                     </span>
-                    <span className="text-[10px] font-black uppercase text-sky-200 tracking-wider">
+                    <span className="text-[10px] font-black uppercase text-sky-800 tracking-wider">
                       Á QUÂN THƯƠNG MẠI
                     </span>
                   </div>
@@ -665,43 +666,43 @@ export default function PackingListView({
                 </div>
 
                 <div className="space-y-1">
-                  <h3 className="text-base sm:text-lg font-black text-white hover:text-sky-300 transition-colors">
+                  <h3 className="text-base sm:text-lg font-black text-slate-900 hover:text-sky-700 transition-colors">
                     {top2Facility.name}
                   </h3>
-                  <p className="text-[11px] text-slate-300 flex items-center gap-1 truncate">
-                    <MapPin className="w-3 h-3 text-sky-300 flex-shrink-0" />
+                  <p className="text-[11px] text-slate-600 flex items-center gap-1 truncate">
+                    <MapPin className="w-3 h-3 text-sky-600 flex-shrink-0" />
                     <span>{top2Facility.diaChi}</span>
                   </p>
                 </div>
 
                 {/* Big Metric Display */}
-                <div className="my-3 p-2.5 bg-black/40 rounded-xl border border-slate-400/30 flex items-center justify-between">
+                <div className="my-3 p-3 bg-white/95 rounded-xl border border-sky-200/90 shadow-2xs flex items-center justify-between">
                   <div>
-                    <div className="text-[10px] text-sky-200/80 font-bold uppercase">Sản lượng xuất bán</div>
-                    <div className="text-xl sm:text-2xl font-black text-sky-300 font-mono">
-                      {top2Facility.count} <span className="text-xs font-bold text-white">cá thể</span>
+                    <div className="text-[10px] text-sky-800 font-bold uppercase">Sản lượng xuất bán</div>
+                    <div className="text-xl sm:text-2xl font-black text-sky-600 font-mono">
+                      {top2Facility.count} <span className="text-xs font-bold text-slate-500">cá thể</span>
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="text-[10px] text-slate-400 font-medium">Khối lượng</div>
-                    <div className="text-sm font-black text-white font-mono">{top2Facility.weight} kg</div>
-                    <div className="text-[10px] text-emerald-300 font-bold">{top2Facility.batches} đợt xuất</div>
+                    <div className="text-[10px] text-slate-500 font-medium">Khối lượng</div>
+                    <div className="text-sm font-black text-slate-900 font-mono">{top2Facility.weight} kg</div>
+                    <div className="text-[10px] text-emerald-700 font-black">{top2Facility.batches} đợt xuất</div>
                   </div>
                 </div>
 
-                <div className="text-[11px] text-slate-300 mb-2 truncate">
-                  <span className="text-slate-400 font-medium">Loài chủ lực:</span>{' '}
-                  <strong className="text-sky-100">{top2Facility.topSpeciesText}</strong>
+                <div className="text-[11px] text-slate-600 mb-2 truncate">
+                  <span className="text-slate-500 font-medium">Loài chủ lực:</span>{' '}
+                  <strong className="text-sky-950 font-bold">{top2Facility.topSpeciesText}</strong>
                 </div>
 
                 {/* Filter Table Button */}
                 <button
                   type="button"
                   onClick={() => handleSelectOwnerFilter(top2Facility.name)}
-                  className={`w-full py-1.5 px-3 rounded-xl text-xs font-extrabold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                  className={`w-full py-2 px-3 rounded-xl text-xs font-black flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
                     filterOwner === top2Facility.name
-                      ? 'bg-sky-400 text-slate-950 font-black'
-                      : 'bg-white/10 hover:bg-white/20 text-sky-200 border border-slate-300/30'
+                      ? 'bg-sky-600 text-white shadow-xs'
+                      : 'bg-sky-100/90 hover:bg-sky-200 text-sky-900 border border-sky-300'
                   }`}
                 >
                   <span>{filterOwner === top2Facility.name ? 'Đang lọc cơ sở này' : 'Xem chi tiết các đợt xuất'}</span>
@@ -713,16 +714,17 @@ export default function PackingListView({
             {/* TOP 3 - HẠNG BA */}
             {top3Facility && (
               <div
-                className={`bg-gradient-to-b from-amber-700/20 via-orange-600/10 to-transparent rounded-2xl p-4 border border-amber-600/40 shadow-md relative overflow-hidden transition-all hover:scale-[1.01] ${
-                  filterOwner === top3Facility.name ? 'ring-2 ring-amber-600' : ''
+                className={`bg-gradient-to-b from-orange-100/80 via-orange-50/50 to-white rounded-2xl p-4 border-2 border-orange-300 shadow-sm relative overflow-hidden transition-all hover:shadow-md hover:-translate-y-0.5 ${
+                  filterOwner === top3Facility.name ? 'ring-2 ring-orange-400 shadow-orange-400/20' : ''
                 }`}
               >
+                <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-orange-300/20 rounded-full blur-xl pointer-events-none" />
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-1.5">
-                    <span className="w-7 h-7 rounded-xl bg-amber-700 text-amber-100 font-black text-xs flex items-center justify-center shadow-md">
+                    <span className="w-7 h-7 rounded-xl bg-gradient-to-tr from-amber-200 to-orange-300 text-orange-950 font-black text-xs flex items-center justify-center shadow-2xs">
                       3
                     </span>
-                    <span className="text-[10px] font-black uppercase text-amber-300 tracking-wider">
+                    <span className="text-[10px] font-black uppercase text-orange-800 tracking-wider">
                       HẠNG BA
                     </span>
                   </div>
@@ -730,43 +732,43 @@ export default function PackingListView({
                 </div>
 
                 <div className="space-y-1">
-                  <h3 className="text-base sm:text-lg font-black text-white hover:text-amber-300 transition-colors">
+                  <h3 className="text-base sm:text-lg font-black text-slate-900 hover:text-orange-700 transition-colors">
                     {top3Facility.name}
                   </h3>
-                  <p className="text-[11px] text-slate-300 flex items-center gap-1 truncate">
-                    <MapPin className="w-3 h-3 text-amber-500 flex-shrink-0" />
+                  <p className="text-[11px] text-slate-600 flex items-center gap-1 truncate">
+                    <MapPin className="w-3 h-3 text-orange-600 flex-shrink-0" />
                     <span>{top3Facility.diaChi}</span>
                   </p>
                 </div>
 
                 {/* Big Metric Display */}
-                <div className="my-3 p-2.5 bg-black/40 rounded-xl border border-amber-600/30 flex items-center justify-between">
+                <div className="my-3 p-3 bg-white/95 rounded-xl border border-orange-200/90 shadow-2xs flex items-center justify-between">
                   <div>
-                    <div className="text-[10px] text-amber-400/80 font-bold uppercase">Sản lượng xuất bán</div>
-                    <div className="text-xl sm:text-2xl font-black text-amber-300 font-mono">
-                      {top3Facility.count} <span className="text-xs font-bold text-white">cá thể</span>
+                    <div className="text-[10px] text-orange-800 font-bold uppercase">Sản lượng xuất bán</div>
+                    <div className="text-xl sm:text-2xl font-black text-orange-600 font-mono">
+                      {top3Facility.count} <span className="text-xs font-bold text-slate-500">cá thể</span>
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="text-[10px] text-slate-400 font-medium">Khối lượng</div>
-                    <div className="text-sm font-black text-white font-mono">{top3Facility.weight} kg</div>
-                    <div className="text-[10px] text-emerald-300 font-bold">{top3Facility.batches} đợt xuất</div>
+                    <div className="text-[10px] text-slate-500 font-medium">Khối lượng</div>
+                    <div className="text-sm font-black text-slate-900 font-mono">{top3Facility.weight} kg</div>
+                    <div className="text-[10px] text-emerald-700 font-black">{top3Facility.batches} đợt xuất</div>
                   </div>
                 </div>
 
-                <div className="text-[11px] text-slate-300 mb-2 truncate">
-                  <span className="text-slate-400 font-medium">Loài chủ lực:</span>{' '}
-                  <strong className="text-amber-200">{top3Facility.topSpeciesText}</strong>
+                <div className="text-[11px] text-slate-600 mb-2 truncate">
+                  <span className="text-slate-500 font-medium">Loài chủ lực:</span>{' '}
+                  <strong className="text-orange-950 font-bold">{top3Facility.topSpeciesText}</strong>
                 </div>
 
                 {/* Filter Table Button */}
                 <button
                   type="button"
                   onClick={() => handleSelectOwnerFilter(top3Facility.name)}
-                  className={`w-full py-1.5 px-3 rounded-xl text-xs font-extrabold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                  className={`w-full py-2 px-3 rounded-xl text-xs font-black flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
                     filterOwner === top3Facility.name
-                      ? 'bg-amber-600 text-white font-black'
-                      : 'bg-white/10 hover:bg-white/20 text-amber-200 border border-amber-600/30'
+                      ? 'bg-orange-600 text-white shadow-xs'
+                      : 'bg-orange-100/90 hover:bg-orange-200 text-orange-950 border border-orange-300'
                   }`}
                 >
                   <span>{filterOwner === top3Facility.name ? 'Đang lọc cơ sở này' : 'Xem chi tiết các đợt xuất'}</span>
@@ -778,10 +780,10 @@ export default function PackingListView({
 
           {/* FULL RANKING TABLE FOR REMAINING FACILITIES */}
           {remainingFacilities.length > 0 && (
-            <div className="mt-4 pt-4 border-t border-white/10">
-              <div className="text-xs font-extrabold text-slate-300 mb-2.5 flex items-center justify-between">
+            <div className="mt-4 pt-4 border-t border-slate-200/90">
+              <div className="text-xs font-black text-slate-800 mb-2.5 flex items-center justify-between">
                 <span>Các cơ sở tiếp theo trong bảng xếp hạng ({remainingFacilities.length} cơ sở)</span>
-                <span className="text-[10px] text-slate-400 font-medium">Bấm vào cơ sở để xem nhật ký xuất bán chi tiết</span>
+                <span className="text-[10px] text-slate-500 font-medium">Bấm vào cơ sở để xem nhật ký xuất bán chi tiết</span>
               </div>
 
               <div className="space-y-2">
@@ -791,27 +793,29 @@ export default function PackingListView({
                     <div
                       key={fac.name}
                       onClick={() => handleSelectOwnerFilter(fac.name)}
-                      className={`p-2.5 rounded-2xl bg-white/5 hover:bg-white/10 border transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
-                        isSelected ? 'border-emerald-400 bg-emerald-950/40 ring-1 ring-emerald-400' : 'border-white/10'
+                      className={`p-3 rounded-2xl bg-white hover:bg-emerald-50/50 border transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs ${
+                        isSelected
+                          ? 'border-emerald-500 bg-emerald-50/90 ring-2 ring-emerald-500/30'
+                          : 'border-slate-200/90 hover:border-emerald-300'
                       }`}
                     >
                       {/* Left info: Rank, Name, Address */}
                       <div className="flex items-center gap-3 overflow-hidden">
-                        <span className="w-6 h-6 rounded-lg bg-white/10 text-white font-mono font-black text-xs flex items-center justify-center flex-shrink-0">
+                        <span className="w-7 h-7 rounded-xl bg-slate-100 text-slate-700 font-mono font-black text-xs flex items-center justify-center flex-shrink-0 border border-slate-200">
                           #{fac.rank}
                         </span>
                         <div className="overflow-hidden">
-                          <div className="font-black text-xs text-white truncate flex items-center gap-2">
+                          <div className="font-black text-xs text-slate-900 truncate flex items-center gap-2">
                             <span>{fac.name}</span>
-                            <span className="text-[10px] text-emerald-300 font-bold bg-emerald-900/60 px-1.5 py-0.2 rounded">
+                            <span className="text-[10px] text-emerald-800 font-bold bg-emerald-100/80 border border-emerald-200 px-2 py-0.5 rounded-full">
                               {fac.batches} đợt xuất
                             </span>
                           </div>
-                          <div className="text-[11px] text-slate-400 truncate flex items-center gap-1 mt-0.5">
-                            <MapPin className="w-2.5 h-2.5 text-slate-400 flex-shrink-0" />
+                          <div className="text-[11px] text-slate-500 truncate flex items-center gap-1 mt-0.5">
+                            <MapPin className="w-3 h-3 text-slate-400 flex-shrink-0" />
                             <span>{fac.diaChi}</span>
                             <span className="mx-1">•</span>
-                            <span className="text-amber-300/90 font-medium">{fac.allSpeciesText}</span>
+                            <span className="text-amber-800 font-bold">{fac.allSpeciesText}</span>
                           </div>
                         </div>
                       </div>
@@ -820,11 +824,11 @@ export default function PackingListView({
                       <div className="flex items-center gap-4 flex-shrink-0">
                         {/* Progress Bar */}
                         <div className="w-28 sm:w-36 hidden md:block">
-                          <div className="flex justify-between text-[9px] font-mono text-slate-400 mb-0.5">
+                          <div className="flex justify-between text-[10px] font-mono text-slate-500 font-semibold mb-0.5">
                             <span>Tỷ trọng</span>
                             <span>{fac.percentBar}%</span>
                           </div>
-                          <div className="w-full h-1.5 rounded-full bg-slate-800 overflow-hidden">
+                          <div className="w-full h-2 rounded-full bg-slate-100 border border-slate-200/80 overflow-hidden">
                             <div
                               style={{ width: `${fac.percentBar}%` }}
                               className="h-full bg-gradient-to-r from-emerald-500 to-teal-400 rounded-full"
@@ -834,13 +838,13 @@ export default function PackingListView({
 
                         {/* Numbers */}
                         <div className="text-right font-mono">
-                          <div className="text-sm font-black text-emerald-400">
-                            {fac.count} <span className="text-[10px] font-bold text-slate-400">cá thể</span>
+                          <div className="text-sm font-black text-emerald-700">
+                            {fac.count} <span className="text-[10px] font-bold text-slate-500">cá thể</span>
                           </div>
-                          <div className="text-[10px] text-slate-400 font-bold">{fac.weight} kg</div>
+                          <div className="text-[11px] text-slate-500 font-bold">{fac.weight} kg</div>
                         </div>
 
-                        <div className="p-1 rounded-lg bg-white/10 text-slate-300 group-hover:text-white">
+                        <div className="p-1.5 rounded-xl bg-slate-100 text-slate-500 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
                           <ArrowUpRight className="w-4 h-4" />
                         </div>
                       </div>
