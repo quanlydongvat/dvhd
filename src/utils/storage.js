@@ -1,4 +1,4 @@
-﻿/**
+/**
  * LocalStorage manager and sample demo data for Wildlife Monitoring Application
  */
 
@@ -202,6 +202,16 @@ export const EMPTY_FACILITY_INFO = {
   purposeCode: 'T',
 };
 
+export const cleanFacilityAddress = (addr) => {
+  if (!addr || typeof addr !== 'string') return addr || '';
+  return addr
+    .replace(/,\s*[Hh]uyện Krông Bông/g, '')
+    .replace(/[Hh]uyện Krông Bông,\s*/g, '')
+    .replace(/[Hh]uyện Krông Bông/g, '')
+    .replace(/\s{2,}/g, ' ')
+    .trim();
+};
+
 export const REAL_FACILITIES_DATA = [
   {
     "purposeCode": "T",
@@ -228,7 +238,7 @@ export const REAL_FACILITIES_DATA = [
       }
     ],
     "id": "fac_1",
-    "address": "Thôn 3, xã Hòa Sơn, Huyện Krông Bông, Tỉnh Đắk Lắk",
+    "address": "Thôn 3, xã Hòa Sơn, Tỉnh Đắk Lắk",
     "facilityName": "Cơ sở nuôi Lê Thị Xuân",
     "registrationCode": "IIB-DLC-027",
     "updatedAt": "2026-10-16T13:50:43.757Z",
@@ -240,7 +250,7 @@ export const REAL_FACILITIES_DATA = [
     "lat": 12.496848
   },
   {
-    "address": "Thôn 3, xã Cư Pui, Huyện Krông Bông, Tỉnh Đắk Lắk",
+    "address": "Thôn 3, xã Cư Pui, Tỉnh Đắk Lắk",
     "registrationDate": "2026-05-08",
     "lng": 108.456819,
     "lat": 12.546946,
@@ -472,7 +482,7 @@ export const REAL_FACILITIES_DATA = [
   },
   {
     "id": "fac_11",
-    "address": "Thôn 3, xã Cư Pui, Huyện Krông Bông, Tỉnh Đắk Lắk",
+    "address": "Thôn 3, xã Cư Pui, Tỉnh Đắk Lắk",
     "registrationDate": "2024-09-25",
     "updatedAt": "2026-10-16T13:50:43.759Z",
     "commune": "xã Cư Pui",
@@ -640,7 +650,7 @@ export const REAL_FACILITIES_DATA = [
     "purposeCode": "T",
     "commune": "Xã Krông Bông",
     "updatedAt": "2026-10-16T13:50:43.760Z",
-    "address": "Thôn 5, Xã Krông Bông, Huyện Krông Bông, Tỉnh Đắk Lắk",
+    "address": "Thôn 5, Xã Krông Bông, Tỉnh Đắk Lắk",
     "registrationDate": "2024-09-06",
     "phone": "",
     "lat": 12.528258,
@@ -682,7 +692,7 @@ export const REAL_FACILITIES_DATA = [
     "purposeCode": "T",
     "note": "",
     "commune": "Xã Krông Bông",
-    "address": "Thôn 8, Xã Krông Bông, Huyện Krông Bông, Tỉnh Đắk Lắk",
+    "address": "Thôn 8, Xã Krông Bông, Tỉnh Đắk Lắk",
     "facilityName": "Cơ sở nuôi Ngô Thị Trang",
     "id": "fac_13",
     "phone": ""
@@ -730,7 +740,7 @@ export const REAL_FACILITIES_DATA = [
     ],
     "purposeCode": "T",
     "lat": 12.492108,
-    "address": "TDP4, Xã Krông Bông, Huyện Krông Bông, Tỉnh Đắk Lắk",
+    "address": "TDP4, Xã Krông Bông, Tỉnh Đắk Lắk",
     "note": "",
     "ownerName": "Hà Huy Thanh",
     "lng": 108.333327,
@@ -1080,7 +1090,7 @@ export const REAL_FACILITIES_DATA = [
     ],
     "id": "fac_15",
     "phone": "",
-    "address": "Thôn 1, xã Yang Mao, Huyện Krông Bông, Tỉnh Đắk Lắk",
+    "address": "Thôn 1, xã Yang Mao, Tỉnh Đắk Lắk",
     "purposeCode": "T",
     "note": "",
     "updatedAt": "2026-10-16T13:50:43.761Z",
@@ -1114,7 +1124,7 @@ export const REAL_FACILITIES_DATA = [
         "id": "sp_16_1"
       }
     ],
-    "address": "Thôn Cư Drăm, xã Yang Mao, Huyện Krông Bông, Tỉnh Đắk Lắk",
+    "address": "Thôn Cư Drăm, xã Yang Mao, Tỉnh Đắk Lắk",
     "commune": "xã Yang Mao",
     "updatedAt": "2026-10-16T13:50:43.761Z",
     "note": "",
@@ -1156,7 +1166,7 @@ export const REAL_FACILITIES_DATA = [
     "purposeCode": "T",
     "registrationCode": "Đang cập nhật",
     "id": "fac_17",
-    "address": "Buôn Tul, xã Yang Mao, Huyện Krông Bông, Tỉnh Đắk Lắk",
+    "address": "Buôn Tul, xã Yang Mao, Tỉnh Đắk Lắk",
     "phone": "",
     "commune": "xã Yang Mao",
     "lng": 108.560116
@@ -1845,7 +1855,7 @@ export const REAL_FACILITIES_DATA = [
     "note": "",
     "commune": "Xã Krông Bông",
     "ownerName": "Lê Quang Mạnh",
-    "address": "Thôn 29, Xã Krông Bông, Huyện Krông Bông, Tỉnh Đắk Lắk",
+    "address": "Thôn 29, Xã Krông Bông, Tỉnh Đắk Lắk",
     "facilityName": "Cơ sở nuôi Lê Quang Mạnh"
   },
   {
@@ -1882,7 +1892,7 @@ export const REAL_FACILITIES_DATA = [
       }
     ],
     "registrationCode": "Đang cập nhật",
-    "address": "Thôn 9, Xã Krông Bông, Huyện Krông Bông, Tỉnh Đắk Lắk"
+    "address": "Thôn 9, Xã Krông Bông, Tỉnh Đắk Lắk"
   },
   {
     "facilityName": "Cơ sở nuôi Nguyễn Văn Thúy",
@@ -1916,7 +1926,7 @@ export const REAL_FACILITIES_DATA = [
     "registrationCode": "IIB-C-DLC-028",
     "id": "fac_2",
     "phone": "",
-    "address": "Thôn Quảng Đông, xã Hòa Sơn, Huyện Krông Bông, Tỉnh Đắk Lắk",
+    "address": "Thôn Quảng Đông, xã Hòa Sơn, Tỉnh Đắk Lắk",
     "commune": "xã Hòa Sơn",
     "lng": 108.297682
   },
@@ -1948,7 +1958,7 @@ export const REAL_FACILITIES_DATA = [
         "citesAppendix": "Khai báo kiểm lâm"
       }
     ],
-    "address": "Buôn Cư Ênun A, Xã Dang Kang, Huyện Krông Bông, Tỉnh Đắk Lắk",
+    "address": "Buôn Cư Ênun A, Xã Dang Kang, Tỉnh Đắk Lắk",
     "purposeCode": "T",
     "lng": 108.315384,
     "registrationDate": "",
@@ -1980,7 +1990,7 @@ export const REAL_FACILITIES_DATA = [
       }
     ],
     "purposeCode": "T",
-    "address": "Thôn 3, Xã Dang Kang, Huyện Krông Bông, Tỉnh Đắk Lắk",
+    "address": "Thôn 3, Xã Dang Kang, Tỉnh Đắk Lắk",
     "registrationCode": "Đang cập nhật",
     "commune": "Xã Dang Kang",
     "note": "",
@@ -2022,14 +2032,14 @@ export const REAL_FACILITIES_DATA = [
       }
     ],
     "updatedAt": "2026-10-16T13:50:43.764Z",
-    "address": "Thôn 2, xã Hòa Sơn, Huyện Krông Bông, Tỉnh Đắk Lắk",
+    "address": "Thôn 2, xã Hòa Sơn, Tỉnh Đắk Lắk",
     "registrationDate": "",
     "phone": ""
   },
   {
     "purposeCode": "O",
     "registrationDate": "",
-    "address": "Thôn 2, xã Hòa Sơn, Huyện Krông Bông, Tỉnh Đắk Lắk",
+    "address": "Thôn 2, xã Hòa Sơn, Tỉnh Đắk Lắk",
     "id": "fac_23",
     "note": "Làm cảnh",
     "updatedAt": "2026-10-16T13:50:43.764Z",
@@ -2061,7 +2071,7 @@ export const REAL_FACILITIES_DATA = [
     "phone": ""
   },
   {
-    "address": "Thôn 4, xã Hòa Sơn, Huyện Krông Bông, Tỉnh Đắk Lắk",
+    "address": "Thôn 4, xã Hòa Sơn, Tỉnh Đắk Lắk",
     "updatedAt": "2026-10-16T13:50:43.773Z",
     "purposeCode": "T",
     "speciesList": [
@@ -2097,7 +2107,7 @@ export const REAL_FACILITIES_DATA = [
   {
     "id": "fac_25",
     "updatedAt": "2026-10-16T13:50:43.773Z",
-    "address": "Thôn 4, Xã Krông Bông, Huyện Krông Bông, Tỉnh Đắk Lắk",
+    "address": "Thôn 4, Xã Krông Bông, Tỉnh Đắk Lắk",
     "commune": "Xã Krông Bông",
     "registrationCode": "Đang cập nhật",
     "lat": 12.502961,
@@ -2162,7 +2172,7 @@ export const REAL_FACILITIES_DATA = [
     "commune": "Xã Krông Bông",
     "registrationDate": "",
     "phone": "",
-    "address": "Thôn 7, Xã Krông Bông, Huyện Krông Bông, Tỉnh Đắk Lắk",
+    "address": "Thôn 7, Xã Krông Bông, Tỉnh Đắk Lắk",
     "facilityName": "Cơ sở nuôi Nguyễn Trí",
     "lng": 108.336714
   },
@@ -2170,7 +2180,7 @@ export const REAL_FACILITIES_DATA = [
     "phone": "",
     "purposeCode": "T",
     "registrationDate": "",
-    "address": "Thôn 2, Xã Krông Bông, Huyện Krông Bông, Tỉnh Đắk Lắk",
+    "address": "Thôn 2, Xã Krông Bông, Tỉnh Đắk Lắk",
     "ownerName": "Nguyễn Văn Hòa",
     "speciesList": [
       {
@@ -2204,7 +2214,7 @@ export const REAL_FACILITIES_DATA = [
     "updatedAt": "2026-10-16T13:50:43.773Z",
     "note": "",
     "registrationDate": "",
-    "address": "Thôn 26, Xã Krông Bông, Huyện Krông Bông, Tỉnh Đắk Lắk",
+    "address": "Thôn 26, Xã Krông Bông, Tỉnh Đắk Lắk",
     "purposeCode": "T",
     "commune": "Xã Krông Bông",
     "facilityName": "Cơ sở nuôi Trần Văn Hà",
@@ -2239,7 +2249,7 @@ export const REAL_FACILITIES_DATA = [
   {
     "registrationCode": "Đang cập nhật",
     "ownerName": "Trần Ngọc Long",
-    "address": "Thôn 2, Xã Krông Bông, Huyện Krông Bông, Tỉnh Đắk Lắk",
+    "address": "Thôn 2, Xã Krông Bông, Tỉnh Đắk Lắk",
     "registrationDate": "",
     "id": "fac_29",
     "speciesList": [
@@ -2295,7 +2305,7 @@ export const REAL_FACILITIES_DATA = [
     ],
     "registrationDate": "2025-10-03",
     "purposeCode": "T",
-    "address": "Thôn 4, xã Hòa Sơn, Huyện Krông Bông, Tỉnh Đắk Lắk",
+    "address": "Thôn 4, xã Hòa Sơn, Tỉnh Đắk Lắk",
     "id": "fac_3",
     "commune": "xã Hòa Sơn",
     "facilityName": "Cơ sở nuôi Trịnh Viết Long",
@@ -2338,7 +2348,7 @@ export const REAL_FACILITIES_DATA = [
     ],
     "registrationCode": "Đang cập nhật",
     "purposeCode": "T",
-    "address": "Thôn 6, Xã Dang Kang, Huyện Krông Bông, Tỉnh Đắk Lắk",
+    "address": "Thôn 6, Xã Dang Kang, Tỉnh Đắk Lắk",
     "lat": 12.574027,
     "updatedAt": "2026-10-16T13:50:43.773Z"
   },
@@ -2374,7 +2384,7 @@ export const REAL_FACILITIES_DATA = [
     "note": "Làm cảnh",
     "registrationCode": "Đang cập nhật",
     "purposeCode": "O",
-    "address": "Thôn 7, Xã Dang Kang, Huyện Krông Bông, Tỉnh Đắk Lắk",
+    "address": "Thôn 7, Xã Dang Kang, Tỉnh Đắk Lắk",
     "updatedAt": "2026-10-16T13:50:43.773Z",
     "commune": "Xã Dang Kang"
   },
@@ -2409,7 +2419,7 @@ export const REAL_FACILITIES_DATA = [
     "updatedAt": "2026-10-16T13:50:43.773Z",
     "registrationCode": "Chưa có mã số",
     "id": "fac_4",
-    "address": "Thôn 3, xã Hòa Sơn, Huyện Krông Bông, Tỉnh Đắk Lắk",
+    "address": "Thôn 3, xã Hòa Sơn, Tỉnh Đắk Lắk",
     "lng": 108.29803,
     "lat": 12.492824,
     "commune": "xã Hòa Sơn"
@@ -2422,7 +2432,7 @@ export const REAL_FACILITIES_DATA = [
     "updatedAt": "2026-10-16T13:50:43.773Z",
     "purposeCode": "T",
     "id": "fac_5",
-    "address": "Thôn 1, xã Hòa Sơn, Huyện Krông Bông, Tỉnh Đắk Lắk",
+    "address": "Thôn 1, xã Hòa Sơn, Tỉnh Đắk Lắk",
     "ownerName": "Phan Thanh Hùng",
     "speciesList": [
       {
@@ -2471,7 +2481,7 @@ export const REAL_FACILITIES_DATA = [
         "fluctuations": []
       }
     ],
-    "address": "Thôn 6, xã Hòa Sơn, Huyện Krông Bông, Tỉnh Đắk Lắk",
+    "address": "Thôn 6, xã Hòa Sơn, Tỉnh Đắk Lắk",
     "note": "Nghỉ nuôi",
     "facilityName": "Cơ sở nuôi Lê Nguyễn Nhật Tân",
     "updatedAt": "2026-10-16T13:50:43.773Z",
@@ -2567,7 +2577,7 @@ export const REAL_FACILITIES_DATA = [
     "id": "fac_7",
     "ownerName": "Nguyễn Tấn Danh Nhân",
     "phone": "",
-    "address": "Buôn Tơ Rang, xã Yang Mao, Huyện Krông Bông, Tỉnh Đắk Lắk",
+    "address": "Buôn Tơ Rang, xã Yang Mao, Tỉnh Đắk Lắk",
     "registrationDate": "2024-07-03",
     "lat": 12.472545,
     "updatedAt": "2026-10-16T13:50:43.774Z",
@@ -2605,7 +2615,7 @@ export const REAL_FACILITIES_DATA = [
     "registrationDate": "2026-05-05",
     "phone": "",
     "lng": 108.562716,
-    "address": "Buôn chàm A, xã Yang Mao, Huyện Krông Bông, Tỉnh Đắk Lắk",
+    "address": "Buôn chàm A, xã Yang Mao, Tỉnh Đắk Lắk",
     "commune": "xã Yang Mao",
     "lat": 12.483552,
     "ownerName": "Huỳnh Công Nam",
@@ -2620,7 +2630,7 @@ export const REAL_FACILITIES_DATA = [
     "lat": 12.503389,
     "registrationCode": "14-26/B-DLC",
     "note": "",
-    "address": "Thôn Ea Luêh, xã Yang Mao, Huyện Krông Bông, Tỉnh Đắk Lắk",
+    "address": "Thôn Ea Luêh, xã Yang Mao, Tỉnh Đắk Lắk",
     "id": "fac_9",
     "commune": "xã Yang Mao",
     "speciesList": [
@@ -2728,6 +2738,10 @@ export function loadAppData() {
         if (freshCount > currentCount) {
           f = { ...f, speciesList: fresh.speciesList, baseline: fresh.baseline };
         }
+      }
+      
+      if (f.address) {
+        f.address = cleanFacilityAddress(f.address);
       }
       
       // Auto-normalize species names and groups

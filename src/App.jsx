@@ -18,6 +18,7 @@ import {
   loadPackingListData,
   savePackingListData,
   INITIAL_PACKING_LIST_DATA,
+  cleanFacilityAddress,
 } from './utils/storage';
 import {
   syncAppDataToCloud,
@@ -366,6 +367,9 @@ export default function App() {
 
           if (cloudFacilities.length > 0) {
             const mergedCloudFacilities = cloudFacilities.map((f) => {
+              if (f.address) {
+                f.address = cleanFacilityAddress(f.address);
+              }
               const fresh = REAL_FACILITIES_DATA.find((rf) => rf.id === f.id);
               if (fresh && fresh.speciesList) {
                 const freshCount = fresh.speciesList.reduce((acc, s) => acc + (s.fluctuations?.length || 0), 0);
@@ -500,6 +504,9 @@ export default function App() {
       const localFacilities = appState.facilitiesList || [];
 
       const mergedCloudFacilities = cloudFacilities.map((f) => {
+        if (f.address) {
+          f.address = cleanFacilityAddress(f.address);
+        }
         const fresh = REAL_FACILITIES_DATA.find((rf) => rf.id === f.id);
         if (fresh && fresh.speciesList) {
           const freshCount = fresh.speciesList.reduce((acc, s) => acc + (s.fluctuations?.length || 0), 0);
@@ -1114,6 +1121,9 @@ export default function App() {
 
   // Handler: Save Facility Info (Add new or Edit existing)
   const handleSaveFacility = (formData) => {
+    if (formData.address) {
+      formData.address = cleanFacilityAddress(formData.address);
+    }
     if (editingFacility && editingFacility.id) {
       // Edit existing facility
       const targetFac = facilitiesList.find(f => f.id === editingFacility.id);

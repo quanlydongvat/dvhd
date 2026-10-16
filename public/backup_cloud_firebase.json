@@ -12,7 +12,7 @@
       "registrationDate": "2023-03-17",
       "lng": 108.227912,
       "note": "",
-      "address": "Thôn 3, xã Hòa Sơn, Huyện Krông Bông, Tỉnh Đắk Lắk",
+      "address": "Thôn 3, xã Hòa Sơn, Tỉnh Đắk Lắk",
       "phone": "",
       "speciesList": [
         {
@@ -27,7 +27,7 @@
             "father": 4,
             "mother": 5,
             "date": "2023-03-17",
-            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
             "otherMale": 8,
             "otherUnknown": 2,
             "note": "Số lượng vật nuôi theo chứng nhận cơ sở",
@@ -158,7 +158,7 @@
             }
           ],
           "baseline": {
-            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
             "date": "2026-05-08",
             "mother": 3,
             "father": 2,
@@ -172,7 +172,7 @@
       ],
       "phone": "",
       "commune": "xã Cư Pui",
-      "address": "Thôn 3, xã Cư Pui, Huyện Krông Bông, Tỉnh Đắk Lắk",
+      "address": "Thôn 3, xã Cư Pui, Tỉnh Đắk Lắk",
       "note": "",
       "lng": 108.456819,
       "updatedAt": "2026-08-12T14:23:57.697Z",
@@ -185,7 +185,7 @@
       "updatedAt": "2026-08-12T14:23:57.697Z",
       "lng": 108.453559,
       "note": "",
-      "address": "Thôn 3, xã Cư Pui, Huyện Krông Bông, Tỉnh Đắk Lắk",
+      "address": "Thôn 3, xã Cư Pui, Tỉnh Đắk Lắk",
       "commune": "xã Cư Pui",
       "phone": "",
       "speciesList": [
@@ -196,7 +196,7 @@
           "baseline": {
             "mother": 7,
             "father": 4,
-            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
             "date": "2024-09-25",
             "otherUnknown": 19,
             "otherMale": 5,
@@ -247,14 +247,14 @@
       "updatedAt": "2026-08-12T14:23:57.697Z",
       "lng": 108.332398,
       "note": "",
-      "address": "Thôn 5, Xã Krông Bông, Huyện Krông Bông, Tỉnh Đắk Lắk",
+      "address": "Thôn 5, Xã Krông Bông, Tỉnh Đắk Lắk",
       "speciesList": [
         {
           "vietnameseName": "Cầy vòi Hương",
           "purposeCode": "T",
           "id": "sp_12_1",
           "baseline": {
-            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
             "date": "2024-09-06",
             "father": 2,
             "mother": 7,
@@ -289,7 +289,7 @@
           "baseline": {
             "father": 6,
             "mother": 7,
-            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
             "date": "2025-07-31",
             "otherMale": 7,
             "otherUnknown": 7,
@@ -302,14 +302,14 @@
         }
       ],
       "note": "",
-      "address": "Thôn 8, Xã Krông Bông, Huyện Krông Bông, Tỉnh Đắk Lắk",
+      "address": "Thôn 8, Xã Krông Bông, Tỉnh Đắk Lắk",
       "lng": 108.414746,
       "updatedAt": "2026-08-12T14:23:57.697Z",
       "registrationDate": "2025-07-31",
       "purposeCode": "T"
     },
     {
-      "address": "TDP4, Xã Krông Bông, Huyện Krông Bông, Tỉnh Đắk Lắk",
+      "address": "TDP4, Xã Krông Bông, Tỉnh Đắk Lắk",
       "note": "",
       "phone": "",
       "speciesList": [
@@ -320,7 +320,7 @@
           "baseline": {
             "father": 5,
             "mother": 23,
-            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
             "date": "2026-03-17",
             "otherMale": 0,
             "otherUnknown": 0,
@@ -341,7 +341,7 @@
           "group": "Động vật rừng (Nhóm IIB)",
           "baseline": {
             "date": "2026-01-01",
-            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
             "mother": 34,
             "father": 9,
             "otherFemale": 0,
@@ -369,7 +369,7 @@
       "facilityName": "Cơ sở nuôi Trần Văn Tới",
       "ownerName": "Trần Văn Tới",
       "id": "fac_15",
-      "address": "Thôn 1, xã Yang Mao, Huyện Krông Bông, Tỉnh Đắk Lắk",
+      "address": "Thôn 1, xã Yang Mao, Tỉnh Đắk Lắk",
       "note": "",
       "commune": "xã Yang Mao",
       "speciesList": [
@@ -384,7 +384,7 @@
             "otherUnknown": 47,
             "otherMale": 28,
             "date": "2026-01-01",
-            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
             "mother": 9,
             "father": 9
           },
@@ -416,7 +416,7 @@
             "note": "Số lượng Dúi mốc lớn hiện có",
             "mother": 2,
             "father": 2,
-            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
             "date": "2026-01-01"
           },
           "citesAppendix": "Khai báo kiểm lâm"
@@ -424,7 +424,7 @@
       ],
       "commune": "xã Yang Mao",
       "note": "",
-      "address": "Thôn Cư Drăm, xã Yang Mao, Huyện Krông Bông, Tỉnh Đắk Lắk",
+      "address": "Thôn Cư Drăm, xã Yang Mao, Tỉnh Đắk Lắk",
       "lng": 108.551582,
       "updatedAt": "2026-08-12T14:23:57.697Z",
       "purposeCode": "T",
@@ -445,7 +445,7 @@
           "baseline": {
             "father": 2,
             "mother": 10,
-            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
             "date": "2026-01-01",
             "otherMale": 0,
             "otherUnknown": 0,
@@ -460,7 +460,7 @@
       ],
       "phone": "",
       "note": "",
-      "address": "Buôn Tul, xã Yang Mao, Huyện Krông Bông, Tỉnh Đắk Lắk",
+      "address": "Buôn Tul, xã Yang Mao, Tỉnh Đắk Lắk",
       "lng": 108.560116,
       "updatedAt": "2026-08-12T14:23:57.698Z",
       "purposeCode": "T",
@@ -501,7 +501,7 @@
           "citesAppendix": "Phụ lục II CITES",
           "baseline": {
             "date": "2026-07-24",
-            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
             "mother": 3,
             "father": 1,
             "otherFemale": 0,
@@ -552,7 +552,7 @@
             "father": 2,
             "mother": 4,
             "date": "2026-07-24",
-            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
             "otherMale": 0,
             "otherUnknown": 0,
             "note": "Hiện trạng đăng ký ban đầu",
@@ -599,7 +599,7 @@
             "father": 2,
             "mother": 40,
             "date": "2026-07-24",
-            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
             "otherMale": 0,
             "otherUnknown": 0,
             "note": "Hiện trạng đăng ký ban đầu",
@@ -738,7 +738,7 @@
           "scientificName": "Rhizomys pruinosus",
           "citesAppendix": "Khai báo kiểm lâm",
           "baseline": {
-            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
             "date": "2026-06-17",
             "mother": 4,
             "father": 2,
@@ -799,7 +799,7 @@
           "citesAppendix": "Khai báo kiểm lâm",
           "baseline": {
             "date": "2025-11-12",
-            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
             "mother": 30,
             "father": 10,
             "otherFemale": 0,
@@ -828,7 +828,7 @@
             "father": 3,
             "mother": 4,
             "date": "2026-01-01",
-            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
             "otherMale": 10,
             "otherUnknown": 0,
             "note": "Số lượng Dúi má đào hiện có",
@@ -850,7 +850,7 @@
             "otherUnknown": 58,
             "otherMale": 17,
             "date": "2026-01-01",
-            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
             "mother": 61,
             "father": 19
           },
@@ -860,7 +860,7 @@
         }
       ],
       "commune": "Xã Krông Bông",
-      "address": "Thôn 29, Xã Krông Bông, Huyện Krông Bông, Tỉnh Đắk Lắk",
+      "address": "Thôn 29, Xã Krông Bông, Tỉnh Đắk Lắk",
       "note": "",
       "ownerName": "Lê Quang Mạnh",
       "id": "fac_18",
@@ -885,7 +885,7 @@
             "otherUnknown": 0,
             "otherMale": 0,
             "date": "2026-01-01",
-            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
             "mother": 15,
             "father": 10
           },
@@ -897,7 +897,7 @@
       ],
       "commune": "Xã Krông Bông",
       "note": "",
-      "address": "Thôn 9, Xã Krông Bông, Huyện Krông Bông, Tỉnh Đắk Lắk",
+      "address": "Thôn 9, Xã Krông Bông, Tỉnh Đắk Lắk",
       "id": "fac_19",
       "ownerName": "Nguyễn Trương Đắc Nam",
       "facilityName": "Cơ sở nuôi Nguyễn Trương Đắc Nam",
@@ -910,7 +910,7 @@
       "updatedAt": "2026-08-12T14:23:57.698Z",
       "lng": 108.297682,
       "note": "",
-      "address": "Thôn Quảng Đông, xã Hòa Sơn, Huyện Krông Bông, Tỉnh Đắk Lắk",
+      "address": "Thôn Quảng Đông, xã Hòa Sơn, Tỉnh Đắk Lắk",
       "phone": "",
       "speciesList": [
         {
@@ -925,7 +925,7 @@
             "note": "Số lượng vật nuôi đăng ký",
             "otherUnknown": 3,
             "otherMale": 6,
-            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
             "date": "2023-04-17",
             "mother": 3,
             "father": 2
@@ -961,7 +961,7 @@
             "otherUnknown": 11,
             "otherMale": 6,
             "date": "2026-01-01",
-            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
             "mother": 26,
             "father": 4
           }
@@ -969,7 +969,7 @@
       ],
       "commune": "Xã Dang Kang",
       "note": "",
-      "address": "Buôn Cư Ênun A, Xã Dang Kang, Huyện Krông Bông, Tỉnh Đắk Lắk",
+      "address": "Buôn Cư Ênun A, Xã Dang Kang, Tỉnh Đắk Lắk",
       "ownerName": "Trần Văn Lực",
       "id": "fac_20",
       "facilityName": "Cơ sở nuôi Trần Văn Lực",
@@ -989,7 +989,7 @@
             "otherFemale": 0,
             "father": 10,
             "mother": 10,
-            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
             "date": "2026-01-01"
           },
           "scientificName": "Rhizomys pruinosus",
@@ -1001,7 +1001,7 @@
         }
       ],
       "note": "",
-      "address": "Thôn 3, Xã Dang Kang, Huyện Krông Bông, Tỉnh Đắk Lắk",
+      "address": "Thôn 3, Xã Dang Kang, Tỉnh Đắk Lắk",
       "lng": 108.339096,
       "purposeCode": "T",
       "registrationDate": "",
@@ -1019,7 +1019,7 @@
       "id": "fac_22",
       "ownerName": "Nguyễn Thanh",
       "registrationCode": "Đang cập nhật",
-      "address": "Thôn 2, xã Hòa Sơn, Huyện Krông Bông, Tỉnh Đắk Lắk",
+      "address": "Thôn 2, xã Hòa Sơn, Tỉnh Đắk Lắk",
       "note": "",
       "facilityName": "Cơ sở nuôi Nguyễn Thanh",
       "commune": "xã Hòa Sơn",
@@ -1035,7 +1035,7 @@
             "note": "Số lượng Chim Cu gáy nuôi",
             "otherUnknown": 0,
             "otherMale": 0,
-            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
             "date": "2026-01-01",
             "mother": 1,
             "father": 1
@@ -1061,7 +1061,7 @@
             "father": 3,
             "mother": 0,
             "date": "2026-01-01",
-            "verifier": "Hạt Kiểm lâm Huyện Krông Bông"
+            "verifier": "Hạt Kiểm lâm khu vực Krông Bông"
           },
           "scientificName": "Pycnonotus Jocosus",
           "fluctuations": [],
@@ -1071,7 +1071,7 @@
       "phone": "",
       "facilityName": "Cơ sở nuôi Huỳnh Phúc Lợi",
       "commune": "xã Hòa Sơn",
-      "address": "Thôn 2, xã Hòa Sơn, Huyện Krông Bông, Tỉnh Đắk Lắk",
+      "address": "Thôn 2, xã Hòa Sơn, Tỉnh Đắk Lắk",
       "note": "Làm cảnh",
       "registrationCode": "Đang cập nhật",
       "ownerName": "Huỳnh Phúc Lợi",
@@ -1088,7 +1088,7 @@
       "ownerName": "Phan Thanh Trúc",
       "registrationCode": "Đang cập nhật",
       "note": "",
-      "address": "Thôn 4, xã Hòa Sơn, Huyện Krông Bông, Tỉnh Đắk Lắk",
+      "address": "Thôn 4, xã Hòa Sơn, Tỉnh Đắk Lắk",
       "facilityName": "Cơ sở nuôi Phan Thanh Trúc",
       "commune": "xã Hòa Sơn",
       "speciesList": [
@@ -1108,7 +1108,7 @@
             "mother": 5,
             "father": 5,
             "date": "2026-01-01",
-            "verifier": "Hạt Kiểm lâm Huyện Krông Bông"
+            "verifier": "Hạt Kiểm lâm khu vực Krông Bông"
           }
         }
       ],
@@ -1119,7 +1119,7 @@
       "purposeCode": "T",
       "updatedAt": "2026-08-12T14:23:57.699Z",
       "lng": 108.333624,
-      "address": "Thôn 4, Xã Krông Bông, Huyện Krông Bông, Tỉnh Đắk Lắk",
+      "address": "Thôn 4, Xã Krông Bông, Tỉnh Đắk Lắk",
       "note": "",
       "commune": "Xã Krông Bông",
       "phone": "",
@@ -1133,7 +1133,7 @@
             "otherFemale": 0,
             "otherMale": 0,
             "otherUnknown": 0,
-            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
             "date": "2026-01-01",
             "father": 5,
             "mother": 5
@@ -1161,7 +1161,7 @@
       "updatedAt": "2026-08-12T14:23:57.699Z",
       "lng": 108.336714,
       "note": "",
-      "address": "Thôn 7, Xã Krông Bông, Huyện Krông Bông, Tỉnh Đắk Lắk",
+      "address": "Thôn 7, Xã Krông Bông, Tỉnh Đắk Lắk",
       "commune": "Xã Krông Bông",
       "phone": "",
       "speciesList": [
@@ -1174,7 +1174,7 @@
             "note": "Số lượng Chim Cu gáy nuôi",
             "mother": 11,
             "father": 11,
-            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
             "date": "2026-01-01"
           },
           "fluctuations": [],
@@ -1188,7 +1188,7 @@
     },
     {
       "registrationCode": "Đang cập nhật",
-      "address": "Thôn 2, Xã Krông Bông, Huyện Krông Bông, Tỉnh Đắk Lắk",
+      "address": "Thôn 2, Xã Krông Bông, Tỉnh Đắk Lắk",
       "note": "",
       "commune": "Xã Krông Bông",
       "facilityName": "Cơ sở nuôi Nguyễn Văn Hòa",
@@ -1199,7 +1199,7 @@
           "fluctuations": [],
           "citesAppendix": "Khai báo kiểm lâm",
           "baseline": {
-            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
             "date": "2026-01-01",
             "mother": 2,
             "father": 2,
@@ -1235,7 +1235,7 @@
             "mother": 1,
             "father": 1,
             "date": "2026-01-01",
-            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
             "otherUnknown": 0,
             "otherMale": 0,
             "otherFemale": 0,
@@ -1248,7 +1248,7 @@
       ],
       "phone": "",
       "commune": "Xã Krông Bông",
-      "address": "Thôn 26, Xã Krông Bông, Huyện Krông Bông, Tỉnh Đắk Lắk",
+      "address": "Thôn 26, Xã Krông Bông, Tỉnh Đắk Lắk",
       "note": "",
       "id": "fac_28",
       "ownerName": "Trần Văn Hà",
@@ -1271,7 +1271,7 @@
           "id": "sp_29_1",
           "baseline": {
             "date": "2026-01-01",
-            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
             "father": 2,
             "mother": 2,
             "note": "Số lượng Chim Cu gáy nuôi",
@@ -1288,7 +1288,7 @@
       "phone": "",
       "registrationCode": "Đang cập nhật",
       "note": "",
-      "address": "Thôn 2, Xã Krông Bông, Huyện Krông Bông, Tỉnh Đắk Lắk"
+      "address": "Thôn 2, Xã Krông Bông, Tỉnh Đắk Lắk"
     },
     {
       "lng": 108.1885,
@@ -1303,7 +1303,7 @@
           "id": "sp_3_1",
           "citesAppendix": "Phụ lục II CITES",
           "baseline": {
-            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
             "date": "2025-10-03",
             "father": 0,
             "mother": 0,
@@ -1318,7 +1318,7 @@
         }
       ],
       "phone": "",
-      "address": "Thôn 4, xã Hòa Sơn, Huyện Krông Bông, Tỉnh Đắk Lắk",
+      "address": "Thôn 4, xã Hòa Sơn, Tỉnh Đắk Lắk",
       "note": "Nghỉ nuôi",
       "ownerName": "Trịnh Viết Long",
       "id": "fac_3",
@@ -1340,7 +1340,7 @@
           "baseline": {
             "mother": 2,
             "father": 2,
-            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
             "date": "2026-01-01",
             "otherUnknown": 3,
             "otherMale": 3,
@@ -1354,7 +1354,7 @@
         }
       ],
       "phone": "",
-      "address": "Thôn 6, Xã Dang Kang, Huyện Krông Bông, Tỉnh Đắk Lắk",
+      "address": "Thôn 6, Xã Dang Kang, Tỉnh Đắk Lắk",
       "note": "",
       "ownerName": "Hoàng Văn Hải",
       "id": "fac_30",
@@ -1373,7 +1373,7 @@
       "updatedAt": "2026-08-12T14:23:57.699Z",
       "lng": 108.33214,
       "note": "Làm cảnh",
-      "address": "Thôn 7, Xã Dang Kang, Huyện Krông Bông, Tỉnh Đắk Lắk",
+      "address": "Thôn 7, Xã Dang Kang, Tỉnh Đắk Lắk",
       "speciesList": [
         {
           "scientificName": "Pycnonotus Jocosus",
@@ -1387,7 +1387,7 @@
             "father": 1,
             "mother": 1,
             "date": "2026-01-01",
-            "verifier": "Hạt Kiểm lâm Huyện Krông Bông"
+            "verifier": "Hạt Kiểm lâm khu vực Krông Bông"
           },
           "citesAppendix": "Khai báo kiểm lâm",
           "id": "sp_31_1",
@@ -1400,7 +1400,7 @@
     },
     {
       "note": "Chưa có mã số",
-      "address": "Thôn 3, xã Hòa Sơn, Huyện Krông Bông, Tỉnh Đắk Lắk",
+      "address": "Thôn 3, xã Hòa Sơn, Tỉnh Đắk Lắk",
       "commune": "xã Hòa Sơn",
       "phone": "",
       "speciesList": [
@@ -1410,7 +1410,7 @@
           "id": "sp_4_1",
           "citesAppendix": "Phụ lục II CITES",
           "baseline": {
-            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
             "date": "2026-01-01",
             "father": 4,
             "mother": 11,
@@ -1435,7 +1435,7 @@
       "ownerName": "Phạm Bá Quang"
     },
     {
-      "address": "Thôn 1, xã Hòa Sơn, Huyện Krông Bông, Tỉnh Đắk Lắk",
+      "address": "Thôn 1, xã Hòa Sơn, Tỉnh Đắk Lắk",
       "note": "Nghỉ nuôi",
       "registrationCode": "IIB-DLC-021",
       "speciesList": [
@@ -1447,7 +1447,7 @@
           "baseline": {
             "father": 0,
             "mother": 0,
-            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
             "date": "2022-04-22",
             "otherMale": 0,
             "otherUnknown": 0,
@@ -1489,7 +1489,7 @@
             "note": "Cơ sở nghỉ nuôi",
             "otherUnknown": 0,
             "otherMale": 0,
-            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
             "date": "2026-01-01",
             "mother": 0,
             "father": 0
@@ -1500,10 +1500,10 @@
       "phone": "",
       "registrationCode": "IIB-DLC-025",
       "note": "Nghỉ nuôi",
-      "address": "Thôn 6, xã Hòa Sơn, Huyện Krông Bông, Tỉnh Đắk Lắk"
+      "address": "Thôn 6, xã Hòa Sơn, Tỉnh Đắk Lắk"
     },
     {
-      "address": "Buôn Tơ Rang, xã Yang Mao, Huyện Krông Bông, Tỉnh Đắk Lắk",
+      "address": "Buôn Tơ Rang, xã Yang Mao, Tỉnh Đắk Lắk",
       "note": "",
       "commune": "xã Yang Mao",
       "speciesList": [
@@ -1513,7 +1513,7 @@
             "mother": 5,
             "father": 3,
             "date": "2024-07-03",
-            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
             "otherUnknown": 19,
             "otherMale": 12,
             "otherFemale": 14,
@@ -1540,7 +1540,7 @@
             "note": "Số lượng Cầy vòi mốc hiện có",
             "mother": 3,
             "father": 2,
-            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
             "date": "2024-07-03"
           },
           "citesAppendix": "Phụ lục II CITES"
@@ -1552,7 +1552,7 @@
           "baseline": {
             "father": 1,
             "mother": 1,
-            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
             "date": "2026-01-01",
             "otherMale": 0,
             "otherUnknown": 0,
@@ -1579,7 +1579,7 @@
             "father": 6,
             "mother": 12,
             "date": "2026-01-01",
-            "verifier": "Hạt Kiểm lâm Huyện Krông Bông"
+            "verifier": "Hạt Kiểm lâm khu vực Krông Bông"
           },
           "citesAppendix": "Khai báo kiểm lâm"
         }
@@ -1614,7 +1614,7 @@
           "citesAppendix": "Phụ lục II CITES",
           "baseline": {
             "date": "2026-05-05",
-            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
             "mother": 5,
             "father": 1,
             "otherFemale": 0,
@@ -1629,11 +1629,11 @@
       ],
       "phone": "",
       "note": "",
-      "address": "Buôn chàm A, xã Yang Mao, Huyện Krông Bông, Tỉnh Đắk Lắk"
+      "address": "Buôn chàm A, xã Yang Mao, Tỉnh Đắk Lắk"
     },
     {
       "note": "",
-      "address": "Thôn Ea Luêh, xã Yang Mao, Huyện Krông Bông, Tỉnh Đắk Lắk",
+      "address": "Thôn Ea Luêh, xã Yang Mao, Tỉnh Đắk Lắk",
       "commune": "xã Yang Mao",
       "phone": "",
       "speciesList": [
@@ -1645,7 +1645,7 @@
           "baseline": {
             "father": 5,
             "mother": 8,
-            "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+            "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
             "date": "2026-03-03",
             "otherMale": 0,
             "otherUnknown": 0,

@@ -131,7 +131,7 @@ export default function CitesSummaryTable({ facilitiesList = [] }) {
         </h1>
         {selectedCommune !== 'ALL' && (
           <p className="text-xs font-bold text-emerald-700">
-            📍 Địa bàn: {selectedCommune} - Huyện Krông Bông
+            📍 Địa bàn: {selectedCommune} - Tỉnh Đắk Lắk
           </p>
         )}
       </div>
