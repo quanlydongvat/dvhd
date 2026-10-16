@@ -374,7 +374,7 @@ export default function MusicPlayer() {
   };
 
   return (
-    <div className="mt-4 bg-gradient-to-br from-emerald-950 via-teal-950 to-slate-900 text-white rounded-2xl p-3.5 border border-emerald-500/30 shadow-lg relative overflow-hidden font-sans transition-all">
+    <div className="mt-1 bg-gradient-to-br from-emerald-950 via-teal-950 to-slate-900 text-white rounded-2xl p-3.5 border border-emerald-500/30 shadow-lg relative overflow-hidden font-sans transition-all">
       {/* Background Glow */}
       <div className="absolute -right-8 -top-8 w-28 h-28 bg-emerald-500/15 rounded-full blur-2xl pointer-events-none" />
       
