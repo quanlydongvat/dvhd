@@ -2676,15 +2676,6 @@ export function loadAppData() {
         : REAL_FACILITIES_DATA;
 
     facilitiesList = facilitiesList.map((f) => {
-      const fresh = REAL_FACILITIES_DATA.find((rf) => rf.id === f.id);
-      if (fresh && fresh.speciesList) {
-        const freshCount = fresh.speciesList.reduce((acc, s) => acc + (s.fluctuations?.length || 0), 0);
-        const currentCount = f.speciesList?.reduce((acc, s) => acc + (s.fluctuations?.length || 0), 0) || 0;
-        if (freshCount > currentCount) {
-          f = { ...f, speciesList: fresh.speciesList, baseline: fresh.baseline };
-        }
-      }
-      
       if (f.address) {
         f.address = cleanFacilityAddress(f.address);
       }

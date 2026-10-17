@@ -370,14 +370,6 @@ export default function App() {
               if (f.address) {
                 f.address = cleanFacilityAddress(f.address);
               }
-              const fresh = REAL_FACILITIES_DATA.find((rf) => rf.id === f.id);
-              if (fresh && fresh.speciesList) {
-                const freshCount = fresh.speciesList.reduce((acc, s) => acc + (s.fluctuations?.length || 0), 0);
-                const currentCount = f.speciesList?.reduce((acc, s) => acc + (s.fluctuations?.length || 0), 0) || 0;
-                if (freshCount > currentCount) {
-                  return { ...f, speciesList: fresh.speciesList, baseline: fresh.baseline };
-                }
-              }
               return f;
             });
 
@@ -506,14 +498,6 @@ export default function App() {
       const mergedCloudFacilities = cloudFacilities.map((f) => {
         if (f.address) {
           f.address = cleanFacilityAddress(f.address);
-        }
-        const fresh = REAL_FACILITIES_DATA.find((rf) => rf.id === f.id);
-        if (fresh && fresh.speciesList) {
-          const freshCount = fresh.speciesList.reduce((acc, s) => acc + (s.fluctuations?.length || 0), 0);
-          const currentCount = f.speciesList?.reduce((acc, s) => acc + (s.fluctuations?.length || 0), 0) || 0;
-          if (freshCount > currentCount) {
-            return { ...f, speciesList: fresh.speciesList, baseline: fresh.baseline };
-          }
         }
         return f;
       });
@@ -650,6 +634,7 @@ export default function App() {
   const handleResetDemo = () => {
     const demo = resetToDemoData();
     setAppState(demo);
+    syncAppDataToCloud(demo);
   };
   // Pending Fluctuation Requests State & Handlers
   const fetchPendingRequests = async () => {
@@ -775,6 +760,12 @@ export default function App() {
       facilitiesList: updatedFacilitiesList
     }));
 
+    // PERSIST APPROVED FACILITY STATE TO FIREBASE CLOUD IMMEDIATELY!
+    const targetApprovedFac = updatedFacilitiesList.find((f) => f.id === req.facilityId);
+    if (targetApprovedFac) {
+      saveFacilityToCloud(targetApprovedFac);
+    }
+
     if (db) {
       try {
         if (req.id && !req.id.startsWith('req_')) {
@@ -828,6 +819,12 @@ export default function App() {
       ...prev,
       facilitiesList: updatedFacilitiesList
     }));
+
+    // PERSIST REJECTED FACILITY STATE TO FIREBASE CLOUD IMMEDIATELY!
+    const targetRejectedFac = updatedFacilitiesList.find((f) => f.id === req.facilityId);
+    if (targetRejectedFac) {
+      saveFacilityToCloud(targetRejectedFac);
+    }
 
     if (db) {
       try {
@@ -976,6 +973,12 @@ export default function App() {
       activeSpeciesId: targetSpId,
     }));
 
+    // PERSIST UPDATED FACILITY TO CLOUD FIRESTORE IMMEDIATELY!
+    const targetUpdatedFac = updatedFacilitiesList.find((f) => f.id === targetFacId);
+    if (targetUpdatedFac) {
+      saveFacilityToCloud(targetUpdatedFac);
+    }
+
     if (isFacilityUser) {
       alert('Đã lưu biến động và hiển thị tức thì trên sổ! Dữ liệu đang chờ Hạt Kiểm Lâm duyệt.');
     } else {
@@ -1022,6 +1025,12 @@ export default function App() {
       facilitiesList: updatedFacilitiesList,
       speciesList: updatedSpeciesList,
     }));
+
+    // PERSIST UPDATED FACILITY TO CLOUD FIRESTORE IMMEDIATELY!
+    const targetUpdatedFac = updatedFacilitiesList.find((f) => f.id === activeFacilityId);
+    if (targetUpdatedFac) {
+      saveFacilityToCloud(targetUpdatedFac);
+    }
   };
 
   // Handler: Save Species (Add new or edit existing & baseline A)
@@ -1080,6 +1089,12 @@ export default function App() {
         facilitiesList: updatedFacilitiesList,
         speciesList: updatedSpeciesList,
       }));
+
+      // PERSIST UPDATED FACILITY TO CLOUD FIRESTORE IMMEDIATELY!
+      const targetUpdatedFac = updatedFacilitiesList.find((f) => f.id === activeFacilityId);
+      if (targetUpdatedFac) {
+        saveFacilityToCloud(targetUpdatedFac);
+      }
     } else {
       // Add new species logbook
       const newSpeciesObj = {
@@ -1105,6 +1120,12 @@ export default function App() {
         speciesList: updatedSpeciesList,
         activeSpeciesId: newSpeciesObj.id,
       }));
+
+      // PERSIST UPDATED FACILITY TO CLOUD FIRESTORE IMMEDIATELY!
+      const targetUpdatedFac = updatedFacilitiesList.find((f) => f.id === activeFacilityId);
+      if (targetUpdatedFac) {
+        saveFacilityToCloud(targetUpdatedFac);
+      }
     }
 
     setEditingSpecies(null);
@@ -1296,6 +1317,11 @@ export default function App() {
       speciesList: activeFac?.speciesList || [],
       activeSpeciesId: activeFac?.speciesList?.[0]?.id || null,
     });
+
+    // SYNC IMPORTED FACILITIES TO FIREBASE CLOUD IMMEDIATELY!
+    if (facilities.length > 0) {
+      syncAppDataToCloud({ facilitiesList: facilities });
+    }
   };
 
   // Packing List Next Auto Numbering
