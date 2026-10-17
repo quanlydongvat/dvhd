@@ -68,7 +68,7 @@ export default function LeftSidebar({
             </h1>
             <p className="text-[11px] text-emerald-200/90 font-bold flex items-center gap-1 mt-0.5">
               <Sparkles className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />
-              <span className="truncate">Sổ Động Vật Hoang Dã (TT85)</span>
+              <span className="truncate">Sổ Động Vật Hoang Dã</span>
             </p>
           </div>
         </div>

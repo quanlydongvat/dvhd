@@ -231,7 +231,7 @@ export default function SummaryView({
             className="flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-extrabold text-white bg-emerald-600 hover:bg-emerald-700 shadow-md transition-all cursor-pointer"
           >
             <Download className="w-4 h-4 text-white" />
-            <span>Xuất Báo Cáo Excel (TT85)</span>
+            <span>Xuất Báo Cáo Excel</span>
           </button>
         </div>
       </div>

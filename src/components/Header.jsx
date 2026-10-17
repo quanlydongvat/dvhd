@@ -85,10 +85,6 @@ export default function Header({
                     <span className="sm:hidden">{activeViewObj.mobileTitle}</span>
                     <span className="hidden sm:inline">{activeViewObj.title}</span>
                   </h2>
-                  <span className="text-[9px] sm:text-[10px] bg-emerald-100/90 text-emerald-800 border border-emerald-300 font-bold px-1.5 sm:px-2 py-0.5 rounded-full whitespace-nowrap flex-shrink-0">
-                    <span className="sm:hidden">TT 85</span>
-                    <span className="hidden sm:inline">TT 85/2025</span>
-                  </span>
                 </div>
                 <p className="text-xs text-slate-500 mt-0.5 font-medium hidden sm:block truncate">
                   Ứng dụng tự động tính toán hiện trạng & biến động tăng giảm đàn theo Thông tư số 85/2025/TT-BNNMT
