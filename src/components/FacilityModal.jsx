@@ -3,6 +3,7 @@ import { X, Save, Building2, PlusCircle, MapPin, Feather } from 'lucide-react';
 import { PURPOSE_CODES } from '../utils/calculations';
 import { PRESET_SPECIES_CATALOG } from './SpeciesModal';
 import LocationPickerModal from './LocationPickerModal';
+import VietnameseDatePicker from './VietnameseDatePicker';
 
 const COMMUNES = ['xã Hòa Sơn', 'xã Yang Mao', 'xã Cư Pui', 'Xã Krông Bông', 'Xã Dang Kang'];
 
@@ -164,11 +165,9 @@ export default function FacilityModal({
 
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1">Ngày đăng ký / Cấp phép</label>
-                <input
-                  type="date"
+                <VietnameseDatePicker
                   value={formData.registrationDate || ''}
-                  onChange={(e) => setFormData({ ...formData, registrationDate: e.target.value })}
-                  className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2 text-sm text-slate-900 font-medium focus:outline-none focus:border-emerald-500 shadow-xs"
+                  onChange={(val) => setFormData({ ...formData, registrationDate: val })}
                 />
               </div>
 

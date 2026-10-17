@@ -5,6 +5,7 @@ import { collection, getDocs, doc, setDoc, deleteDoc } from 'firebase/firestore'
 import { getAuth, createUserWithEmailAndPassword, signOut } from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
 import { firebaseConfig } from '../firebase';
+import { formatDateVN } from '../utils/calculations';
 
 // Khởi tạo ứng dụng phụ để tạo tài khoản không đăng xuất Admin
 const secondaryApp = initializeApp(firebaseConfig, "SecondaryApp");
@@ -464,7 +465,7 @@ export default function AdminDashboard({ facilitiesList = [], onDeleteFacility }
                       <td className="px-4 py-3 font-bold text-slate-800">{f.commune}</td>
                       <td className="px-4 py-3">
                         <div className="font-mono font-extrabold text-indigo-700">{f.registrationCode || 'Chưa cấp mã số'}</div>
-                        <div className="text-[10px] text-slate-400 font-medium">{f.registrationDate ? f.registrationDate.split('-').reverse().join('/') : '---'}</div>
+                        <div className="text-[10px] text-slate-400 font-medium">{f.registrationDate ? formatDateVN(f.registrationDate) : '---'}</div>
                       </td>
                       <td className="px-4 py-3 text-center">
                         <span className="bg-emerald-50 text-emerald-800 border border-emerald-200 px-2 py-0.5 rounded-full font-extrabold">

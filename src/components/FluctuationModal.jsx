@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { X, Save, Calculator, RefreshCw, AlertTriangle, PlusCircle, MinusCircle, ShoppingCart, Building2, Feather, Users } from 'lucide-react';
+import { X, Save, Calculator, RefreshCw, AlertTriangle, PlusCircle, MinusCircle, ShoppingCart, Building2, Feather, Users, Clock } from 'lucide-react';
+import VietnameseDatePicker from './VietnameseDatePicker';
 import {
   PURPOSE_CODES,
   INTERNAL_TRANSFER_REASONS,
@@ -504,24 +505,49 @@ export default function FluctuationModal({
                 <label className="block text-xs font-bold text-slate-700 mb-1">
                   Ngày biến động (Cột 1) <span className="text-rose-500">*</span>
                 </label>
-                <input
-                  type="date"
+                <VietnameseDatePicker
                   value={formData.date}
-                  onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                  onChange={(val) => setFormData({ ...formData, date: val })}
                   required
-                  className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-sm text-slate-900 font-medium focus:outline-none focus:border-emerald-500 shadow-xs"
                 />
               </div>
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1">
-                  Giờ ghi nhận (để sắp xếp theo thứ tự)
+                  Giờ ghi nhận (24h: HH:mm)
                 </label>
-                <input
-                  type="time"
-                  value={formData.time}
-                  onChange={(e) => setFormData({ ...formData, time: e.target.value })}
-                  className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-sm text-slate-900 font-medium focus:outline-none focus:border-emerald-500 shadow-xs"
-                />
+                <div className="relative">
+                  <Clock className="w-4 h-4 text-emerald-600 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  <input
+                    type="text"
+                    placeholder="VD: 07:30 hoặc 14:00"
+                    value={formData.time || ''}
+                    onChange={(e) => setFormData({ ...formData, time: e.target.value })}
+                    className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-9 pr-3 py-2 text-sm text-slate-900 font-semibold focus:outline-none focus:border-emerald-500 shadow-xs"
+                  />
+                </div>
+                <div className="flex items-center gap-1.5 mt-1">
+                  <button
+                    type="button"
+                    onClick={() => setFormData({ ...formData, time: new Date().toTimeString().slice(0, 5) })}
+                    className="text-[10px] bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded border border-emerald-200 transition-colors cursor-pointer"
+                  >
+                    Bây giờ
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setFormData({ ...formData, time: '08:00' })}
+                    className="text-[10px] bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium px-1.5 py-0.5 rounded transition-colors cursor-pointer"
+                  >
+                    08:00
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setFormData({ ...formData, time: '14:00' })}
+                    className="text-[10px] bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium px-1.5 py-0.5 rounded transition-colors cursor-pointer"
+                  >
+                    14:00
+                  </button>
+                </div>
               </div>
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1">

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, Save, FolderPlus, Sparkles, CheckCircle2 } from 'lucide-react';
 import { PURPOSE_CODES } from '../utils/calculations';
+import VietnameseDatePicker from './VietnameseDatePicker';
 
 // Predefined Species Catalog Dictionary (Danh mục loài mẫu chuẩn theo Nghị định 06/2019/NĐ-CP & Nghị định 84/2021/NĐ-CP)
 export const PRESET_SPECIES_CATALOG = [
@@ -875,11 +876,9 @@ export default function SpeciesModal({
                 <label className="block text-xs font-bold text-slate-700 mb-1">
                   Ngày ghi nhận ban đầu (Cột 1)
                 </label>
-                <input
-                  type="date"
+                <VietnameseDatePicker
                   value={formData.baselineDate}
-                  onChange={(e) => setFormData({ ...formData, baselineDate: e.target.value })}
-                  className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2 text-sm text-slate-900 font-medium focus:outline-none focus:border-emerald-500 shadow-xs"
+                  onChange={(val) => setFormData({ ...formData, baselineDate: val })}
                 />
               </div>
 
