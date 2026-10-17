@@ -10,8 +10,8 @@ export default function HomeLandingPage({ onLoginSuccess }) {
       <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-amber-500/8 rounded-full blur-[100px] pointer-events-none" />
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-teal-500/5 rounded-full blur-[150px] pointer-events-none" />
 
-      {/* ===== TOP NAV BAR: Đã bỏ chữ góc trái trên cùng cho cân đối ===== */}
-      <nav className="relative z-20 px-4 sm:px-8 py-3.5 flex items-center justify-between border-b border-white/5 backdrop-blur-md">
+      {/* ===== TOP NAV BAR: Ẩn hoàn toàn trên điện thoại để không vướng giờ & pin ===== */}
+      <nav className="hidden sm:flex relative z-20 px-4 sm:px-8 py-3.5 items-center justify-between border-b border-white/5 backdrop-blur-md">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 sm:w-11 sm:h-11 bg-white/10 backdrop-blur-xl rounded-xl border border-white/20 p-1.5 shadow-lg flex items-center justify-center flex-shrink-0">
             <img
@@ -34,7 +34,7 @@ export default function HomeLandingPage({ onLoginSuccess }) {
       </nav>
 
       {/* ===== MAIN CONTENT: 2 CỘT CÂN ĐỐI ĐẸP MẮT (50% - 50%) ===== */}
-      <main className="flex-1 max-w-6xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 lg:py-10 flex flex-col justify-center relative z-10">
+      <main className="flex-1 max-w-6xl mx-auto w-full px-4 sm:px-6 lg:px-8 pt-8 sm:pt-6 pb-6 lg:py-10 flex flex-col justify-center relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           
           {/* CỘT 1 (BÊN TRÁI): THÔNG TIN ĐƠN VỊ, VIDEO BANNER & LOÀI NUÔI */}
