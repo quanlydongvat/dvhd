@@ -77,6 +77,22 @@ export async function deleteFacilityFromCloud(facilityId) {
   try {
     if (!db || !facilityId) return false;
     await deleteDoc(doc(db, "facilities", facilityId));
+
+    // Also update legacy app_state if it exists so deleted facilities are never resurrected
+    try {
+      const docRef = doc(db, "wildlife_data", "app_state");
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        const oldData = docSnap.data();
+        if (oldData.facilitiesList) {
+          const filtered = oldData.facilitiesList.filter(f => f.id !== facilityId);
+          await setDoc(docRef, { ...oldData, facilitiesList: filtered });
+        }
+      }
+    } catch (e) {
+      console.warn("Could not sync deletion to legacy app_state:", e);
+    }
+
     return true;
   } catch (error) {
     console.warn("Error deleting facility from Firebase Cloud:", error);
@@ -95,32 +111,10 @@ export async function loadAppDataFromCloud(user) {
       const q = query(collection(db, "facilities"), where("id", "==", user.facilityId));
       const snapshot = await getDocs(q);
       snapshot.forEach(doc => facilitiesList.push(doc.data()));
-    } else if (user.role === 'ADMIN') {
-      // Load all facilities
+    } else if (user.role === 'ADMIN' || user.role === 'STAFF') {
+      // Load all facilities directly from 'facilities' collection
       const snapshot = await getDocs(collection(db, "facilities"));
-      
-      // TEMP FORCED MIGRATION: Check if old app_state has more facilities
-      const docRef = doc(db, "wildlife_data", "app_state");
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        const oldData = docSnap.data();
-        const oldFacilities = oldData.facilitiesList || [];
-        
-        if (oldFacilities.length > snapshot.size) {
-          console.log("Found more facilities in old app_state. Migrating...");
-          const batch = writeBatch(db);
-          oldFacilities.forEach(fac => {
-            const facRef = doc(db, "facilities", fac.id);
-            batch.set(facRef, fac);
-          });
-          await batch.commit();
-          facilitiesList = oldFacilities;
-        } else {
-          snapshot.forEach(doc => facilitiesList.push(doc.data()));
-        }
-      } else {
-        snapshot.forEach(doc => facilitiesList.push(doc.data()));
-      }
+      snapshot.forEach(doc => facilitiesList.push(doc.data()));
     }
     
     if (facilitiesList.length === 0) return null;

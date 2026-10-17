@@ -1229,71 +1229,16 @@ export const REAL_FACILITIES_DATA = [
     "lng": 108.455555
   },
   {
-    "phone": "0342017979",
-    "registrationDate": "2026-07-24",
-    "purposeCode": "T",
-    "lng": 108.321909,
-    "speciesList": [
-      {
-        "citesAppendix": "Phụ lục II CITES",
-        "fluctuations": [],
-        "purposeCode": "T",
-        "id": "sp_1786163777938_1",
-        "group": "Động vật rừng nguy cấp, quý, hiếm (Nhóm IIB)",
-        "baseline": {
-          "father": 2,
-          "otherFemale": 0,
-          "date": "2026-07-24",
-          "otherMale": 0,
-          "otherUnknown": 0,
-          "mother": 4,
-          "note": "Hiện trạng đăng ký ban đầu",
-          "verifier": "Hạt Kiểm lâm khu vực Krông Bông"
-        },
-        "scientificName": "Paradoxurus hermaphroditus",
-        "vietnameseName": "Cầy vòi Hương"
-      },
-      {
-        "fluctuations": [],
-        "vietnameseName": "Cầy vòi mốc",
-        "scientificName": "Paguma larvata",
-        "citesAppendix": "Phụ lục II CITES",
-        "id": "species_1786163827161",
-        "purposeCode": "T",
-        "group": "Động vật rừng nguy cấp, quý, hiếm (Nhóm IIB)",
-        "baseline": {
-          "otherFemale": 0,
-          "mother": "13",
-          "otherMale": 0,
-          "father": "4",
-          "date": "2026-07-10",
-          "verifier": "",
-          "note": "Số lượng vật nuôi hiện có ban đầu",
-          "otherUnknown": 0
-        }
-      }
-    ],
-    "updatedAt": "2026-10-16T13:50:43.762Z",
-    "lat": 12.558497,
-    "facilityName": " Nguyễn Hoàng Dũng",
-    "address": "thôn 6, xã Dang Kang, tỉnh Đắk Lắk",
-    "registrationCode": "142-26/B-DLC",
-    "commune": "xã Hòa Sơn",
-    "note": "",
-    "id": "fac_1786163777938",
-    "ownerName": " Nguyễn Hoàng Dũng"
-  },
-  {
     "ownerName": "Nguyễn Hoàng Dũng",
     "lng": 108.321947,
-    "address": " thôn 6, xã Dang Kang, tỉnh Đắk Lắk",
+    "address": "thôn 6, xã Dang Kang, tỉnh Đắk Lắk",
     "registrationCode": "142-26/B-DLC",
     "facilityName": "Nguyễn Hoàng Dũng",
     "phone": "0342017979",
     "commune": "Xã Dang Kang",
     "note": "",
     "lat": 12.558599,
-    "registrationDate": "2026-01-24",
+    "registrationDate": "2026-07-24",
     "updatedAt": "2026-10-16T13:50:43.762Z",
     "purposeCode": "T",
     "id": "fac_1786419630740",
@@ -1302,7 +1247,7 @@ export const REAL_FACILITIES_DATA = [
         "purposeCode": "T",
         "baseline": {
           "otherMale": 0,
-          "mother": 40,
+          "mother": 4,
           "otherFemale": 0,
           "note": "Hiện trạng đăng ký ban đầu",
           "verifier": "Hạt Kiểm lâm khu vực Krông Bông",

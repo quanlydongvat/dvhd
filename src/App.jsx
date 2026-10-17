@@ -518,7 +518,7 @@ export default function App() {
         return f;
       });
 
-      if (currentUser.role === 'FACILITY' || mergedCloudFacilities.length >= localFacilities.length) {
+      if (currentUser.role === 'FACILITY' || currentUser.role === 'ADMIN' || currentUser.role === 'STAFF' || mergedCloudFacilities.length >= localFacilities.length) {
         let activeFacId = currentUser.facilityId || cloudData.activeFacilityId || mergedCloudFacilities[0]?.id;
         if (!mergedCloudFacilities.find(f => f.id === activeFacId)) {
            activeFacId = mergedCloudFacilities[0]?.id;
@@ -526,8 +526,7 @@ export default function App() {
         
         const activeFac = mergedCloudFacilities.find((f) => f.id === activeFacId) || mergedCloudFacilities[0];
 
-        setSkipNextSync(true);
-        setAppState({
+        const nextState = {
           facilitiesList: mergedCloudFacilities,
           activeFacilityId: activeFacId,
           facilityInfo: activeFac ? {
@@ -546,7 +545,11 @@ export default function App() {
           } : appState.facilityInfo,
           speciesList: activeFac?.speciesList || [],
           activeSpeciesId: cloudData.activeSpeciesId || activeFac?.speciesList?.[0]?.id || null,
-        });
+        };
+
+        saveAppData(nextState);
+        setSkipNextSync(true);
+        setAppState(nextState);
       }
     });
 
@@ -1243,14 +1246,16 @@ export default function App() {
         nextActiveSpeciesId = fallbackFac?.speciesList?.[0]?.id || null;
       }
 
-      setAppState((prev) => ({
-        ...prev,
+      const nextState = {
+        ...appState,
         facilitiesList: updatedFacilitiesList,
         activeFacilityId: nextActiveId,
         facilityInfo: nextFacilityInfo,
         speciesList: nextSpeciesList,
         activeSpeciesId: nextActiveSpeciesId
-      }));
+      };
+      saveAppData(nextState);
+      setAppState(nextState);
 
       alert("✅ Đã xóa cơ sở nuôi và các tài khoản liên kết thành công!");
     } catch (err) {
@@ -1380,7 +1385,10 @@ export default function App() {
     return (
       <div className="min-h-screen bg-slate-50 text-slate-800 flex flex-col font-sans antialiased selection:bg-emerald-500 selection:text-white">
         {/* Ultra-compact Public QR Header */}
-        <header className="bg-gradient-to-r from-emerald-950 via-teal-900 to-slate-900 text-white px-3 sm:px-6 py-3 shadow-md border-b border-emerald-700/40 sticky top-0 z-30">
+        <header 
+          style={{ paddingTop: 'max(env(safe-area-inset-top, 0px), 8px)' }}
+          className="bg-gradient-to-r from-emerald-950 via-teal-900 to-slate-900 text-white px-3 sm:px-6 py-2.5 sm:py-3 shadow-md border-b border-emerald-700/40 sticky top-0 z-30 sm:!pt-3"
+        >
           <div className="max-w-[1720px] mx-auto flex items-center justify-between gap-3">
             {/* Facility Title & Address Info */}
             <div className="flex items-center gap-2.5 min-w-0">
