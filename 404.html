@@ -2,20 +2,56 @@
 <html lang="vi">
   <head>
     <meta charset="utf-8">
-    <title>Sổ Theo Dõi Động Vật Hoang Dã - Hạt Kiểm Lâm Krông Bông</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hạt Kiểm Lâm Krông Bông - Đang chuyển hướng...</title>
     <script type="text/javascript">
-      // GitHub Pages SPA Single Page App redirect
-      var segmentCount = 0;
-      var l = window.location;
-      l.replace(
-        l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
-        l.pathname.split('/').slice(0, 1 + segmentCount).join('/') + '/?/' +
-        l.pathname.slice(1).split('/').slice(segmentCount).join('/').replace(/&/g, '~and~') +
-        (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
-        l.hash
-      );
+      // GitHub Pages SPA Single Page App redirect & Legacy /dvhd/ normalization
+      (function() {
+        var l = window.location;
+        // Strip legacy /dvhd/ repository path if present from older installs
+        var cleanPath = l.pathname.replace(/^\/dvhd\/?/, '/') || '/';
+        
+        if (cleanPath === '/' && !l.search && !l.hash) {
+          l.replace(l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') + '/');
+          return;
+        }
+
+        var pathPart = cleanPath.replace(/^\//, '').replace(/&/g, '~and~');
+        var queryPart = l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '';
+        var redirectUrl = l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') + '/?/' + pathPart + queryPart + l.hash;
+        l.replace(redirectUrl);
+      })();
     </script>
+    <style>
+      body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        background-color: #064e3b;
+        color: white;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        text-align: center;
+        padding: 20px;
+        box-sizing: border-box;
+      }
+      .btn {
+        margin-top: 20px;
+        padding: 12px 24px;
+        background-color: #10b981;
+        color: #022c22;
+        font-weight: bold;
+        text-decoration: none;
+        border-radius: 12px;
+        display: inline-block;
+      }
+    </style>
   </head>
   <body>
+    <h2>Hạt Kiểm lâm Krông Bông</h2>
+    <p>Đang nạp ứng dụng Sổ Theo Dõi Động Vật Hoang Dã...</p>
+    <a href="/" class="btn">Mở Trang Chủ Ứng Dụng</a>
   </body>
 </html>

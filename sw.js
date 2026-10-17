@@ -3,25 +3,24 @@
  * Provides PWA offline app shell caching and offline lookup support.
  */
 
-const CACHE_NAME = 'dvhd-krongbong-v2026.1';
+const CACHE_NAME = 'dvhd-krongbong-v2026.4-stable';
 
 // Core assets required to run the application shell offline
 const PRECACHE_ASSETS = [
-  './',
-  './index.html',
-  './manifest.json',
-  './app.json',
-  './pwa-192x192.png',
-  './pwa-512x512.png',
-  './apple-touch-icon.png',
-  './favicon.svg',
-  './images/logo_kiem_lam.png',
-  './images/logo.jpg',
+  '/',
+  '/index.html',
+  '/manifest.json',
+  '/app.json',
+  '/pwa-192x192.png',
+  '/pwa-512x512.png',
+  '/apple-touch-icon.png',
+  '/favicon.svg',
+  '/images/logo.jpg',
   'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=JetBrains+Mono:wght@400;500;600;700&display=swap',
   'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'
 ];
 
-// Install: Pre-cache core application shell
+// Install: Pre-cache core application shell & force skip waiting
 self.addEventListener('install', (event) => {
   self.skipWaiting();
   event.waitUntil(
@@ -34,14 +33,14 @@ self.addEventListener('install', (event) => {
   );
 });
 
-// Activate: Clean up old cache versions and claim immediate control
+// Activate: Clean up ALL older cache versions and claim immediate control
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) => {
       return Promise.all(
         keys.map((key) => {
           if (key !== CACHE_NAME) {
-            console.log('[SW] Deleting old cache version:', key);
+            console.log('[SW] Purging old cache version:', key);
             return caches.delete(key);
           }
         })
@@ -50,7 +49,7 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Fetch: Strategy for offline resiliency
+// Fetch: Resilient strategy for offline support and dynamic updates
 self.addEventListener('fetch', (event) => {
   const request = event.request;
   const url = new URL(request.url);
@@ -60,7 +59,7 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // 2. Skip Firebase API & Analytics requests (they handle their own offline states)
+  // 2. Skip Firebase API & Analytics requests (they handle their own offline state)
   if (
     url.hostname.includes('firestore.googleapis.com') ||
     url.hostname.includes('identitytoolkit.googleapis.com') ||
@@ -79,17 +78,19 @@ self.addEventListener('fetch', (event) => {
             const responseClone = response.clone();
             caches.open(CACHE_NAME).then((cache) => {
               cache.put(request, responseClone);
+              cache.put('/', response.clone());
+              cache.put('/index.html', response.clone());
             });
           }
           return response;
         })
         .catch(async () => {
-          // Device is offline or weak signal in remote buôn/thôn: serve cached index.html
+          // Device is offline or weak signal: serve cached index.html
           const cache = await caches.open(CACHE_NAME);
-          const cachedIndex = (await cache.match(request)) || (await cache.match('./index.html')) || (await cache.match('./'));
+          const cachedIndex = (await cache.match(request)) || (await cache.match('/index.html')) || (await cache.match('/'));
           if (cachedIndex) return cachedIndex;
           return new Response(
-            '<html><body><h2>Hệ thống đang hoạt động Ngoại tuyến (Offline).</h2><p>Vui lòng mở lại trang từ Màn hình chính.</p></body></html>',
+            '<!DOCTYPE html><html lang="vi"><head><meta charset="utf-8"><title>Chế độ Ngoại Tuyến</title><meta name="viewport" content="width=device-width,initial-scale=1"></head><body style="background:#064e3b;color:white;font-family:sans-serif;text-align:center;padding:40px 20px;"><h2>🌲 Hệ Thống Đang Hoạt Động Ngoại Tuyến</h2><p>Vui lòng kết nối Internet hoặc mở lại ứng dụng từ màn hình chính.</p><a href="/" style="display:inline-block;margin-top:20px;padding:10px 20px;background:#10b981;color:#022c22;text-decoration:none;font-weight:bold;border-radius:10px;">Thử lại</a></body></html>',
             { headers: { 'Content-Type': 'text/html; charset=utf-8' } }
           );
         })
@@ -108,9 +109,7 @@ self.addEventListener('fetch', (event) => {
               caches.open(CACHE_NAME).then((cache) => cache.put(request, networkResponse));
             }
           })
-          .catch(() => {
-            // Ignore background fetch error when offline
-          });
+          .catch(() => {});
         return cachedResponse;
       }
 
@@ -126,9 +125,9 @@ self.addEventListener('fetch', (event) => {
           return networkResponse;
         })
         .catch((err) => {
-          // If offline and request is an image, fallback gracefully
+          // Fallback for missing images when offline
           if (request.destination === 'image') {
-            return caches.match('./pwa-192x192.png');
+            return caches.match('/pwa-192x192.png');
           }
           throw err;
         });
@@ -136,9 +135,9 @@ self.addEventListener('fetch', (event) => {
   );
 });
 
-// Message listener
+// Skip waiting message listener
 self.addEventListener('message', (event) => {
-  if (event.data && event.data.type === 'SKIP_WAITING') {
+  if (event.data && (event.data.type === 'SKIP_WAITING' || event.data === 'skipWaiting')) {
     self.skipWaiting();
   }
 });

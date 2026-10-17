@@ -9,41 +9,95 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
     <title>Quản Lý Sổ Theo Dõi Động Vật Hoang Dã (Mẫu II - Nuôi Sinh Sản)</title>
 
-    <!-- Service Worker Registration for PWA & Offline Support -->
+    <!-- 1. Immediate Normalization for Legacy PWA /dvhd/ Shortcuts -->
     <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', function() {
-          navigator.serviceWorker.register('./sw.js')
-            .then(function(reg) {
-              console.log('[PWA] Service Worker registered with scope:', reg.scope);
-            })
-            .catch(function(err) {
-              console.warn('[PWA] Service Worker registration failed:', err);
-            });
-        });
-      }
+      (function() {
+        try {
+          var path = window.location.pathname;
+          if (path.indexOf('/dvhd') !== -1) {
+            var clean = path.replace(/\/dvhd\/?/g, '/') || '/';
+            window.history.replaceState(null, null, window.location.origin + clean + window.location.search + window.location.hash);
+          }
+        } catch (e) {}
+      })();
     </script>
 
-    <!-- SPA redirect decode script for GitHub Pages custom domain routing -->
+    <!-- 2. Vite Chunk Dynamic Import Auto-Recovery Listener -->
+    <script>
+      window.addEventListener('vite:preloadError', function(event) {
+        console.warn('[PWA] Vite preload error detected, auto-refreshing for latest version...', event);
+        window.location.reload();
+      });
+    </script>
+
+    <!-- 3. SPA Redirect Decoder for GitHub Pages / Custom Domain Routing -->
     <script type="text/javascript">
       (function(l) {
         if (l.search[1] === '/' ) {
           var decoded = l.search.slice(1).split('&').map(function(s) { 
             return s.replace(/~and~/g, '&')
           }).join('?');
-          window.history.replaceState(null, null,
-              l.pathname.slice(0, -1) + decoded + l.hash
-          );
+          var targetPath = l.pathname.replace(/\/+$/, '') + decoded + l.hash;
+          targetPath = targetPath.replace(/^\/dvhd\/?/, '/');
+          window.history.replaceState(null, null, targetPath || '/');
         }
       }(window.location))
+    </script>
+
+    <!-- 4. Service Worker Registration with Aggressive Auto-Update -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('/sw.js')
+            .then(function(reg) {
+              console.log('[PWA] Service Worker active, scope:', reg.scope);
+              // Force check for updates on startup
+              try { reg.update(); } catch(e) {}
+
+              reg.onupdatefound = function() {
+                var installing = reg.installing;
+                if (!installing) return;
+                installing.onstatechange = function() {
+                  if (installing.state === 'installed' && navigator.serviceWorker.controller) {
+                    console.log('[PWA] Phiên bản mới đã sẵn sàng. Tự động kích hoạt...');
+                    installing.postMessage({ type: 'SKIP_WAITING' });
+                  }
+                };
+              };
+            })
+            .catch(function(err) {
+              console.warn('[PWA] Service Worker reg failed:', err);
+            });
+
+          // Check for update on tab focus/app resume
+          document.addEventListener('visibilitychange', function() {
+            if (document.visibilityState === 'visible') {
+              navigator.serviceWorker.getRegistration().then(function(reg) {
+                if (reg) {
+                  try { reg.update(); } catch(e) {}
+                }
+              });
+            }
+          });
+        });
+
+        // Auto reload when SW claims clients with fresh code
+        var refreshing = false;
+        navigator.serviceWorker.addEventListener('controllerchange', function() {
+          if (!refreshing) {
+            refreshing = true;
+            console.log('[PWA] Đã cập nhật phiên bản mới nhất.');
+          }
+        });
+      }
     </script>
 
     <!-- Web App & PWA Meta Tags -->
     <meta name="theme-color" content="#064e3b" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content="Kiểm lâm Krông Bông" />
-    <meta name="application-name" content="Quản lý ĐVHD Krông Bông" />
+    <meta name="apple-mobile-web-app-title" content="Sổ ĐVHD" />
+    <meta name="application-name" content="Sổ ĐVHD Krông Bông" />
     <meta name="format-detection" content="telephone=no" />
     <meta name="mobile-web-app-capable" content="yes" />
 
@@ -53,12 +107,12 @@
     <meta property="og:description" content="Ứng dụng quản lý hiện trạng & biến động tăng giảm đàn động vật hoang dã nuôi sinh sản theo Thông tư 85/2025/TT-BNNMT." />
 
     <!-- PWA Manifest & App Icons -->
-    <link rel="manifest" href="./assets/manifest-Cg_WTMCu.json" />
-    <link rel="icon" type="image/png" sizes="192x192" href="./pwa-192x192.png" />
-    <link rel="icon" type="image/png" sizes="512x512" href="./pwa-512x512.png" />
-    <link rel="icon" type="image/jpeg" href="./images/logo.jpg" />
-    <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
-    <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/pwa-192x192.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/pwa-512x512.png" />
+    <link rel="icon" type="image/jpeg" href="/images/logo.jpg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 
     <!-- Google Fonts & Leaflet CSS -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -66,15 +120,176 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
 
+    <!-- Embedded CSS for Instant Mobile Splash Screen -->
+    <style>
+      #pwa-splash {
+        position: fixed;
+        inset: 0;
+        background: linear-gradient(135deg, #022c22 0%, #064e3b 50%, #0f172a 100%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 99999;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        color: #ffffff;
+        text-align: center;
+        padding: 24px;
+        box-sizing: border-box;
+      }
+      .pwa-logo-box {
+        width: 88px;
+        height: 88px;
+        background: #ffffff;
+        border-radius: 24px;
+        padding: 6px;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4), 0 0 0 3px rgba(16, 185, 129, 0.3);
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .pwa-logo-box img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        border-radius: 18px;
+      }
+      .pwa-title {
+        font-size: 18px;
+        font-weight: 900;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        color: #a7f3d0;
+        margin: 0 0 6px 0;
+      }
+      .pwa-subtitle {
+        font-size: 13px;
+        font-weight: 500;
+        color: #e2e8f0;
+        margin: 0 0 24px 0;
+        opacity: 0.9;
+      }
+      .pwa-bar-wrap {
+        width: 160px;
+        height: 4px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 999px;
+        overflow: hidden;
+        position: relative;
+        margin-bottom: 12px;
+      }
+      .pwa-bar-inner {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 40%;
+        background: #34d399;
+        border-radius: 999px;
+        animation: pwa-slide 1.2s infinite ease-in-out;
+      }
+      @keyframes pwa-slide {
+        0% { left: -40%; width: 30%; }
+        50% { left: 40%; width: 50%; }
+        100% { left: 100%; width: 30%; }
+      }
+      .pwa-status {
+        font-size: 12px;
+        color: #94a3b8;
+        font-weight: 500;
+      }
+      #pwa-recovery-btn {
+        display: none;
+        margin-top: 24px;
+        padding: 12px 20px;
+        background: #10b981;
+        color: #022c22;
+        font-weight: 800;
+        font-size: 13px;
+        border-radius: 14px;
+        border: none;
+        box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);
+        cursor: pointer;
+      }
+    </style>
+
     <!-- Vite Source Entrypoint -->
-    <script type="module" crossorigin src="./assets/index-Bv-yCm1I.js"></script>
-    <link rel="modulepreload" crossorigin href="./assets/rolldown-runtime-Dd_uD5pT.js">
-    <link rel="modulepreload" crossorigin href="./assets/vendor-charts-DRpLXYI-.js">
-    <link rel="modulepreload" crossorigin href="./assets/vendor-firebase-D2mnisHN.js">
-    <link rel="stylesheet" crossorigin href="./assets/index-DFuHBYSe.css">
+    <script type="module" crossorigin src="/assets/index-CvFWan4C.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-Dd_uD5pT.js">
+    <link rel="modulepreload" crossorigin href="/assets/vendor-charts-DRpLXYI-.js">
+    <link rel="modulepreload" crossorigin href="/assets/vendor-firebase-D2mnisHN.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-DFuHBYSe.css">
   </head>
 
   <body class="bg-slate-50 text-slate-800 font-sans antialiased selection:bg-emerald-500 selection:text-white notranslate" translate="no">
-    <div id="root"></div>
+    <div id="root">
+      <!-- Native Instant Splash Screen while React compiles/initializes -->
+      <div id="pwa-splash">
+        <div class="pwa-logo-box">
+          <img src="/apple-touch-icon.png" alt="Kiểm lâm" onerror="this.src='/images/logo.jpg'" />
+        </div>
+        <h1 class="pwa-title">Hạt Kiểm Lâm Krông Bông</h1>
+        <p class="pwa-subtitle">Quản Lý Sổ Theo Dõi Động Vật Hoang Dã (Mẫu II)</p>
+        <div class="pwa-bar-wrap">
+          <div class="pwa-bar-inner"></div>
+        </div>
+        <div id="pwa-status-text" class="pwa-status">Đang nạp ứng dụng...</div>
+        <button id="pwa-recovery-btn" onclick="pwaForceCleanReload()">
+          🔄 Làm Mới & Tải Bản Mới Nhất
+        </button>
+      </div>
+    </div>
+
+    <!-- Watchdog & Self-Healing Script -->
+    <script>
+      function pwaForceCleanReload() {
+        var btn = document.getElementById('pwa-recovery-btn');
+        if (btn) btn.innerText = 'Đang làm mới bộ nhớ đệm...';
+        try {
+          if ('caches' in window) {
+            caches.keys().then(function(keys) {
+              return Promise.all(keys.map(function(k) { return caches.delete(k); }));
+            }).then(function() {
+              if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.getRegistrations().then(function(regs) {
+                  return Promise.all(regs.map(function(r) { return r.unregister(); }));
+                }).then(function() {
+                  window.location.href = '/?v=' + Date.now();
+                });
+              } else {
+                window.location.href = '/?v=' + Date.now();
+              }
+            });
+            return;
+          }
+        } catch(e) {}
+        window.location.href = '/?v=' + Date.now();
+      }
+
+      // If React takes more than 3.5s (due to slow network or old cached module error), reveal the refresh button
+      setTimeout(function() {
+        var splash = document.getElementById('pwa-splash');
+        var btn = document.getElementById('pwa-recovery-btn');
+        var status = document.getElementById('pwa-status-text');
+        if (splash && btn) {
+          btn.style.display = 'inline-block';
+          if (status) status.innerText = 'Đang đồng bộ phiên bản mới...';
+        }
+      }, 3500);
+
+      // Auto self-heal on unhandled module loading error
+      window.addEventListener('error', function(e) {
+        if (e && e.message && (
+          e.message.indexOf('fetch') !== -1 ||
+          e.message.indexOf('Loading chunk') !== -1 ||
+          e.message.indexOf('Failed to fetch') !== -1 ||
+          e.message.indexOf('module') !== -1
+        )) {
+          console.warn('[PWA Watchdog] Detected resource loading error, scheduling self-heal...', e.message);
+          setTimeout(pwaForceCleanReload, 2000);
+        }
+      });
+    </script>
   </body>
 </html>
