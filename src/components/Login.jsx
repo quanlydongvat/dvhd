@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { User, Lock, Loader2, ShieldCheck } from 'lucide-react';
+import { User, Lock, Loader2, ShieldCheck, Eye, EyeOff } from 'lucide-react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth, db } from '../firebase';
 import { doc, getDoc, collection, query, where, getDocs } from 'firebase/firestore';
@@ -7,6 +7,7 @@ import { doc, getDoc, collection, query, where, getDocs } from 'firebase/firesto
 export default function Login({ onLoginSuccess, onCancel, isEmbedded = false }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -116,7 +117,7 @@ export default function Login({ onLoginSuccess, onCancel, isEmbedded = false }) 
   };
 
   const loginCard = (
-    <div className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl w-full max-w-md overflow-hidden border border-emerald-500/20 z-10 mx-auto">
+    <div className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl w-full max-w-md overflow-hidden border border-emerald-500/20 z-10 mx-auto text-slate-900">
       {/* Header */}
         <div className={`bg-gradient-to-br from-emerald-800 via-emerald-700 to-teal-800 ${isEmbedded ? 'p-5 sm:p-6' : 'p-7 sm:p-8'} text-center text-white relative overflow-hidden`}>
           <div className="absolute -right-8 -top-8 w-32 h-32 bg-white/10 rounded-full blur-xl pointer-events-none" />
@@ -182,7 +183,8 @@ export default function Login({ onLoginSuccess, onCancel, isEmbedded = false }) 
                   required
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="block w-full pl-10 pr-3 py-3 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-xs sm:text-sm font-semibold transition-all"
+                  style={{ color: '#0f172a' }}
+                  className="block w-full pl-10 pr-3 py-3 bg-slate-50 focus:bg-white text-slate-900 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-xs sm:text-sm font-bold placeholder:text-slate-400 placeholder:font-normal transition-all"
                   placeholder="VD: admin hoặc dlc-krb"
                 />
               </div>
@@ -195,13 +197,27 @@ export default function Login({ onLoginSuccess, onCancel, isEmbedded = false }) 
                   <Lock className="h-4 h-4 text-emerald-600" />
                 </div>
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="block w-full pl-10 pr-3 py-3 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-xs sm:text-sm font-semibold transition-all"
+                  style={{ color: '#0f172a' }}
+                  className="block w-full pl-10 pr-11 py-3 bg-slate-50 focus:bg-white text-slate-900 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-xs sm:text-sm font-bold tracking-wide placeholder:text-slate-400 placeholder:font-normal placeholder:tracking-normal transition-all"
                   placeholder="••••••••"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-emerald-700 transition-colors cursor-pointer"
+                  title={showPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
+                  tabIndex={-1}
+                >
+                  {showPassword ? (
+                    <EyeOff className="w-4 h-4 stroke-[2.2]" />
+                  ) : (
+                    <Eye className="w-4 h-4 stroke-[2.2]" />
+                  )}
+                </button>
               </div>
             </div>
 
