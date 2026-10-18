@@ -19,6 +19,7 @@ import {
   savePackingListData,
   INITIAL_PACKING_LIST_DATA,
   cleanFacilityAddress,
+  BLACKLISTED_DELETED_FACILITY_IDS,
 } from './utils/storage';
 import {
   syncAppDataToCloud,
@@ -379,8 +380,10 @@ export default function App() {
               const localFacilities = prev.facilitiesList || [];
               const cloudIds = new Set(mergedCloudFacilities.map(f => f.id));
 
-              // PROTECT LOCAL FACILITIES: Never drop local facilities not yet in Cloud
-              const localOnly = localFacilities.filter(f => !cloudIds.has(f.id));
+              // PROTECT LOCAL FACILITIES: Never drop local facilities not yet in Cloud (excluding blacklisted deleted IDs)
+              const localOnly = localFacilities
+                .filter(f => !cloudIds.has(f.id))
+                .filter(f => !BLACKLISTED_DELETED_FACILITY_IDS.includes(f.id));
               if (localOnly.length > 0) {
                 console.log(`[Sync Guard] Found ${localOnly.length} local-only facilities. Persisting to Cloud...`, localOnly);
                 localOnly.forEach(f => {
@@ -403,7 +406,8 @@ export default function App() {
                 return { ...cf, speciesList: mergedSpecies };
               });
 
-              const allFacilities = [...mergedFromCloud, ...localOnly];
+              const allFacilities = [...mergedFromCloud, ...localOnly]
+                .filter(f => !BLACKLISTED_DELETED_FACILITY_IDS.includes(f.id));
 
               const activeFacId = prev.activeFacilityId || allFacilities[0]?.id;
               const activeFac = allFacilities.find((f) => f.id === activeFacId) || allFacilities[0];
@@ -532,7 +536,9 @@ export default function App() {
       });
 
       const cloudMap = new Map(mergedCloudFacilities.map(f => [f.id, f]));
-      const localOnlyFacilities = localFacilities.filter(f => !cloudMap.has(f.id));
+      const localOnlyFacilities = localFacilities
+        .filter(f => !cloudMap.has(f.id))
+        .filter(f => !BLACKLISTED_DELETED_FACILITY_IDS.includes(f.id));
       if (localOnlyFacilities.length > 0) {
         console.log(`[Sync Guard Auth] Found ${localOnlyFacilities.length} local-only facilities. Persisting to Cloud...`);
         localOnlyFacilities.forEach(f => saveFacilityToCloud(f));
@@ -553,7 +559,8 @@ export default function App() {
         return { ...cf, speciesList: mergedSpecies };
       });
 
-      const allFacilities = [...mergedFromCloud, ...localOnlyFacilities];
+      const allFacilities = [...mergedFromCloud, ...localOnlyFacilities]
+        .filter(f => !BLACKLISTED_DELETED_FACILITY_IDS.includes(f.id));
 
       if (currentUser.role === 'FACILITY' || currentUser.role === 'ADMIN' || currentUser.role === 'STAFF' || allFacilities.length >= localFacilities.length) {
         let activeFacId = currentUser.facilityId || cloudData.activeFacilityId || allFacilities[0]?.id;
@@ -1348,7 +1355,7 @@ export default function App() {
 
   // Handler: Import Data (JSON or Excel)
   const handleImportData = (parsedData) => {
-    const facilities = parsedData.facilitiesList || (parsedData.speciesList ? [
+    const rawFacilities = parsedData.facilitiesList || (parsedData.speciesList ? [
       {
         id: 'fac_custom_' + Date.now(),
         facilityName: parsedData.facilityInfo?.facilityName || 'Cơ sở nuôi mới',
@@ -1360,6 +1367,8 @@ export default function App() {
         speciesList: parsedData.speciesList || [],
       }
     ] : []);
+
+    const facilities = rawFacilities.filter(f => !BLACKLISTED_DELETED_FACILITY_IDS.includes(f.id));
 
     const activeFac = facilities[0];
 

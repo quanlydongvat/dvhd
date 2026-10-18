@@ -4,6 +4,9 @@
 
 const STORAGE_KEY = 'wildlife_manager_data_v6';
 
+// Permanent blacklist of deleted/zombie facilities to prevent them from resurrecting from local cache or backups
+export const BLACKLISTED_DELETED_FACILITY_IDS = ['fac_1786163777938'];
+
 export async function forceClearAllCache() {
   try {
     localStorage.clear();
@@ -2674,6 +2677,14 @@ export function loadAppData() {
       parsed.facilitiesList && Array.isArray(parsed.facilitiesList) && parsed.facilitiesList.length > 0
         ? parsed.facilitiesList
         : REAL_FACILITIES_DATA;
+
+    // PERMANENT PURGE: Remove any zombie or blacklisted facilities from local storage
+    const initialCount = facilitiesList.length;
+    facilitiesList = facilitiesList.filter(f => !BLACKLISTED_DELETED_FACILITY_IDS.includes(f.id));
+    if (facilitiesList.length !== initialCount) {
+      console.log(`[Storage Purge] Removed ${initialCount - facilitiesList.length} blacklisted deleted facilities.`);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...parsed, facilitiesList }));
+    }
 
     facilitiesList = facilitiesList.map((f) => {
       if (f.address) {
