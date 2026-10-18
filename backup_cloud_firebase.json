@@ -529,61 +529,6 @@
       "ownerName": "Nguyễn Lĩnh"
     },
     {
-      "id": "fac_1786163777938",
-      "ownerName": " Nguyễn Hoàng Dũng",
-      "facilityName": " Nguyễn Hoàng Dũng",
-      "lat": 12.558497,
-      "registrationCode": "142-26/B-DLC",
-      "lng": 108.321909,
-      "updatedAt": "2026-08-12T14:23:57.698Z",
-      "registrationDate": "2026-07-24",
-      "purposeCode": "T",
-      "phone": "0342017979",
-      "speciesList": [
-        {
-          "id": "sp_1786163777938_1",
-          "purposeCode": "T",
-          "vietnameseName": "Cầy vòi Hương",
-          "group": "Động vật rừng nguy cấp, quý, hiếm (Nhóm IIB)",
-          "fluctuations": [],
-          "scientificName": "Paradoxurus hermaphroditus",
-          "citesAppendix": "Phụ lục II CITES",
-          "baseline": {
-            "father": 2,
-            "mother": 4,
-            "date": "2026-07-24",
-            "verifier": "Hạt Kiểm lâm khu vực Krông Bông",
-            "otherMale": 0,
-            "otherUnknown": 0,
-            "note": "Hiện trạng đăng ký ban đầu",
-            "otherFemale": 0
-          }
-        },
-        {
-          "fluctuations": [],
-          "scientificName": "Paguma larvata",
-          "group": "Động vật rừng nguy cấp, quý, hiếm (Nhóm IIB)",
-          "citesAppendix": "Phụ lục II CITES",
-          "baseline": {
-            "father": "4",
-            "mother": "13",
-            "date": "2026-07-10",
-            "verifier": "",
-            "otherMale": 0,
-            "otherUnknown": 0,
-            "note": "Số lượng vật nuôi hiện có ban đầu",
-            "otherFemale": 0
-          },
-          "id": "species_1786163827161",
-          "vietnameseName": "Cầy vòi mốc",
-          "purposeCode": "T"
-        }
-      ],
-      "commune": "xã Hòa Sơn",
-      "note": "",
-      "address": "thôn 6, xã Dang Kang, tỉnh Đắk Lắk"
-    },
-    {
       "lng": 108.321947,
       "updatedAt": "2026-08-12T14:23:57.698Z",
       "purposeCode": "T",
