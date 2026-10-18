@@ -40,7 +40,7 @@ function decodeFirestoreDoc(doc) {
   return res;
 }
 
-const BLACKLISTED_DELETED_FACILITY_IDS = ['fac_1786163777938'];
+const BLACKLISTED_DELETED_FACILITY_IDS = ['fac_1786163777938', 'fac_1788916180780'];
 
 function fetchCollection(collName) {
   return new Promise((resolve, reject) => {
