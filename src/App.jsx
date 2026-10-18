@@ -30,6 +30,9 @@ import {
   deletePackingListItemFromCloud,
   loadPackingListFromCloud,
   syncPackingListToCloud,
+  subscribeToCloudFacilities,
+  subscribeToCloudRequests,
+  subscribeToCloudPackingList,
 } from './firebase';
 import { auth, db } from './firebase';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
@@ -354,91 +357,106 @@ export default function App() {
     return () => unsubscribe();
   }, []);
 
-  // Public Cloud Sync on Mount (For Guest / Demo users across different computers)
+  // Real-time Cloud Firestore Listener for Facilities across all connected computers/devices
   useEffect(() => {
     if (!db) return;
-    (async () => {
-      try {
-        const snapshot = await getDocs(collection(db, "facilities"));
-        if (!snapshot.empty) {
-          const cloudFacilities = [];
-          snapshot.forEach(doc => {
-            cloudFacilities.push({ id: doc.id, ...doc.data() });
-          });
 
-          if (cloudFacilities.length > 0) {
-            const mergedCloudFacilities = cloudFacilities.map((f) => {
-              if (f.address) {
-                f.address = cleanFacilityAddress(f.address);
-              }
-              return f;
-            });
+    const unsubscribe = subscribeToCloudFacilities((cloudFacilities) => {
+      if (!cloudFacilities || cloudFacilities.length === 0) return;
 
-            console.log(`[Firebase Guest Restore] Loaded ${mergedCloudFacilities.length} facilities.`);
-            setSkipNextSync(true);
-            setAppState(prev => {
-              const localFacilities = prev.facilitiesList || [];
-              const cloudIds = new Set(mergedCloudFacilities.map(f => f.id));
-
-              // PROTECT LOCAL FACILITIES: Never drop local facilities not yet in Cloud (excluding blacklisted deleted IDs)
-              const localOnly = localFacilities
-                .filter(f => !cloudIds.has(f.id))
-                .filter(f => !BLACKLISTED_DELETED_FACILITY_IDS.includes(f.id));
-              if (localOnly.length > 0) {
-                console.log(`[Sync Guard] Found ${localOnly.length} local-only facilities. Persisting to Cloud...`, localOnly);
-                localOnly.forEach(f => {
-                  saveFacilityToCloud(f);
-                });
-              }
-
-              // Merge species & fluctuations if local has more fluctuations
-              const mergedFromCloud = mergedCloudFacilities.map(cf => {
-                const lf = localFacilities.find(f => f.id === cf.id);
-                if (!lf) return cf;
-
-                const mergedSpecies = (cf.speciesList || []).map(cs => {
-                  const ls = (lf.speciesList || []).find(s => s.id === cs.id);
-                  if (!ls) return cs;
-                  const cFlucs = cs.fluctuations || [];
-                  const lFlucs = ls.fluctuations || [];
-                  return lFlucs.length > cFlucs.length ? { ...cs, fluctuations: lFlucs } : cs;
-                });
-                return { ...cf, speciesList: mergedSpecies };
-              });
-
-              const allFacilities = [...mergedFromCloud, ...localOnly]
-                .filter(f => !BLACKLISTED_DELETED_FACILITY_IDS.includes(f.id));
-
-              const activeFacId = prev.activeFacilityId || allFacilities[0]?.id;
-              const activeFac = allFacilities.find((f) => f.id === activeFacId) || allFacilities[0];
-              return {
-                ...prev,
-                facilitiesList: allFacilities,
-                activeFacilityId: activeFacId,
-                facilityInfo: activeFac ? {
-                  id: activeFac.id,
-                  facilityName: activeFac.facilityName,
-                  ownerName: activeFac.ownerName,
-                  registrationCode: activeFac.registrationCode,
-                  registrationDate: activeFac.registrationDate,
-                  commune: activeFac.commune || 'xã Hòa Sơn',
-                  address: activeFac.address,
-                  phone: activeFac.phone,
-                  purposeCode: activeFac.purposeCode,
-                  note: activeFac.note,
-                  lat: activeFac.lat || '',
-                  lng: activeFac.lng || '',
-                } : prev.facilityInfo,
-                speciesList: activeFac?.speciesList || [],
-                activeSpeciesId: activeFac?.speciesList?.[0]?.id || null,
-              };
-            });
+      const mergedCloudFacilities = cloudFacilities
+        .filter(f => !BLACKLISTED_DELETED_FACILITY_IDS.includes(f.id))
+        .map((f) => {
+          if (f.address) {
+            f.address = cleanFacilityAddress(f.address);
           }
-        }
-      } catch (err) {
-        console.warn("Public load from Firebase Cloud failed:", err);
-      }
-    })();
+          if (!f.facilityName && f.name) f.facilityName = f.name;
+          if (!f.name && f.facilityName) f.name = f.facilityName;
+          if (!f.ownerName && f.owner) f.ownerName = f.owner;
+          if (!f.owner && f.ownerName) f.owner = f.ownerName;
+          return f;
+        });
+
+      setAppState((prev) => {
+        const localFacilities = prev.facilitiesList || [];
+
+        // Real-time Smart Merge: for each facility, combine unique fluctuations additively
+        const mergedFromCloud = mergedCloudFacilities.map((cf) => {
+          const lf = localFacilities.find((f) => f.id === cf.id);
+          if (!lf) return cf;
+
+          const mergedSpecies = (cf.speciesList || []).map((cs) => {
+            const ls = (lf.speciesList || []).find((s) => s.id === cs.id);
+            if (!ls) return cs;
+
+            const flucMap = new Map();
+            // 1. Cloud fluctuations first
+            (cs.fluctuations || []).forEach((fluc) => {
+              if (fluc && fluc.id) flucMap.set(fluc.id, fluc);
+            });
+            // 2. Any local-only fluctuations not yet on Cloud
+            (ls.fluctuations || []).forEach((fluc) => {
+              if (fluc && fluc.id && !flucMap.has(fluc.id)) {
+                flucMap.set(fluc.id, fluc);
+              }
+            });
+
+            const allFlucs = Array.from(flucMap.values()).sort((a, b) => {
+              const dateA = new Date(a.date + (a.time ? `T${a.time}` : 'T00:00:00'));
+              const dateB = new Date(b.date + (b.time ? `T${b.time}` : 'T00:00:00'));
+              if (dateA.getTime() !== dateB.getTime()) {
+                return dateA.getTime() - dateB.getTime();
+              }
+              return (a.createdAt || 0) - (b.createdAt || 0);
+            });
+
+            return { ...cs, fluctuations: allFlucs };
+          });
+          return { ...cf, speciesList: mergedSpecies };
+        });
+
+        const cloudIds = new Set(mergedCloudFacilities.map((f) => f.id));
+        const localOnly = localFacilities
+          .filter((f) => !cloudIds.has(f.id))
+          .filter((f) => !BLACKLISTED_DELETED_FACILITY_IDS.includes(f.id));
+
+        const allFacilities = [...mergedFromCloud, ...localOnly];
+
+        const activeFacId = prev.activeFacilityId || allFacilities[0]?.id;
+        const activeFac = allFacilities.find((f) => f.id === activeFacId) || allFacilities[0];
+
+        const nextState = {
+          ...prev,
+          facilitiesList: allFacilities,
+          activeFacilityId: activeFacId,
+          facilityInfo: activeFac ? {
+            id: activeFac.id,
+            facilityName: activeFac.facilityName || activeFac.name,
+            ownerName: activeFac.ownerName || activeFac.owner,
+            registrationCode: activeFac.registrationCode,
+            registrationDate: activeFac.registrationDate,
+            commune: activeFac.commune || 'xã Hòa Sơn',
+            address: activeFac.address,
+            phone: activeFac.phone,
+            purposeCode: activeFac.purposeCode,
+            note: activeFac.note,
+            lat: activeFac.lat || '',
+            lng: activeFac.lng || '',
+          } : prev.facilityInfo,
+          speciesList: activeFac?.speciesList || [],
+          activeSpeciesId: prev.activeSpeciesId && activeFac?.speciesList?.some(s => s.id === prev.activeSpeciesId)
+            ? prev.activeSpeciesId
+            : activeFac?.speciesList?.[0]?.id || null,
+        };
+
+        saveAppData(nextState);
+        return nextState;
+      });
+    }, (err) => {
+      console.warn("[Real-time Facilities Sync Warning]:", err);
+    });
+
+    return () => unsubscribe();
   }, []);
 
   useEffect(() => {
@@ -467,9 +485,9 @@ export default function App() {
   const [isPackingListModalOpen, setIsPackingListModalOpen] = useState(false);
   const [editingPackingListItem, setEditingPackingListItem] = useState(null);
 
-  // Sync packing list from Cloud on mount
+  // Real-time sync packing list from Cloud
   useEffect(() => {
-    loadPackingListFromCloud().then((cloudList) => {
+    const unsubscribe = subscribeToCloudPackingList((cloudList) => {
       if (cloudList && cloudList.length > 0) {
         setPackingListData((prev) => {
           if (cloudList.length >= prev.length) {
@@ -478,27 +496,14 @@ export default function App() {
           }
           return prev;
         });
-      } else {
-        syncPackingListToCloud(INITIAL_PACKING_LIST_DATA);
       }
     });
+    return () => unsubscribe();
   }, []);
 
-  const [skipNextSync, setSkipNextSync] = useState(false);
-  const isInitialMount = React.useRef(true);
-
-  // Sync state to LocalStorage and Firebase Cloud Firestore on change
+  // Sync state to LocalStorage on local changes (Cloud sync is handled granularly per facility in each action handler)
   useEffect(() => {
     saveAppData(appState);
-    if (skipNextSync) {
-      setSkipNextSync(false);
-      return;
-    }
-    if (isInitialMount.current) {
-      isInitialMount.current = false;
-      return;
-    }
-    syncAppDataToCloud(appState);
   }, [appState]);
 
   // Auto-sync when reconnecting from offline
@@ -544,7 +549,7 @@ export default function App() {
         localOnlyFacilities.forEach(f => saveFacilityToCloud(f));
       }
 
-      // Merge species & fluctuations if local has more fluctuations
+      // Merge species & fluctuations additively by unique ID so none are ever lost
       const mergedFromCloud = mergedCloudFacilities.map(cf => {
         const lf = localFacilities.find(f => f.id === cf.id);
         if (!lf) return cf;
@@ -552,9 +557,27 @@ export default function App() {
         const mergedSpecies = (cf.speciesList || []).map(cs => {
           const ls = (lf.speciesList || []).find(s => s.id === cs.id);
           if (!ls) return cs;
-          const cFlucs = cs.fluctuations || [];
-          const lFlucs = ls.fluctuations || [];
-          return lFlucs.length > cFlucs.length ? { ...cs, fluctuations: lFlucs } : cs;
+
+          const flucMap = new Map();
+          (cs.fluctuations || []).forEach(fluc => {
+            if (fluc && fluc.id) flucMap.set(fluc.id, fluc);
+          });
+          (ls.fluctuations || []).forEach(fluc => {
+            if (fluc && fluc.id && !flucMap.has(fluc.id)) {
+              flucMap.set(fluc.id, fluc);
+            }
+          });
+
+          const allFlucs = Array.from(flucMap.values()).sort((a, b) => {
+            const dateA = new Date(a.date + (a.time ? `T${a.time}` : 'T00:00:00'));
+            const dateB = new Date(b.date + (b.time ? `T${b.time}` : 'T00:00:00'));
+            if (dateA.getTime() !== dateB.getTime()) {
+              return dateA.getTime() - dateB.getTime();
+            }
+            return (a.createdAt || 0) - (b.createdAt || 0);
+          });
+
+          return { ...cs, fluctuations: allFlucs };
         });
         return { ...cf, speciesList: mergedSpecies };
       });
@@ -767,8 +790,10 @@ export default function App() {
   useEffect(() => {
     if (currentUser?.role === 'ADMIN' || currentUser?.role === 'STAFF') {
       fetchPendingRequests();
-      const interval = setInterval(fetchPendingRequests, 10000);
-      return () => clearInterval(interval);
+      const unsubscribe = subscribeToCloudRequests(() => {
+        fetchPendingRequests();
+      });
+      return () => unsubscribe();
     }
   }, [currentUser, facilitiesList]);
 

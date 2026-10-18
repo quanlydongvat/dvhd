@@ -143,11 +143,52 @@ export async function loadAppDataFromCloud(user) {
   }
 }
 
-// Helper function to listen for real-time Firebase Cloud changes
+// Helper functions to listen for real-time Firebase Cloud changes across all devices
+export function subscribeToCloudFacilities(onData, onError) {
+  if (!db) return () => {};
+  return onSnapshot(collection(db, "facilities"), (snapshot) => {
+    if (snapshot.empty) return;
+    const facilitiesList = [];
+    snapshot.forEach((docSnap) => {
+      facilitiesList.push({ id: docSnap.id, ...docSnap.data() });
+    });
+    if (onData) onData(facilitiesList);
+  }, (err) => {
+    if (onError) onError(err);
+    else console.warn("Real-time facilities listener error:", err);
+  });
+}
+
+export function subscribeToCloudRequests(onData, onError) {
+  if (!db) return () => {};
+  return onSnapshot(collection(db, "fluctuation_requests"), (snapshot) => {
+    const list = [];
+    snapshot.forEach((docSnap) => {
+      list.push({ id: docSnap.id, ...docSnap.data() });
+    });
+    if (onData) onData(list);
+  }, (err) => {
+    if (onError) onError(err);
+    else console.warn("Real-time requests listener error:", err);
+  });
+}
+
+export function subscribeToCloudPackingList(onData, onError) {
+  if (!db) return () => {};
+  return onSnapshot(collection(db, "packing_lists"), (snapshot) => {
+    const list = [];
+    snapshot.forEach((docSnap) => {
+      list.push({ id: docSnap.id, ...docSnap.data() });
+    });
+    if (onData) onData(list);
+  }, (err) => {
+    if (onError) onError(err);
+    else console.warn("Real-time packing list listener error:", err);
+  });
+}
+
 export function subscribeToCloudChanges(callback) {
-  // Not used actively in new architecture to avoid over-fetching
-  // Just returning dummy unsubscribe
-  return () => {};
+  return subscribeToCloudFacilities(callback);
 }
 
 // Cloud Firestore helpers for Packing List (Sổ theo dõi bảng kê lâm sản)
