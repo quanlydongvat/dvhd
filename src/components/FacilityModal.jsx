@@ -53,7 +53,7 @@ export default function FacilityModal({
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.facilityName?.trim()) {
       alert('Vui lòng nhập Tên cơ sở nuôi!');
@@ -64,7 +64,7 @@ export default function FacilityModal({
       return;
     }
 
-    onSave(formData);
+    await onSave(formData);
     onClose();
   };
 

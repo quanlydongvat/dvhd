@@ -39,12 +39,27 @@ export { app, db, analytics, auth };
 
 import { writeBatch, collection, getDocs, query, where } from "firebase/firestore";
 
+// Helper to recursively remove all undefined keys to prevent Firestore write crashes
+export function removeUndefinedKeys(obj) {
+  if (obj === null || typeof obj !== 'object') return obj;
+  if (Array.isArray(obj)) return obj.map(removeUndefinedKeys);
+  const cleaned = {};
+  for (const [key, value] of Object.entries(obj)) {
+    if (value !== undefined) {
+      cleaned[key] = removeUndefinedKeys(value);
+    }
+  }
+  return cleaned;
+}
+
 // Helper function to save a single facility document to Cloud Firestore
 export async function saveFacilityToCloud(facilityObj) {
   try {
     if (!db || !facilityObj || !facilityObj.id) return false;
     const docRef = doc(db, "facilities", facilityObj.id);
-    await setDoc(docRef, { ...facilityObj, updatedAt: new Date().toISOString() });
+    const cleaned = removeUndefinedKeys({ ...facilityObj, updatedAt: new Date().toISOString() });
+    await setDoc(docRef, cleaned);
+    console.log(`[Firestore] Successfully saved facility "${facilityObj.id}" to Cloud.`);
     return true;
   } catch (error) {
     console.warn("Error saving facility to Cloud Firestore:", error);
@@ -62,10 +77,12 @@ export async function syncAppDataToCloud(appState) {
     
     appState.facilitiesList.forEach(fac => {
       const docRef = doc(db, "facilities", fac.id);
-      batch.set(docRef, { ...fac, updatedAt: new Date().toISOString() });
+      const cleaned = removeUndefinedKeys({ ...fac, updatedAt: fac.updatedAt || new Date().toISOString() });
+      batch.set(docRef, cleaned);
     });
     
     await batch.commit();
+    console.log(`[Firestore] Successfully synced ${appState.facilitiesList.length} facilities to Cloud.`);
     return true;
   } catch (error) {
     console.warn("Error syncing to Firebase Cloud:", error);
@@ -140,7 +157,8 @@ export async function syncPackingListToCloud(packingList) {
     const batch = writeBatch(db);
     packingList.forEach((item) => {
       const docRef = doc(db, 'packing_lists', item.id);
-      batch.set(docRef, { ...item, updatedAt: new Date().toISOString() });
+      const cleaned = removeUndefinedKeys({ ...item, updatedAt: item.updatedAt || new Date().toISOString() });
+      batch.set(docRef, cleaned);
     });
     await batch.commit();
     return true;
@@ -154,7 +172,8 @@ export async function savePackingListItemToCloud(item) {
   try {
     if (!db || !item || !item.id) return false;
     const docRef = doc(db, 'packing_lists', item.id);
-    await setDoc(docRef, { ...item, updatedAt: new Date().toISOString() });
+    const cleaned = removeUndefinedKeys({ ...item, updatedAt: new Date().toISOString() });
+    await setDoc(docRef, cleaned);
     return true;
   } catch (error) {
     console.warn('Error saving packing list item to Cloud:', error);

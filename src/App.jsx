@@ -376,11 +376,40 @@ export default function App() {
             console.log(`[Firebase Guest Restore] Loaded ${mergedCloudFacilities.length} facilities.`);
             setSkipNextSync(true);
             setAppState(prev => {
-              const activeFacId = prev.activeFacilityId || mergedCloudFacilities[0]?.id;
-              const activeFac = mergedCloudFacilities.find((f) => f.id === activeFacId) || mergedCloudFacilities[0];
+              const localFacilities = prev.facilitiesList || [];
+              const cloudIds = new Set(mergedCloudFacilities.map(f => f.id));
+
+              // PROTECT LOCAL FACILITIES: Never drop local facilities not yet in Cloud
+              const localOnly = localFacilities.filter(f => !cloudIds.has(f.id));
+              if (localOnly.length > 0) {
+                console.log(`[Sync Guard] Found ${localOnly.length} local-only facilities. Persisting to Cloud...`, localOnly);
+                localOnly.forEach(f => {
+                  saveFacilityToCloud(f);
+                });
+              }
+
+              // Merge species & fluctuations if local has more fluctuations
+              const mergedFromCloud = mergedCloudFacilities.map(cf => {
+                const lf = localFacilities.find(f => f.id === cf.id);
+                if (!lf) return cf;
+
+                const mergedSpecies = (cf.speciesList || []).map(cs => {
+                  const ls = (lf.speciesList || []).find(s => s.id === cs.id);
+                  if (!ls) return cs;
+                  const cFlucs = cs.fluctuations || [];
+                  const lFlucs = ls.fluctuations || [];
+                  return lFlucs.length > cFlucs.length ? { ...cs, fluctuations: lFlucs } : cs;
+                });
+                return { ...cf, speciesList: mergedSpecies };
+              });
+
+              const allFacilities = [...mergedFromCloud, ...localOnly];
+
+              const activeFacId = prev.activeFacilityId || allFacilities[0]?.id;
+              const activeFac = allFacilities.find((f) => f.id === activeFacId) || allFacilities[0];
               return {
                 ...prev,
-                facilitiesList: mergedCloudFacilities,
+                facilitiesList: allFacilities,
                 activeFacilityId: activeFacId,
                 facilityInfo: activeFac ? {
                   id: activeFac.id,
@@ -502,16 +531,40 @@ export default function App() {
         return f;
       });
 
-      if (currentUser.role === 'FACILITY' || currentUser.role === 'ADMIN' || currentUser.role === 'STAFF' || mergedCloudFacilities.length >= localFacilities.length) {
-        let activeFacId = currentUser.facilityId || cloudData.activeFacilityId || mergedCloudFacilities[0]?.id;
-        if (!mergedCloudFacilities.find(f => f.id === activeFacId)) {
-           activeFacId = mergedCloudFacilities[0]?.id;
+      const cloudMap = new Map(mergedCloudFacilities.map(f => [f.id, f]));
+      const localOnlyFacilities = localFacilities.filter(f => !cloudMap.has(f.id));
+      if (localOnlyFacilities.length > 0) {
+        console.log(`[Sync Guard Auth] Found ${localOnlyFacilities.length} local-only facilities. Persisting to Cloud...`);
+        localOnlyFacilities.forEach(f => saveFacilityToCloud(f));
+      }
+
+      // Merge species & fluctuations if local has more fluctuations
+      const mergedFromCloud = mergedCloudFacilities.map(cf => {
+        const lf = localFacilities.find(f => f.id === cf.id);
+        if (!lf) return cf;
+
+        const mergedSpecies = (cf.speciesList || []).map(cs => {
+          const ls = (lf.speciesList || []).find(s => s.id === cs.id);
+          if (!ls) return cs;
+          const cFlucs = cs.fluctuations || [];
+          const lFlucs = ls.fluctuations || [];
+          return lFlucs.length > cFlucs.length ? { ...cs, fluctuations: lFlucs } : cs;
+        });
+        return { ...cf, speciesList: mergedSpecies };
+      });
+
+      const allFacilities = [...mergedFromCloud, ...localOnlyFacilities];
+
+      if (currentUser.role === 'FACILITY' || currentUser.role === 'ADMIN' || currentUser.role === 'STAFF' || allFacilities.length >= localFacilities.length) {
+        let activeFacId = currentUser.facilityId || cloudData.activeFacilityId || allFacilities[0]?.id;
+        if (!allFacilities.find(f => f.id === activeFacId)) {
+           activeFacId = allFacilities[0]?.id;
         }
         
-        const activeFac = mergedCloudFacilities.find((f) => f.id === activeFacId) || mergedCloudFacilities[0];
+        const activeFac = allFacilities.find((f) => f.id === activeFacId) || allFacilities[0];
 
         const nextState = {
-          facilitiesList: mergedCloudFacilities,
+          facilitiesList: allFacilities,
           activeFacilityId: activeFacId,
           facilityInfo: activeFac ? {
             id: activeFac.id,
@@ -1144,7 +1197,7 @@ export default function App() {
   };
 
   // Handler: Save Facility Info (Add new or Edit existing)
-  const handleSaveFacility = (formData) => {
+  const handleSaveFacility = async (formData) => {
     if (formData.address) {
       formData.address = cleanFacilityAddress(formData.address);
     }
@@ -1160,14 +1213,18 @@ export default function App() {
       const isCurrentActive = activeFacilityId === editingFacility.id;
       const updatedFacilityInfo = isCurrentActive ? { ...facilityInfo, ...formData } : facilityInfo;
 
-      setAppState((prev) => ({
-        ...prev,
+      const nextState = {
+        ...appState,
         facilitiesList: updatedFacilitiesList,
         facilityInfo: updatedFacilityInfo,
-      }));
+      };
+
+      saveAppData(nextState);
+      setAppState(nextState);
 
       // PERSIST TO CLOUD FIRESTORE IMMEDIATELY!
-      saveFacilityToCloud(updatedFacObj);
+      await saveFacilityToCloud(updatedFacObj);
+      alert(`Đã lưu thay đổi cơ sở "${updatedFacObj.facilityName || updatedFacObj.ownerName}" lên hệ thống đám mây Firebase thành công!`);
     } else {
       // Create new facility
       const newFacilityId = 'fac_' + Date.now();
@@ -1211,17 +1268,21 @@ export default function App() {
 
       const updatedFacilitiesList = [newFacilityObj, ...facilitiesList];
 
-      setAppState((prev) => ({
-        ...prev,
+      const nextState = {
+        ...appState,
         facilitiesList: updatedFacilitiesList,
         activeFacilityId: newFacilityId,
         facilityInfo: newFacilityObj,
         speciesList: defaultSpeciesList,
         activeSpeciesId: defaultSpeciesList[0].id,
-      }));
+      };
+
+      saveAppData(nextState);
+      setAppState(nextState);
 
       // PERSIST NEW FACILITY TO CLOUD FIRESTORE IMMEDIATELY!
-      saveFacilityToCloud(newFacilityObj);
+      await saveFacilityToCloud(newFacilityObj);
+      alert(`Đã tạo và lưu cơ sở "${newFacilityObj.facilityName || newFacilityObj.ownerName}" lên hệ thống đám mây Firebase thành công!`);
     }
     setEditingFacility(null);
   };
