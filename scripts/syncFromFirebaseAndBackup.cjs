@@ -30,8 +30,17 @@ function decodeFirestoreDoc(doc) {
   for (const k in fields) {
     res[k] = decodeFirestoreValue(fields[k]);
   }
+  if (!res.id && doc.name) {
+    res.id = doc.name.split('/').pop();
+  }
+  if (!res.facilityName && res.name) res.facilityName = res.name;
+  if (!res.name && res.facilityName) res.name = res.facilityName;
+  if (!res.ownerName && res.owner) res.ownerName = res.owner;
+  if (!res.owner && res.ownerName) res.owner = res.ownerName;
   return res;
 }
+
+const BLACKLISTED_DELETED_FACILITY_IDS = ['fac_1786163777938'];
 
 function fetchCollection(collName) {
   return new Promise((resolve, reject) => {
@@ -59,11 +68,13 @@ function fetchCollection(collName) {
 async function syncAndBackup() {
   console.log('Downloading live data from Firebase Cloud Firestore (dvhd-52ebb)...');
   
-  const facilities = await fetchCollection('facilities');
+  const rawFacilities = await fetchCollection('facilities');
   const fluctuationRequests = await fetchCollection('fluctuation_requests');
   const users = await fetchCollection('users');
 
-  console.log(`Downloaded ${facilities.length} Facilities, ${fluctuationRequests.length} Requests, ${users.length} Users.`);
+  const facilities = rawFacilities.filter(f => !BLACKLISTED_DELETED_FACILITY_IDS.includes(f.id));
+
+  console.log(`Downloaded ${facilities.length} active Facilities (filtered from ${rawFacilities.length}), ${fluctuationRequests.length} Requests, ${users.length} Users.`);
 
   const timestamp = new Date().toISOString();
   const backupObject = {

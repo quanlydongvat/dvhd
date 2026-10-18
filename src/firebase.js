@@ -127,11 +127,11 @@ export async function loadAppDataFromCloud(user) {
       // Load only specific facility
       const q = query(collection(db, "facilities"), where("id", "==", user.facilityId));
       const snapshot = await getDocs(q);
-      snapshot.forEach(doc => facilitiesList.push(doc.data()));
+      snapshot.forEach(doc => facilitiesList.push({ id: doc.id, ...doc.data() }));
     } else if (user.role === 'ADMIN' || user.role === 'STAFF') {
       // Load all facilities directly from 'facilities' collection
       const snapshot = await getDocs(collection(db, "facilities"));
-      snapshot.forEach(doc => facilitiesList.push(doc.data()));
+      snapshot.forEach(doc => facilitiesList.push({ id: doc.id, ...doc.data() }));
     }
     
     if (facilitiesList.length === 0) return null;

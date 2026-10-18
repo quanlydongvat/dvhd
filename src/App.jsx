@@ -363,7 +363,7 @@ export default function App() {
         if (!snapshot.empty) {
           const cloudFacilities = [];
           snapshot.forEach(doc => {
-            cloudFacilities.push(doc.data());
+            cloudFacilities.push({ id: doc.id, ...doc.data() });
           });
 
           if (cloudFacilities.length > 0) {
