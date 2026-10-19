@@ -92,10 +92,28 @@ async function syncAndBackup() {
   // 1. Write JSON to public/ and docs/ for web downloads
   const publicBackupPath = path.join(__dirname, '../public/backup_cloud_firebase.json');
   const docsBackupPath = path.join(__dirname, '../docs/backup_cloud_firebase.json');
+  const timestampedBackupPath = path.join(__dirname, '../docs/backup_42_coso_20261019_latest.json');
 
   fs.writeFileSync(publicBackupPath, JSON.stringify(backupObject, null, 2), 'utf8');
   fs.writeFileSync(docsBackupPath, JSON.stringify(backupObject, null, 2), 'utf8');
-  console.log('Saved JSON backups to public/backup_cloud_firebase.json & docs/backup_cloud_firebase.json');
+  fs.writeFileSync(timestampedBackupPath, JSON.stringify(backupObject, null, 2), 'utf8');
+  console.log('Saved JSON backups to public/backup_cloud_firebase.json, docs/backup_cloud_firebase.json & docs/backup_42_coso_20261019_latest.json');
+
+  // 1.1 Update REAL_FACILITIES_DATA in src/utils/storage.js
+  const storageJsPath = path.join(__dirname, '../src/utils/storage.js');
+  let storageContent = fs.readFileSync(storageJsPath, 'utf8');
+  const startMarker = 'export const REAL_FACILITIES_DATA = [';
+  const endMarker = '];';
+  const startIdx = storageContent.indexOf(startMarker);
+  if (startIdx !== -1) {
+    const endIdx = storageContent.indexOf(endMarker, startIdx);
+    if (endIdx !== -1) {
+      const newDeclaration = `export const REAL_FACILITIES_DATA = ${JSON.stringify(facilities, null, 2)};`;
+      storageContent = storageContent.substring(0, startIdx) + newDeclaration + storageContent.substring(endIdx + endMarker.length);
+      fs.writeFileSync(storageJsPath, storageContent, 'utf8');
+      console.log('Successfully updated REAL_FACILITIES_DATA in src/utils/storage.js with latest 42 facilities & fluctuations!');
+    }
+  }
 
   // 2. Generate Google Drive / Google Sheets compatible CSV summary file
   const csvRows = [];
