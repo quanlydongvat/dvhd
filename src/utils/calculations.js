@@ -313,6 +313,14 @@ export function isBirdSpecies(sp) {
 }
 
 /**
+ * Helper function to determine if a species belongs to Class Mammalia (Lớp Thú)
+ */
+export function isMammalSpecies(sp) {
+  if (!sp) return false;
+  return !isBirdSpecies(sp);
+}
+
+/**
  * Determine if a species is CITES / Endangered / Quý hiếm
  */
 export function isCitesSpecies(sp) {
@@ -511,24 +519,11 @@ export function formatDateVN(dateStr) {
  */
 export function isCitesOrEndangeredSpecies(sp) {
   if (!sp) return false;
-  const grp = (sp.group || '').toUpperCase();
-  const cites = (sp.citesAppendix || '').toUpperCase();
-
-  // If explicitly marked as CITES or Group IB / IIB
-  if (grp.includes('IB') || grp.includes('IIB') || grp.includes('1B') || grp.includes('2B')) {
-    return true;
+  const canonical = getCanonicalSpecies(sp.vietnameseName, sp.scientificName);
+  if (canonical && typeof canonical.isCites === 'boolean') {
+    return canonical.isCites;
   }
-  if (cites.includes('CITES') || cites.includes('PHỤ LỤC I') || cites.includes('PHỤ LỤC II') || cites.includes('APPENDIX I') || cites.includes('APPENDIX II')) {
-    if (!cites.includes('KHÔNG')) return true;
-  }
-
-  // If bird species or explicitly common wildlife -> NOT CITES / Endangered
-  if (isBirdSpecies(sp) || grp.includes('THÔNG THƯỜNG') || grp.includes('TT') || grp.includes('THONG THUONG')) {
-    return false;
-  }
-
-  // Mammals / Reptiles (Dúi, Cầy, Nhím) default to Group IIB unless marked common
-  return true;
+  return isCitesSpecies(sp);
 }
 
 /**

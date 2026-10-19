@@ -17,7 +17,7 @@ import {
 } from 'chart.js';
 import { Line, Bar, Doughnut } from 'react-chartjs-2';
 import { TrendingUp, TrendingDown, Calendar, Filter, MapPin, Feather, Download, Award, BarChart3, PieChart, Activity, RefreshCw, Layers, ChevronDown, ChevronUp } from 'lucide-react';
-import { isBirdSpecies, getFacilityCategory, computeLogbookTable, getCanonicalSpecies } from '../utils/calculations';
+import { isBirdSpecies, isMammalSpecies, getFacilityCategory, computeLogbookTable, getCanonicalSpecies } from '../utils/calculations';
 
 // Register Chart.js modules
 ChartJS.register(
@@ -446,32 +446,35 @@ export default function AnalyticsView({ facilitiesList = [] }) {
     return found || speciesBreedingStats.allStats;
   }, [selectedBreedingSpecies, speciesBreedingStats]);
 
-  // 3. Legal & CITES Species Classification (Nghị định 84/2021/NĐ-CP & CITES)
-  const legalCitesBreakdown = useMemo(() => {
-    let groupIIBCount = 0; // Nhóm IIB CITES II (Dúi, Cầy, Nhím...)
-    let groupNormalCount = 0; // ĐV Thông thường (Chim chào mào, chim cu gáy...)
+  // 3. Animal Class Breakdown (Lớp Thú - Mammalia & Lớp Chim - Aves)
+  const animalClassBreakdown = useMemo(() => {
+    let mammalsCount = 0; // Lớp Thú (Dúi, Cầy, Nhím, Don...)
+    let birdsCount = 0;   // Lớp Chim (Chim chào mào, chim cu gáy...)
 
     filteredFacilities.forEach((fac) => {
       (fac.speciesList || []).forEach((sp) => {
         const processedRows = computeLogbookTable(sp.baseline || {}, sp.fluctuations || []);
         const lastRow = processedRows[processedRows.length - 1];
-        const count = lastRow ? lastRow.total : 0;
+        const count = lastRow ? Number(lastRow.total) || 0 : 0;
+        if (count <= 0) return;
 
-        if (isBirdSpecies(sp)) {
-          groupNormalCount += count;
+        const canonical = getCanonicalSpecies(sp.vietnameseName, sp.scientificName);
+        if (canonical.isBird || isBirdSpecies(sp)) {
+          birdsCount += count;
         } else {
-          groupIIBCount += count;
+          mammalsCount += count;
         }
       });
     });
 
-    const total = groupIIBCount + groupNormalCount || 1;
+    const total = mammalsCount + birdsCount || 1;
 
     return {
-      groupIIBCount,
-      groupNormalCount,
-      groupIIBPct: Math.round((groupIIBCount / total) * 100),
-      groupNormalPct: Math.round((groupNormalCount / total) * 100),
+      mammalsCount,
+      birdsCount,
+      total,
+      mammalsPct: Math.round((mammalsCount / total) * 100),
+      birdsPct: Math.round((birdsCount / total) * 100),
     };
   }, [filteredFacilities]);
 
@@ -1254,44 +1257,59 @@ export default function AnalyticsView({ facilitiesList = [] }) {
 
       {/* 2 Grid Columns Section: CITES Classification & Decrease Reasons Analysis */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6">
-        {/* Legal CITES Classification (6 cols) */}
+        {/* Animal Class Classification: Lớp Thú (Mammalia) & Lớp Chim (Aves) (6 cols) */}
         <div className="lg:col-span-6 bg-white border border-slate-200 rounded-2xl p-3.5 sm:p-5 shadow-sm space-y-3">
           <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
             <div>
               <h3 className="text-xs sm:text-sm font-extrabold text-slate-900 flex items-center gap-2">
-                <Filter className="w-4 h-4 text-purple-600 flex-shrink-0" />
-                <span>Phân Loại Pháp Lý ĐVHD (NĐ 84/2021/NĐ-CP & CITES)</span>
+                <Layers className="w-4 h-4 text-purple-600 flex-shrink-0" />
+                <span>Phân Loại Theo Lớp Động Vật (Lớp Thú & Lớp Chim)</span>
               </h3>
               <p className="text-[10px] sm:text-[11px] text-slate-500 font-medium">
-                Tỷ lệ loài nguy cấp, quý, hiếm (Nhóm IIB) và loài thông thường
+                Cơ cấu số lượng cá thể giữa động vật Lớp Thú (Mammalia) và Lớp Chim (Aves)
               </p>
             </div>
+            <span className="text-[10px] font-black uppercase tracking-wider text-purple-800 bg-purple-50 border border-purple-200/80 px-2 py-0.5 rounded-full">
+              Lớp sinh học
+            </span>
           </div>
 
           <div className="space-y-3">
-            <div className="bg-amber-50/80 border border-amber-200 rounded-xl p-3 space-y-1.5">
+            {/* Lớp Thú - Mammalia */}
+            <div className="bg-amber-50/80 border border-amber-200/90 rounded-xl p-3 space-y-1.5 shadow-2xs hover:border-amber-300 transition-all">
               <div className="flex items-center justify-between text-xs">
-                <span className="font-extrabold text-amber-900 flex items-center gap-1.5">
-                  <span className="w-2.5 h-2.5 rounded-full bg-amber-500 inline-block" />
-                  Loài Nhóm IIB & Phụ lục II CITES (Dúi, Cầy, Nhím...)
+                <span className="font-extrabold text-amber-950 flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded-full bg-amber-500 inline-block ring-2 ring-amber-300/60" />
+                  <span>Động vật Lớp Thú - Mammalia (Dúi, Cầy, Nhím, Don...)</span>
                 </span>
-                <strong className="font-mono text-amber-950 font-black text-sm">{legalCitesBreakdown.groupIIBCount} con ({legalCitesBreakdown.groupIIBPct}%)</strong>
+                <strong className="font-mono text-amber-950 font-black text-sm whitespace-nowrap">
+                  {animalClassBreakdown.mammalsCount.toLocaleString('vi-VN')} con ({animalClassBreakdown.mammalsPct}%)
+                </strong>
               </div>
-              <div className="w-full bg-amber-200 rounded-full h-2 overflow-hidden">
-                <div className="bg-amber-600 h-2 rounded-full" style={{ width: `${legalCitesBreakdown.groupIIBPct}%` }} />
+              <div className="w-full bg-amber-200/80 rounded-full h-2.5 overflow-hidden">
+                <div
+                  className="bg-gradient-to-r from-amber-500 to-amber-600 h-2.5 rounded-full transition-all duration-700"
+                  style={{ width: `${animalClassBreakdown.mammalsPct}%` }}
+                />
               </div>
             </div>
 
-            <div className="bg-emerald-50/80 border border-emerald-200 rounded-xl p-3 space-y-1.5">
+            {/* Lớp Chim - Aves */}
+            <div className="bg-emerald-50/80 border border-emerald-200/90 rounded-xl p-3 space-y-1.5 shadow-2xs hover:border-emerald-300 transition-all">
               <div className="flex items-center justify-between text-xs">
-                <span className="font-extrabold text-emerald-900 flex items-center gap-1.5">
-                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block" />
-                  Động Vật Hoang Dã Thông Thường (Chim chào mào, cu gáy...)
+                <span className="font-extrabold text-emerald-950 flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block ring-2 ring-emerald-300/60" />
+                  <span>Động vật Lớp Chim - Aves (Chim chào mào, cu gáy...)</span>
                 </span>
-                <strong className="font-mono text-emerald-950 font-black text-sm">{legalCitesBreakdown.groupNormalCount} con ({legalCitesBreakdown.groupNormalPct}%)</strong>
+                <strong className="font-mono text-emerald-950 font-black text-sm whitespace-nowrap">
+                  {animalClassBreakdown.birdsCount.toLocaleString('vi-VN')} con ({animalClassBreakdown.birdsPct}%)
+                </strong>
               </div>
-              <div className="w-full bg-emerald-200 rounded-full h-2 overflow-hidden">
-                <div className="bg-emerald-600 h-2 rounded-full" style={{ width: `${legalCitesBreakdown.groupNormalPct}%` }} />
+              <div className="w-full bg-emerald-200/80 rounded-full h-2.5 overflow-hidden">
+                <div
+                  className="bg-gradient-to-r from-emerald-500 to-teal-600 h-2.5 rounded-full transition-all duration-700"
+                  style={{ width: `${animalClassBreakdown.birdsPct}%` }}
+                />
               </div>
             </div>
           </div>
