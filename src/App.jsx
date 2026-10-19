@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Suspense, lazy } from 'react';
+import React, { useState, useEffect, useMemo, Suspense, lazy } from 'react';
 import Header from './components/Header';
 import LeftSidebar from './components/LeftSidebar';
 import TableView from './components/TableView';
@@ -159,8 +159,30 @@ export default function App() {
   const [isUISettingsModalOpen, setIsUISettingsModalOpen] = useState(false);
   const [qrModalFacility, setQrModalFacility] = useState(null);
   const [isQRCodeModalOpen, setIsQRCodeModalOpen] = useState(false);
-  const [isQrReadOnlyMode, setIsQrReadOnlyMode] = useState(() => !!isQrPublicScan);
+  const [isQrReadOnlyMode, setIsQrReadOnlyMode] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+
+  // Compute Read-Only Status with 100% Reliability
+  const isTableViewReadOnly = useMemo(() => {
+    // 1. Unauthenticated users are always read-only
+    if (!currentUser) return true;
+
+    // 2. Forest Rangers / Admin / Staff ALWAYS have full write/edit permission on ALL facilities!
+    if (currentUser.role === 'ADMIN' || currentUser.role === 'STAFF') {
+      return false;
+    }
+
+    // 3. Facility owners can edit only their assigned facility
+    if (currentUser.role === 'FACILITY') {
+      const curFacId = appState.activeFacilityId || appState.facilityInfo?.id;
+      const userFacId = currentUser.facilityId;
+      const assignedIds = currentUser.assignedFacilityIds || [];
+      const canEdit = curFacId && (curFacId === userFacId || assignedIds.includes(curFacId));
+      return !canEdit;
+    }
+
+    return true;
+  }, [currentUser, appState.activeFacilityId, appState.facilityInfo?.id]);
 
   const [pendingRequests, setPendingRequests] = useState([]);
   const [isPendingModalOpen, setIsPendingModalOpen] = useState(false);
@@ -217,17 +239,24 @@ export default function App() {
     if (appState.facilitiesList && appState.facilitiesList.length > 0) {
       const params = new URLSearchParams(window.location.search);
       const facIdParam = params.get('facId') || params.get('facilityId');
-      const isReadOnlyParam = params.get('view') === 'readOnly' || params.get('readOnly') === 'true' || !!facIdParam;
 
       if (facIdParam) {
         const targetFac = appState.facilitiesList.find(f => f.id === facIdParam);
         if (targetFac) {
           handleSelectFacility(facIdParam);
           setCurrentView('LOGBOOK');
-          if (isReadOnlyParam && (!currentUser || currentUser.role !== 'ADMIN')) {
-            setIsQrReadOnlyMode(true);
-          }
         }
+      }
+
+      // Automatically reset or set read-only mode based on user authentication and role
+      if (currentUser && (currentUser.role === 'ADMIN' || currentUser.role === 'STAFF')) {
+        setIsQrReadOnlyMode(false);
+      } else if (currentUser && currentUser.role === 'FACILITY') {
+        const activeId = facIdParam || appState.activeFacilityId;
+        const isOwner = activeId && (activeId === currentUser.facilityId || (currentUser.assignedFacilityIds || []).includes(activeId));
+        setIsQrReadOnlyMode(!isOwner);
+      } else if (!currentUser) {
+        setIsQrReadOnlyMode(true);
       }
     }
   }, [appState.facilitiesList, currentUser]);
@@ -271,8 +300,12 @@ export default function App() {
         params.delete('facilityId');
       }
 
-      if (isQrReadOnlyMode) {
+      if (currentUser && (currentUser.role === 'ADMIN' || currentUser.role === 'STAFF')) {
+        params.delete('view');
+      } else if (!currentUser && isQrReadOnlyMode) {
         params.set('view', 'readOnly');
+      } else {
+        params.delete('view');
       }
 
       const queryString = params.toString() ? `?${params.toString()}` : '';
@@ -284,7 +317,7 @@ export default function App() {
     } catch (e) {
       console.warn("History pushState error:", e);
     }
-  }, [currentView, appState.activeFacilityId, isQrReadOnlyMode]);
+  }, [currentView, appState.activeFacilityId, isQrReadOnlyMode, currentUser]);
 
   // Handle Browser Back / Forward Button Navigation
   useEffect(() => {
@@ -1850,7 +1883,7 @@ export default function App() {
                 onApprovePending={handleApprovePending}
                 onRejectPending={handleRejectPending}
                 currentUser={currentUser}
-                isReadOnly={!currentUser || isQrReadOnlyMode || (currentUser?.role === 'FACILITY' && facilityInfo?.id !== activeFacilityId)}
+                isReadOnly={isTableViewReadOnly}
                 onOpenLogin={() => setIsLoginModalOpen(true)}
               />
             )}
