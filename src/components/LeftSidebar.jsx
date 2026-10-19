@@ -18,12 +18,15 @@ import {
   FileSpreadsheet,
   FileCheck2,
 } from 'lucide-react';
+import SidebarTopRankingSlide from './SidebarTopRankingSlide';
 
 export default function LeftSidebar({
   currentView = 'SUMMARY',
   onChangeView,
   facilitiesCount = 31,
   packingListCount = 33,
+  facilitiesList = [],
+  onSelectFacility,
   onOpenAddFluctuation,
   onOpenAddFacility,
   onOpenAddPackingList,
@@ -483,6 +486,13 @@ export default function LeftSidebar({
             </div>
           </section>
         )}
+
+        {/* SECTION 4: BẢNG XẾP HẠNG TOP 5 CƠ SỞ NUÔI (NGUY CẤP QUÝ HIẾM & THÔNG THƯỜNG) */}
+        <SidebarTopRankingSlide
+          facilitiesList={facilitiesList}
+          onSelectFacility={onSelectFacility}
+          onChangeView={onChangeView}
+        />
 
       </div>
 

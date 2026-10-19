@@ -1638,6 +1638,8 @@ export default function App() {
             onChangeView={setCurrentView}
             facilitiesCount={facilitiesList.length}
             packingListCount={packingListData.length}
+            facilitiesList={facilitiesList}
+            onSelectFacility={handleSelectFacility}
             onOpenAddFluctuation={() => {
               setEditingFluctuation(null);
               setIsFluctuationModalOpen(true);
