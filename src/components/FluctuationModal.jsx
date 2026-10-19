@@ -49,11 +49,11 @@ export default function FluctuationModal({
     'Chuyển cá thể đực đủ tuổi vào đàn bố mẹ.',
     'Chuyển cá thể cái đủ tuổi vào đàn bố mẹ.',
     'Chuyển cá thể đực và cái đủ tuổi vào đàn bố mẹ.',
-    'Sinh sản lứa F1 mới nở/sinh',
     'Sinh sản lứa F2 mới nở/sinh',
     'Xuất bán thương mại cho cơ sở B',
     'Tặng cho/chuyển nhượng theo quyết định',
     'Chết do thời tiết/bệnh lý',
+    'Sổng chuồng',
   ];
 
   useEffect(() => {
@@ -775,16 +775,19 @@ export default function FluctuationModal({
                   {QUICK_REASONS.map((r, i) => {
                     const isCur = formData.reason === r;
                     const isPurch = isPurchaseFromOutside(r);
+                    const isDec = r === 'Sổng chuồng' || r === 'Chết do thời tiết/bệnh lý';
                     return (
                       <button
                         key={i}
                         type="button"
                         onClick={() => handleSelectReason(r)}
-                        className={`text-[11px] px-2.5 py-1 rounded-lg transition-all font-bold border cursor-pointer ${
+                        className={`text-[11px] px-2.5 py-1 rounded-lg transition-all font-bold border cursor-pointer active:scale-95 ${
                           isCur
                             ? 'bg-emerald-600 text-white border-emerald-700 shadow-xs'
                             : isPurch
                             ? 'bg-indigo-50 hover:bg-indigo-100 text-indigo-800 border-indigo-200'
+                            : isDec
+                            ? 'bg-rose-50 hover:bg-rose-100 text-rose-800 border-rose-300'
                             : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-300'
                         }`}
                       >
@@ -808,7 +811,7 @@ export default function FluctuationModal({
                       decOtherFemale: isPurch ? 0 : prev.decOtherFemale,
                     }));
                   }}
-                  placeholder="Ghi rõ thông tin sinh sản thế hệ F1, F2..., chuyển cá thể đủ tuổi vào đàn bố mẹ, mua bán giống từ cơ sở khác..."
+                  placeholder="Ghi rõ thông tin sinh sản thế hệ F2..., sổng chuồng, chuyển cá thể đủ tuổi vào đàn bố mẹ, mua bán giống từ cơ sở khác..."
                   required
                   className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-sm text-slate-900 font-medium focus:outline-none focus:border-emerald-500 shadow-xs"
                 />

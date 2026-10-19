@@ -229,7 +229,7 @@ export default function AnalyticsView({ facilitiesList = [] }) {
 
                 if (reason.includes('xuất') || reason.includes('bán') || reason.includes('thương mại')) {
                   totalSold += decAmount;
-                } else if (reason.includes('chết') || reason.includes('bệnh') || reason.includes('rủi ro') || reason.includes('hủy')) {
+                } else if (reason.includes('chết') || reason.includes('bệnh') || reason.includes('rủi ro') || reason.includes('hủy') || reason.includes('sổng')) {
                   totalDeath += decAmount;
                 } else if (reason.includes('tặng') || reason.includes('chuyển') || reason.includes('nhượng') || reason.includes('cho')) {
                   totalTransferOut += decAmount;
@@ -498,7 +498,7 @@ export default function AnalyticsView({ facilitiesList = [] }) {
             const reason = (row.reason || '').toLowerCase();
             if (reason.includes('xuất bán') || reason.includes('bán')) {
               sold += dec;
-            } else if (reason.includes('chết') || reason.includes('bệnh') || reason.includes('rủi ro')) {
+            } else if (reason.includes('chết') || reason.includes('bệnh') || reason.includes('rủi ro') || reason.includes('sổng')) {
               death += dec;
             } else if (reason.includes('tặng') || reason.includes('chuyển') || reason.includes('nhượng')) {
               transfer += dec;
