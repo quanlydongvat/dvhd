@@ -1775,9 +1775,9 @@ export default function App() {
 
             {/* Main Content Area */}
             <main className="flex-1 max-w-[1720px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-5">
-              {/* Show Video Banner ONLY on Home view */}
+              {/* Show Video Banner ONLY on Home view - Compact 150-180px height while preserving full text & animal animation */}
               {currentView === 'HOME' && (
-                <div className="mb-5 animate-in fade-in slide-in-from-top-4 duration-500 rounded-2xl overflow-hidden border border-emerald-500/30 shadow-lg bg-slate-900 h-[260px] sm:h-[340px] md:h-[390px] lg:h-[430px] relative flex items-center justify-center">
+                <div className="mb-4 animate-in fade-in slide-in-from-top-4 duration-500 rounded-2xl overflow-hidden border border-emerald-800/30 shadow-md bg-gradient-to-r from-[#062219] via-[#0a3022] to-[#062219] h-[150px] sm:h-[168px] lg:h-[180px] relative flex items-center justify-center">
                   <video
                     autoPlay
                     loop
@@ -1785,14 +1785,14 @@ export default function App() {
                     playsInline
                     preload="metadata"
                     poster="./images/banner.jpg"
-                    className="w-full h-full object-cover object-center block rounded-2xl"
+                    className="w-full h-full object-contain object-center block [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)]"
                   >
                     <source src="./banner.mp4" type="video/mp4" />
                     <source src="./images/banner.mp4" type="video/mp4" />
                     <img
                       src="./images/banner.jpg"
                       alt="Hạt Kiểm lâm khu vực Krông Bông - Banner Quản lý cơ sở nuôi động vật hoang dã"
-                      className="w-full h-full object-cover object-center block rounded-2xl"
+                      className="w-full h-full object-contain object-center block"
                     />
                   </video>
                 </div>

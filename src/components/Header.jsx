@@ -68,26 +68,26 @@ export default function Header({
   return (
     <header 
       style={{ paddingTop: 'max(env(safe-area-inset-top, 0px), 8px)' }}
-      className="bg-white/95 backdrop-blur-md text-slate-800 shadow-2xs border-b border-slate-300 sticky top-0 z-30 transition-all sm:!pt-0"
+      className="bg-white/95 backdrop-blur-md text-slate-800 shadow-2xs border-b border-slate-200/80 sticky top-0 z-30 transition-all sm:!pt-0"
     >
-      <div className="max-w-[1720px] mx-auto px-3 sm:px-6 lg:px-8 py-2 sm:py-3">
+      <div className="max-w-[1720px] mx-auto px-3 sm:px-6 lg:px-8 py-2 sm:py-2.5">
         {/* Top View Header Title & Quick View Badges for Mobile */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-1 sm:pb-1.5 border-b border-slate-100">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-1 sm:pb-1.5 border-b border-slate-100/80">
           <div className="flex items-center justify-between w-full sm:w-auto gap-2 sm:gap-3 min-w-0">
             {/* View Title & Icon Block */}
-            <div className="flex items-center gap-2 min-w-0 flex-1">
-              <div className="p-1.5 sm:p-2 bg-emerald-50 border border-emerald-300 rounded-lg text-emerald-700 shadow-2xs flex-shrink-0">
+            <div className="flex items-center gap-2.5 min-w-0 flex-1">
+              <div className="p-1.5 sm:p-2 bg-emerald-50/90 border border-emerald-200/80 rounded-xl text-emerald-700 shadow-2xs flex-shrink-0">
                 <IconComponent className={`w-4 h-4 sm:w-5 sm:h-5 ${activeViewObj.color}`} />
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
-                  <h2 className="text-sm sm:text-base lg:text-lg font-black text-slate-900 tracking-tight whitespace-nowrap truncate min-w-0">
+                  <h2 className="text-sm sm:text-base lg:text-lg font-bold text-slate-900 tracking-tight whitespace-nowrap truncate min-w-0">
                     <span className="sm:hidden">{activeViewObj.mobileTitle}</span>
                     <span className="hidden sm:inline">{activeViewObj.title}</span>
                   </h2>
                 </div>
-                <p className="text-xs text-slate-500 mt-0.5 font-medium hidden sm:block truncate">
-                  Ứng dụng tự động tính toán hiện trạng & biến động tăng giảm đàn theo Thông tư số 85/2025/TT-BNNMT
+                <p className="text-[11px] text-slate-500 font-medium hidden sm:block truncate">
+                  Theo dõi hiện trạng & biến động tăng giảm đàn theo Thông tư số 85/2025/TT-BNNMT
                 </p>
               </div>
             </div>
@@ -166,7 +166,7 @@ export default function Header({
                   <button
                     type="button"
                     onClick={onLogout}
-                    className="flex items-center justify-center p-1.5 sm:px-2.5 sm:py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200/90 rounded-xl text-xs font-black transition-all cursor-pointer active:scale-95 shadow-2xs"
+                    className="flex items-center justify-center p-1.5 sm:px-3 sm:py-1.5 bg-slate-100 hover:bg-rose-50 text-slate-600 hover:text-rose-700 border border-slate-200 hover:border-rose-200 rounded-xl text-xs font-semibold transition-all cursor-pointer active:scale-95 shadow-2xs"
                     title="Đăng xuất khỏi hệ thống"
                   >
                     <LogOut className="w-4 h-4 sm:w-3.5 sm:h-3.5 text-rose-600" />

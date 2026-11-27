@@ -725,185 +725,206 @@ export default function AnalyticsView({ facilitiesList = [] }) {
   };
 
   return (
-    <div className="space-y-4 sm:space-y-6 animate-in fade-in duration-300">
-      {/* Analytics Banner Header */}
-      <div className="bg-gradient-to-br from-emerald-950 via-teal-900 to-slate-900 rounded-3xl p-4 sm:p-6 shadow-xl border border-emerald-500/20 text-white flex flex-col lg:flex-row lg:items-center justify-between gap-4 relative overflow-hidden">
-        <div className="absolute -right-10 -bottom-10 w-48 h-48 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none" />
-        
-        <div className="relative z-10">
-          <div className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-emerald-400">
-            <Activity className="w-4 h-4 text-amber-400" />
-            <span>Biểu Đồ Trực Quan & Phân Tích Tăng Trưởng</span>
+    <div className="space-y-4 sm:space-y-5 animate-in fade-in duration-300">
+      {/* 1. Executive Toolbar Header (Light, Clean & Cohesive) */}
+      <div className="bg-white rounded-2xl p-4 sm:px-5 sm:py-4 shadow-2xs border border-slate-200/90 flex flex-col lg:flex-row lg:items-center justify-between gap-3.5 relative overflow-hidden">
+        <div className="flex items-start sm:items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-200/80 text-emerald-700 flex items-center justify-center flex-shrink-0 shadow-2xs">
+            <Activity className="w-5 h-5" />
           </div>
-          <h2 className="text-xl sm:text-2xl font-black text-white mt-1 tracking-tight">
-            Báo Cáo Thống Kê Sự Phát Triển Đàn Vật Nuôi
-          </h2>
-          <p className="text-xs text-emerald-200/90 font-medium mt-1">
-            Theo dõi tốc độ sinh sản, tăng giảm số lượng cá thể theo Từng tháng, 6 tháng (H1/H2) và Cả năm 2026
-          </p>
+          <div>
+            <div className="flex items-center gap-2">
+              <h2 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">
+                Báo cáo thống kê & Diễn biến đàn nuôi
+              </h2>
+              <span className="hidden sm:inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/80">
+                Năm {selectedYear}
+              </span>
+            </div>
+            <p className="text-xs text-slate-500 font-medium mt-0.5">
+              Theo dõi tốc độ sinh sản, tăng giảm cá thể theo từng tháng, 6 tháng (H1/H2) và cả năm
+            </p>
+          </div>
         </div>
 
         <button
           type="button"
           onClick={handleExportAnalyticsExcel}
-          className="flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 px-4 py-3 rounded-2xl text-xs font-black transition-all shadow-md active:scale-95 w-full sm:w-auto relative z-10 cursor-pointer"
+          className="flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition-all shadow-xs hover:shadow-md active:scale-95 w-full sm:w-auto cursor-pointer flex-shrink-0"
         >
-          <Download className="w-4 h-4 text-slate-950 stroke-[2.5]" />
-          <span>Xuất Báo Cáo Thống Kê Excel</span>
+          <Download className="w-4 h-4 stroke-[2.2]" />
+          <span>Xuất báo cáo Excel</span>
         </button>
       </div>
 
-      {/* KPI Cards (Key Performance Indicators) - 5 Cards Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 sm:gap-4">
-        {/* Total Animals Card */}
-        <div className="bg-white border border-slate-200 rounded-2xl p-3 sm:p-4 shadow-sm flex items-center justify-between">
-          <div>
-            <span className="text-[10px] sm:text-xs font-bold text-slate-500 block uppercase">Quy mô hiện tại</span>
-            <div className="text-lg sm:text-2xl font-extrabold text-slate-900 mt-0.5 sm:mt-1 font-mono">{chartData.finalTotal} <span className="text-[10px] sm:text-xs font-sans font-normal text-slate-500">con</span></div>
-            <span className="text-[10px] sm:text-[11px] text-slate-500 font-medium hidden sm:block">Toàn bộ các cơ sở</span>
-          </div>
-          <div className="p-2 sm:p-3 bg-sky-50 text-sky-600 rounded-xl sm:rounded-2xl border border-sky-200">
-            <BarChart3 className="w-5 h-5 sm:w-6 sm:h-6" />
-          </div>
-        </div>
-
-        {/* Real Increase Card */}
-        <div className="bg-white border border-slate-200 rounded-2xl p-3 sm:p-4 shadow-sm flex items-center justify-between">
-          <div>
-            <span className="text-[10px] sm:text-xs font-bold text-teal-700 block uppercase">Tổng Tăng Thực Tế</span>
-            <div className="text-lg sm:text-2xl font-extrabold text-teal-700 mt-0.5 sm:mt-1 font-mono">+{kpiStats.realInc} <span className="text-[10px] sm:text-xs font-sans font-normal text-slate-500">con</span></div>
-            <span className="text-[10px] sm:text-[11px] text-slate-500 font-medium hidden sm:block">Sinh sản & Nhập từ ngoài</span>
-          </div>
-          <div className="p-2 sm:p-3 bg-teal-50 text-teal-600 rounded-xl sm:rounded-2xl border border-teal-200">
-            <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6" />
-          </div>
-        </div>
-
-        {/* Real Decrease Card (Leaving Facility) */}
-        <div className="bg-white border border-slate-200 rounded-2xl p-3 sm:p-4 shadow-sm flex items-center justify-between">
-          <div>
-            <span className="text-[10px] sm:text-xs font-bold text-rose-700 block uppercase">Giảm Thực Tế (Rời Đàn)</span>
-            <div className="text-lg sm:text-2xl font-extrabold text-rose-700 mt-0.5 sm:mt-1 font-mono">-{kpiStats.realDec} <span className="text-[10px] sm:text-xs font-sans font-normal text-slate-500">con</span></div>
-            <span className="text-[10px] sm:text-[11px] text-slate-500 font-medium hidden sm:block">
-              Bán: <strong className="text-rose-800">{kpiStats.totalSold}</strong> | Chết: <strong className="text-rose-800">{kpiStats.totalDeath}</strong>
-              {kpiStats.totalTransferOut > 0 && <> | Tặng: <strong className="text-rose-800">{kpiStats.totalTransferOut}</strong></>}
-              {kpiStats.totalOtherDec > 0 && <> | Khác: <strong className="text-rose-800">{kpiStats.totalOtherDec}</strong></>}
-            </span>
-          </div>
-          <div className="p-2 sm:p-3 bg-rose-50 text-rose-600 rounded-xl sm:rounded-2xl border border-rose-200">
-            <TrendingDown className="w-5 h-5 sm:w-6 sm:h-6" />
-          </div>
-        </div>
-
-        {/* Internal Group Transfer Card (Net 0) */}
-        <div className="bg-white border border-slate-200 rounded-2xl p-3 sm:p-4 shadow-sm flex items-center justify-between">
-          <div>
-            <span className="text-[10px] sm:text-xs font-bold text-amber-700 block uppercase">Luân Chuyển Nội Bộ</span>
-            <div className="text-lg sm:text-2xl font-extrabold text-amber-700 mt-0.5 sm:mt-1 font-mono">{kpiStats.internalTransferCount} <span className="text-[10px] sm:text-xs font-sans font-normal text-slate-500">con</span></div>
-            <span className="text-[10px] sm:text-[11px] text-amber-800 font-medium hidden sm:block">Chuyển sang Bố mẹ (Tổng đàn giữ nguyên)</span>
-          </div>
-          <div className="p-2 sm:p-3 bg-amber-50 text-amber-600 rounded-xl sm:rounded-2xl border border-amber-200">
-            <RefreshCw className="w-5 h-5 sm:w-6 sm:h-6" />
-          </div>
-        </div>
-
-        {/* Net Growth Card */}
-        <div className="bg-white border border-slate-200 rounded-2xl p-3 sm:p-4 shadow-sm flex items-center justify-between">
-          <div>
-            <span className="text-[10px] sm:text-xs font-bold text-indigo-700 block uppercase">Tăng trưởng ròng</span>
-            <div className={`text-lg sm:text-2xl font-extrabold mt-0.5 sm:mt-1 font-mono ${kpiStats.netGrowth >= 0 ? 'text-emerald-700' : 'text-rose-700'}`}>
-              {kpiStats.netGrowth >= 0 ? `+${kpiStats.netGrowth}` : kpiStats.netGrowth} <span className="text-[10px] sm:text-xs font-sans font-normal text-slate-500">con</span>
-            </div>
-            <span className="text-[10px] sm:text-[11px] text-slate-500 font-medium hidden sm:block">Tăng thực - Giảm thực</span>
-          </div>
-          <div className="p-2 sm:p-3 bg-indigo-50 text-indigo-600 rounded-xl sm:rounded-2xl border border-indigo-200">
-            <Award className="w-5 h-5 sm:w-6 sm:h-6" />
-          </div>
-        </div>
-      </div>
-
-      {/* Filter and Time Mode Controls Bar - Scrollable on mobile */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-3 sm:p-4 flex flex-col md:flex-row items-center justify-between gap-3 shadow-sm">
+      {/* 2. Filter & Time Mode Controls Bar (Placed ABOVE KPIs per UX Best Practices) */}
+      <div className="bg-white border border-slate-200/90 rounded-2xl p-2.5 sm:px-4 sm:py-3 flex flex-col md:flex-row items-center justify-between gap-2.5 shadow-2xs">
         {/* Time Mode Segmented Switcher */}
-        <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs font-bold w-full md:w-auto overflow-x-auto scrollbar-none whitespace-nowrap">
+        <div className="flex items-center gap-1 bg-slate-100/90 p-1 rounded-xl border border-slate-200/80 text-xs font-semibold w-full md:w-auto overflow-x-auto scrollbar-none whitespace-nowrap">
           <button
+            type="button"
             onClick={() => setTimeMode('YEAR')}
-            className={`px-2.5 sm:px-3 py-1.5 rounded-lg transition-all ${
-              timeMode === 'YEAR' ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-700 hover:bg-white/80'
+            className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer flex items-center gap-1.5 ${
+              timeMode === 'YEAR' ? 'bg-white text-emerald-700 shadow-xs font-bold' : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
             }`}
           >
-            🗓️ Cả năm 2026
+            <Calendar className="w-3.5 h-3.5" />
+            <span>Cả năm {selectedYear}</span>
           </button>
           <button
+            type="button"
             onClick={() => setTimeMode('H1')}
-            className={`px-2.5 sm:px-3 py-1.5 rounded-lg transition-all ${
-              timeMode === 'H1' ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-700 hover:bg-white/80'
+            className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
+              timeMode === 'H1' ? 'bg-white text-emerald-700 shadow-xs font-bold' : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
             }`}
           >
-            📊 6 tháng đầu năm (H1)
+            6 tháng đầu (H1)
           </button>
           <button
+            type="button"
             onClick={() => setTimeMode('H2')}
-            className={`px-2.5 sm:px-3 py-1.5 rounded-lg transition-all ${
-              timeMode === 'H2' ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-700 hover:bg-white/80'
+            className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
+              timeMode === 'H2' ? 'bg-white text-emerald-700 shadow-xs font-bold' : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
             }`}
           >
-            📈 6 tháng cuối năm (H2)
+            6 tháng cuối (H2)
           </button>
           <button
+            type="button"
             onClick={() => setTimeMode('MONTH')}
-            className={`px-2.5 sm:px-3 py-1.5 rounded-lg transition-all ${
-              timeMode === 'MONTH' ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-700 hover:bg-white/80'
+            className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
+              timeMode === 'MONTH' ? 'bg-white text-emerald-700 shadow-xs font-bold' : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
             }`}
           >
-            📅 Theo Tháng
+            Theo tháng
           </button>
         </div>
 
-        {/* Month Selector Dropdown if MONTH mode */}
-        {timeMode === 'MONTH' && (
-          <div className="flex items-center gap-2 text-xs w-full sm:w-auto">
-            <Calendar className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+        {/* Month + Geographic & Category Filters */}
+        <div className="flex flex-wrap items-center gap-2 text-xs w-full md:w-auto justify-end">
+          {timeMode === 'MONTH' && (
+            <div className="flex items-center gap-1.5 w-full sm:w-auto">
+              <select
+                value={selectedMonth}
+                onChange={(e) => setSelectedMonth(Number(e.target.value))}
+                className="w-full sm:w-auto bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 text-xs text-slate-800 font-semibold focus:outline-none focus:border-emerald-500 cursor-pointer"
+              >
+                {Array.from({ length: 12 }, (_, i) => (
+                  <option key={i + 1} value={i + 1}>
+                    Tháng {i + 1} / {selectedYear}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
+          {/* Commune Filter */}
+          <div className="relative flex items-center flex-1 sm:flex-initial">
+            <MapPin className="w-3.5 h-3.5 text-emerald-600 absolute left-2.5 pointer-events-none" />
             <select
-              value={selectedMonth}
-              onChange={(e) => setSelectedMonth(Number(e.target.value))}
-              className="w-full sm:w-auto bg-slate-50 border border-slate-300 rounded-xl px-3 py-1.5 text-xs text-slate-900 font-bold focus:outline-none focus:border-emerald-500 cursor-pointer shadow-xs"
+              value={selectedCommune}
+              onChange={(e) => setSelectedCommune(e.target.value)}
+              className="w-full bg-slate-50 hover:bg-slate-100/80 border border-slate-200 rounded-xl pl-7 pr-3 py-1.5 text-xs text-slate-800 font-semibold focus:outline-none focus:border-emerald-500 cursor-pointer transition-colors"
             >
-              {Array.from({ length: 12 }, (_, i) => (
-                <option key={i + 1} value={i + 1}>
-                  Tháng {i + 1} / {selectedYear}
+              <option value="ALL">Tất cả 5 Xã</option>
+              {COMMUNES.map((c) => (
+                <option key={c} value={c}>
+                  {c}
                 </option>
               ))}
             </select>
           </div>
-        )}
-
-        {/* Geographic & Category Filters */}
-        <div className="flex flex-wrap items-center gap-2 text-xs w-full md:w-auto">
-          {/* Commune Filter */}
-          <select
-            value={selectedCommune}
-            onChange={(e) => setSelectedCommune(e.target.value)}
-            className="flex-1 sm:flex-initial bg-slate-50 border border-slate-300 rounded-xl px-2.5 py-1.5 text-xs text-slate-900 font-bold focus:outline-none focus:border-emerald-500 cursor-pointer shadow-xs"
-          >
-            <option value="ALL">📍 Tất cả 5 Xã</option>
-            {COMMUNES.map((c) => (
-              <option key={c} value={c}>
-                📍 {c}
-              </option>
-            ))}
-          </select>
 
           {/* Category Filter */}
-          <select
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-            className="flex-1 sm:flex-initial bg-slate-50 border border-slate-300 rounded-xl px-2.5 py-1.5 text-xs text-slate-900 font-bold focus:outline-none focus:border-emerald-500 cursor-pointer shadow-xs"
-          >
-            <option value="ALL">🐾 Tất cả nhóm loài</option>
-            <option value="MAMMAL_REPTILE">🦔 Lớp Thú</option>
-            <option value="BIRD">🦜 Nhóm Chim</option>
-          </select>
+          <div className="relative flex items-center flex-1 sm:flex-initial">
+            <Filter className="w-3.5 h-3.5 text-emerald-600 absolute left-2.5 pointer-events-none" />
+            <select
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              className="w-full bg-slate-50 hover:bg-slate-100/80 border border-slate-200 rounded-xl pl-7 pr-3 py-1.5 text-xs text-slate-800 font-semibold focus:outline-none focus:border-emerald-500 cursor-pointer transition-colors"
+            >
+              <option value="ALL">Tất cả nhóm loài</option>
+              <option value="MAMMAL_REPTILE">Động vật Lớp Thú</option>
+              <option value="BIRD">Động vật Lớp Chim</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      {/* 3. KPI Cards (Unified Modern Bento Style) - 5 Cards Grid */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
+        {/* Total Animals Card */}
+        <div className="bg-white border border-slate-200/90 hover:border-emerald-300/80 rounded-2xl p-3.5 sm:p-4 shadow-2xs hover:shadow-md transition-all flex items-center justify-between">
+          <div>
+            <span className="text-[11px] font-semibold text-slate-500 block">Quy mô hiện tại</span>
+            <div className="text-xl sm:text-2xl font-bold text-slate-900 mt-1 font-mono tracking-tight">
+              {chartData.finalTotal.toLocaleString('vi-VN')} <span className="text-[11px] font-sans font-medium text-slate-400">con</span>
+            </div>
+            <span className="text-[11px] text-slate-400 font-medium hidden sm:block mt-0.5">Toàn bộ các cơ sở</span>
+          </div>
+          <div className="p-2.5 bg-slate-100 text-slate-700 rounded-xl border border-slate-200/70">
+            <BarChart3 className="w-5 h-5" />
+          </div>
+        </div>
+
+        {/* Real Increase Card */}
+        <div className="bg-white border border-slate-200/90 hover:border-emerald-300/80 rounded-2xl p-3.5 sm:p-4 shadow-2xs hover:shadow-md transition-all flex items-center justify-between">
+          <div>
+            <span className="text-[11px] font-semibold text-slate-500 block">Tổng tăng thực tế</span>
+            <div className="text-xl sm:text-2xl font-bold text-emerald-700 mt-1 font-mono tracking-tight">
+              +{kpiStats.realInc} <span className="text-[11px] font-sans font-medium text-slate-400">con</span>
+            </div>
+            <span className="text-[11px] text-slate-400 font-medium hidden sm:block mt-0.5">Sinh sản & Nhập ngoài</span>
+          </div>
+          <div className="p-2.5 bg-emerald-50 text-emerald-600 rounded-xl border border-emerald-200/70">
+            <TrendingUp className="w-5 h-5" />
+          </div>
+        </div>
+
+        {/* Real Decrease Card (Leaving Facility) */}
+        <div className="bg-white border border-slate-200/90 hover:border-rose-300/80 rounded-2xl p-3.5 sm:p-4 shadow-2xs hover:shadow-md transition-all flex items-center justify-between">
+          <div>
+            <span className="text-[11px] font-semibold text-slate-500 block">Giảm thực tế (Rời đàn)</span>
+            <div className="text-xl sm:text-2xl font-bold text-rose-600 mt-1 font-mono tracking-tight">
+              -{kpiStats.realDec} <span className="text-[11px] font-sans font-medium text-slate-400">con</span>
+            </div>
+            <span className="text-[11px] text-slate-500 font-medium hidden sm:block mt-0.5">
+              Bán: <strong className="text-slate-700">{kpiStats.totalSold}</strong> · Chết: <strong className="text-slate-700">{kpiStats.totalDeath}</strong>
+              {kpiStats.totalTransferOut > 0 && <> · Tặng: <strong className="text-slate-700">{kpiStats.totalTransferOut}</strong></>}
+              {kpiStats.totalOtherDec > 0 && <> · Khác: <strong className="text-slate-700">{kpiStats.totalOtherDec}</strong></>}
+            </span>
+          </div>
+          <div className="p-2.5 bg-rose-50 text-rose-600 rounded-xl border border-rose-200/70">
+            <TrendingDown className="w-5 h-5" />
+          </div>
+        </div>
+
+        {/* Internal Group Transfer Card (Net 0) */}
+        <div className="bg-white border border-slate-200/90 hover:border-amber-300/80 rounded-2xl p-3.5 sm:p-4 shadow-2xs hover:shadow-md transition-all flex items-center justify-between">
+          <div>
+            <span className="text-[11px] font-semibold text-slate-500 block">Luân chuyển nội bộ</span>
+            <div className="text-xl sm:text-2xl font-bold text-amber-600 mt-1 font-mono tracking-tight">
+              {kpiStats.internalTransferCount} <span className="text-[11px] font-sans font-medium text-slate-400">con</span>
+            </div>
+            <span className="text-[11px] text-slate-400 font-medium hidden sm:block mt-0.5">Chuyển sang bố mẹ</span>
+          </div>
+          <div className="p-2.5 bg-amber-50 text-amber-600 rounded-xl border border-amber-200/70">
+            <RefreshCw className="w-5 h-5" />
+          </div>
+        </div>
+
+        {/* Net Growth Card */}
+        <div className="bg-white border border-slate-200/90 hover:border-indigo-300/80 rounded-2xl p-3.5 sm:p-4 shadow-2xs hover:shadow-md transition-all flex items-center justify-between">
+          <div>
+            <span className="text-[11px] font-semibold text-slate-500 block">Tăng trưởng ròng</span>
+            <div className={`text-xl sm:text-2xl font-bold mt-1 font-mono tracking-tight ${kpiStats.netGrowth >= 0 ? 'text-emerald-700' : 'text-rose-600'}`}>
+              {kpiStats.netGrowth >= 0 ? `+${kpiStats.netGrowth}` : kpiStats.netGrowth} <span className="text-[11px] font-sans font-medium text-slate-400">con</span>
+            </div>
+            <span className="text-[11px] text-slate-400 font-medium hidden sm:block mt-0.5">Tăng thực - Giảm thực</span>
+          </div>
+          <div className="p-2.5 bg-indigo-50 text-indigo-600 rounded-xl border border-indigo-200/70">
+            <Award className="w-5 h-5" />
+          </div>
         </div>
       </div>
 
@@ -969,14 +990,14 @@ export default function AnalyticsView({ facilitiesList = [] }) {
       </div>
 
       {/* Breakdown by Species Table */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-3.5 sm:p-5 shadow-sm space-y-3">
+      <div className="bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-5 shadow-2xs space-y-3">
         <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
           <div>
-            <h3 className="text-xs sm:text-sm font-extrabold text-slate-900 flex items-center gap-2">
+            <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
               <Award className="w-4 h-4 text-amber-500 flex-shrink-0" />
-              <span>Thống Kê Cơ Cấu Quy Mô Các Loài Nuôi Chủ Lực</span>
+              <span>Thống kê cơ cấu quy mô các loài nuôi chủ lực</span>
             </h3>
-            <p className="text-[10px] sm:text-[11px] text-slate-500 font-medium">
+            <p className="text-[11px] text-slate-500 font-medium">
               Sắp xếp theo tổng số lượng cá thể hiện có tại các cơ sở
             </p>
           </div>
@@ -986,15 +1007,17 @@ export default function AnalyticsView({ facilitiesList = [] }) {
           {speciesBreakdown.map((sp, idx) => (
             <div
               key={sp.name}
-              className="bg-slate-50 border border-slate-200 rounded-xl p-2.5 sm:p-3 flex items-center justify-between shadow-2xs"
+              className="bg-slate-50/70 hover:bg-emerald-50/40 border border-slate-200/80 hover:border-emerald-200 rounded-xl p-3 flex items-center justify-between transition-colors"
             >
-              <div className="space-y-0.5 min-w-0 pr-1">
-                <span className="text-[9px] sm:text-[10px] font-bold text-slate-400 font-mono">#0{idx + 1}</span>
-                <h4 className="text-[11px] sm:text-xs font-extrabold text-slate-900 truncate">
-                  {sp.isBird ? '🦜' : '🦔'} {sp.name}
+              <div className="space-y-0.5 min-w-0 pr-2">
+                <span className="text-[10px] font-semibold text-slate-400 font-mono block">
+                  #{String(idx + 1).padStart(2, '0')} · {sp.isBird ? 'Lớp Chim' : 'Lớp Thú'}
+                </span>
+                <h4 className="text-xs font-bold text-slate-900 truncate">
+                  {sp.name}
                 </h4>
               </div>
-              <span className="text-base sm:text-lg font-extrabold font-mono text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-lg border border-emerald-300 flex-shrink-0">
+              <span className="text-sm sm:text-base font-bold font-mono text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200/70 flex-shrink-0">
                 {sp.total}
               </span>
             </div>
@@ -1003,80 +1026,85 @@ export default function AnalyticsView({ facilitiesList = [] }) {
       </div>
 
       {/* 2 Grid Columns Section: Top 5 Facilities & Gender / Age Structure */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6">
-        {/* Top 5 Facilities Leaderboard (7 cols) */}
-        <div className="lg:col-span-7 bg-white border border-slate-200 rounded-2xl p-3.5 sm:p-5 shadow-sm space-y-3">
-          <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
-            <div>
-              <h3 className="text-xs sm:text-sm font-extrabold text-slate-900 flex items-center gap-2">
-                <Award className="w-4 h-4 text-amber-500 flex-shrink-0" />
-                <span>Top 5 Cơ Sở Nuôi Quy Mô Lớn Nhất Huyện</span>
-              </h3>
-              <p className="text-[10px] sm:text-[11px] text-slate-500 font-medium">
-                Xếp hạng các cơ sở theo tổng số lượng cá thể đang quản lý
-              </p>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5 items-stretch">
+        {/* Top 5 Facilities Leaderboard (6 cols) */}
+        <div className="lg:col-span-6 bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-5 shadow-2xs flex flex-col justify-between space-y-3">
+          <div className="space-y-3">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
+              <div>
+                <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                  <Award className="w-4 h-4 text-amber-500 flex-shrink-0" />
+                  <span>Top 5 cơ sở nuôi quy mô lớn nhất huyện</span>
+                </h3>
+                <p className="text-[11px] text-slate-500 font-medium">
+                  Xếp hạng các cơ sở theo tổng số lượng cá thể đang quản lý
+                </p>
+              </div>
             </div>
-          </div>
 
-          <div className="space-y-2">
-            {topFacilities.map((fac, rank) => {
-              const pct = chartData.finalTotal > 0 ? Math.round((fac.totalAnimals / chartData.finalTotal) * 100) : 0;
-              const badgeColors = [
-                'bg-amber-100 text-amber-800 border-amber-300 font-black',
-                'bg-slate-200 text-slate-700 border-slate-300 font-bold',
-                'bg-amber-700/10 text-amber-900 border-amber-400 font-bold',
-                'bg-slate-100 text-slate-600 border-slate-200 font-medium',
-                'bg-slate-100 text-slate-600 border-slate-200 font-medium',
-              ];
+            <div className="space-y-2.5">
+              {topFacilities.map((fac, rank) => {
+                const pct = chartData.finalTotal > 0 ? Math.round((fac.totalAnimals / chartData.finalTotal) * 100) : 0;
+                const badgeColors = [
+                  'bg-amber-100 text-amber-800 border-amber-300 font-bold',
+                  'bg-slate-200 text-slate-700 border-slate-300 font-bold',
+                  'bg-amber-700/10 text-amber-900 border-amber-300 font-bold',
+                  'bg-slate-100 text-slate-600 border-slate-200 font-semibold',
+                  'bg-slate-100 text-slate-600 border-slate-200 font-semibold',
+                ];
 
-              return (
-                <div key={fac.id} className="bg-slate-50/80 border border-slate-200/80 rounded-xl p-2.5 sm:p-3 space-y-1.5 hover:bg-slate-100/80 transition-colors">
-                  <div className="flex items-center justify-between gap-2">
-                    <div className="flex items-center gap-2 min-w-0">
-                      <span className={`w-6 h-6 rounded-lg text-xs flex items-center justify-center border flex-shrink-0 ${badgeColors[rank]}`}>
-                        #{rank + 1}
-                      </span>
-                      <div className="truncate">
-                        <h4 className="text-xs font-bold text-slate-900 truncate">
-                          {fac.facilityName}
-                        </h4>
-                        <span className="text-[10px] text-slate-500 font-medium">
-                          Chủ hộ: {fac.ownerName} • 📍 {fac.commune}
+                return (
+                  <div key={fac.id} className="bg-slate-50/70 border border-slate-200/80 rounded-xl p-3 space-y-2 hover:bg-emerald-50/40 hover:border-emerald-200/80 transition-colors">
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <span className={`w-6 h-6 rounded-lg text-xs flex items-center justify-center border flex-shrink-0 ${badgeColors[rank]}`}>
+                          #{rank + 1}
+                        </span>
+                        <div className="truncate">
+                          <h4 className="text-xs font-bold text-slate-900 truncate">
+                            {fac.facilityName}
+                          </h4>
+                          <span className="text-[11px] text-slate-500 font-medium flex items-center gap-1 mt-0.5">
+                            <span>Chủ hộ: {fac.ownerName}</span>
+                            <span>·</span>
+                            <MapPin className="w-3 h-3 text-emerald-600 inline" />
+                            <span>{fac.commune}</span>
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="text-right flex-shrink-0">
+                        <span className="text-sm sm:text-base font-bold font-mono text-emerald-700">
+                          {fac.totalAnimals} <span className="text-[10px] font-sans font-normal text-slate-400">con</span>
                         </span>
                       </div>
                     </div>
 
-                    <div className="text-right flex-shrink-0">
-                      <span className="text-sm sm:text-base font-extrabold font-mono text-emerald-800">
-                        {fac.totalAnimals} <span className="text-[10px] font-sans font-normal text-slate-500">con</span>
-                      </span>
+                    {/* Progress bar */}
+                    <div className="w-full bg-slate-200/80 rounded-full h-1.5 overflow-hidden">
+                      <div
+                        className="bg-emerald-600 h-1.5 rounded-full transition-all duration-500"
+                        style={{ width: `${Math.max(5, pct)}%` }}
+                      />
                     </div>
                   </div>
-
-                  {/* Progress bar */}
-                  <div className="w-full bg-slate-200 rounded-full h-1.5 overflow-hidden">
-                    <div
-                      className="bg-emerald-600 h-1.5 rounded-full transition-all duration-500"
-                      style={{ width: `${Math.max(5, pct)}%` }}
-                    />
-                  </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
         </div>
 
-        {/* Gender & Breed Ratio Breakdown per Species (5 cols) */}
-        <div className="lg:col-span-5 bg-white border border-slate-200 rounded-2xl p-3.5 sm:p-5 shadow-sm space-y-3 flex flex-col justify-between">
+        {/* Gender & Breed Ratio Breakdown per Species (6 cols) */}
+        <div className="lg:col-span-6 bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-5 shadow-2xs space-y-3 flex flex-col justify-between">
           <div className="space-y-3">
             {/* Card Header with Title and Species Select Dropdown */}
             <div className="flex items-center justify-between border-b border-slate-100 pb-2.5 gap-2 flex-wrap">
               <div>
-                <h3 className="text-xs sm:text-sm font-extrabold text-slate-900 flex items-center gap-1.5">
+                <h3 className="text-sm font-bold text-slate-900 flex items-center gap-1.5">
                   <Feather className="w-4 h-4 text-emerald-600 flex-shrink-0" />
-                  <span>Cấu Trúc Đàn & Giới Tính</span>
+                  <span>Cấu trúc đàn & Giới tính</span>
                 </h3>
-                <p className="text-[10px] sm:text-[11px] text-slate-500 font-medium">
+                <p className="text-[11px] text-slate-500 font-medium">
                   Tỷ lệ Bố / Mẹ sinh sản & Động vật non / Hậu bị
                 </p>
               </div>
@@ -1085,26 +1113,26 @@ export default function AnalyticsView({ facilitiesList = [] }) {
               <select
                 value={selectedBreedingSpecies}
                 onChange={(e) => setSelectedBreedingSpecies(e.target.value)}
-                className="text-xs bg-emerald-50 border border-emerald-300 font-bold text-emerald-950 px-2.5 py-1 rounded-xl shadow-2xs outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer max-w-[200px] truncate"
+                className="text-xs bg-slate-50 border border-slate-200 font-semibold text-slate-800 px-2.5 py-1.5 rounded-xl outline-none focus:border-emerald-500 cursor-pointer max-w-[200px] truncate"
               >
-                <option value="ALL">🌐 Tất cả loài (Toàn huyện)</option>
+                <option value="ALL">Tất cả loài (Toàn huyện)</option>
                 {speciesBreedingStats.speciesList.map((sp) => (
                   <option key={sp.name} value={sp.name}>
-                    🐾 {sp.name} ({sp.grandTotal} con)
+                    {sp.name} ({sp.grandTotal} con)
                   </option>
                 ))}
               </select>
             </div>
 
             {/* Quick Horizontal Species Tabs / Pills */}
-            <div className="flex items-center gap-1 overflow-x-auto pb-1 text-[11px] scrollbar-none">
+            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-[11px] scrollbar-none">
               <button
                 type="button"
                 onClick={() => setSelectedBreedingSpecies('ALL')}
-                className={`px-2.5 py-1 rounded-lg font-bold transition-all whitespace-nowrap cursor-pointer ${
+                className={`px-2.5 py-1 rounded-lg font-semibold transition-all whitespace-nowrap cursor-pointer ${
                   selectedBreedingSpecies === 'ALL'
                     ? 'bg-emerald-600 text-white shadow-xs'
-                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200/80'
                 }`}
               >
                 Tất cả loài
@@ -1114,10 +1142,10 @@ export default function AnalyticsView({ facilitiesList = [] }) {
                   type="button"
                   key={sp.name}
                   onClick={() => setSelectedBreedingSpecies(sp.name)}
-                  className={`px-2.5 py-1 rounded-lg font-bold transition-all whitespace-nowrap cursor-pointer ${
+                  className={`px-2.5 py-1 rounded-lg font-semibold transition-all whitespace-nowrap cursor-pointer ${
                     selectedBreedingSpecies === sp.name
                       ? 'bg-emerald-600 text-white shadow-xs'
-                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200/80'
                   }`}
                 >
                   {sp.name}
@@ -1126,9 +1154,9 @@ export default function AnalyticsView({ facilitiesList = [] }) {
             </div>
 
             {/* Selected Species Information Header Badge */}
-            <div className="bg-slate-50 border border-slate-200/80 rounded-xl px-3 py-2 flex items-center justify-between text-xs">
+            <div className="bg-slate-50/80 border border-slate-200/80 rounded-xl px-3 py-2.5 flex items-center justify-between text-xs">
               <div className="min-w-0">
-                <span className="font-extrabold text-slate-900 truncate block">
+                <span className="font-bold text-slate-900 truncate block">
                   {currentBreedingData.name}
                   {currentBreedingData.scientificName && currentBreedingData.scientificName !== 'Tổng hợp toàn huyện' && (
                     <span className="text-[11px] font-normal italic text-slate-500 ml-1.5">
@@ -1136,62 +1164,62 @@ export default function AnalyticsView({ facilitiesList = [] }) {
                     </span>
                   )}
                 </span>
-                <span className="text-[10px] text-slate-500">
-                  {selectedBreedingSpecies === 'ALL' ? '37 cơ sở toàn huyện' : `Phân bố tại ${currentBreedingData.facilitiesCount} cơ sở nuôi`}
+                <span className="text-[11px] text-slate-500">
+                  {selectedBreedingSpecies === 'ALL' ? `${facilitiesList.length} cơ sở toàn huyện` : `Phân bố tại ${currentBreedingData.facilitiesCount} cơ sở nuôi`}
                 </span>
               </div>
               <div className="text-right flex-shrink-0">
-                <span className="text-[10px] font-bold text-slate-500 block">Tổng đàn</span>
-                <strong className="text-sm font-black text-emerald-800 font-mono">
-                  {currentBreedingData.grandTotal} <span className="text-[10px] font-sans font-normal">con</span>
+                <span className="text-[10px] font-semibold text-slate-400 block">Tổng đàn</span>
+                <strong className="text-sm font-bold text-emerald-700 font-mono">
+                  {currentBreedingData.grandTotal.toLocaleString('vi-VN')} <span className="text-[10px] font-sans font-normal text-slate-500">con</span>
                 </strong>
               </div>
             </div>
 
             {/* Father & Mother 2-col Grid */}
-            <div className="grid grid-cols-2 gap-2 text-center">
-              <div className="bg-sky-50 border border-sky-200 rounded-xl p-2.5">
-                <span className="text-[10px] font-bold text-sky-700 uppercase block">Đực Bố (♂️)</span>
-                <span className="text-lg font-black text-sky-900 font-mono">{currentBreedingData.father}</span>
+            <div className="grid grid-cols-2 gap-2.5 text-center">
+              <div className="bg-sky-50/70 border border-sky-200/80 rounded-xl p-2.5">
+                <span className="text-[11px] font-semibold text-sky-700 block">Đực bố (♂)</span>
+                <span className="text-lg font-bold text-sky-900 font-mono">{currentBreedingData.father}</span>
                 <span className="text-[10px] text-sky-600 block mt-0.5">{currentBreedingData.fatherPct}% đàn</span>
               </div>
 
-              <div className="bg-pink-50 border border-pink-200 rounded-xl p-2.5">
-                <span className="text-[10px] font-bold text-pink-700 uppercase block">Cái Mẹ (♀️)</span>
-                <span className="text-lg font-black text-pink-900 font-mono">{currentBreedingData.mother}</span>
-                <span className="text-[10px] text-pink-600 block mt-0.5">{currentBreedingData.motherPct}% đàn</span>
+              <div className="bg-rose-50/70 border border-rose-200/80 rounded-xl p-2.5">
+                <span className="text-[11px] font-semibold text-rose-700 block">Cái mẹ (♀)</span>
+                <span className="text-lg font-bold text-rose-900 font-mono">{currentBreedingData.mother}</span>
+                <span className="text-[10px] text-rose-600 block mt-0.5">{currentBreedingData.motherPct}% đàn</span>
               </div>
             </div>
 
             {/* Breeding Ratio Box for this specific species */}
-            <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3 flex items-center justify-between text-xs">
+            <div className="bg-emerald-50/70 border border-emerald-200/80 rounded-xl p-3 flex items-center justify-between text-xs">
               <div>
-                <span className="font-bold text-emerald-900 block">Tỷ lệ Phối Giống Sinh Sản</span>
-                <span className="text-[10px] text-emerald-700">
-                  {selectedBreedingSpecies === 'ALL' ? 'Trung bình chung: 1 Đực Bố phối với' : `Tỷ lệ ghép giống của ${currentBreedingData.name}:`}
+                <span className="font-bold text-emerald-900 block">Tỷ lệ phối giống sinh sản</span>
+                <span className="text-[11px] text-emerald-700">
+                  {selectedBreedingSpecies === 'ALL' ? 'Trung bình chung: 1 Đực bố phối với' : `Tỷ lệ ghép giống của ${currentBreedingData.name}:`}
                 </span>
               </div>
-              <span className="text-base font-extrabold text-emerald-900 font-mono bg-white px-2.5 py-1 rounded-lg border border-emerald-300 shadow-2xs">
+              <span className="text-sm sm:text-base font-bold text-emerald-900 font-mono bg-white px-2.5 py-1 rounded-lg border border-emerald-200 shadow-2xs">
                 {currentBreedingData.father > 0 ? `1 ♂ : ${currentBreedingData.ratioMotherToFather} ♀` : 'Chưa có đực bố'}
               </span>
             </div>
 
             {/* Young / Sub-adults breakdown */}
-            <div className="bg-slate-50 border border-slate-200 rounded-xl p-2.5 space-y-1.5 text-xs">
+            <div className="bg-slate-50/80 border border-slate-200/80 rounded-xl p-2.5 space-y-2 text-xs">
               <div className="flex items-center justify-between text-slate-700 font-medium">
-                <span>🐣 Đàn non / Hậu bị / Khác:</span>
+                <span>Đàn non / Hậu bị / Khác:</span>
                 <strong className="font-mono text-slate-900">{currentBreedingData.youngTotal} con ({currentBreedingData.youngPct}%)</strong>
               </div>
-              <div className="grid grid-cols-3 gap-1 pt-1.5 border-t border-slate-200/80 text-[11px] text-slate-600">
-                <div className="bg-white p-1 rounded border border-slate-200 text-center">
+              <div className="grid grid-cols-3 gap-1.5 pt-1.5 border-t border-slate-200/80 text-[11px] text-slate-600">
+                <div className="bg-white p-1.5 rounded-lg border border-slate-200/70 text-center">
                   <span className="block text-[10px] text-slate-400">Đực hậu bị</span>
                   <strong className="font-mono text-sky-700">{currentBreedingData.otherMale || 0}</strong>
                 </div>
-                <div className="bg-white p-1 rounded border border-slate-200 text-center">
+                <div className="bg-white p-1.5 rounded-lg border border-slate-200/70 text-center">
                   <span className="block text-[10px] text-slate-400">Cái hậu bị</span>
-                  <strong className="font-mono text-pink-700">{currentBreedingData.otherFemale || 0}</strong>
+                  <strong className="font-mono text-rose-700">{currentBreedingData.otherFemale || 0}</strong>
                 </div>
-                <div className="bg-white p-1 rounded border border-slate-200 text-center">
+                <div className="bg-white p-1.5 rounded-lg border border-slate-200/70 text-center">
                   <span className="block text-[10px] text-slate-400">Chưa rõ tính</span>
                   <strong className="font-mono text-slate-700">{currentBreedingData.otherUnknown || 0}</strong>
                 </div>
@@ -1202,9 +1230,9 @@ export default function AnalyticsView({ facilitiesList = [] }) {
             <button
               type="button"
               onClick={() => setShowSpeciesBreedingTable(!showSpeciesBreedingTable)}
-              className="w-full flex items-center justify-between px-3 py-2 bg-slate-100 hover:bg-slate-200/80 rounded-xl text-xs font-bold text-slate-700 transition-all cursor-pointer"
+              className="w-full flex items-center justify-between px-3 py-2 bg-slate-100/80 hover:bg-slate-200/70 rounded-xl text-xs font-semibold text-slate-700 transition-all cursor-pointer"
             >
-              <div className="flex items-center gap-1.5 text-emerald-800">
+              <div className="flex items-center gap-1.5 text-emerald-700">
                 <Layers className="w-3.5 h-3.5" />
                 <span>Bảng so sánh cơ cấu đàn tất cả các loài ({speciesBreedingStats.speciesList.length} loài)</span>
               </div>
@@ -1215,13 +1243,13 @@ export default function AnalyticsView({ facilitiesList = [] }) {
             {showSpeciesBreedingTable && (
               <div className="overflow-x-auto border border-slate-200 rounded-xl max-h-60 overflow-y-auto">
                 <table className="w-full text-left text-xs border-collapse">
-                  <thead className="bg-slate-100 text-slate-700 font-extrabold sticky top-0 border-b border-slate-200 text-[10px] uppercase">
+                  <thead className="bg-slate-50 text-slate-600 font-bold sticky top-0 border-b border-slate-200 text-[10px] uppercase">
                     <tr>
                       <th className="p-2">Tên loài</th>
                       <th className="p-2 text-center">Tổng</th>
                       <th className="p-2 text-center text-sky-700">Đực bố</th>
-                      <th className="p-2 text-center text-pink-700">Cái mẹ</th>
-                      <th className="p-2 text-center text-emerald-800">Tỷ lệ ♂:♀</th>
+                      <th className="p-2 text-center text-rose-700">Cái mẹ</th>
+                      <th className="p-2 text-center text-emerald-700">Tỷ lệ ♂:♀</th>
                       <th className="p-2 text-center">Hậu bị/Non</th>
                     </tr>
                   </thead>
@@ -1231,7 +1259,7 @@ export default function AnalyticsView({ facilitiesList = [] }) {
                         key={sp.name}
                         onClick={() => setSelectedBreedingSpecies(sp.name)}
                         className={`hover:bg-emerald-50/50 cursor-pointer transition-colors ${
-                          selectedBreedingSpecies === sp.name ? 'bg-emerald-50 font-bold' : ''
+                          selectedBreedingSpecies === sp.name ? 'bg-emerald-50 font-semibold' : ''
                         }`}
                       >
                         <td className="p-2">
@@ -1240,8 +1268,8 @@ export default function AnalyticsView({ facilitiesList = [] }) {
                         </td>
                         <td className="p-2 text-center font-mono font-bold text-slate-800">{sp.grandTotal}</td>
                         <td className="p-2 text-center font-mono text-sky-700">{sp.father}</td>
-                        <td className="p-2 text-center font-mono text-pink-700">{sp.mother}</td>
-                        <td className="p-2 text-center font-mono font-black text-emerald-700">
+                        <td className="p-2 text-center font-mono text-rose-700">{sp.mother}</td>
+                        <td className="p-2 text-center font-mono font-bold text-emerald-700">
                           {sp.father > 0 ? `1 : ${sp.ratioMotherToFather}` : '---'}
                         </td>
                         <td className="p-2 text-center font-mono text-slate-600">{sp.youngTotal}</td>
@@ -1255,97 +1283,101 @@ export default function AnalyticsView({ facilitiesList = [] }) {
         </div>
       </div>
 
-      {/* 2 Grid Columns Section: CITES Classification & Decrease Reasons Analysis */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6">
+      {/* 2 Grid Columns Section: Animal Class Classification & Decrease Reasons Analysis */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5 items-stretch">
         {/* Animal Class Classification: Lớp Thú (Mammalia) & Lớp Chim (Aves) (6 cols) */}
-        <div className="lg:col-span-6 bg-white border border-slate-200 rounded-2xl p-3.5 sm:p-5 shadow-sm space-y-3">
-          <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
-            <div>
-              <h3 className="text-xs sm:text-sm font-extrabold text-slate-900 flex items-center gap-2">
-                <Layers className="w-4 h-4 text-purple-600 flex-shrink-0" />
-                <span>Phân Loại Theo Lớp Động Vật (Lớp Thú & Lớp Chim)</span>
-              </h3>
-              <p className="text-[10px] sm:text-[11px] text-slate-500 font-medium">
-                Cơ cấu số lượng cá thể giữa động vật Lớp Thú (Mammalia) và Lớp Chim (Aves)
-              </p>
-            </div>
-            <span className="text-[10px] font-black uppercase tracking-wider text-purple-800 bg-purple-50 border border-purple-200/80 px-2 py-0.5 rounded-full">
-              Lớp sinh học
-            </span>
-          </div>
-
+        <div className="lg:col-span-6 bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-5 shadow-2xs space-y-3 flex flex-col justify-between">
           <div className="space-y-3">
-            {/* Lớp Thú - Mammalia */}
-            <div className="bg-amber-50/80 border border-amber-200/90 rounded-xl p-3 space-y-1.5 shadow-2xs hover:border-amber-300 transition-all">
-              <div className="flex items-center justify-between text-xs">
-                <span className="font-extrabold text-amber-950 flex items-center gap-1.5">
-                  <span className="w-2.5 h-2.5 rounded-full bg-amber-500 inline-block ring-2 ring-amber-300/60" />
-                  <span>Động vật Lớp Thú - Mammalia (Dúi, Cầy, Nhím, Don...)</span>
-                </span>
-                <strong className="font-mono text-amber-950 font-black text-sm whitespace-nowrap">
-                  {animalClassBreakdown.mammalsCount.toLocaleString('vi-VN')} con ({animalClassBreakdown.mammalsPct}%)
-                </strong>
+            <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
+              <div>
+                <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                  <Layers className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+                  <span>Phân loại theo Lớp Động vật (Thú & Chim)</span>
+                </h3>
+                <p className="text-[11px] text-slate-500 font-medium">
+                  Cơ cấu số lượng cá thể giữa Lớp Thú (Mammalia) và Lớp Chim (Aves)
+                </p>
               </div>
-              <div className="w-full bg-amber-200/80 rounded-full h-2.5 overflow-hidden">
-                <div
-                  className="bg-gradient-to-r from-amber-500 to-amber-600 h-2.5 rounded-full transition-all duration-700"
-                  style={{ width: `${animalClassBreakdown.mammalsPct}%` }}
-                />
-              </div>
+              <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200/80 px-2.5 py-0.5 rounded-full">
+                Lớp sinh học
+              </span>
             </div>
 
-            {/* Lớp Chim - Aves */}
-            <div className="bg-emerald-50/80 border border-emerald-200/90 rounded-xl p-3 space-y-1.5 shadow-2xs hover:border-emerald-300 transition-all">
-              <div className="flex items-center justify-between text-xs">
-                <span className="font-extrabold text-emerald-950 flex items-center gap-1.5">
-                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block ring-2 ring-emerald-300/60" />
-                  <span>Động vật Lớp Chim - Aves (Chim chào mào, cu gáy...)</span>
-                </span>
-                <strong className="font-mono text-emerald-950 font-black text-sm whitespace-nowrap">
-                  {animalClassBreakdown.birdsCount.toLocaleString('vi-VN')} con ({animalClassBreakdown.birdsPct}%)
-                </strong>
+            <div className="space-y-2.5">
+              {/* Lớp Thú - Mammalia */}
+              <div className="bg-amber-50/50 border border-amber-200/70 rounded-xl p-3 space-y-1.5 transition-all">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="font-semibold text-slate-800 flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 rounded-full bg-amber-500 inline-block" />
+                    <span>Động vật Lớp Thú - Mammalia (Dúi, Cầy, Nhím, Don...)</span>
+                  </span>
+                  <strong className="font-mono text-amber-900 font-bold text-sm whitespace-nowrap">
+                    {animalClassBreakdown.mammalsCount.toLocaleString('vi-VN')} con ({animalClassBreakdown.mammalsPct}%)
+                  </strong>
+                </div>
+                <div className="w-full bg-amber-200/50 rounded-full h-2 overflow-hidden">
+                  <div
+                    className="bg-amber-500 h-2 rounded-full transition-all duration-700"
+                    style={{ width: `${animalClassBreakdown.mammalsPct}%` }}
+                  />
+                </div>
               </div>
-              <div className="w-full bg-emerald-200/80 rounded-full h-2.5 overflow-hidden">
-                <div
-                  className="bg-gradient-to-r from-emerald-500 to-teal-600 h-2.5 rounded-full transition-all duration-700"
-                  style={{ width: `${animalClassBreakdown.birdsPct}%` }}
-                />
+
+              {/* Lớp Chim - Aves */}
+              <div className="bg-emerald-50/50 border border-emerald-200/70 rounded-xl p-3 space-y-1.5 transition-all">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="font-semibold text-slate-800 flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block" />
+                    <span>Động vật Lớp Chim - Aves (Chim chào mào, cu gáy...)</span>
+                  </span>
+                  <strong className="font-mono text-emerald-900 font-bold text-sm whitespace-nowrap">
+                    {animalClassBreakdown.birdsCount.toLocaleString('vi-VN')} con ({animalClassBreakdown.birdsPct}%)
+                  </strong>
+                </div>
+                <div className="w-full bg-emerald-200/50 rounded-full h-2 overflow-hidden">
+                  <div
+                    className="bg-emerald-500 h-2 rounded-full transition-all duration-700"
+                    style={{ width: `${animalClassBreakdown.birdsPct}%` }}
+                  />
+                </div>
               </div>
             </div>
           </div>
         </div>
 
         {/* Decrease Reasons Analysis (6 cols) */}
-        <div className="lg:col-span-6 bg-white border border-slate-200 rounded-2xl p-3.5 sm:p-5 shadow-sm space-y-3">
-          <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
-            <div>
-              <h3 className="text-xs sm:text-sm font-extrabold text-slate-900 flex items-center gap-2">
-                <TrendingDown className="w-4 h-4 text-rose-600 flex-shrink-0" />
-                <span>Phân Tích Lý Do Giảm Đàn Trong Kỳ</span>
-              </h3>
-              <p className="text-[10px] sm:text-[11px] text-slate-500 font-medium">
-                Tỷ lệ giữa xuất bán thương mại và rủi ro bệnh/chết
-              </p>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-3 gap-2 text-center text-xs">
-            <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-2.5 space-y-0.5">
-              <span className="text-[10px] font-bold text-emerald-800 uppercase block">Xuất bán 💰</span>
-              <span className="text-base font-black text-emerald-900 font-mono">{decreaseReasons.sold} con</span>
-              <span className="text-[10px] text-emerald-700 block font-medium">{decreaseReasons.soldPct}%</span>
+        <div className="lg:col-span-6 bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-5 shadow-2xs space-y-3 flex flex-col justify-between">
+          <div className="space-y-3">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
+              <div>
+                <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                  <TrendingDown className="w-4 h-4 text-rose-600 flex-shrink-0" />
+                  <span>Phân tích lý do giảm đàn trong kỳ</span>
+                </h3>
+                <p className="text-[11px] text-slate-500 font-medium">
+                  Tỷ lệ giữa xuất bán thương mại, chuyển nhượng và rủi ro bệnh/chết
+                </p>
+              </div>
             </div>
 
-            <div className="bg-rose-50 border border-rose-200 rounded-xl p-2.5 space-y-0.5">
-              <span className="text-[10px] font-bold text-rose-800 uppercase block">Rủi ro/Chết ⚠️</span>
-              <span className="text-base font-black text-rose-900 font-mono">{decreaseReasons.death} con</span>
-              <span className="text-[10px] text-rose-700 block font-medium">{decreaseReasons.deathPct}%</span>
-            </div>
+            <div className="grid grid-cols-3 gap-2.5 text-center text-xs pt-1">
+              <div className="bg-emerald-50/60 border border-emerald-200/70 rounded-xl p-3 space-y-1">
+                <span className="text-[11px] font-semibold text-emerald-800 block">Xuất bán</span>
+                <span className="text-lg font-bold text-emerald-900 font-mono block">{decreaseReasons.sold} con</span>
+                <span className="text-[11px] text-emerald-700 block font-medium">{decreaseReasons.soldPct}%</span>
+              </div>
 
-            <div className="bg-blue-50 border border-blue-200 rounded-xl p-2.5 space-y-0.5">
-              <span className="text-[10px] font-bold text-blue-800 uppercase block">Chuyển nhượng 🚚</span>
-              <span className="text-base font-black text-blue-900 font-mono">{decreaseReasons.transfer} con</span>
-              <span className="text-[10px] text-blue-700 block font-medium">{decreaseReasons.transferPct}%</span>
+              <div className="bg-rose-50/60 border border-rose-200/70 rounded-xl p-3 space-y-1">
+                <span className="text-[11px] font-semibold text-rose-800 block">Rủi ro / Chết</span>
+                <span className="text-lg font-bold text-rose-900 font-mono block">{decreaseReasons.death} con</span>
+                <span className="text-[11px] text-rose-700 block font-medium">{decreaseReasons.deathPct}%</span>
+              </div>
+
+              <div className="bg-sky-50/60 border border-sky-200/70 rounded-xl p-3 space-y-1">
+                <span className="text-[11px] font-semibold text-sky-800 block">Chuyển nhượng</span>
+                <span className="text-lg font-bold text-sky-900 font-mono block">{decreaseReasons.transfer} con</span>
+                <span className="text-[11px] text-sky-700 block font-medium">{decreaseReasons.transferPct}%</span>
+              </div>
             </div>
           </div>
         </div>
