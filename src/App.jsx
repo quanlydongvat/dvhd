@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useMemo, Suspense, lazy } from 'react';
 import Header from './components/Header';
 import LeftSidebar from './components/LeftSidebar';
-import HeroBanner from './components/HeroBanner';
 import TableView from './components/TableView';
 import SummaryView from './components/SummaryView';
 import DesktopAppHeader from './components/DesktopAppHeader';
@@ -1776,8 +1775,28 @@ export default function App() {
 
             {/* Main Content Area */}
             <main className="flex-1 max-w-[1720px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-5">
-              {/* Show Panoramic Full-Width Hero Banner ONLY on Home view */}
-              {currentView === 'HOME' && <HeroBanner />}
+              {/* Show Animated Video Banner ONLY on Home view (220px compact full-width) */}
+              {currentView === 'HOME' && (
+                <div className="mb-4 animate-in fade-in slide-in-from-top-4 duration-500 rounded-2xl overflow-hidden border border-emerald-500/30 shadow-md bg-slate-900 h-[160px] sm:h-[200px] lg:h-[220px] relative flex items-center justify-center">
+                  <video
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    preload="metadata"
+                    poster="./images/banner.jpg"
+                    className="w-full h-full object-cover object-center block rounded-2xl"
+                  >
+                    <source src="./banner.mp4" type="video/mp4" />
+                    <source src="./images/banner.mp4" type="video/mp4" />
+                    <img
+                      src="./images/banner.jpg"
+                      alt="Hạt Kiểm lâm khu vực Krông Bông - Banner Quản lý cơ sở nuôi động vật hoang dã"
+                      className="w-full h-full object-cover object-center block rounded-2xl"
+                    />
+                  </video>
+                </div>
+              )}
 
               {currentView === 'ADMIN_USERS' && currentUser?.role === 'ADMIN' ? (
                 <Suspense fallback={<ViewLoadingFallback text="Đang nạp Bảng Quản trị Hệ thống..." />}>
