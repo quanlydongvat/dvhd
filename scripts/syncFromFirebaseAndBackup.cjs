@@ -44,7 +44,7 @@ const BLACKLISTED_DELETED_FACILITY_IDS = ['fac_1786163777938', 'fac_178891618078
 
 function fetchCollection(collName) {
   return new Promise((resolve, reject) => {
-    const url = `https://firestore.googleapis.com/v1/projects/dvhd-52ebb/databases/(default)/documents/${collName}?pageSize=300`;
+    const url = `https://firestore.googleapis.com/v1/projects/dvhd-52ebb/databases/(default)/documents/${collName}?pageSize=500`;
     https.get(url, (res) => {
       let data = '';
       res.on('data', chunk => data += chunk);
@@ -66,38 +66,57 @@ function fetchCollection(collName) {
 }
 
 async function syncAndBackup() {
-  console.log('Downloading live data from Firebase Cloud Firestore (dvhd-52ebb)...');
+  console.log('=== [FIREBASE SYNC] Downloading live data from Cloud Firestore (dvhd-52ebb)... ===');
   
   const rawFacilities = await fetchCollection('facilities');
   const fluctuationRequests = await fetchCollection('fluctuation_requests');
   const users = await fetchCollection('users');
+  const rawPackingLists = await fetchCollection('packing_lists');
 
+  // Filter blacklisted deleted facilities
   const facilities = rawFacilities.filter(f => !BLACKLISTED_DELETED_FACILITY_IDS.includes(f.id));
 
-  console.log(`Downloaded ${facilities.length} active Facilities (filtered from ${rawFacilities.length}), ${fluctuationRequests.length} Requests, ${users.length} Users.`);
+  // Sort packing lists by STT ascending
+  const packingLists = rawPackingLists.sort((a, b) => (Number(a.stt) || 0) - (Number(b.stt) || 0));
 
-  const timestamp = new Date().toISOString();
+  console.log(`✓ Downloaded ${facilities.length} active Facilities (out of ${rawFacilities.length} total)`);
+  console.log(`✓ Downloaded ${packingLists.length} Packing Lists (Bảng kê lâm sản)`);
+  console.log(`✓ Downloaded ${fluctuationRequests.length} Fluctuation Requests`);
+  console.log(`✓ Downloaded ${users.length} Users`);
+
+  const now = new Date();
+  const timestamp = now.toISOString();
+  const dateStr = now.toISOString().slice(0, 10).replace(/-/g, '');
+
   const backupObject = {
     appName: "Sổ Theo Dõi Động Vật Hoang Dã (Thông tư 85/2025/TT-BNNMT)",
     unit: "Hạt Kiểm Lâm Khu Vực Krông Bông",
     syncedAt: timestamp,
     facilitiesCount: facilities.length,
+    packingListCount: packingLists.length,
     usersCount: users.length,
     requestsCount: fluctuationRequests.length,
     facilitiesList: facilities,
+    packingListData: packingLists,
     fluctuationRequests,
     usersList: users,
   };
 
-  // 1. Write JSON to public/ and docs/ for web downloads
+  // 1. Write JSON backups to public/ and docs/
   const publicBackupPath = path.join(__dirname, '../public/backup_cloud_firebase.json');
   const docsBackupPath = path.join(__dirname, '../docs/backup_cloud_firebase.json');
-  const timestampedBackupPath = path.join(__dirname, '../docs/backup_42_coso_20261019_latest.json');
+  const timestampedBackupPath = path.join(__dirname, `../docs/backup_all_collections_${dateStr}_latest.json`);
+  const docsLatestBackupPath = path.join(__dirname, '../docs/backup_all_collections_latest.json');
 
   fs.writeFileSync(publicBackupPath, JSON.stringify(backupObject, null, 2), 'utf8');
   fs.writeFileSync(docsBackupPath, JSON.stringify(backupObject, null, 2), 'utf8');
   fs.writeFileSync(timestampedBackupPath, JSON.stringify(backupObject, null, 2), 'utf8');
-  console.log('Saved JSON backups to public/backup_cloud_firebase.json, docs/backup_cloud_firebase.json & docs/backup_42_coso_20261019_latest.json');
+  fs.writeFileSync(docsLatestBackupPath, JSON.stringify(backupObject, null, 2), 'utf8');
+  console.log(`✓ Saved JSON backups to:`);
+  console.log(`  - public/backup_cloud_firebase.json`);
+  console.log(`  - docs/backup_cloud_firebase.json`);
+  console.log(`  - docs/backup_all_collections_${dateStr}_latest.json`);
+  console.log(`  - docs/backup_all_collections_latest.json`);
 
   // 1.1 Update REAL_FACILITIES_DATA in src/utils/storage.js
   const storageJsPath = path.join(__dirname, '../src/utils/storage.js');
@@ -111,8 +130,15 @@ async function syncAndBackup() {
       const newDeclaration = `export const REAL_FACILITIES_DATA = ${JSON.stringify(facilities, null, 2)};`;
       storageContent = storageContent.substring(0, startIdx) + newDeclaration + storageContent.substring(endIdx + endMarker.length);
       fs.writeFileSync(storageJsPath, storageContent, 'utf8');
-      console.log('Successfully updated REAL_FACILITIES_DATA in src/utils/storage.js with latest 42 facilities & fluctuations!');
+      console.log(`✓ Updated REAL_FACILITIES_DATA in src/utils/storage.js with ${facilities.length} live facilities.`);
     }
+  }
+
+  // 1.2 Update packingListInitialData.json with live packing lists
+  if (packingLists.length > 0) {
+    const packingListJsonPath = path.join(__dirname, '../src/utils/packingListInitialData.json');
+    fs.writeFileSync(packingListJsonPath, JSON.stringify(packingLists, null, 2), 'utf8');
+    console.log(`✓ Updated src/utils/packingListInitialData.json with ${packingLists.length} live packing list records.`);
   }
 
   // 2. Generate Google Drive / Google Sheets compatible CSV summary file
@@ -150,9 +176,9 @@ async function syncAndBackup() {
   const csvPath = path.join(__dirname, '../docs/Bao_Cao_Tong_Hop_Firebase_GoogleDrive.csv');
   // BOM \uFEFF for Excel & Google Sheets UTF-8 compatibility
   fs.writeFileSync(csvPath, '\uFEFF' + csvRows.join('\n'), 'utf8');
-  console.log('Saved Google Drive compatible CSV to docs/Bao_Cao_Tong_Hop_Firebase_GoogleDrive.csv');
+  console.log(`✓ Saved Google Drive / Excel compatible CSV to docs/Bao_Cao_Tong_Hop_Firebase_GoogleDrive.csv`);
 
-  console.log('Sync from Firebase completed successfully!');
+  console.log('=== [FIREBASE SYNC COMPLETE] All live web data has been safely downloaded and preserved locally! ===');
 }
 
 syncAndBackup();

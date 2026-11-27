@@ -1651,7 +1651,7 @@ export default function App() {
             }}
             onExportExcel={handleExportExcelClick}
             onOpenPrintView={() => setIsPrintViewOpen(true)}
-            onOpenBackupModal={() => setIsBackupModalOpen(true)}
+            onOpenBackupModal={currentUser?.role === 'ADMIN' ? () => setIsBackupModalOpen(true) : undefined}
             onOpenUISettings={() => setIsUISettingsModalOpen(true)}
             activeSpecies={activeSpecies}
             currentUser={currentUser}
@@ -1682,7 +1682,7 @@ export default function App() {
             onOpenEditFacility={handleOpenEditFacility}
             onExportExcel={handleExportExcelClick}
             onOpenPrintView={() => setIsPrintViewOpen(true)}
-            onOpenBackupModal={() => setIsBackupModalOpen(true)}
+            onOpenBackupModal={currentUser?.role === 'ADMIN' ? () => setIsBackupModalOpen(true) : undefined}
             onOpenUISettings={() => setIsUISettingsModalOpen(true)}
             currentView={currentView}
             onChangeView={setCurrentView}
@@ -1881,7 +1881,7 @@ export default function App() {
                 }}
                 onOpenAddFacility={handleOpenAddFacility}
                 onOpenEditFacility={handleOpenEditFacility}
-                onOpenBackupModal={() => setIsBackupModalOpen(true)}
+                onOpenBackupModal={currentUser?.role === 'ADMIN' ? () => setIsBackupModalOpen(true) : undefined}
                 onApprovePending={handleApprovePending}
                 onRejectPending={handleRejectPending}
                 currentUser={currentUser}
@@ -1977,14 +1977,16 @@ export default function App() {
           editFacility={editingFacility}
         />
 
-        <ExportImportModal
-          isOpen={isBackupModalOpen}
-          onClose={() => setIsBackupModalOpen(false)}
-          appData={appState}
-          onImportData={handleImportData}
-          onClearData={handleClearAllData}
-          onResetDemoData={handleResetDemo}
-        />
+        {currentUser?.role === 'ADMIN' && (
+          <ExportImportModal
+            isOpen={isBackupModalOpen}
+            onClose={() => setIsBackupModalOpen(false)}
+            appData={appState}
+            onImportData={handleImportData}
+            onClearData={handleClearAllData}
+            onResetDemoData={handleResetDemo}
+          />
+        )}
 
         <PrintView
           isOpen={isPrintViewOpen}
@@ -2040,11 +2042,14 @@ export default function App() {
           onOpenUISettings={() => setIsUISettingsModalOpen(true)}
         />
 
-        <BackupReminderBanner
-          appData={appState}
-          facilitiesList={facilitiesList}
-          packingListData={packingListData}
-        />
+        {currentUser?.role === 'ADMIN' && (
+          <BackupReminderBanner
+            appData={appState}
+            facilitiesList={facilitiesList}
+            packingListData={packingListData}
+            currentUser={currentUser}
+          />
+        )}
       </Suspense>
 
       {/* Floating Quick Search Button for Mobile & Desktop (Ctrl + K) */}

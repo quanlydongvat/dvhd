@@ -1,16 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { ShieldCheck, Download, X, Clock, CheckCircle2, Database, Sparkles } from 'lucide-react';
+import { ShieldCheck, Download, X, Clock, CheckCircle2, Sparkles } from 'lucide-react';
 
 export default function BackupReminderBanner({
   appData,
   packingListData = [],
   facilitiesList = [],
+  currentUser = null,
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [reminderReason, setReminderReason] = useState('MONTHLY'); // 'FIRST_DAY' | 'WEEKLY'
 
   useEffect(() => {
+    // 0. CHỈ HIỂN THỊ TỰ ĐỘNG VỚI TÀI KHOẢN ADMIN (Tránh người dùng khác/khách thấy nhắc nhở sao lưu)
+    if (currentUser?.role !== 'ADMIN') {
+      setIsOpen(false);
+      return;
+    }
+
     // 1. Kiểm tra thời gian hoãn nhắc nhở (Snooze)
     const snoozedUntil = Number(localStorage.getItem('wildlife_backup_snooze_until') || 0);
     if (Date.now() < snoozedUntil) {
@@ -56,7 +63,7 @@ export default function BackupReminderBanner({
       }, 2000);
       return () => clearTimeout(timer);
     }
-  }, []);
+  }, [currentUser]);
 
   // 1-Click Backup Download
   const handleExecuteBackup = () => {
@@ -104,7 +111,7 @@ export default function BackupReminderBanner({
     setIsOpen(false);
   };
 
-  if (!isOpen) return null;
+  if (currentUser?.role !== 'ADMIN' || !isOpen) return null;
 
   return (
     <aside

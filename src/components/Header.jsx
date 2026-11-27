@@ -148,8 +148,8 @@ export default function Header({
                 </button>
               )}
 
-              {/* Backup & Restore Button (Desktop) */}
-              {onOpenBackupModal && (
+              {/* Backup & Restore Button (Desktop) - Chỉ dành cho Admin */}
+              {currentUser?.role === 'ADMIN' && onOpenBackupModal && (
                 <button
                   type="button"
                   onClick={onOpenBackupModal}
@@ -250,13 +250,15 @@ export default function Header({
                   <Download className="w-4 h-4" />
                 </button>
               )}
-              <button
-                onClick={onOpenBackupModal}
-                className="p-2 bg-indigo-50 text-indigo-700 border border-indigo-200 rounded-lg text-xs font-bold shadow-xs active:scale-95"
-                title="Sao lưu dữ liệu"
-              >
-                <Database className="w-4 h-4" />
-              </button>
+              {currentUser?.role === 'ADMIN' && onOpenBackupModal && (
+                <button
+                  onClick={onOpenBackupModal}
+                  className="p-2 bg-indigo-50 text-indigo-700 border border-indigo-200 rounded-lg text-xs font-bold shadow-xs active:scale-95"
+                  title="Sao lưu dữ liệu"
+                >
+                  <Database className="w-4 h-4" />
+                </button>
+              )}
             </div>
           </div>
         </div>

@@ -16,28 +16,7 @@ export class ErrorBoundary extends React.Component {
   }
 
   handleReload = () => {
-    try {
-      localStorage.clear();
-      sessionStorage.clear();
-    } catch (e) {}
-
-    if ('caches' in window) {
-      caches.keys().then((keys) => Promise.all(keys.map((k) => caches.delete(k)))).then(() => {
-        if ('serviceWorker' in navigator) {
-          navigator.serviceWorker.getRegistrations().then((regs) => {
-            Promise.all(regs.map((r) => r.unregister())).then(() => {
-              window.location.href = window.location.pathname + '?v=' + Date.now();
-            });
-          });
-        } else {
-          window.location.href = window.location.pathname + '?v=' + Date.now();
-        }
-      }).catch(() => {
-        window.location.href = window.location.pathname + '?v=' + Date.now();
-      });
-    } else {
-      window.location.href = window.location.pathname + '?v=' + Date.now();
-    }
+    window.location.reload();
   };
 
   render() {
@@ -64,7 +43,7 @@ export class ErrorBoundary extends React.Component {
               onClick={this.handleReload}
               className="w-full py-3.5 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-slate-950 font-black rounded-2xl shadow-lg transition-all active:scale-95 text-sm cursor-pointer"
             >
-              🔄 Xóa Bộ Nhớ Đệm & Tải Lại Nhanh
+              Tải lại ứng dụng
             </button>
           </div>
         </div>
