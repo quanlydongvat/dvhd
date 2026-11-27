@@ -19,6 +19,7 @@ import {
   FileCheck2,
 } from 'lucide-react';
 import SidebarTopRankingSlide from './SidebarTopRankingSlide';
+import SidebarUserReviews from './SidebarUserReviews';
 
 export default function LeftSidebar({
   currentView = 'SUMMARY',
@@ -27,6 +28,9 @@ export default function LeftSidebar({
   packingListCount = 33,
   facilitiesList = [],
   onSelectFacility,
+  reviews = [],
+  onOpenReviewModal,
+  onOpenLogin,
   onOpenAddFluctuation,
   onOpenAddFacility,
   onOpenAddPackingList,
@@ -492,6 +496,14 @@ export default function LeftSidebar({
           facilitiesList={facilitiesList}
           onSelectFacility={onSelectFacility}
           onChangeView={onChangeView}
+        />
+
+        {/* SECTION 5: ĐÁNH GIÁ & GÓP Ý TỪ CÁC CƠ SỞ NUÔI (1 ĐẾN 5 SAO & BÌNH LUẬN) */}
+        <SidebarUserReviews
+          reviews={reviews}
+          currentUser={currentUser}
+          onOpenReviewModal={onOpenReviewModal}
+          onOpenLogin={onOpenLogin}
         />
 
       </div>

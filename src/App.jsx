@@ -33,6 +33,10 @@ import {
   subscribeToCloudFacilities,
   subscribeToCloudRequests,
   subscribeToCloudPackingList,
+  subscribeToUserReviews,
+  saveUserReviewToCloud,
+  deleteUserReviewFromCloud,
+  DEFAULT_USER_REVIEWS,
 } from './firebase';
 import { auth, db } from './firebase';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
@@ -62,6 +66,7 @@ const Login = lazy(() => import('./components/Login'));
 const HomeLandingPage = lazy(() => import('./components/HomeLandingPage'));
 const QuickSearchModal = lazy(() => import('./components/QuickSearchModal'));
 const BackupReminderBanner = lazy(() => import('./components/BackupReminderBanner'));
+const UserReviewsModal = lazy(() => import('./components/UserReviewsModal'));
 
 export const DEFAULT_UI_SETTINGS = {
   theme: 'EMERALD',
@@ -534,6 +539,77 @@ export default function App() {
     return () => unsubscribe();
   }, []);
 
+  // User Reviews & Star Ratings (1-5 sao và bình luận góp ý của cơ sở nuôi)
+  const [reviews, setReviews] = useState(() => {
+    try {
+      const saved = localStorage.getItem('wildlife_user_reviews');
+      return saved ? JSON.parse(saved) : DEFAULT_USER_REVIEWS;
+    } catch (e) {
+      return DEFAULT_USER_REVIEWS;
+    }
+  });
+  const [isUserReviewModalOpen, setIsUserReviewModalOpen] = useState(false);
+
+  // Real-time Cloud Firestore Listener for user reviews
+  useEffect(() => {
+    const unsubscribe = subscribeToUserReviews(
+      (cloudReviews) => {
+        if (cloudReviews && cloudReviews.length > 0) {
+          setReviews(cloudReviews);
+          try {
+            localStorage.setItem('wildlife_user_reviews', JSON.stringify(cloudReviews));
+          } catch (e) {}
+        }
+      },
+      (error) => {
+        console.warn('Realtime subscribe reviews warning:', error);
+      }
+    );
+    return () => {
+      if (typeof unsubscribe === 'function') unsubscribe();
+    };
+  }, []);
+
+  const handleSaveReview = async (reviewObj) => {
+    try {
+      const savedReview = await saveUserReviewToCloud(reviewObj);
+      setReviews((prev) => {
+        const existingIdx = prev.findIndex((r) => r.id === savedReview.id);
+        let updated;
+        if (existingIdx >= 0) {
+          updated = [...prev];
+          updated[existingIdx] = savedReview;
+        } else {
+          updated = [savedReview, ...prev];
+        }
+        try {
+          localStorage.setItem('wildlife_user_reviews', JSON.stringify(updated));
+        } catch (e) {}
+        return updated;
+      });
+      return savedReview;
+    } catch (err) {
+      console.error('Lỗi lưu đánh giá:', err);
+      throw err;
+    }
+  };
+
+  const handleDeleteReview = async (reviewId) => {
+    try {
+      await deleteUserReviewFromCloud(reviewId);
+      setReviews((prev) => {
+        const updated = prev.filter((r) => r.id !== reviewId);
+        try {
+          localStorage.setItem('wildlife_user_reviews', JSON.stringify(updated));
+        } catch (e) {}
+        return updated;
+      });
+    } catch (err) {
+      console.error('Lỗi xóa đánh giá:', err);
+      throw err;
+    }
+  };
+
   // Sync state to LocalStorage on local changes (Cloud sync is handled granularly per facility in each action handler)
   useEffect(() => {
     saveAppData(appState);
@@ -648,7 +724,6 @@ export default function App() {
         };
 
         saveAppData(nextState);
-        setSkipNextSync(true);
         setAppState(nextState);
       }
     });
@@ -1655,7 +1730,10 @@ export default function App() {
             onOpenUISettings={() => setIsUISettingsModalOpen(true)}
             activeSpecies={activeSpecies}
             currentUser={currentUser}
+            onOpenLogin={() => setIsLoginModalOpen(true)}
             onLogout={handleLogout}
+            reviews={reviews}
+            onOpenReviewModal={() => setIsUserReviewModalOpen(true)}
           />
         </div>
 
@@ -2050,6 +2128,17 @@ export default function App() {
             currentUser={currentUser}
           />
         )}
+
+        <UserReviewsModal
+          isOpen={isUserReviewModalOpen}
+          onClose={() => setIsUserReviewModalOpen(false)}
+          reviews={reviews}
+          currentUser={currentUser}
+          facilitiesList={facilitiesList}
+          onSaveReview={handleSaveReview}
+          onDeleteReview={handleDeleteReview}
+          onOpenLogin={() => setIsLoginModalOpen(true)}
+        />
       </Suspense>
 
       {/* Floating Quick Search Button for Mobile & Desktop (Ctrl + K) */}

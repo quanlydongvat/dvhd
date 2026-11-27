@@ -217,16 +217,7 @@ export const cleanFacilityAddress = (addr) => {
 
 export const REAL_FACILITIES_DATA = [
   {
-    "id": "fac_1",
     "address": "Thôn 3, xã Hòa Sơn, Tỉnh Đắk Lắk",
-    "registrationDate": "2023-03-17",
-    "updatedAt": "2026-11-26T00:29:15.343Z",
-    "owner": "Lê Thị Xuân",
-    "lng": 108.227912,
-    "commune": "xã Hòa Sơn",
-    "purposeCode": "T",
-    "registrationCode": "IIB-DLC-027",
-    "ownerName": "Lê Thị Xuân",
     "speciesList": [
       {
         "id": "sp_1_1",
@@ -337,17 +328,35 @@ export const REAL_FACILITIES_DATA = [
         }
       }
     ],
-    "lat": 12.496848,
+    "registrationCode": "IIB-DLC-027",
     "note": "",
-    "facilityName": "Cơ sở nuôi Lê Thị Xuân",
     "phone": "",
-    "name": "Cơ sở nuôi Lê Thị Xuân"
+    "owner": "Lê Thị Xuân",
+    "name": "Cơ sở nuôi Lê Thị Xuân",
+    "lat": 12.496848,
+    "updatedAt": "2026-11-26T00:29:15.343Z",
+    "purposeCode": "T",
+    "ownerName": "Lê Thị Xuân",
+    "commune": "xã Hòa Sơn",
+    "registrationDate": "2023-03-17",
+    "id": "fac_1",
+    "lng": 108.227912,
+    "facilityName": "Cơ sở nuôi Lê Thị Xuân"
   },
   {
-    "id": "fac_10",
+    "lng": 108.456819,
+    "owner": "Trịnh Lục",
+    "registrationCode": "52-26/B-DLC",
     "phone": "",
+    "purposeCode": "T",
+    "commune": "xã Cư Pui",
+    "lat": 12.546946,
+    "id": "fac_10",
+    "ownerName": "Trịnh Lục",
+    "note": "",
+    "updatedAt": "2026-11-26T00:29:15.348Z",
     "facilityName": "Cơ sở nuôi Trịnh Lục",
-    "registrationDate": "2026-05-08",
+    "address": "Thôn 3, xã Cư Pui, Tỉnh Đắk Lắk",
     "speciesList": [
       {
         "baseline": {
@@ -568,31 +577,18 @@ export const REAL_FACILITIES_DATA = [
         "purposeCode": "T"
       }
     ],
-    "note": "",
-    "updatedAt": "2026-11-26T00:29:15.348Z",
-    "lng": 108.456819,
-    "registrationCode": "52-26/B-DLC",
-    "name": "Cơ sở nuôi Trịnh Lục",
-    "owner": "Trịnh Lục",
-    "ownerName": "Trịnh Lục",
-    "commune": "xã Cư Pui",
-    "lat": 12.546946,
-    "purposeCode": "T",
-    "address": "Thôn 3, xã Cư Pui, Tỉnh Đắk Lắk"
+    "registrationDate": "2026-05-08",
+    "name": "Cơ sở nuôi Trịnh Lục"
   },
   {
-    "purposeCode": "T",
-    "commune": "xã Cư Pui",
-    "registrationCode": "IIB-C-DLC-063",
-    "lng": 108.458901,
-    "address": "Thôn 3, xã Cư Pui, Tỉnh Đắk Lắk",
-    "registrationDate": "2024-09-25",
-    "owner": "Nguyễn Hữu Đô",
-    "updatedAt": "2026-11-08T03:23:43.581Z",
-    "id": "fac_11",
-    "ownerName": "Nguyễn Hữu Đô",
-    "lat": 12.548123,
     "name": "Cơ sở nuôi Nguyễn Hữu Đô",
+    "commune": "xã Cư Pui",
+    "owner": "Nguyễn Hữu Đô",
+    "phone": "",
+    "registrationCode": "IIB-C-DLC-063",
+    "updatedAt": "2026-11-08T03:23:43.581Z",
+    "note": "",
+    "lat": 12.548123,
     "speciesList": [
       {
         "citesAppendix": "Phụ lục II CITES",
@@ -759,7 +755,7 @@ export const REAL_FACILITIES_DATA = [
             "isGenderIdentifyMode": false,
             "approvalStatus": "APPROVED",
             "createdAt": 1794569546350,
-            "reason": "Sinh sản lứa F2 m���i nở/sinh",
+            "reason": "Sinh sản lứa F2 mới nở/sinh",
             "decOtherFemale": 0,
             "purpose": "T",
             "decOtherMale": 0,
@@ -769,18 +765,27 @@ export const REAL_FACILITIES_DATA = [
         ]
       }
     ],
-    "phone": "",
-    "note": "",
-    "facilityName": "Cơ sở nuôi Nguyễn Hữu Đô"
+    "ownerName": "Nguyễn Hữu Đô",
+    "registrationDate": "2024-09-25",
+    "purposeCode": "T",
+    "address": "Thôn 3, xã Cư Pui, Tỉnh Đắk Lắk",
+    "facilityName": "Cơ sở nuôi Nguyễn Hữu Đô",
+    "id": "fac_11",
+    "lng": 108.458901
   },
   {
-    "name": "Cơ sở nuôi Lê Thanh Đức",
-    "lng": 108.332398,
+    "facilityName": "Cơ sở nuôi Lê Thanh Đức",
+    "registrationCode": "IIB-C-DLC-060",
+    "address": "Thôn 5, Xã Krông Bông, Tỉnh Đắk Lắk",
     "note": "",
+    "name": "Cơ sở nuôi Lê Thanh Đức",
+    "id": "fac_12",
     "purposeCode": "T",
-    "ownerName": "Lê Thanh Đức",
-    "owner": "Lê Thanh Đức",
     "lat": 12.528258,
+    "ownerName": "Lê Thanh Đức",
+    "updatedAt": "2026-11-26T00:29:15.356Z",
+    "phone": "",
+    "owner": "Lê Thanh Đức",
     "speciesList": [
       {
         "id": "sp_12_1",
@@ -1178,27 +1183,16 @@ export const REAL_FACILITIES_DATA = [
       }
     ],
     "commune": "Xã Krông Bông",
-    "updatedAt": "2026-11-26T00:29:15.356Z",
-    "registrationCode": "IIB-C-DLC-060",
-    "facilityName": "Cơ sở nuôi Lê Thanh Đức",
-    "registrationDate": "2024-09-06",
-    "address": "Thôn 5, Xã Krông Bông, Tỉnh Đắk Lắk",
-    "id": "fac_12",
-    "phone": ""
+    "lng": 108.332398,
+    "registrationDate": "2024-09-06"
   },
   {
-    "owner": "Ngô Thị Trang",
-    "updatedAt": "2026-11-26T00:29:15.367Z",
-    "lng": 108.414746,
-    "commune": "Xã Krông Bông",
-    "facilityName": "Cơ sở nuôi Ngô Thị Trang",
-    "registrationCode": "010-25/B-DLC",
-    "purposeCode": "T",
-    "address": "Thôn 8, Xã Krông Bông, Tỉnh Đắk Lắk",
-    "registrationDate": "2025-07-31",
+    "name": "Cơ sở nuôi Ngô Thị Trang",
     "phone": "",
-    "note": "",
-    "id": "fac_13",
+    "registrationDate": "2025-07-31",
+    "commune": "Xã Krông Bông",
+    "lng": 108.414746,
+    "facilityName": "Cơ sở nuôi Ngô Thị Trang",
     "speciesList": [
       {
         "baseline": {
@@ -1463,25 +1457,25 @@ export const REAL_FACILITIES_DATA = [
         "citesAppendix": "Phụ lục II CITES"
       }
     ],
-    "name": "Cơ sở nuôi Ngô Thị Trang",
-    "ownerName": "Ngô Thị Trang",
-    "lat": 12.53985
+    "owner": "Ngô Thị Trang",
+    "note": "",
+    "id": "fac_13",
+    "lat": 12.53985,
+    "purposeCode": "T",
+    "updatedAt": "2026-11-26T00:29:15.367Z",
+    "address": "Thôn 8, Xã Krông Bông, Tỉnh Đắk Lắk",
+    "registrationCode": "010-25/B-DLC",
+    "ownerName": "Ngô Thị Trang"
   },
   {
-    "updatedAt": "2026-11-26T00:29:15.368Z",
-    "address": "TDP4, Xã Krông Bông, Tỉnh Đắk Lắk",
-    "registrationCode": "18-26/B-DLC",
-    "owner": "Hà Huy Thanh",
+    "name": "Cơ sở nuôi Hà Huy Thanh",
     "purposeCode": "T",
-    "lng": 108.333327,
-    "commune": "Xã Krông Bông",
-    "registrationDate": "2026-03-17",
-    "phone": "",
-    "id": "fac_14",
+    "address": "TDP4, Xã Krông Bông, Tỉnh Đắk Lắk",
     "note": "",
+    "lng": 108.333327,
+    "id": "fac_14",
     "facilityName": "Cơ sở nuôi Hà Huy Thanh",
-    "lat": 12.492108,
-    "ownerName": "Hà Huy Thanh",
+    "registrationCode": "18-26/B-DLC",
     "speciesList": [
       {
         "purposeCode": "T",
@@ -1522,12 +1516,24 @@ export const REAL_FACILITIES_DATA = [
         "purposeCode": "T"
       }
     ],
-    "name": "Cơ sở nuôi Hà Huy Thanh"
+    "registrationDate": "2026-03-17",
+    "owner": "Hà Huy Thanh",
+    "ownerName": "Hà Huy Thanh",
+    "phone": "",
+    "updatedAt": "2026-11-26T00:29:15.368Z",
+    "lat": 12.492108,
+    "commune": "Xã Krông Bông"
   },
   {
-    "owner": "Trần Văn Tới",
     "note": "",
-    "updatedAt": "2026-11-26T00:29:15.368Z",
+    "commune": "xã Yang Mao",
+    "owner": "Trần Văn Tới",
+    "purposeCode": "T",
+    "lat": 12.477054,
+    "registrationDate": "2023-11-02",
+    "name": "Cơ sở nuôi Trần Văn Tới",
+    "phone": "",
+    "id": "fac_15",
     "speciesList": [
       {
         "citesAppendix": "Khai báo kiểm lâm",
@@ -1904,26 +1910,29 @@ export const REAL_FACILITIES_DATA = [
         ]
       }
     ],
-    "name": "Cơ sở nuôi Trần Văn Tới",
-    "lat": 12.477054,
-    "facilityName": "Cơ sở nuôi Trần Văn Tới",
-    "phone": "",
-    "commune": "xã Yang Mao",
-    "id": "fac_15",
-    "lng": 108.58051,
+    "updatedAt": "2026-11-26T00:29:15.368Z",
     "registrationCode": "52-26/B-DLC",
-    "purposeCode": "T",
+    "facilityName": "Cơ sở nuôi Trần Văn Tới",
+    "lng": 108.58051,
     "ownerName": "Trần Văn Tới",
-    "address": "Thôn 1, xã Yang Mao, Tỉnh Đắk Lắk",
-    "registrationDate": "2023-11-02"
+    "address": "Thôn 1, xã Yang Mao, Tỉnh Đắk Lắk"
   },
   {
-    "phone": "",
     "lng": 108.551582,
-    "registrationDate": "",
     "facilityName": "Cơ sở nuôi Lê Đình Tâm",
     "registrationCode": "Đang cập nhật",
+    "id": "fac_16",
+    "address": "Thôn Cư Drăm, xã Yang Mao, Tỉnh Đắk Lắk",
     "ownerName": "Lê Đình Tâm",
+    "purposeCode": "T",
+    "updatedAt": "2026-11-26T00:29:15.576Z",
+    "lat": 12.487572,
+    "commune": "xã Yang Mao",
+    "name": "Cơ sở nuôi Lê Đình Tâm",
+    "owner": "Lê Đình Tâm",
+    "phone": "",
+    "note": "",
+    "registrationDate": "",
     "speciesList": [
       {
         "purposeCode": "T",
@@ -1944,31 +1953,22 @@ export const REAL_FACILITIES_DATA = [
         "scientificName": "Rhizomys pruinosus",
         "vietnameseName": "Dúi mốc lớn"
       }
-    ],
-    "owner": "Lê Đình Tâm",
-    "note": "",
-    "purposeCode": "T",
-    "updatedAt": "2026-11-26T00:29:15.576Z",
-    "id": "fac_16",
-    "commune": "xã Yang Mao",
-    "name": "Cơ sở nuôi Lê Đình Tâm",
-    "address": "Thôn Cư Drăm, xã Yang Mao, Tỉnh Đắk Lắk",
-    "lat": 12.487572
+    ]
   },
   {
+    "registrationDate": "",
     "lng": 108.560116,
     "name": "Cơ sở nuôi Nguyễn Kim Danh",
     "address": "Buôn Tul, xã Yang Mao, Tỉnh Đắk Lắk",
-    "purposeCode": "T",
-    "registrationCode": "Đang cập nhật",
     "id": "fac_17",
-    "commune": "xã Yang Mao",
-    "note": "",
     "owner": "Nguyễn Kim Danh",
-    "updatedAt": "2026-11-26T00:29:15.576Z",
-    "registrationDate": "",
-    "facilityName": "Cơ sở nuôi Nguyễn Kim Danh",
+    "phone": "",
+    "note": "",
+    "purposeCode": "T",
     "ownerName": "Nguyễn Kim Danh",
+    "facilityName": "Cơ sở nuôi Nguyễn Kim Danh",
+    "lat": 12.462085,
+    "updatedAt": "2026-11-26T00:29:15.576Z",
     "speciesList": [
       {
         "purposeCode": "T",
@@ -1990,14 +1990,22 @@ export const REAL_FACILITIES_DATA = [
         "id": "sp_17_1"
       }
     ],
-    "phone": "",
-    "lat": 12.462085
+    "registrationCode": "Đang cập nhật",
+    "commune": "xã Yang Mao"
   },
   {
-    "ownerName": "Nguyễn Lĩnh",
-    "phone": "0866100652",
-    "note": "",
+    "name": "Nguyễn Lĩnh",
     "registrationCode": "141-26/B-DLC",
+    "commune": "xã Cư Pui",
+    "id": "fac_1786163645775",
+    "ownerName": "Nguyễn Lĩnh",
+    "purposeCode": "T",
+    "lng": 108.455555,
+    "note": "",
+    "updatedAt": "2026-11-26T00:29:15.577Z",
+    "phone": "0866100652",
+    "facilityName": "Nguyễn Lĩnh",
+    "registrationDate": "2026-07-24",
     "speciesList": [
       {
         "scientificName": "Paradoxurus hermaphroditus",
@@ -2040,32 +2048,26 @@ export const REAL_FACILITIES_DATA = [
         ]
       }
     ],
-    "lat": 12.547587,
-    "name": "Nguyễn Lĩnh",
-    "id": "fac_1786163645775",
-    "registrationDate": "2026-07-24",
-    "owner": "Nguyễn Lĩnh",
-    "commune": "xã Cư Pui",
-    "facilityName": "Nguyễn Lĩnh",
-    "lng": 108.455555,
     "address": "thôn 3, xã Cư Pui, tỉnh Đắk Lắk.",
-    "updatedAt": "2026-11-26T00:29:15.577Z",
-    "purposeCode": "T"
+    "owner": "Nguyễn Lĩnh",
+    "lat": 12.547587
   },
   {
-    "lng": 108.321947,
-    "name": "Nguyễn Hoàng Dũng",
-    "commune": "Xã Dang Kang",
-    "purposeCode": "T",
-    "note": "",
-    "address": "thôn 6, xã Dang Kang, tỉnh Đắk Lắk",
     "facilityName": "Nguyễn Hoàng Dũng",
-    "owner": "Nguyễn Hoàng Dũng",
-    "ownerName": "Nguyễn Hoàng Dũng",
-    "registrationCode": "142-26/B-DLC",
+    "lat": 12.558599,
     "id": "fac_1786419630740",
-    "updatedAt": "2026-11-26T00:29:15.577Z",
+    "note": "",
+    "phone": "0342017979",
+    "purposeCode": "T",
+    "owner": "Nguyễn Hoàng Dũng",
+    "commune": "Xã Dang Kang",
     "registrationDate": "2026-01-24",
+    "name": "Nguyễn Hoàng Dũng",
+    "lng": 108.321947,
+    "registrationCode": "142-26/B-DLC",
+    "address": "thôn 6, xã Dang Kang, tỉnh Đắk Lắk",
+    "ownerName": "Nguyễn Hoàng Dũng",
+    "updatedAt": "2026-11-26T00:29:15.577Z",
     "speciesList": [
       {
         "fluctuations": [
@@ -2126,22 +2128,15 @@ export const REAL_FACILITIES_DATA = [
         },
         "citesAppendix": "Phụ lục II CITES"
       }
-    ],
-    "phone": "0342017979",
-    "lat": 12.558599
+    ]
   },
   {
+    "registrationCode": "Chưa có mã số",
+    "commune": "Xã Krông Bông",
+    "purposeCode": "T",
     "id": "fac_1786432202893",
     "lat": 12.520837,
-    "purposeCode": "T",
-    "facilityName": "Phạm Duy Thắng",
-    "commune": "Xã Krông Bông",
-    "phone": "",
-    "updatedAt": "2026-11-26T00:29:15.577Z",
-    "address": "Thôn 23",
-    "registrationCode": "Chưa có mã số",
     "ownerName": "Phạm Duy Thắng",
-    "note": "",
     "speciesList": [
       {
         "fluctuations": [
@@ -2224,14 +2219,26 @@ export const REAL_FACILITIES_DATA = [
         "vietnameseName": "Dúi mốc lớn"
       }
     ],
+    "note": "",
+    "phone": "",
+    "updatedAt": "2026-11-26T00:29:15.577Z",
+    "name": "Phạm Duy Thắng",
     "owner": "Phạm Duy Thắng",
+    "address": "Thôn 23",
+    "facilityName": "Phạm Duy Thắng",
     "lng": 108.394137,
-    "registrationDate": "2026-08-11",
-    "name": "Phạm Duy Thắng"
+    "registrationDate": "2026-08-11"
   },
   {
+    "commune": "Xã Dang Kang",
+    "note": "",
+    "phone": "",
+    "lng": "108.338165",
+    "purposeCode": "T",
+    "registrationDate": "2025-11-12",
+    "facilityName": "Nguyễn Kim Tuấn",
     "owner": "Nguyễn Kim Tuấn",
-    "address": "Thôn 6 xã Dang Kang",
+    "name": "Nguyễn Kim Tuấn",
     "speciesList": [
       {
         "citesAppendix": "Khai báo kiểm lâm",
@@ -2274,34 +2281,17 @@ export const REAL_FACILITIES_DATA = [
         ]
       }
     ],
-    "registrationDate": "2025-11-12",
-    "commune": "Xã Dang Kang",
-    "lng": "108.338165",
-    "registrationCode": "Chưa có mã số",
-    "ownerName": "Nguyễn Kim Tuấn",
     "lat": "12.575576",
-    "phone": "",
-    "note": "",
-    "updatedAt": "2026-11-26T00:29:15.577Z",
-    "purposeCode": "T",
-    "facilityName": "Nguyễn Kim Tuấn",
-    "name": "Nguyễn Kim Tuấn",
-    "id": "fac_1786504114807"
+    "registrationCode": "Chưa có mã số",
+    "id": "fac_1786504114807",
+    "address": "Thôn 6 xã Dang Kang",
+    "ownerName": "Nguyễn Kim Tuấn",
+    "updatedAt": "2026-11-26T00:29:15.577Z"
   },
   {
-    "registrationDate": "2026-05-25",
-    "owner": "Nguyễn Hữu Lưu",
     "note": "",
-    "address": "",
-    "id": "fac_1787585236556",
-    "purposeCode": "T",
-    "registrationCode": "Chưa có mã số",
-    "updatedAt": "2026-11-26T00:29:15.577Z",
-    "commune": "xã Cư Pui",
-    "name": "Nguyễn Hữu Lưu",
+    "owner": "Nguyễn Hữu Lưu",
     "lng": "108.431876",
-    "lat": "12.532135",
-    "phone": "",
     "speciesList": [
       {
         "purposeCode": "T",
@@ -2323,25 +2313,26 @@ export const REAL_FACILITIES_DATA = [
         "group": "Động vật rừng thông thường (Lớp Chim)"
       }
     ],
+    "id": "fac_1787585236556",
+    "address": "",
+    "registrationDate": "2026-05-25",
+    "facilityName": "Nguyễn Hữu Lưu",
+    "phone": "",
+    "name": "Nguyễn Hữu Lưu",
     "ownerName": "Nguyễn Hữu Lưu",
-    "facilityName": "Nguyễn Hữu Lưu"
+    "lat": "12.532135",
+    "registrationCode": "Chưa có mã số",
+    "updatedAt": "2026-11-26T00:29:15.577Z",
+    "purposeCode": "T",
+    "commune": "xã Cư Pui"
   },
   {
-    "purposeCode": "T",
-    "updatedAt": "2026-11-26T00:29:15.584Z",
-    "owner": "Nguyễn Tâm Châu",
-    "lat": 12.492318,
-    "note": "",
-    "name": "Nguyễn Tâm Châu",
-    "address": "",
     "phone": "",
+    "updatedAt": "2026-11-26T00:29:15.584Z",
     "registrationCode": "Chưa có mã số",
-    "id": "fac_1787793901636",
-    "commune": "xã Hòa Sơn",
     "ownerName": "Nguyễn Tâm Châu",
-    "registrationDate": "2026-06-27",
     "lng": 108.324298,
-    "facilityName": "Nguyễn Tâm Châu",
+    "commune": "xã Hòa Sơn",
     "speciesList": [
       {
         "group": "Động vật rừng thông thường (Lớp Chim)",
@@ -2362,10 +2353,31 @@ export const REAL_FACILITIES_DATA = [
         "citesAppendix": "Khai báo kiểm lâm",
         "vietnameseName": "Chim Chào mào"
       }
-    ]
+    ],
+    "owner": "Nguyễn Tâm Châu",
+    "address": "",
+    "name": "Nguyễn Tâm Châu",
+    "facilityName": "Nguyễn Tâm Châu",
+    "lat": 12.492318,
+    "note": "",
+    "purposeCode": "T",
+    "registrationDate": "2026-06-27",
+    "id": "fac_1787793901636"
   },
   {
+    "note": "",
+    "registrationDate": "2026-07-27",
+    "lat": 12.495249,
+    "purposeCode": "T",
+    "name": "Nguyễn Thanh ",
+    "commune": "xã Hòa Sơn",
+    "id": "fac_1787794070148",
+    "facilityName": "Nguyễn Thanh ",
+    "owner": "Nguyễn Thanh ",
+    "lng": 108.294381,
     "address": "Thôn 2",
+    "ownerName": "Nguyễn Thanh ",
+    "phone": "",
     "updatedAt": "2026-11-26T00:29:15.584Z",
     "speciesList": [
       {
@@ -2388,23 +2400,11 @@ export const REAL_FACILITIES_DATA = [
         "fluctuations": []
       }
     ],
-    "owner": "Nguyễn Thanh ",
-    "lat": 12.495249,
-    "commune": "xã Hòa Sơn",
-    "id": "fac_1787794070148",
-    "phone": "",
-    "facilityName": "Nguyễn Thanh ",
-    "name": "Nguyễn Thanh ",
-    "registrationDate": "2026-07-27",
-    "lng": 108.294381,
-    "ownerName": "Nguyễn Thanh ",
-    "purposeCode": "T",
-    "note": "",
     "registrationCode": "Chưa có mã số"
   },
   {
-    "id": "fac_1787794146413",
-    "address": "Thôn 9 Hòa Sơn",
+    "lat": 12.492941,
+    "phone": "",
     "speciesList": [
       {
         "baseline": {
@@ -2445,33 +2445,33 @@ export const REAL_FACILITIES_DATA = [
         }
       }
     ],
-    "updatedAt": "2026-11-26T00:29:15.585Z",
-    "commune": "xã Hòa Sơn",
-    "lng": 108.32352,
-    "owner": "Trần Văn Ngọ",
-    "ownerName": "Trần Văn Ngọ",
-    "facilityName": "Trần Văn Ngọ",
-    "lat": 12.492941,
-    "registrationCode": "Chưa có mã số",
     "name": "Trần Văn Ngọ",
+    "registrationCode": "Chưa có mã số",
+    "ownerName": "Trần Văn Ngọ",
+    "note": "",
+    "commune": "xã Hòa Sơn",
+    "updatedAt": "2026-11-26T00:29:15.585Z",
+    "owner": "Trần Văn Ngọ",
+    "id": "fac_1787794146413",
+    "lng": 108.32352,
+    "address": "Thôn 9 Hòa Sơn",
     "purposeCode": "T",
-    "phone": "",
     "registrationDate": "2026-07-27",
-    "note": ""
+    "facilityName": "Trần Văn Ngọ"
   },
   {
-    "registrationDate": "2026-08-27",
-    "id": "fac_1787794338130",
-    "name": "Nguyễn Duy Thông",
-    "lat": 12.490722,
-    "purposeCode": "T",
     "facilityName": "Nguyễn Duy Thông",
+    "id": "fac_1787794338130",
+    "registrationDate": "2026-08-27",
+    "commune": "xã Hòa Sơn",
+    "lng": 108.315073,
+    "purposeCode": "T",
+    "address": "thôn 9, xã Hoà Sơn, tỉnh Đắk Lắk0948861157",
+    "name": "Nguyễn Duy Thông",
+    "phone": "0948861157",
     "registrationCode": "Chưa có mã số",
     "updatedAt": "2026-11-26T00:29:15.585Z",
-    "note": "Đang cập nhập",
-    "owner": "Nguyễn Duy Thông",
-    "address": "thôn 9, xã Hoà Sơn, tỉnh Đắk Lắk0948861157",
-    "ownerName": "Nguyễn Duy Thông",
+    "lat": 12.490722,
     "speciesList": [
       {
         "id": "sp_1787794338130_1",
@@ -2512,25 +2512,21 @@ export const REAL_FACILITIES_DATA = [
         }
       }
     ],
-    "lng": 108.315073,
-    "commune": "xã Hòa Sơn",
-    "phone": "0948861157"
+    "ownerName": "Nguyễn Duy Thông",
+    "owner": "Nguyễn Duy Thông",
+    "note": "Đang cập nhập"
   },
   {
+    "registrationDate": "2026-08-27",
+    "address": "Thôn 10",
     "purposeCode": "T",
     "phone": "0337825861",
-    "address": "Thôn 10",
-    "updatedAt": "2026-11-26T00:29:15.586Z",
-    "registrationDate": "2026-08-27",
     "lng": 108.322735,
-    "facilityName": "Vũ Hoàng Tân",
-    "commune": "xã Hòa Sơn",
-    "registrationCode": "Chưa có mã số",
     "owner": "Vũ Hoàng Tân",
-    "id": "fac_1787795701427",
+    "ownerName": "Vũ Hoàng Tân",
+    "updatedAt": "2026-11-26T00:29:15.586Z",
     "note": "",
     "lat": 12.500922,
-    "ownerName": "Vũ Hoàng Tân",
     "speciesList": [
       {
         "citesAppendix": "Khai báo kiểm lâm",
@@ -2552,13 +2548,16 @@ export const REAL_FACILITIES_DATA = [
         "group": "Động vật rừng thông thường (Lớp Chim)"
       }
     ],
-    "name": "Vũ Hoàng Tân"
+    "commune": "xã Hòa Sơn",
+    "facilityName": "Vũ Hoàng Tân",
+    "id": "fac_1787795701427",
+    "name": "Vũ Hoàng Tân",
+    "registrationCode": "Chưa có mã số"
   },
   {
-    "lng": 108.322383,
+    "id": "fac_1791188880545",
+    "registrationCode": "Chưa có mã số",
     "note": "",
-    "commune": "xã Hòa Sơn",
-    "owner": "Nguyễn Văn Vinh",
     "speciesList": [
       {
         "purposeCode": "T",
@@ -2627,29 +2626,28 @@ export const REAL_FACILITIES_DATA = [
     ],
     "name": "Nguyễn Văn Vinh",
     "address": "thôn 10, xã Hoà Sơn, tỉnh Đắk Lắk",
+    "lng": 108.322383,
+    "owner": "Nguyễn Văn Vinh",
+    "commune": "xã Hòa Sơn",
     "updatedAt": "2026-11-26T00:29:15.586Z",
     "ownerName": "Nguyễn Văn Vinh",
-    "facilityName": "Nguyễn Văn Vinh",
-    "id": "fac_1791188880545",
-    "purposeCode": "T",
     "registrationDate": "2026-10-05",
-    "phone": "0988.257.586",
     "lat": 12.49798,
-    "registrationCode": "Chưa có mã số"
+    "purposeCode": "T",
+    "phone": "0988.257.586",
+    "facilityName": "Nguyễn Văn Vinh"
   },
   {
     "note": "",
-    "registrationCode": "Chưa có mã số",
-    "address": "Thôn 1, xã Hòa Sơn",
-    "lng": 108.184749,
-    "purposeCode": "T",
-    "ownerName": "Lương Thị Cẩm Thanh",
-    "name": "Lương Thị Cẩm Thanh",
-    "phone": "",
-    "registrationDate": "2026-10-11",
     "commune": "xã Hòa Sơn",
-    "id": "fac_1794366309761",
+    "name": "Lương Thị Cẩm Thanh",
+    "ownerName": "Lương Thị Cẩm Thanh",
+    "purposeCode": "T",
+    "registrationDate": "2026-10-11",
+    "updatedAt": "2026-11-26T00:29:15.586Z",
+    "lat": 12.507605,
     "owner": "Lương Thị Cẩm Thanh",
+    "registrationCode": "Chưa có mã số",
     "speciesList": [
       {
         "purposeCode": "T",
@@ -2671,14 +2669,19 @@ export const REAL_FACILITIES_DATA = [
         "fluctuations": []
       }
     ],
-    "lat": 12.507605,
-    "updatedAt": "2026-11-26T00:29:15.586Z",
-    "facilityName": "Lương Thị Cẩm Thanh"
+    "facilityName": "Lương Thị Cẩm Thanh",
+    "lng": 108.184749,
+    "phone": "",
+    "id": "fac_1794366309761",
+    "address": "Thôn 1, xã Hòa Sơn"
   },
   {
+    "registrationCode": "Chưa có mã số",
+    "commune": "Xã Dang Kang",
     "owner": "Tăng Ngọc Tịnh",
     "id": "fac_1794367138616",
-    "commune": "Xã Dang Kang",
+    "phone": "",
+    "lat": "12.577273",
     "speciesList": [
       {
         "purposeCode": "T",
@@ -2700,33 +2703,20 @@ export const REAL_FACILITIES_DATA = [
         "vietnameseName": "Dúi mốc lớn"
       }
     ],
-    "registrationCode": "Chưa có mã số",
+    "updatedAt": "2026-11-26T00:29:15.586Z",
+    "name": "Tăng Ngọc Tịnh",
+    "facilityName": "Tăng Ngọc Tịnh",
+    "ownerName": "Tăng Ngọc Tịnh",
+    "purposeCode": "T",
+    "address": "Thôn 9, xã Dang Kang",
     "lng": "108.341248",
     "note": "",
-    "registrationDate": "2026-11-11",
-    "ownerName": "Tăng Ngọc Tịnh",
-    "address": "Thôn 9, xã Dang Kang",
-    "name": "Tăng Ngọc Tịnh",
-    "phone": "",
-    "updatedAt": "2026-11-26T00:29:15.586Z",
-    "facilityName": "Tăng Ngọc Tịnh",
-    "lat": "12.577273",
-    "purposeCode": "T"
+    "registrationDate": "2026-11-11"
   },
   {
-    "id": "fac_1794368355384",
-    "purposeCode": "T",
-    "lat": "12.508668",
     "updatedAt": "2026-11-26T00:29:15.589Z",
-    "facilityName": "Ngô Ngọc Tuân",
-    "owner": "Ngô Ngọc Tuân",
-    "address": "Thôn 1",
-    "registrationCode": "Chưa có mã số",
+    "id": "fac_1794368355384",
     "name": "Ngô Ngọc Tuân",
-    "commune": "xã Hòa Sơn",
-    "lng": "108.186247",
-    "ownerName": "Ngô Ngọc Tuân",
-    "registrationDate": "2026-11-11",
     "speciesList": [
       {
         "fluctuations": [],
@@ -2748,24 +2738,34 @@ export const REAL_FACILITIES_DATA = [
         "group": "Động vật rừng nguy cấp, quý, hiếm (Nhóm IIB)"
       }
     ],
+    "ownerName": "Ngô Ngọc Tuân",
+    "registrationDate": "2026-11-11",
+    "facilityName": "Ngô Ngọc Tuân",
+    "lng": "108.186247",
+    "commune": "xã Hòa Sơn",
+    "note": "",
+    "address": "Thôn 1",
+    "purposeCode": "T",
     "phone": "0903550988",
-    "note": ""
+    "registrationCode": "Chưa có mã số",
+    "lat": "12.508668",
+    "owner": "Ngô Ngọc Tuân"
   },
   {
-    "facilityName": "Ngô Ngọc Tuân",
-    "name": "Ngô Ngọc Tuân",
-    "phone": "0903550988",
     "registrationDate": "2026-11-12",
-    "purposeCode": "T",
-    "note": "Đang thử Nghiệm",
-    "registrationCode": "Chưa có mã số",
     "lat": "",
-    "updatedAt": "2026-11-26T00:29:15.589Z",
-    "id": "fac_1794453722654",
+    "purposeCode": "T",
+    "address": "Thôn 1, xã Hoà Sơn, Tỉnh Đắk Lắk",
+    "facilityName": "Ngô Ngọc Tuân",
     "lng": "",
+    "name": "Ngô Ngọc Tuân",
     "owner": "Ngô Ngọc Tuân",
     "commune": "xã Hòa Sơn",
+    "id": "fac_1794453722654",
+    "phone": "0903550988",
+    "note": "Đang thử Nghiệm",
     "ownerName": "Ngô Ngọc Tuân",
+    "registrationCode": "Chưa có mã số",
     "speciesList": [
       {
         "citesAppendix": "Khai báo kiểm lâm",
@@ -2787,7 +2787,7 @@ export const REAL_FACILITIES_DATA = [
         "group": "Động vật rừng nguy cấp, quý, hiếm (Nhóm IIB)"
       }
     ],
-    "address": "Thôn 1, xã Hoà Sơn, Tỉnh Đắk Lắk"
+    "updatedAt": "2026-11-26T00:29:15.589Z"
   },
   {
     "speciesList": [
@@ -2830,38 +2830,33 @@ export const REAL_FACILITIES_DATA = [
         "id": "sp_18_2"
       }
     ],
-    "registrationDate": "",
-    "phone": "",
-    "lng": 108.423608,
-    "registrationCode": "Đang cập nhật",
-    "facilityName": "Cơ sở nuôi Lê Quang Mạnh",
-    "updatedAt": "2026-11-26T00:29:15.589Z",
-    "address": "Thôn 29, Xã Krông Bông, Tỉnh Đắk Lắk",
-    "ownerName": "Lê Quang Mạnh",
     "name": "Cơ sở nuôi Lê Quang Mạnh",
-    "lat": 12.526903,
-    "owner": "Lê Quang Mạnh",
-    "id": "fac_18",
-    "commune": "Xã Krông Bông",
+    "lng": 108.423608,
+    "note": "",
+    "registrationCode": "Đang cập nhật",
+    "address": "Thôn 29, Xã Krông Bông, Tỉnh Đắk Lắk",
+    "updatedAt": "2026-11-26T00:29:15.589Z",
     "purposeCode": "T",
-    "note": ""
+    "facilityName": "Cơ sở nuôi Lê Quang Mạnh",
+    "owner": "Lê Quang Mạnh",
+    "lat": 12.526903,
+    "registrationDate": "",
+    "ownerName": "Lê Quang Mạnh",
+    "commune": "Xã Krông Bông",
+    "phone": "",
+    "id": "fac_18"
   },
   {
-    "purposeCode": "T",
-    "registrationCode": "Đang cập nhật",
-    "ownerName": "Nguyễn Trương Đắc Nam",
-    "owner": "Nguyễn Trương Đắc Nam",
     "facilityName": "Cơ sở nuôi Nguyễn Trương Đắc Nam",
     "registrationDate": "",
-    "lng": 108.328497,
+    "address": "Thôn 9, Xã Krông Bông, Tỉnh Đắk Lắk",
     "id": "fac_19",
+    "purposeCode": "T",
     "lat": 12.528051,
     "name": "Cơ sở nuôi Nguyễn Trương Đắc Nam",
-    "address": "Thôn 9, Xã Krông Bông, Tỉnh Đắk Lắk",
-    "phone": "",
+    "owner": "Nguyễn Trương Đắc Nam",
     "updatedAt": "2026-11-26T00:29:15.589Z",
-    "commune": "Xã Krông Bông",
-    "note": "",
+    "phone": "",
     "speciesList": [
       {
         "baseline": {
@@ -2882,22 +2877,14 @@ export const REAL_FACILITIES_DATA = [
         "fluctuations": [],
         "group": "Động vật rừng thông thường"
       }
-    ]
+    ],
+    "note": "",
+    "lng": 108.328497,
+    "ownerName": "Nguyễn Trương Đắc Nam",
+    "registrationCode": "Đang cập nhật",
+    "commune": "Xã Krông Bông"
   },
   {
-    "lng": 108.297682,
-    "updatedAt": "2026-11-26T00:29:15.589Z",
-    "purposeCode": "T",
-    "address": "Thôn Quảng Đông, xã Hòa Sơn, Tỉnh Đắk Lắk",
-    "name": "Cơ sở nuôi Nguyễn Văn Thúy",
-    "note": "",
-    "commune": "xã Hòa Sơn",
-    "owner": "Nguyễn Văn Thúy",
-    "facilityName": "Cơ sở nuôi Nguyễn Văn Thúy",
-    "id": "fac_2",
-    "registrationCode": "IIB-C-DLC-028",
-    "ownerName": "Nguyễn Văn Thúy",
-    "phone": "",
     "speciesList": [
       {
         "baseline": {
@@ -3030,21 +3017,37 @@ export const REAL_FACILITIES_DATA = [
         "purposeCode": "T"
       }
     ],
+    "phone": "",
     "registrationDate": "2023-04-17",
-    "lat": 12.491634
+    "address": "Thôn Quảng Đông, xã Hòa Sơn, Tỉnh Đắk Lắk",
+    "id": "fac_2",
+    "owner": "Nguyễn Văn Thúy",
+    "lat": 12.491634,
+    "name": "Cơ sở nuôi Nguyễn Văn Thúy",
+    "commune": "xã Hòa Sơn",
+    "purposeCode": "T",
+    "facilityName": "Cơ sở nuôi Nguyễn Văn Thúy",
+    "ownerName": "Nguyễn Văn Thúy",
+    "registrationCode": "IIB-C-DLC-028",
+    "note": "",
+    "updatedAt": "2026-11-26T00:29:15.589Z",
+    "lng": 108.297682
   },
   {
-    "name": "Cơ sở nuôi Trần Văn Lực",
     "owner": "Trần Văn Lực",
-    "ownerName": "Trần Văn Lực",
-    "purposeCode": "T",
-    "note": "",
-    "lat": 12.58438,
     "id": "fac_20",
+    "ownerName": "Trần Văn Lực",
+    "lat": 12.58438,
+    "updatedAt": "2026-11-26T00:29:15.590Z",
+    "registrationDate": "",
+    "purposeCode": "T",
+    "phone": "",
     "address": "Buôn Cư Ênun A, Xã Dang Kang, Tỉnh Đắk Lắk",
     "registrationCode": "Đang cập nhật",
+    "commune": "Xã Dang Kang",
+    "note": "",
     "lng": 108.315384,
-    "phone": "",
+    "facilityName": "Cơ sở nuôi Trần Văn Lực",
     "speciesList": [
       {
         "group": "Động vật rừng thông thường",
@@ -3066,18 +3069,12 @@ export const REAL_FACILITIES_DATA = [
         "fluctuations": []
       }
     ],
-    "commune": "Xã Dang Kang",
-    "facilityName": "Cơ sở nuôi Trần Văn Lực",
-    "registrationDate": "",
-    "updatedAt": "2026-11-26T00:29:15.590Z"
+    "name": "Cơ sở nuôi Trần Văn Lực"
   },
   {
-    "phone": "",
-    "id": "fac_21",
-    "note": "",
-    "lng": 108.339096,
-    "registrationDate": "",
     "commune": "Xã Dang Kang",
+    "lng": 108.339096,
+    "id": "fac_21",
     "speciesList": [
       {
         "citesAppendix": "Khai báo kiểm lâm",
@@ -3093,25 +3090,27 @@ export const REAL_FACILITIES_DATA = [
           "otherMale": 0,
           "mother": 10,
           "otherUnknown": 0,
-          "note": "Số lư��ng Dúi mốc lớn hiện có"
+          "note": "Số lượng Dúi mốc lớn hiện có"
         },
         "id": "sp_21_1",
         "fluctuations": []
       }
     ],
-    "name": "Cơ sở nuôi Đinh Tiến Toàn",
+    "ownerName": "Đinh Tiến Toàn",
+    "registrationDate": "",
+    "updatedAt": "2026-11-26T00:29:15.590Z",
+    "note": "",
+    "lat": 12.619158,
+    "facilityName": "Cơ sở nuôi Đinh Tiến Toàn",
+    "phone": "",
     "registrationCode": "Đang cập nhật",
     "address": "Thôn 3, Xã Dang Kang, Tỉnh Đắk Lắk",
-    "updatedAt": "2026-11-26T00:29:15.590Z",
     "owner": "Đinh Tiến Toàn",
-    "ownerName": "Đinh Tiến Toàn",
-    "facilityName": "Cơ sở nuôi Đinh Tiến Toàn",
-    "purposeCode": "T",
-    "lat": 12.619158
+    "name": "Cơ sở nuôi Đinh Tiến Toàn",
+    "purposeCode": "T"
   },
   {
     "commune": "xã Hòa Sơn",
-    "updatedAt": "2026-11-26T00:29:15.590Z",
     "speciesList": [
       {
         "id": "sp_22_1",
@@ -3133,25 +3132,31 @@ export const REAL_FACILITIES_DATA = [
         }
       }
     ],
-    "address": "Thôn 2, xã Hòa Sơn, Tỉnh Đắk Lắk",
-    "owner": "Nguyễn Thanh",
     "registrationCode": "Đang cập nhật",
-    "ownerName": "Nguyễn Thanh",
-    "name": "Cơ sở nuôi Nguyễn Thanh",
-    "purposeCode": "T",
     "facilityName": "Cơ sở nuôi Nguyễn Thanh",
-    "registrationDate": "",
     "id": "fac_22",
+    "phone": "",
+    "registrationDate": "",
+    "updatedAt": "2026-11-26T00:29:15.590Z",
+    "name": "Cơ sở nuôi Nguyễn Thanh",
+    "ownerName": "Nguyễn Thanh",
     "note": "",
-    "phone": ""
+    "purposeCode": "T",
+    "address": "Thôn 2, xã Hòa Sơn, Tỉnh Đắk Lắk",
+    "owner": "Nguyễn Thanh"
   },
   {
-    "owner": "Huỳnh Phúc Lợi",
+    "ownerName": "Huỳnh Phúc Lợi",
+    "registrationCode": "Đang cập nhật",
     "id": "fac_23",
-    "note": "Làm cảnh",
     "updatedAt": "2026-11-26T00:29:15.590Z",
-    "name": "Cơ sở nuôi Huỳnh Phúc Lợi",
+    "owner": "Huỳnh Phúc Lợi",
+    "phone": "",
+    "purposeCode": "O",
+    "commune": "xã Hòa Sơn",
     "facilityName": "Cơ sở nuôi Huỳnh Phúc Lợi",
+    "address": "Thôn 2, xã Hòa Sơn, Tỉnh Đắk Lắk",
+    "name": "Cơ sở nuôi Huỳnh Phúc Lợi",
     "speciesList": [
       {
         "group": "Động vật rừng thông thường (Lớp Chim)",
@@ -3173,25 +3178,26 @@ export const REAL_FACILITIES_DATA = [
         "scientificName": "Pycnonotus jocosus"
       }
     ],
-    "ownerName": "Huỳnh Phúc Lợi",
-    "phone": "",
-    "commune": "xã Hòa Sơn",
-    "purposeCode": "O",
-    "registrationCode": "Đang cập nhật",
-    "address": "Thôn 2, xã Hòa Sơn, Tỉnh Đắk Lắk",
+    "note": "Làm cảnh",
     "registrationDate": ""
   },
   {
-    "phone": "",
-    "ownerName": "Phan Thanh Trúc",
+    "updatedAt": "2026-11-26T00:29:15.590Z",
     "purposeCode": "T",
-    "owner": "Phan Thanh Trúc",
+    "name": "Cơ sở nuôi Phan Thanh Trúc",
+    "ownerName": "Phan Thanh Trúc",
+    "commune": "xã Hòa Sơn",
     "registrationDate": "",
     "note": "",
+    "address": "Thôn 4, xã Hòa Sơn, Tỉnh Đắk Lắk",
+    "facilityName": "Cơ sở nuôi Phan Thanh Trúc",
+    "registrationCode": "Đang cập nhật",
+    "phone": "",
+    "id": "fac_24",
     "speciesList": [
       {
         "fluctuations": [],
-        "citesAppendix": "Khai báo kiểm lâm",
+        "citesAppendix": "Khai báo ki��m lâm",
         "baseline": {
           "otherUnknown": 0,
           "otherMale": 0,
@@ -3209,20 +3215,9 @@ export const REAL_FACILITIES_DATA = [
         "purposeCode": "T"
       }
     ],
-    "id": "fac_24",
-    "commune": "xã Hòa Sơn",
-    "facilityName": "Cơ sở nuôi Phan Thanh Trúc",
-    "name": "Cơ sở nuôi Phan Thanh Trúc",
-    "registrationCode": "Đang cập nhật",
-    "updatedAt": "2026-11-26T00:29:15.590Z",
-    "address": "Thôn 4, xã Hòa Sơn, Tỉnh Đắk Lắk"
+    "owner": "Phan Thanh Trúc"
   },
   {
-    "ownerName": "Thái Hồng Sơn",
-    "registrationDate": "",
-    "commune": "Xã Krông Bông",
-    "id": "fac_25",
-    "facilityName": "Cơ sở nuôi Thái Hồng Sơn",
     "speciesList": [
       {
         "baseline": {
@@ -3244,28 +3239,24 @@ export const REAL_FACILITIES_DATA = [
         "vietnameseName": "Chim Chào mào"
       }
     ],
-    "owner": "Thái Hồng Sơn",
+    "id": "fac_25",
     "address": "Thôn 4, Xã Krông Bông, Tỉnh Đắk Lắk",
-    "registrationCode": "Đang cập nhật",
+    "facilityName": "Cơ sở nuôi Thái Hồng Sơn",
     "lat": 12.502961,
-    "lng": 108.333624,
-    "note": "",
+    "registrationCode": "Đang cập nhật",
+    "registrationDate": "",
+    "owner": "Thái Hồng Sơn",
     "purposeCode": "T",
-    "phone": "",
+    "note": "",
+    "lng": 108.333624,
+    "updatedAt": "2026-11-26T00:29:15.590Z",
+    "commune": "Xã Krông Bông",
     "name": "Cơ sở nuôi Thái Hồng Sơn",
-    "updatedAt": "2026-11-26T00:29:15.590Z"
+    "ownerName": "Thái Hồng Sơn",
+    "phone": ""
   },
   {
-    "registrationDate": "",
-    "facilityName": "Cơ sở nuôi Nguyễn Trí",
-    "address": "Thôn 7, Xã Krông Bông, Tỉnh Đắk Lắk",
-    "ownerName": "Nguyễn Trí",
-    "lat": 12.523945,
-    "owner": "Nguyễn Trí",
-    "purposeCode": "T",
-    "registrationCode": "Đang cập nhật",
-    "commune": "Xã Krông Bông",
-    "note": "",
+    "lng": 108.336714,
     "speciesList": [
       {
         "baseline": {
@@ -3287,20 +3278,22 @@ export const REAL_FACILITIES_DATA = [
         "id": "sp_26_1"
       }
     ],
-    "lng": 108.336714,
-    "phone": "",
     "name": "Cơ sở nuôi Nguyễn Trí",
+    "address": "Thôn 7, Xã Krông Bông, Tỉnh Đắk Lắk",
+    "ownerName": "Nguyễn Trí",
+    "note": "",
+    "registrationCode": "Đang cập nhật",
+    "updatedAt": "2026-11-26T00:29:15.590Z",
+    "facilityName": "Cơ sở nuôi Nguyễn Trí",
+    "commune": "Xã Krông Bông",
+    "phone": "",
+    "lat": 12.523945,
+    "registrationDate": "",
     "id": "fac_26",
-    "updatedAt": "2026-11-26T00:29:15.590Z"
+    "purposeCode": "T",
+    "owner": "Nguyễn Trí"
   },
   {
-    "updatedAt": "2026-11-26T00:29:15.658Z",
-    "commune": "Xã Krông Bông",
-    "registrationDate": "",
-    "name": "Cơ sở nuôi Nguyễn Văn Hòa",
-    "facilityName": "Cơ sở nuôi Nguyễn Văn Hòa",
-    "address": "Thôn 2, Xã Krông Bông, Tỉnh Đắk Lắk",
-    "registrationCode": "Đang cập nhật",
     "speciesList": [
       {
         "citesAppendix": "Khai báo kiểm lâm",
@@ -3322,24 +3315,29 @@ export const REAL_FACILITIES_DATA = [
         "fluctuations": []
       }
     ],
+    "name": "Cơ sở nuôi Nguyễn Văn Hòa",
+    "commune": "Xã Krông Bông",
     "note": "",
-    "owner": "Nguyễn Văn Hòa",
-    "purposeCode": "T",
-    "id": "fac_27",
+    "updatedAt": "2026-11-26T00:29:15.658Z",
+    "registrationCode": "Đang cập nhật",
     "ownerName": "Nguyễn Văn Hòa",
-    "phone": ""
+    "facilityName": "Cơ sở nuôi Nguyễn Văn Hòa",
+    "registrationDate": "",
+    "purposeCode": "T",
+    "owner": "Nguyễn Văn Hòa",
+    "phone": "",
+    "id": "fac_27",
+    "address": "Thôn 2, Xã Krông Bông, Tỉnh Đắk Lắk"
   },
   {
-    "lng": 108.401029,
-    "note": "",
-    "commune": "Xã Krông Bông",
-    "owner": "Trần Văn Hà",
-    "purposeCode": "T",
-    "name": "Cơ sở nuôi Trần Văn Hà",
     "facilityName": "Cơ sở nuôi Trần Văn Hà",
-    "address": "Thôn 26, Xã Krông Bông, Tỉnh Đắk Lắk",
+    "note": "",
+    "ownerName": "Trần Văn Hà",
+    "commune": "Xã Krông Bông",
+    "name": "Cơ sở nuôi Trần Văn Hà",
+    "lat": 12.547061,
     "updatedAt": "2026-11-26T00:29:15.658Z",
-    "id": "fac_28",
+    "registrationCode": "Đang cập nhật",
     "speciesList": [
       {
         "id": "sp_28_1",
@@ -3361,13 +3359,26 @@ export const REAL_FACILITIES_DATA = [
         "vietnameseName": "Chim Chào mào"
       }
     ],
-    "registrationCode": "Đang cập nhật",
-    "ownerName": "Trần Văn Hà",
-    "phone": "",
     "registrationDate": "",
-    "lat": 12.547061
+    "owner": "Trần Văn Hà",
+    "address": "Thôn 26, Xã Krông Bông, Tỉnh Đắk Lắk",
+    "id": "fac_28",
+    "lng": 108.401029,
+    "purposeCode": "T",
+    "phone": ""
   },
   {
+    "phone": "",
+    "facilityName": "Cơ sở nuôi Trần Ngọc Long",
+    "purposeCode": "T",
+    "name": "Cơ sở nuôi Trần Ngọc Long",
+    "address": "Thôn 2, Xã Krông Bông, Tỉnh Đắk Lắk",
+    "note": "",
+    "registrationDate": "",
+    "id": "fac_29",
+    "owner": "Trần Ngọc Long",
+    "commune": "Xã Krông Bông",
+    "ownerName": "Trần Ngọc Long",
     "speciesList": [
       {
         "id": "sp_29_1",
@@ -3389,32 +3400,24 @@ export const REAL_FACILITIES_DATA = [
         "vietnameseName": "Chim Cu gáy"
       }
     ],
-    "ownerName": "Trần Ngọc Long",
-    "phone": "",
-    "facilityName": "Cơ sở nuôi Trần Ngọc Long",
-    "registrationDate": "",
-    "address": "Thôn 2, Xã Krông Bông, Tỉnh Đắk Lắk",
     "updatedAt": "2026-11-26T00:29:15.659Z",
-    "name": "Cơ sở nuôi Trần Ngọc Long",
-    "registrationCode": "Đang cập nhật",
-    "id": "fac_29",
-    "commune": "Xã Krông Bông",
-    "note": "",
-    "purposeCode": "T",
-    "owner": "Trần Ngọc Long"
+    "registrationCode": "Đang cập nhật"
   },
   {
-    "phone": "",
-    "purposeCode": "T",
-    "ownerName": "Trịnh Viết Long",
-    "lat": 12.506699,
-    "lng": 108.1885,
-    "name": "Cơ sở nuôi Trịnh Viết Long",
-    "address": "Thôn 4, xã Hòa Sơn, Tỉnh Đắk Lắk",
-    "owner": "Trịnh Viết Long",
-    "id": "fac_3",
     "updatedAt": "2026-11-26T00:29:15.659Z",
     "registrationDate": "2025-10-03",
+    "ownerName": "Trịnh Viết Long",
+    "note": "Nghỉ nuôi",
+    "lat": 12.506699,
+    "address": "Thôn 4, xã Hòa Sơn, Tỉnh Đắk Lắk",
+    "purposeCode": "T",
+    "name": "Cơ sở nuôi Trịnh Viết Long",
+    "commune": "xã Hòa Sơn",
+    "id": "fac_3",
+    "facilityName": "Cơ sở nuôi Trịnh Viết Long",
+    "phone": "",
+    "lng": 108.1885,
+    "owner": "Trịnh Viết Long",
     "speciesList": [
       {
         "id": "sp_3_1",
@@ -3436,15 +3439,18 @@ export const REAL_FACILITIES_DATA = [
         "vietnameseName": "Cầy vòi Hương"
       }
     ],
-    "note": "Nghỉ nuôi",
-    "facilityName": "Cơ sở nuôi Trịnh Viết Long",
-    "commune": "xã Hòa Sơn",
     "registrationCode": "028-25/B-DLC"
   },
   {
-    "phone": "",
-    "facilityName": "Cơ sở nuôi Hoàng Văn Hải",
+    "registrationCode": "Đang cập nhật",
+    "address": "Thôn 6, Xã Dang Kang, Tỉnh Đắk Lắk",
     "lng": 108.3365,
+    "purposeCode": "T",
+    "name": "Cơ sở nuôi Hoàng Văn Hải",
+    "ownerName": "Hoàng Văn Hải",
+    "phone": "",
+    "updatedAt": "2026-11-26T00:29:15.660Z",
+    "id": "fac_30",
     "speciesList": [
       {
         "purposeCode": "T",
@@ -3466,24 +3472,16 @@ export const REAL_FACILITIES_DATA = [
         "vietnameseName": "Chim Chào mào"
       }
     ],
-    "ownerName": "Hoàng Văn Hải",
-    "id": "fac_30",
-    "note": "",
-    "owner": "Hoàng Văn Hải",
-    "address": "Thôn 6, Xã Dang Kang, Tỉnh Đắk Lắk",
-    "updatedAt": "2026-11-26T00:29:15.660Z",
-    "registrationDate": "",
-    "purposeCode": "T",
-    "name": "Cơ sở nuôi Hoàng Văn Hải",
     "commune": "Xã Dang Kang",
     "lat": 12.574027,
-    "registrationCode": "Đang cập nhật"
+    "facilityName": "Cơ sở nuôi Hoàng Văn Hải",
+    "owner": "Hoàng Văn Hải",
+    "registrationDate": "",
+    "note": ""
   },
   {
-    "owner": "Võ Văn Nhơn",
-    "updatedAt": "2026-11-26T00:29:15.660Z",
-    "lng": 108.33214,
-    "purposeCode": "O",
+    "note": "Làm cảnh",
+    "lat": 12.562678,
     "registrationDate": "",
     "speciesList": [
       {
@@ -3506,20 +3504,32 @@ export const REAL_FACILITIES_DATA = [
         }
       }
     ],
-    "ownerName": "Võ Văn Nhơn",
-    "lat": 12.562678,
-    "phone": "",
-    "note": "Làm cảnh",
-    "address": "Thôn 7, Xã Dang Kang, Tỉnh Đắk Lắk",
     "facilityName": "Cơ sở nuôi Võ Văn Nhơn",
-    "registrationCode": "Đang cập nhật",
-    "name": "Cơ sở nuôi Võ Văn Nhơn",
     "commune": "Xã Dang Kang",
-    "id": "fac_31"
+    "name": "Cơ sở nuôi Võ Văn Nhơn",
+    "purposeCode": "O",
+    "lng": 108.33214,
+    "address": "Thôn 7, Xã Dang Kang, Tỉnh Đắk Lắk",
+    "owner": "Võ Văn Nhơn",
+    "id": "fac_31",
+    "updatedAt": "2026-11-26T00:29:15.660Z",
+    "registrationCode": "Đang cập nhật",
+    "ownerName": "Võ Văn Nhơn",
+    "phone": ""
   },
   {
-    "registrationCode": "104-26/B-DLC",
+    "purposeCode": "T",
+    "updatedAt": "2026-11-26T00:29:15.660Z",
+    "facilityName": "Cơ sở nuôi Phạm Bá Quang",
+    "ownerName": "Phạm Bá Quang",
     "lat": 12.492824,
+    "registrationDate": "2026-07-06",
+    "address": "Thôn 8, xã Hòa Sơn, Tỉnh Đắk Lắk",
+    "id": "fac_4",
+    "commune": "xã Hòa Sơn",
+    "name": "Cơ sở nuôi Phạm Bá Quang",
+    "registrationCode": "104-26/B-DLC",
+    "owner": "Phạm Bá Quang",
     "speciesList": [
       {
         "baseline": {
@@ -3564,24 +3574,11 @@ export const REAL_FACILITIES_DATA = [
         ]
       }
     ],
-    "registrationDate": "2026-07-06",
-    "updatedAt": "2026-11-26T00:29:15.660Z",
-    "phone": "",
-    "id": "fac_4",
-    "purposeCode": "T",
-    "address": "Thôn 8, xã Hòa Sơn, Tỉnh Đắk Lắk",
-    "name": "Cơ sở nuôi Phạm Bá Quang",
-    "ownerName": "Phạm Bá Quang",
     "lng": 108.29803,
-    "facilityName": "Cơ sở nuôi Phạm Bá Quang",
-    "commune": "xã Hòa Sơn",
-    "owner": "Phạm Bá Quang",
+    "phone": "",
     "note": "104-26/B-DLC"
   },
   {
-    "ownerName": "Phan Thanh Hùng",
-    "phone": "",
-    "purposeCode": "T",
     "speciesList": [
       {
         "group": "Động vật rừng nguy cấp, quý, hiếm (Nhóm IIB)",
@@ -3604,29 +3601,30 @@ export const REAL_FACILITIES_DATA = [
       }
     ],
     "id": "fac_5",
-    "registrationCode": "IIB-DLC-021",
-    "facilityName": "Cơ sở nuôi Phan Thanh Hùng",
-    "note": "Nghỉ nuôi",
     "address": "Thôn 1, xã Hòa Sơn, Tỉnh Đắk Lắk",
+    "phone": "",
     "owner": "Phan Thanh Hùng",
-    "updatedAt": "2026-11-26T00:29:15.660Z",
     "registrationDate": "2022-04-22",
+    "registrationCode": "IIB-DLC-021",
+    "purposeCode": "T",
+    "note": "Nghỉ nuôi",
+    "ownerName": "Phan Thanh Hùng",
+    "name": "Cơ sở nuôi Phan Thanh Hùng",
+    "facilityName": "Cơ sở nuôi Phan Thanh Hùng",
     "commune": "xã Hòa Sơn",
-    "name": "Cơ sở nuôi Phan Thanh Hùng"
+    "updatedAt": "2026-11-26T00:29:15.660Z"
   },
   {
-    "phone": "",
-    "address": "Thôn 6, xã Hòa Sơn, Tỉnh Đắk Lắk",
     "purposeCode": "T",
-    "commune": "xã Hòa Sơn",
     "updatedAt": "2026-11-26T00:29:15.660Z",
-    "id": "fac_6",
-    "facilityName": "Cơ sở nuôi Lê Nguyễn Nhật Tân",
     "note": "Nghỉ nuôi",
-    "owner": "Lê Nguyễn Nhật Tân",
-    "ownerName": "Lê Nguy���n Nhật Tân",
-    "registrationCode": "IIB-DLC-025",
+    "ownerName": "Lê Nguyễn Nhật Tân",
     "name": "Cơ sở nuôi Lê Nguyễn Nhật Tân",
+    "commune": "xã Hòa Sơn",
+    "registrationCode": "IIB-DLC-025",
+    "owner": "Lê Nguyễn Nhật Tân",
+    "address": "Thôn 6, xã Hòa Sơn, Tỉnh Đắk Lắk",
+    "registrationDate": "",
     "speciesList": [
       {
         "purposeCode": "T",
@@ -3648,11 +3646,21 @@ export const REAL_FACILITIES_DATA = [
         "scientificName": "Paradoxurus hermaphroditus"
       }
     ],
-    "registrationDate": ""
+    "facilityName": "Cơ sở nuôi Lê Nguyễn Nhật Tân",
+    "id": "fac_6",
+    "phone": ""
   },
   {
+    "purposeCode": "T",
+    "note": "",
+    "phone": "",
     "owner": "Nguyễn Tấn Danh Nhân",
     "registrationCode": "IIB-C-DLC-055",
+    "address": "Buôn Tơ Rang, xã Yang Mao, Tỉnh Đắk Lắk",
+    "name": "Cơ sở nuôi Nguyễn Tấn Danh Nhân",
+    "lat": 12.472545,
+    "commune": "xã Yang Mao",
+    "updatedAt": "2026-11-26T00:29:15.662Z",
     "speciesList": [
       {
         "group": "Động vật rừng nguy cấp, quý, hiếm (Nhóm IIB)",
@@ -3731,29 +3739,22 @@ export const REAL_FACILITIES_DATA = [
         "purposeCode": "T"
       }
     ],
-    "ownerName": "Nguyễn Tấn Danh Nhân",
-    "commune": "xã Yang Mao",
-    "lng": 108.562016,
-    "facilityName": "Cơ sở nuôi Nguyễn Tấn Danh Nhân",
     "registrationDate": "2024-07-03",
-    "address": "Buôn Tơ Rang, xã Yang Mao, Tỉnh Đắk Lắk",
-    "note": "",
-    "phone": "",
-    "name": "Cơ sở nuôi Nguyễn Tấn Danh Nhân",
-    "lat": 12.472545,
-    "purposeCode": "T",
+    "ownerName": "Nguyễn Tấn Danh Nhân",
     "id": "fac_7",
-    "updatedAt": "2026-11-26T00:29:15.662Z"
+    "lng": 108.562016,
+    "facilityName": "Cơ sở nuôi Nguyễn Tấn Danh Nhân"
   },
   {
-    "registrationDate": "2026-05-05",
-    "ownerName": "Huỳnh Công Nam",
-    "registrationCode": "53-26/B-DLC",
-    "phone": "",
-    "lat": 12.483552,
+    "updatedAt": "2026-11-26T00:29:15.662Z",
     "purposeCode": "T",
-    "id": "fac_8",
+    "address": "Buôn chàm A, xã Yang Mao, Tỉnh Đắk Lắk",
+    "ownerName": "Huỳnh Công Nam",
+    "registrationDate": "2026-05-05",
+    "lat": 12.483552,
+    "owner": "Huỳnh Công Nam",
     "facilityName": "Cơ sở nuôi Huỳnh Công Nam",
+    "id": "fac_8",
     "speciesList": [
       {
         "purposeCode": "T",
@@ -3775,16 +3776,23 @@ export const REAL_FACILITIES_DATA = [
         "vietnameseName": "Cầy vòi Hương"
       }
     ],
-    "lng": 108.562716,
-    "name": "Cơ sở nuôi Huỳnh Công Nam",
-    "address": "Buôn chàm A, xã Yang Mao, Tỉnh Đắk Lắk",
     "note": "",
-    "owner": "Huỳnh Công Nam",
+    "lng": 108.562716,
+    "registrationCode": "53-26/B-DLC",
     "commune": "xã Yang Mao",
-    "updatedAt": "2026-11-26T00:29:15.662Z"
+    "name": "Cơ sở nuôi Huỳnh Công Nam",
+    "phone": ""
   },
   {
-    "registrationDate": "2026-03-03",
+    "owner": "Trần Duy Quân",
+    "address": "Thôn Ea Luêh, xã Yang Mao, Tỉnh Đắk Lắk",
+    "purposeCode": "T",
+    "ownerName": "Trần Duy Quân",
+    "id": "fac_9",
+    "updatedAt": "2026-11-26T00:29:15.662Z",
+    "registrationCode": "14-26/B-DLC",
+    "lat": 12.503389,
+    "phone": "",
     "speciesList": [
       {
         "group": "Động vật rừng nguy cấp, quý, hiếm (Nhóm IIB)",
@@ -3806,20 +3814,12 @@ export const REAL_FACILITIES_DATA = [
         "citesAppendix": "Phụ lục II CITES"
       }
     ],
-    "owner": "Trần Duy Quân",
-    "updatedAt": "2026-11-26T00:29:15.662Z",
-    "lng": 108.655302,
-    "registrationCode": "14-26/B-DLC",
+    "registrationDate": "2026-03-03",
     "facilityName": "Cơ sở nuôi Trần Duy Quân",
-    "commune": "xã Yang Mao",
-    "lat": 12.503389,
-    "phone": "",
+    "note": "",
     "name": "Cơ sở nuôi Trần Duy Quân",
-    "id": "fac_9",
-    "address": "Thôn Ea Luêh, xã Yang Mao, Tỉnh Đắk Lắk",
-    "purposeCode": "T",
-    "ownerName": "Trần Duy Quân",
-    "note": ""
+    "commune": "xã Yang Mao",
+    "lng": 108.655302
   }
 ];
 

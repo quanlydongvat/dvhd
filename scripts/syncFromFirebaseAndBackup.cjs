@@ -72,6 +72,7 @@ async function syncAndBackup() {
   const fluctuationRequests = await fetchCollection('fluctuation_requests');
   const users = await fetchCollection('users');
   const rawPackingLists = await fetchCollection('packing_lists');
+  const userReviews = await fetchCollection('user_reviews');
 
   // Filter blacklisted deleted facilities
   const facilities = rawFacilities.filter(f => !BLACKLISTED_DELETED_FACILITY_IDS.includes(f.id));
@@ -83,6 +84,7 @@ async function syncAndBackup() {
   console.log(`✓ Downloaded ${packingLists.length} Packing Lists (Bảng kê lâm sản)`);
   console.log(`✓ Downloaded ${fluctuationRequests.length} Fluctuation Requests`);
   console.log(`✓ Downloaded ${users.length} Users`);
+  console.log(`✓ Downloaded ${userReviews.length} User Reviews`);
 
   const now = new Date();
   const timestamp = now.toISOString();
@@ -96,10 +98,12 @@ async function syncAndBackup() {
     packingListCount: packingLists.length,
     usersCount: users.length,
     requestsCount: fluctuationRequests.length,
+    reviewsCount: userReviews.length,
     facilitiesList: facilities,
     packingListData: packingLists,
     fluctuationRequests,
     usersList: users,
+    userReviews,
   };
 
   // 1. Write JSON backups to public/ and docs/

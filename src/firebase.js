@@ -247,3 +247,135 @@ export async function loadPackingListFromCloud() {
     return null;
   }
 }
+
+// ==========================================
+// USER REVIEWS & RATINGS (Đánh giá người dùng)
+// ==========================================
+
+export const DEFAULT_USER_REVIEWS = [
+  {
+    id: 'rev_fac_10',
+    facilityId: 'fac_10',
+    facilityName: 'Cơ sở nuôi Trịnh Lục',
+    ownerName: 'Trịnh Lục',
+    commune: 'xã Cư Pui',
+    username: 'trinhluc',
+    userRole: 'FACILITY',
+    rating: 5,
+    comment: 'Ứng dụng khai báo biến động tăng giảm đàn rất tiện lợi, thao tác trực tiếp trên điện thoại nhanh chóng, sổ sách rõ ràng minh bạch.',
+    createdAt: '2026-11-20T08:30:00.000Z',
+    updatedAt: '2026-11-20T08:30:00.000Z',
+  },
+  {
+    id: 'rev_fac_12',
+    facilityId: 'fac_12',
+    facilityName: 'Cơ sở nuôi Lê Thanh Đức',
+    ownerName: 'Lê Thanh Đức',
+    commune: 'Xã Krông Bông',
+    username: 'lethanhduc',
+    userRole: 'FACILITY',
+    rating: 5,
+    comment: 'Theo dõi số lượng đàn cầy vòi hương và xuất bảng kê lâm sản rất chuẩn xác. Cán bộ Kiểm lâm tiếp nhận và duyệt biến động nhanh.',
+    createdAt: '2026-11-22T09:15:00.000Z',
+    updatedAt: '2026-11-22T09:15:00.000Z',
+  },
+  {
+    id: 'rev_fac_18',
+    facilityId: 'fac_18',
+    facilityName: 'Cơ sở nuôi Lê Quang Mạnh',
+    ownerName: 'Lê Quang Mạnh',
+    commune: 'Xã Krông Bông',
+    username: 'lequangmanh',
+    userRole: 'FACILITY',
+    rating: 5,
+    comment: 'Hệ thống tự động tính toán tổng đàn dúi theo Thông tư 85 rất tiện ích, giúp cơ sở không phải cộng sổ tay thủ công nữa.',
+    createdAt: '2026-11-23T14:45:00.000Z',
+    updatedAt: '2026-11-23T14:45:00.000Z',
+  },
+  {
+    id: 'rev_fac_11',
+    facilityId: 'fac_11',
+    facilityName: 'Cơ sở nuôi Nguyễn Hữu Đô',
+    ownerName: 'Nguyễn Hữu Đô',
+    commune: 'xã Cư Pui',
+    username: 'nguyenhuudo',
+    userRole: 'FACILITY',
+    rating: 5,
+    comment: 'Giao diện tiếng Việt rõ ràng, dễ sử dụng cho các hộ chăn nuôi. Đánh giá 5 sao cho phần mềm!',
+    createdAt: '2026-11-24T10:20:00.000Z',
+    updatedAt: '2026-11-24T10:20:00.000Z',
+  },
+  {
+    id: 'rev_fac_1791188880545',
+    facilityId: 'fac_1791188880545',
+    facilityName: 'Nguyễn Văn Vinh',
+    ownerName: 'Nguyễn Văn Vinh',
+    commune: 'xã Hòa Sơn',
+    username: 'nguyenvanvinh',
+    userRole: 'FACILITY',
+    rating: 5,
+    comment: 'Biểu đồ và bảng xếp hạng rất trực quan, nắm bắt ngay được hiện trạng và biến động tăng đàn trong tháng.',
+    createdAt: '2026-11-25T16:00:00.000Z',
+    updatedAt: '2026-11-25T16:00:00.000Z',
+  },
+];
+
+export function subscribeToUserReviews(onData, onError) {
+  if (!db) return () => {};
+  return onSnapshot(collection(db, 'user_reviews'), (snapshot) => {
+    const list = [];
+    snapshot.forEach((docSnap) => {
+      list.push({ id: docSnap.id, ...docSnap.data() });
+    });
+    // Sort by createdAt descending
+    list.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+    if (onData) onData(list);
+  }, (err) => {
+    if (onError) onError(err);
+    else console.warn('Real-time user_reviews listener error:', err);
+  });
+}
+
+export async function saveUserReviewToCloud(reviewObj) {
+  try {
+    if (!db || !reviewObj || !reviewObj.id) return false;
+    const docRef = doc(db, 'user_reviews', reviewObj.id);
+    const cleaned = removeUndefinedKeys({
+      ...reviewObj,
+      updatedAt: new Date().toISOString()
+    });
+    await setDoc(docRef, cleaned);
+    console.log(`[Firestore] Saved user review "${reviewObj.id}" successfully.`);
+    return true;
+  } catch (error) {
+    console.warn('Error saving user review to Cloud Firestore:', error);
+    return false;
+  }
+}
+
+export async function deleteUserReviewFromCloud(reviewId) {
+  try {
+    if (!db || !reviewId) return false;
+    await deleteDoc(doc(db, 'user_reviews', reviewId));
+    console.log(`[Firestore] Deleted user review "${reviewId}" successfully.`);
+    return true;
+  } catch (error) {
+    console.warn('Error deleting user review from Cloud Firestore:', error);
+    return false;
+  }
+}
+
+export async function loadUserReviewsFromCloud() {
+  try {
+    if (!db) return null;
+    const snapshot = await getDocs(collection(db, 'user_reviews'));
+    if (snapshot.empty) return null;
+    const list = [];
+    snapshot.forEach((d) => list.push({ id: d.id, ...d.data() }));
+    list.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+    return list;
+  } catch (error) {
+    console.warn('Error loading user reviews from Cloud:', error);
+    return null;
+  }
+}

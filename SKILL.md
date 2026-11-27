@@ -144,3 +144,22 @@ const rows = computeLogbookTable(species.baseline || {}, species.fluctuations ||
 - Hiển thị tỷ lệ số lượng cá thể giữa:
   - 🐾 **Động vật Lớp Thú (Mammalia)**: Dúi, Cầy, Nhím, Don...
   - 🪶 **Động vật Lớp Chim (Aves)**: Chim chào mào, Chim cu gáy...
+
+### D. Hệ thống Đánh Giá & Góp Ý từ Cơ Sở Nuôi (1 đến 5 sao & Bình luận)
+- Tọa lạc ngay bên dưới Bảng xếp hạng nuôi trong thanh điều hướng bên trái (`LeftSidebar.jsx`).
+- **Sidebar Widget (`SidebarUserReviews.jsx`)**:
+  - Hiển thị điểm đánh giá trung bình (VD: ⭐ 5.0/5) và số lượng cơ sở đã đánh giá.
+  - Tự động xoay vòng hiển thị các trích dẫn nhận xét thực tế của các cơ sở nuôi tại Krông Bông mỗi 6 giây, có nút chuyển qua lại (`prev/next`) và tạm dừng khi rê chuột.
+  - Nút gọi hành động: "Chấm điểm" (hoặc hiển thị "Đã chấm X★" nếu đã đánh giá) và "Xem tất cả góp ý & gửi đánh giá".
+- **Cửa sổ chi tiết Đánh giá (`UserReviewsModal.jsx`)**:
+  - Thanh phân bổ xếp hạng từ 5★ đến 1★.
+  - Bộ lọc xem nhận xét theo số sao (Tất cả, 5★, 4★, 3★...).
+  - Form chấm điểm tương tác 1 đến 5 sao với nhãn cảm xúc trực quan (1: Cần cải thiện ... 5: Tuyệt vời, rất hài lòng!).
+  - Tự động liên kết thông tin cơ sở nuôi khi đăng nhập (Tên cơ sở, Chủ hộ, Xã).
+  - Khung nhập nhận xét chi tiết (tối đa 600 ký tự).
+  - Hỗ trợ cơ sở chỉnh sửa lại đánh giá của mình hoặc xóa đánh giá.
+- **Đồng bộ dữ liệu đa tầng**:
+  - Real-time Firestore snapshot listener: collection `user_reviews`.
+  - Cache Offline: `localStorage.getItem('wildlife_user_reviews')`.
+  - Backup định kỳ: script `scripts/syncFromFirebaseAndBackup.cjs` sao lưu toàn bộ `user_reviews` vào `public/` và `docs/`.
+
