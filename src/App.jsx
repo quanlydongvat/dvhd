@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo, Suspense, lazy } from 'react';
 import Header from './components/Header';
 import LeftSidebar from './components/LeftSidebar';
+import HeroBanner from './components/HeroBanner';
 import TableView from './components/TableView';
 import SummaryView from './components/SummaryView';
 import DesktopAppHeader from './components/DesktopAppHeader';
@@ -1775,28 +1776,8 @@ export default function App() {
 
             {/* Main Content Area */}
             <main className="flex-1 max-w-[1720px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-5">
-              {/* Show Video Banner ONLY on Home view - Compact 150-180px height while preserving full text & animal animation */}
-              {currentView === 'HOME' && (
-                <div className="mb-4 animate-in fade-in slide-in-from-top-4 duration-500 rounded-2xl overflow-hidden border border-emerald-800/30 shadow-md bg-gradient-to-r from-[#062219] via-[#0a3022] to-[#062219] h-[150px] sm:h-[168px] lg:h-[180px] relative flex items-center justify-center">
-                  <video
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    preload="metadata"
-                    poster="./images/banner.jpg"
-                    className="w-full h-full object-contain object-center block [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)]"
-                  >
-                    <source src="./banner.mp4" type="video/mp4" />
-                    <source src="./images/banner.mp4" type="video/mp4" />
-                    <img
-                      src="./images/banner.jpg"
-                      alt="Hạt Kiểm lâm khu vực Krông Bông - Banner Quản lý cơ sở nuôi động vật hoang dã"
-                      className="w-full h-full object-contain object-center block"
-                    />
-                  </video>
-                </div>
-              )}
+              {/* Show Panoramic Full-Width Hero Banner ONLY on Home view */}
+              {currentView === 'HOME' && <HeroBanner />}
 
               {currentView === 'ADMIN_USERS' && currentUser?.role === 'ADMIN' ? (
                 <Suspense fallback={<ViewLoadingFallback text="Đang nạp Bảng Quản trị Hệ thống..." />}>
