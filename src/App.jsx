@@ -1777,57 +1777,25 @@ export default function App() {
             <main className="flex-1 max-w-[1720px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-5">
               {/* Show Animated Video Banner ONLY on Home view (192px mobile / 240px tablet / 264px desktop) */}
               {currentView === 'HOME' && (
-                <div className="mb-4 animate-in fade-in slide-in-from-top-4 duration-500 rounded-2xl overflow-hidden border border-emerald-500/30 shadow-lg bg-gradient-to-r from-[#052014] via-[#0a3020] to-[#072619] h-[192px] sm:h-[240px] lg:h-[264px] relative flex items-center justify-between">
-                  {/* Subtle glowing forest atmosphere (no ghosted text) */}
-                  <div className="absolute -left-16 -top-16 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
-                  <div className="absolute left-1/3 -bottom-16 w-56 h-56 bg-amber-400/10 rounded-full blur-3xl pointer-events-none" />
-
-                  {/* Left: Crisp Uncropped Title & Logo */}
-                  <div className="relative z-20 pl-5 sm:pl-8 lg:pl-10 pr-2 flex flex-col justify-center w-[58%] sm:w-[50%] lg:w-[46%]">
-                    <div className="flex items-center gap-2.5 mb-2 sm:mb-2.5">
-                      <img
-                        src="./images/logo_kiem_lam.png"
-                        alt="Logo Kiểm Lâm"
-                        className="w-8 h-8 sm:w-10 sm:h-10 object-contain rounded-full bg-white/10 p-0.5 border border-emerald-400/30 shadow-sm flex-shrink-0"
-                        onError={(e) => { e.target.style.display = 'none'; }}
-                      />
-                      <div className="min-w-0">
-                        <div className="text-[10px] sm:text-xs font-extrabold tracking-widest text-emerald-300 uppercase truncate">
-                          WILDLIFE FARM · KRÔNG BÔNG
-                        </div>
-                        <div className="text-[10px] sm:text-xs text-emerald-100/80 font-medium truncate">
-                          Hạt Kiểm lâm khu vực Krông Bông
-                        </div>
-                      </div>
-                    </div>
-
-                    <h1 className="text-base sm:text-2xl lg:text-[28px] xl:text-[32px] font-black tracking-tight leading-[1.18] text-transparent bg-clip-text bg-gradient-to-b from-[#f7e7ac] via-[#dfbe62] to-[#b08a2e] drop-shadow-[0_2px_6px_rgba(0,0,0,0.65)]">
-                      QUẢN LÝ CƠ SỞ NUÔI
-                      <br />
-                      ĐỘNG VẬT HOANG DÃ
-                    </h1>
-                  </div>
-
-                  {/* Right: Original Animated Video (Masks out left text inside video, keeps 100% of moving animals) */}
-                  <div className="relative z-10 h-full flex-1 flex justify-end items-center overflow-hidden">
-                    <video
-                      autoPlay
-                      loop
-                      muted
-                      playsInline
-                      preload="metadata"
-                      poster="./images/banner.jpg"
-                      className="h-full w-auto max-w-none object-contain object-right [mask-image:linear-gradient(to_right,transparent_0%,transparent_44%,black_55%,black_98%,transparent_100%)]"
-                    >
-                      <source src="./banner.mp4" type="video/mp4" />
-                      <source src="./images/banner.mp4" type="video/mp4" />
-                      <img
-                        src="./images/banner.jpg"
-                        alt="Hạt Kiểm lâm khu vực Krông Bông - Banner Quản lý cơ sở nuôi động vật hoang dã"
-                        className="h-full w-auto object-contain object-right"
-                      />
-                    </video>
-                  </div>
+                <div className="mb-4 animate-in fade-in slide-in-from-top-4 duration-500 rounded-2xl overflow-hidden border border-emerald-500/30 shadow-lg bg-slate-900 h-[192px] sm:h-[240px] lg:h-[264px] relative">
+                  {/* Full-width Animated Video Banner (spanning 100% width, animals occupy 3/4 to full banner) */}
+                  <video
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    preload="metadata"
+                    poster="./images/banner.jpg"
+                    className="w-full h-full object-cover object-center block"
+                  >
+                    <source src="./banner.mp4" type="video/mp4" />
+                    <source src="./images/banner.mp4" type="video/mp4" />
+                    <img
+                      src="./images/banner.jpg"
+                      alt="Hạt Kiểm lâm khu vực Krông Bông - Banner Quản lý cơ sở nuôi động vật hoang dã"
+                      className="w-full h-full object-cover object-center block"
+                    />
+                  </video>
                 </div>
               )}
 

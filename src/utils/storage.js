@@ -5,6 +5,7 @@
 const STORAGE_KEY = 'wildlife_manager_data_v6';
 
 // Permanent blacklist of deleted/zombie facilities to prevent them from resurrecting from local cache or backups
+export const BLACKLISTED_DELETED_FACILITY_IDS = ['fac_1786163777938', 'fac_1788916180780'];
 export const BLACKLISTED_DELETED_FACILITY_IDS = ['fac_1786163777938', 'fac_1788916180780', 'fac_22', 'fac_1794453722654'];
 
 export async function forceClearAllCache() {
@@ -3780,7 +3781,7 @@ export function loadAppData() {
       try {
         const params = new URLSearchParams(window.location.search);
         urlFacId = params.get("facId") || params.get("facilityId");
-      } catch (e) {}
+      } catch (e) { }
     }
 
     let raw = localStorage.getItem(STORAGE_KEY);
@@ -3805,7 +3806,7 @@ export function loadAppData() {
             saveAppData(migrated);
             raw = JSON.stringify(migrated);
           }
-        } catch (e) {}
+        } catch (e) { }
       }
     }
 
@@ -3832,7 +3833,7 @@ export function loadAppData() {
       if (f.address) {
         f.address = cleanFacilityAddress(f.address);
       }
-      
+
       // Auto-normalize species names and groups
       if (f.speciesList) {
         f.speciesList = f.speciesList.map((s) => {
@@ -3884,19 +3885,19 @@ export function loadAppData() {
 
     const facilityInfo = activeFacility
       ? {
-          id: activeFacility.id,
-          facilityName: activeFacility.facilityName,
-          ownerName: activeFacility.ownerName,
-          registrationCode: activeFacility.registrationCode,
-          registrationDate: activeFacility.registrationDate,
-          commune: activeFacility.commune || 'xã Hòa Sơn',
-          address: activeFacility.address,
-          phone: activeFacility.phone,
-          purposeCode: activeFacility.purposeCode,
-          note: activeFacility.note,
-          lat: activeFacility.lat || '',
-          lng: activeFacility.lng || '',
-        }
+        id: activeFacility.id,
+        facilityName: activeFacility.facilityName,
+        ownerName: activeFacility.ownerName,
+        registrationCode: activeFacility.registrationCode,
+        registrationDate: activeFacility.registrationDate,
+        commune: activeFacility.commune || 'xã Hòa Sơn',
+        address: activeFacility.address,
+        phone: activeFacility.phone,
+        purposeCode: activeFacility.purposeCode,
+        note: activeFacility.note,
+        lat: activeFacility.lat || '',
+        lng: activeFacility.lng || '',
+      }
       : parsed.facilityInfo || { ...EMPTY_FACILITY_INFO };
 
     const speciesList = activeFacility ? activeFacility.speciesList : parsed.speciesList || [];
