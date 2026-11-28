@@ -132,7 +132,7 @@ export default function SidebarTopRankingSlide({
               key={fac.id}
               type="button"
               onClick={() => handleFacilityClick(fac.id)}
-              title={`Nhấn để mở Sổ Mẫu II của ${fac.name} (${fac.details})`}
+              title={`Nhấn để mở Sổ Mẫu số 10 của ${fac.name} (${fac.details})`}
               className="w-full relative overflow-hidden rounded-xl border border-slate-200/80 hover:border-emerald-400 bg-white hover:bg-slate-50/90 transition-all duration-200 text-left cursor-pointer group shadow-2xs hover:shadow-xs active:scale-[0.985] p-2"
             >
               {/* Visual herd volume fill bar behind content ("nhìn trực quan") */}
@@ -347,7 +347,7 @@ export default function SidebarTopRankingSlide({
 
         {/* 5. Footer with Click Hint and Slide Dots */}
         <div className="pt-1 border-t border-slate-100 flex items-center justify-between text-[10px] text-slate-400">
-          <span className="truncate text-slate-500 font-medium">Nhấp vào cơ sở để xem Sổ Mẫu II</span>
+          <span className="truncate text-slate-500 font-medium">Nhấp vào cơ sở để xem Sổ Mẫu số 10</span>
 
           {/* Interactive Slide Dots */}
           <div className="flex items-center gap-1.5 flex-shrink-0">

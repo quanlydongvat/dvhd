@@ -93,7 +93,7 @@ export default function LeftSidebar({
           </div>
 
           <nav className="bg-white rounded-2xl p-1.5 border border-slate-200/80 shadow-2xs space-y-1">
-            {/* If FACILITY account, show ONLY Sổ Mẫu II (Chi Tiết của cơ sở) */}
+            {/* If FACILITY account, show ONLY Sổ Mẫu số 10 (Chi Tiết của cơ sở) */}
             {currentUser?.role === 'FACILITY' ? (
               <button
                 type="button"
@@ -105,7 +105,7 @@ export default function LeftSidebar({
                     <Table className="w-4 h-4" />
                   </div>
                   <div className="text-left">
-                    <div className="text-xs font-black">Sổ Ghi Chép Mẫu II</div>
+                    <div className="text-xs font-black">Sổ Mẫu số 10</div>
                     <div className="text-[10px] text-emerald-100">Chi tiết theo dõi của cơ sở</div>
                   </div>
                 </div>
@@ -178,7 +178,7 @@ export default function LeftSidebar({
                   </span>
                 </button>
 
-                {/* 3. Sổ Mẫu II (Chi Tiết) */}
+                {/* 3. Sổ Mẫu số 10 (Chi Tiết) */}
                 <button
                   type="button"
                   onClick={() => onChangeView('LOGBOOK')}
@@ -197,7 +197,7 @@ export default function LeftSidebar({
                       <Table className="w-4 h-4" />
                     </div>
                     <div className="text-left leading-tight">
-                      <div className="font-bold">Sổ Mẫu II (Chi Tiết)</div>
+                      <div className="font-bold">Sổ Mẫu số 10 (Chi Tiết)</div>
                       <div className={`text-[10px] font-medium ${isNavActive('LOGBOOK') ? 'text-emerald-100' : 'text-slate-400'}`}>
                         Nhật ký biến động loài
                       </div>

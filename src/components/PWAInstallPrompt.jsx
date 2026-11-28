@@ -190,7 +190,7 @@ export default function PWAInstallPrompt() {
                     <span>Xem Offline 100%</span>
                   </div>
                   <p className="text-[11px] text-slate-600 leading-normal">
-                    Tra cứu 43 cơ sở nuôi và Sổ Mẫu II ngay cả khi đi kiểm tra buôn/thôn mất sóng.
+                    Tra cứu 43 cơ sở nuôi và Sổ Mẫu số 10 ngay cả khi đi kiểm tra buôn/thôn mất sóng.
                   </p>
                 </div>
               </div>

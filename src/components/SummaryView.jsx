@@ -868,7 +868,7 @@ export default function SummaryView({
                                         : 'bg-white hover:bg-slate-100 text-slate-800 border border-slate-300'
                                     }`}
                                   >
-                                    <span>{isCurrentActive ? 'Đang chọn' : 'Sổ Mẫu II'}</span>
+                                    <span>{isCurrentActive ? 'Đang chọn' : 'Sổ Mẫu số 10'}</span>
                                     <ArrowRight className="w-3 h-3" />
                                   </button>
 

@@ -6,7 +6,7 @@ export default function DesktopShortcutsModal({ isOpen, onClose }) {
 
   const shortcutsList = [
     { key: 'Ctrl + K', desc: '🔍 Tìm kiếm nhanh cơ sở, loài, số bảng kê' },
-    { key: 'Alt + 1', desc: 'Chuyển sang Sổ Theo Dõi Mẫu II (19 cột)' },
+    { key: 'Alt + 1', desc: 'Chuyển sang Sổ Mẫu số 10 (19 cột)' },
     { key: 'Alt + 2', desc: 'Chuyển sang Bảng Tổng Hợp 43 Cơ Sở Phân Theo 5 Xã' },
     { key: 'Alt + 3', desc: 'Chuyển sang Biểu Đồ Thống Kê & Phân Tích Tăng Trưởng' },
     { key: 'Alt + 4', desc: 'Chuyển sang Bản Đồ Định Vị GIS Google Hybrid' },

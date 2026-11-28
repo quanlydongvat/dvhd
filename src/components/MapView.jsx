@@ -353,7 +353,7 @@ export default function MapView({
               id="btn-logbook-${fac.id}"
               class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-[11px] py-1.5 px-2 rounded-lg transition-colors flex items-center justify-center gap-1 shadow-xs"
             >
-              📖 Mở Sổ Theo Dõi Mẫu II
+              📖 Mở Sổ Mẫu số 10
             </button>
 
             {/* Smart Navigation App Launcher Buttons */}

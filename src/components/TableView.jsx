@@ -370,7 +370,7 @@ export default function TableView({
             <button
               onClick={onOpenPrintView}
               className="flex items-center gap-1 bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 px-3 py-2 rounded-xl text-xs font-bold transition-all shadow-2xs cursor-pointer active:scale-95"
-              title="In Sổ Mẫu II khổ giấy A4 ngang theo quy định BNNMT"
+              title="In Sổ Mẫu số 10 khổ giấy A4 ngang theo quy định BNNMT"
             >
               <Printer className="w-3.5 h-3.5 text-slate-600" />
               <span className="hidden sm:inline">In Sổ A4</span>
@@ -380,7 +380,7 @@ export default function TableView({
             <button
               onClick={onExportExcel}
               className="flex items-center gap-1 bg-white hover:bg-emerald-50 text-emerald-800 border border-emerald-300 px-3 py-2 rounded-xl text-xs font-bold transition-all shadow-2xs cursor-pointer active:scale-95"
-              title="Xuất file Excel Sổ theo dõi Mẫu II"
+              title="Xuất file Excel Sổ Mẫu số 10"
             >
               <Download className="w-3.5 h-3.5 text-emerald-700" />
               <span className="hidden sm:inline">Xuất Excel</span>
@@ -555,7 +555,7 @@ export default function TableView({
         {/* Left: Species Title & Tabs */}
         <div className="flex items-center gap-2 flex-wrap flex-1">
           <span className="text-[11px] font-black uppercase text-emerald-800 bg-emerald-100 px-2 py-1 rounded-lg border border-emerald-300 flex-shrink-0">
-            SỔ MẪU II CHI TIẾT
+            SỔ MẪU SỐ 10 CHI TIẾT
           </span>
 
           {species ? (
@@ -629,7 +629,7 @@ export default function TableView({
           <div className="space-y-1.5">
             <h3 className="text-xl font-bold text-slate-900">Cơ Sở Chưa Khai Báo Loài Động Vật</h3>
             <p className="text-xs sm:text-sm text-slate-500 max-w-md mx-auto leading-relaxed">
-              Cơ sở nuôi này hiện chưa có danh sách loài nào trong Sổ Mẫu II. Bạn có thể thêm loài nuôi ban đầu hoặc chuyển sang xem cơ sở khác ở danh sách phía trên.
+              Cơ sở nuôi này hiện chưa có danh sách loài nào trong Sổ Mẫu số 10. Bạn có thể thêm loài nuôi ban đầu hoặc chuyển sang xem cơ sở khác ở danh sách phía trên.
             </p>
           </div>
 
@@ -657,7 +657,7 @@ export default function TableView({
       {species && (
         <>
           {/* =========================================================================
-              MODULE 4: BỘ LỌC BIẾN ĐỘNG DÒNG SỔ MẪU II (FLUCTUATIONS TOOLBAR)
+              MODULE 4: BỘ LỌC BIẾN ĐỘNG DÒNG SỔ MẪU SỐ 10 (FLUCTUATIONS TOOLBAR)
           ========================================================================= */}
           <div className="bg-slate-100/90 border border-slate-200/90 rounded-2xl p-3 shadow-2xs space-y-2.5">
             <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-2.5">
@@ -792,7 +792,7 @@ export default function TableView({
             {/* Filtered Count indicator */}
             <div className="flex items-center justify-between text-[11px] text-slate-500 font-medium px-1">
               <span>
-                Hiển thị <strong>{filteredRows.length}</strong> / <strong>{rows.length}</strong> dòng ghi chép Sổ Mẫu II
+                Hiển thị <strong>{filteredRows.length}</strong> / <strong>{rows.length}</strong> dòng ghi chép Sổ Mẫu số 10
               </span>
               <span className="hidden sm:inline text-slate-400">
                 (Quy tắc tính tự động 19 cột theo Thông tư 85/2025/TT-BNNMT)
@@ -951,7 +951,7 @@ export default function TableView({
           )}
 
           {/* =========================================================================
-              MODULE 6: BẢNG SỔ MẪU II CHUẨN 19 CỘT BNNMT (OFFICIAL 19-COLUMN TABLE)
+              MODULE 6: BẢNG SỔ MẪU SỐ 10 CHUẨN 19 CỘT BNNMT (OFFICIAL 19-COLUMN TABLE)
           ========================================================================= */}
           <div className={`bg-white border border-slate-200 rounded-2xl shadow-xl overflow-hidden ${mobileViewMode === 'CARDS' ? 'hidden sm:block' : 'block'}`}>
             <div className="overflow-x-auto scrollbar-thin">
@@ -1287,7 +1287,7 @@ export default function TableView({
           >
             <div className="flex items-center gap-2">
               <Info className="w-4 h-4 text-emerald-600" />
-              <span>GHI CHÚ HƯỚNG DẪN ĐIỀN NỘI DUNG (Trích Thông tư số 85/2025/TT-BNNMT / Sổ Mẫu II)</span>
+              <span>GHI CHÚ HƯỚNG DẪN ĐIỀN NỘI DUNG (Trích Thông tư số 85/2025/TT-BNNMT / Sổ Mẫu số 10)</span>
             </div>
             {showNotes ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
           </button>

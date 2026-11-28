@@ -19,8 +19,8 @@ export default function Header({
     switch (currentView) {
       case 'LOGBOOK':
         return {
-          title: 'Sổ Theo Dõi Chi Tiết (Mẫu II)',
-          mobileTitle: 'Sổ Mẫu II',
+          title: 'Sổ Mẫu số 10 (Chi Tiết)',
+          mobileTitle: 'Sổ Mẫu số 10',
           icon: Table,
           color: 'text-emerald-700'
         };
@@ -217,7 +217,7 @@ export default function Header({
                   currentView === 'LOGBOOK' ? 'bg-emerald-700 text-white shadow-xs' : 'text-slate-700 hover:text-slate-950'
                 }`}
               >
-                Sổ Mẫu II
+                Sổ Mẫu số 10
               </button>
               <button
                 type="button"

@@ -224,7 +224,7 @@ export default function SidebarUserReviews({
 
                 {/* Comment snippet */}
                 <p className="text-[10px] text-slate-600 font-medium line-clamp-2 leading-relaxed italic">
-                  "{reviewItem.comment || 'Ứng dụng quản lý sổ Mẫu II rất thuận tiện và chính xác.'}"
+                  "{reviewItem.comment || 'Ứng dụng quản lý Sổ Mẫu số 10 rất thuận tiện và chính xác.'}"
                 </p>
               </div>
             ))}

@@ -229,7 +229,7 @@ export default function UserReviewsModal({
                 </span>
               </div>
               <p className="text-[11px] sm:text-xs text-emerald-200 font-medium">
-                Khảo sát mức độ hài lòng và đóng góp ý kiến hoàn thiện Sổ Mẫu II điện tử
+                Khảo sát mức độ hài lòng và đóng góp ý kiến hoàn thiện Sổ Mẫu số 10 điện tử
               </p>
             </div>
           </div>

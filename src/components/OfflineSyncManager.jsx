@@ -68,7 +68,7 @@ export default function OfflineSyncManager({ onSyncWithCloud }) {
                 Chế độ Ngoại tuyến (Offline):
               </span>
               <span className="font-medium text-amber-50 text-[11px] sm:text-xs">
-                Đang mất sóng hoặc không có mạng. Bạn vẫn xem & tra cứu bình thường toàn bộ 43 cơ sở và Sổ Mẫu II từ bộ nhớ máy.
+                Đang mất sóng hoặc không có mạng. Bạn vẫn xem & tra cứu bình thường toàn bộ 43 cơ sở và Sổ Mẫu số 10 từ bộ nhớ máy.
               </span>
             </div>
             <span className="hidden md:inline-flex items-center gap-1 bg-amber-900/60 text-amber-200 px-2.5 py-1 rounded-full text-[10px] font-bold border border-amber-500/40">

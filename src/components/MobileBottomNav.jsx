@@ -16,7 +16,7 @@ export default function MobileBottomNav({
       <div className="flex items-center justify-around max-w-md mx-auto px-1">
         {isFacilityRole ? (
           <>
-            {/* 1. Sổ Mẫu II */}
+            {/* 1. Sổ Mẫu số 10 */}
             <button
               type="button"
               onClick={() => onChangeView('LOGBOOK')}
@@ -27,7 +27,7 @@ export default function MobileBottomNav({
               }`}
             >
               <Table className="w-5 h-5 text-emerald-400" />
-              <span className="text-[10px] font-bold">Sổ Mẫu II</span>
+              <span className="text-[10px] font-bold">Sổ Mẫu số 10</span>
             </button>
 
             {/* Center Nút Thêm Biến Động Nổi Bật */}
@@ -93,7 +93,7 @@ export default function MobileBottomNav({
               <Plus className="w-6 h-6 stroke-[3]" />
             </button>
 
-            {/* 3. Sổ Mẫu II */}
+            {/* 3. Sổ Mẫu số 10 */}
             <button
               type="button"
               onClick={() => onChangeView('LOGBOOK')}
@@ -104,7 +104,7 @@ export default function MobileBottomNav({
               }`}
             >
               <Table className="w-5 h-5 text-emerald-400" />
-              <span className="text-[10px] font-bold">Sổ Mẫu II</span>
+              <span className="text-[10px] font-bold">Sổ Mẫu số 10</span>
             </button>
 
             {/* 4. Bản Đồ GIS */}

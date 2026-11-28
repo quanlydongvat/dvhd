@@ -153,7 +153,7 @@ export default function Login({ onLoginSuccess, onCancel, isEmbedded = false }) 
             </div>
 
             <p className="text-[11px] sm:text-xs text-emerald-100/90 font-semibold mt-1.5 bg-emerald-900/40 px-3 py-1 rounded-full border border-emerald-400/30">
-              Ứng Dụng Quản Lý Động Vật Hoang Dã Mẫu II
+              Ứng Dụng Quản Lý Động Vật Hoang Dã Sổ Mẫu số 10
             </p>
           </div>
         </div>

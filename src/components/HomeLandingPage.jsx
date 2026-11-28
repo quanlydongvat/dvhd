@@ -49,7 +49,7 @@ export default function HomeLandingPage({ onLoginSuccess }) {
                 Quản Lý Động Vật Hoang Dã
               </h1>
               <p className="text-xs sm:text-sm text-emerald-100/90 font-semibold leading-relaxed">
-                Ứng Dụng <span className="text-amber-300 font-extrabold">Sổ Theo Dõi Quản Lý</span> Điện Tử (Mẫu II)
+                Ứng Dụng <span className="text-amber-300 font-extrabold">Sổ Theo Dõi Quản Lý</span> Điện Tử (Sổ Mẫu số 10)
               </p>
               <p className="text-[11px] sm:text-xs text-white/60 font-medium leading-normal">
                 Hệ thống theo dõi hiện trạng & biến động tăng giảm đàn động vật hoang dã nuôi sinh sản trên địa bàn quản lý.

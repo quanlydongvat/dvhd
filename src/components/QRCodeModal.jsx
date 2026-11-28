@@ -62,7 +62,7 @@ export default function QRCodeModal({ isOpen, onClose, facility }) {
             </div>
             <div>
               <h3 className="text-base font-extrabold text-white">Mã QR Định Danh Cơ Sở</h3>
-              <p className="text-xs text-slate-300 font-medium mt-0.5">Quét để truy cập ngay Sổ Mẫu II & Bản đồ</p>
+              <p className="text-xs text-slate-300 font-medium mt-0.5">Quét để truy cập ngay Sổ Mẫu số 10 & Bản đồ</p>
             </div>
           </div>
           <button
@@ -130,7 +130,7 @@ export default function QRCodeModal({ isOpen, onClose, facility }) {
             </div>
 
             <p className="text-[10px] text-slate-400 italic font-medium pt-1">
-              * Dùng camera điện thoại hoặc ứng dụng quét mã QR để mở Sổ Mẫu II trực tiếp.
+              * Dùng camera điện thoại hoặc ứng dụng quét mã QR để mở Sổ Mẫu số 10 trực tiếp.
             </p>
           </div>
         </div>

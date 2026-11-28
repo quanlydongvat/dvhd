@@ -1677,7 +1677,7 @@ export default function App() {
       // Admin và Cán bộ (dlc-krb) có quyền mở modal xuất báo cáo tổng hợp mẫu (Toàn huyện / 5 Xã)
       setIsExportModalOpen(true);
     } else {
-      // Cơ sở nuôi chỉ xuất sổ ghi chép Mẫu II của chính cơ sở đó
+      // Cơ sở nuôi chỉ xuất Sổ Mẫu số 10 của chính cơ sở đó
       const { exportFacilityLogbook } = await import('./utils/exportExcel');
       const userFac =
         facilitiesList.find(
@@ -1972,10 +1972,10 @@ export default function App() {
                     HẠT KIỂM LÂM KHU VỰC KRÔNG BÔNG
                   </h3>
                   <p className="text-xs sm:text-sm font-bold text-emerald-800">
-                    Ứng dụng Quản lý & Sổ theo dõi Động vật hoang dã điện tử (Mẫu II)
+                    Ứng dụng Quản lý & Sổ theo dõi Động vật hoang dã điện tử (Sổ Mẫu số 10)
                   </p>
                   <p className="text-xs sm:text-sm text-slate-500 max-w-md mx-auto leading-relaxed pt-2">
-                    Để xem Sổ Mẫu II chi tiết của một cơ sở nuôi cụ thể, vui lòng <strong>quét mã QR định danh</strong> dán tại cơ sở đó hoặc <strong>Đăng nhập tài khoản</strong> để quản lý.
+                    Để xem Sổ Mẫu số 10 chi tiết của một cơ sở nuôi cụ thể, vui lòng <strong>quét mã QR định danh</strong> dán tại cơ sở đó hoặc <strong>Đăng nhập tài khoản</strong> để quản lý.
                   </p>
                 </div>
                 <div className="flex flex-wrap items-center justify-center gap-3 pt-3">

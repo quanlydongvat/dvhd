@@ -529,7 +529,7 @@ export async function exportFacilityLogbook(facility) {
 
     // Title Block
     ws.mergeCells('A1:O1');
-    ws.getCell('A1').value = 'SỔ THEO DÕI ĐỘNG VẬT HOANG DÃ NUÔI SINH SẢN, NUÔI SINH TRƯỞNG (MẪU II)';
+    ws.getCell('A1').value = 'SỔ THEO DÕI ĐỘNG VẬT HOANG DÃ NUÔI SINH SẢN, NUÔI SINH TRƯỞNG (SỔ MẪU SỐ 10)';
     ws.getCell('A1').font = { name: 'Times New Roman', size: 14, bold: true };
     ws.getCell('A1').alignment = { horizontal: 'center', vertical: 'middle' };
 
