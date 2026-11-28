@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, Suspense, lazy } from 'react';
+import React, { useState, useEffect, useMemo, useRef, Suspense, lazy } from 'react';
 import Header from './components/Header';
 import LeftSidebar from './components/LeftSidebar';
 import TableView from './components/TableView';
@@ -42,7 +42,7 @@ import { auth, db } from './firebase';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { doc, setDoc, addDoc, updateDoc, deleteDoc, getDoc, collection, getDocs, query, where, writeBatch } from 'firebase/firestore';
 
-import { Search } from 'lucide-react';
+import { Search, Volume2, VolumeX } from 'lucide-react';
 
 // LAZY-LOADED VIEWS (Chỉ tải thư viện khi người dùng chuyển tab)
 const AnalyticsView = lazy(() => import('./components/AnalyticsView'));
@@ -83,6 +83,115 @@ function ViewLoadingFallback({ text = 'Đang tải dữ liệu...' }) {
       <div className="w-10 h-10 border-3 border-emerald-600 border-t-transparent rounded-full animate-spin mx-auto" />
       <p className="text-xs font-black text-slate-800 tracking-tight">{text}</p>
       <p className="text-[11px] text-slate-400 font-medium">Đang nạp nhanh thành phần theo yêu cầu...</p>
+    </div>
+  );
+}
+
+// Animated Banner with First-Play Audio (plays bird sound on initial entry, mutes on subsequent loops)
+function AnimatedBannerVideo() {
+  const videoRef = useRef(null);
+  const firstLoopDoneRef = useRef(false);
+  const [isMuted, setIsMuted] = useState(false);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    let unlockListenerAttached = false;
+
+    const unlockAudioOnFirstInteraction = () => {
+      if (firstLoopDoneRef.current) return;
+      const v = videoRef.current;
+      if (v) {
+        v.muted = false;
+        setIsMuted(false);
+        v.play().catch(() => {});
+      }
+      removeUnlockListeners();
+    };
+
+    const removeUnlockListeners = () => {
+      if (!unlockListenerAttached) return;
+      window.removeEventListener('pointerdown', unlockAudioOnFirstInteraction);
+      window.removeEventListener('keydown', unlockAudioOnFirstInteraction);
+      unlockListenerAttached = false;
+    };
+
+    // Try playing with sound on first entry
+    video.muted = false;
+    video.loop = false;
+    const playPromise = video.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(() => {
+        // Browser blocked unmuted autoplay -> fallback to muted so video keeps moving,
+        // and unmute immediately on user's first interaction during the first loop
+        video.muted = true;
+        setIsMuted(true);
+        video.play().catch(() => {});
+        if (!firstLoopDoneRef.current && !unlockListenerAttached) {
+          window.addEventListener('pointerdown', unlockAudioOnFirstInteraction, { once: true });
+          window.addEventListener('keydown', unlockAudioOnFirstInteraction, { once: true });
+          unlockListenerAttached = true;
+        }
+      });
+    }
+
+    return () => {
+      removeUnlockListeners();
+    };
+  }, []);
+
+  const handleFirstLoopEnded = () => {
+    const video = videoRef.current;
+    if (!video) return;
+    firstLoopDoneRef.current = true;
+    video.muted = true;
+    video.loop = true;
+    setIsMuted(true);
+    video.play().catch(() => {});
+  };
+
+  const toggleAudio = () => {
+    const video = videoRef.current;
+    if (!video) return;
+    const nextMuted = !isMuted;
+    video.muted = nextMuted;
+    setIsMuted(nextMuted);
+    if (!nextMuted) {
+      video.play().catch(() => {});
+    }
+  };
+
+  return (
+    <div className="mb-4 animate-in fade-in slide-in-from-top-4 duration-500 rounded-2xl overflow-hidden border border-emerald-500/30 shadow-lg bg-slate-900 h-[120px] sm:h-[180px] lg:h-[250px] relative group">
+      <video
+        ref={videoRef}
+        autoPlay
+        playsInline
+        preload="auto"
+        poster="./images/banner.jpg"
+        onEnded={handleFirstLoopEnded}
+        className="w-full h-full object-cover object-center block"
+      >
+        <source src="./video.banner.mp4?v=2" type="video/mp4" />
+        <source src="./banner.mp4" type="video/mp4" />
+        <img
+          src="./images/banner.jpg"
+          alt="Hạt Kiểm lâm khu vực Krông Bông - Banner Quản lý cơ sở nuôi động vật hoang dã"
+          className="w-full h-full object-cover object-center block"
+        />
+      </video>
+
+      {/* Subtle audio toggle button */}
+      <button
+        type="button"
+        onClick={toggleAudio}
+        title={isMuted ? 'Bật tiếng chim hót' : 'Tắt âm thanh banner'}
+        className="absolute bottom-2.5 right-2.5 z-10 flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-black/50 hover:bg-black/75 text-white/90 backdrop-blur-sm border border-white/15 text-[11px] font-medium transition-all shadow-sm opacity-80 group-hover:opacity-100 cursor-pointer"
+      >
+        {isMuted ? <VolumeX className="w-3.5 h-3.5 text-slate-300" /> : <Volume2 className="w-3.5 h-3.5 text-emerald-400 animate-pulse" />}
+        <span className="hidden sm:inline">{isMuted ? 'Bật tiếng' : 'Đang phát tiếng'}</span>
+      </button>
     </div>
   );
 }
@@ -1776,28 +1885,7 @@ export default function App() {
             {/* Main Content Area */}
             <main className="flex-1 max-w-[1720px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-5">
               {/* Show Animated Video Banner ONLY on Home view (120px mobile / 180px tablet / 250px desktop) */}
-              {currentView === 'HOME' && (
-                <div className="mb-4 animate-in fade-in slide-in-from-top-4 duration-500 rounded-2xl overflow-hidden border border-emerald-500/30 shadow-lg bg-slate-900 h-[120px] sm:h-[180px] lg:h-[250px] relative">
-                  {/* Full-width Animated Video Banner (spanning 100% width) */}
-                  <video
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    preload="auto"
-                    poster="./images/banner.jpg"
-                    className="w-full h-full object-cover object-center block"
-                  >
-                    <source src="./video.banner.mp4?v=2" type="video/mp4" />
-                    <source src="./banner.mp4" type="video/mp4" />
-                    <img
-                      src="./images/banner.jpg"
-                      alt="Hạt Kiểm lâm khu vực Krông Bông - Banner Quản lý cơ sở nuôi động vật hoang dã"
-                      className="w-full h-full object-cover object-center block"
-                    />
-                  </video>
-                </div>
-              )}
+              {currentView === 'HOME' && <AnimatedBannerVideo />}
 
               {currentView === 'ADMIN_USERS' && currentUser?.role === 'ADMIN' ? (
                 <Suspense fallback={<ViewLoadingFallback text="Đang nạp Bảng Quản trị Hệ thống..." />}>
