@@ -318,6 +318,19 @@ export const DEFAULT_USER_REVIEWS = [
     createdAt: '2026-11-25T16:00:00.000Z',
     updatedAt: '2026-11-25T16:00:00.000Z',
   },
+  {
+    id: 'rev_fac_15',
+    facilityId: 'fac_15',
+    facilityName: 'Cơ sở nuôi Trần Văn Tới',
+    ownerName: 'Trần Văn Tới',
+    commune: 'xã Yang Mao',
+    username: 'tranvantoi',
+    userRole: 'FACILITY',
+    rating: 5,
+    comment: 'Từ ngày có app trên điện thoại dễ dàng ghi chép biến động hơn rất nhiều, theo dõi đàn dúi hằng ngày nhanh gọn và chính xác.',
+    createdAt: '2026-11-28T08:00:00.000Z',
+    updatedAt: '2026-11-28T08:00:00.000Z',
+  },
 ];
 
 export function subscribeToUserReviews(onData, onError) {

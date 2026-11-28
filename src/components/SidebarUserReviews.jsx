@@ -52,18 +52,22 @@ export default function SidebarUserReviews({
     };
   }, [reviews, currentUser]);
 
-  // Auto-cycle through reviews every 6 seconds (pauses on hover)
+  // Auto-cycle through reviews (2 at a time) every 6 seconds (pauses on hover)
   useEffect(() => {
-    if (isPaused || (reviews || []).length <= 1) return;
+    if (isPaused || (reviews || []).length <= 2) return;
     const timer = setInterval(() => {
-      setActiveReviewIdx((prev) => (prev + 1) % reviews.length);
+      setActiveReviewIdx((prev) => (prev + 2) % reviews.length);
     }, 6000);
     return () => clearInterval(timer);
   }, [isPaused, reviews]);
 
-  const currentReview = reviews && reviews.length > 0
-    ? reviews[Math.min(activeReviewIdx, reviews.length - 1)]
-    : null;
+  const visibleReviews = useMemo(() => {
+    if (!reviews || reviews.length === 0) return [];
+    if (reviews.length <= 2) return reviews;
+    const first = reviews[activeReviewIdx % reviews.length];
+    const second = reviews[(activeReviewIdx + 1) % reviews.length];
+    return [first, second];
+  }, [reviews, activeReviewIdx]);
 
   return (
     <section
@@ -89,13 +93,13 @@ export default function SidebarUserReviews({
           </span>
 
           {/* Navigation arrows for review snippets */}
-          {reviews.length > 1 && (
+          {reviews.length > 2 && (
             <div className="flex items-center">
               <button
                 type="button"
                 onClick={() =>
                   setActiveReviewIdx((prev) =>
-                    prev === 0 ? reviews.length - 1 : prev - 1
+                    (prev - 2 + reviews.length) % reviews.length
                   )
                 }
                 className="p-1 text-slate-400 hover:text-slate-800 hover:bg-slate-200/80 rounded-md transition-colors cursor-pointer"
@@ -106,7 +110,7 @@ export default function SidebarUserReviews({
               <button
                 type="button"
                 onClick={() =>
-                  setActiveReviewIdx((prev) => (prev + 1) % reviews.length)
+                  setActiveReviewIdx((prev) => (prev + 2) % reviews.length)
                 }
                 className="p-1 text-slate-400 hover:text-slate-800 hover:bg-slate-200/80 rounded-md transition-colors cursor-pointer"
                 title="Đánh giá tiếp theo"
@@ -179,44 +183,51 @@ export default function SidebarUserReviews({
           )}
         </div>
 
-        {/* 3. Review Quote Snippet Card */}
-        {currentReview ? (
-          <div className="relative bg-slate-50/90 rounded-xl p-2.5 border border-slate-200/70 space-y-1.5 min-h-[82px] flex flex-col justify-between">
-            {/* Reviewer Header */}
-            <div className="flex items-center justify-between gap-1">
-              <div className="flex items-center gap-1.5 min-w-0 flex-1">
-                <div className="w-5 h-5 rounded-full bg-emerald-600 text-white text-[10px] font-black flex items-center justify-center flex-shrink-0">
-                  {currentReview.ownerName?.[0] || currentReview.facilityName?.[0] || 'C'}
-                </div>
-                <div className="min-w-0 flex-1 leading-none truncate">
-                  <span className="font-extrabold text-[11px] text-slate-900 truncate block">
-                    {currentReview.ownerName || currentReview.facilityName}
-                  </span>
-                  <span className="text-[9px] text-slate-400 font-medium truncate block mt-0.5">
-                    {currentReview.commune || 'Krông Bông'}
-                  </span>
-                </div>
-              </div>
+        {/* 3. Review Quote Snippet Cards (2 reviews per view) */}
+        {visibleReviews.length > 0 ? (
+          <div className="space-y-2">
+            {visibleReviews.map((reviewItem) => (
+              <div
+                key={reviewItem.id || `${reviewItem.ownerName}_${reviewItem.createdAt}`}
+                className="relative bg-slate-50/90 rounded-xl p-2.5 border border-slate-200/70 space-y-1.5 min-h-[78px] flex flex-col justify-between"
+              >
+                {/* Reviewer Header */}
+                <div className="flex items-center justify-between gap-1">
+                  <div className="flex items-center gap-1.5 min-w-0 flex-1">
+                    <div className="w-5 h-5 rounded-full bg-emerald-600 text-white text-[10px] font-black flex items-center justify-center flex-shrink-0">
+                      {reviewItem.ownerName?.[0] || reviewItem.facilityName?.[0] || 'C'}
+                    </div>
+                    <div className="min-w-0 flex-1 leading-none truncate">
+                      <span className="font-extrabold text-[11px] text-slate-900 truncate block">
+                        {reviewItem.ownerName || reviewItem.facilityName}
+                      </span>
+                      <span className="text-[9px] text-slate-400 font-medium truncate block mt-0.5">
+                        {reviewItem.commune || 'Krông Bông'}
+                      </span>
+                    </div>
+                  </div>
 
-              {/* Star Rating of this review */}
-              <div className="flex items-center gap-0.5 text-amber-500 flex-shrink-0">
-                {[1, 2, 3, 4, 5].map((s) => (
-                  <Star
-                    key={s}
-                    className={`w-2.5 h-2.5 ${
-                      s <= (currentReview.rating || 5)
-                        ? 'fill-amber-500 text-amber-500'
-                        : 'fill-slate-200 text-slate-200'
-                    }`}
-                  />
-                ))}
-              </div>
-            </div>
+                  {/* Star Rating of this review */}
+                  <div className="flex items-center gap-0.5 text-amber-500 flex-shrink-0">
+                    {[1, 2, 3, 4, 5].map((s) => (
+                      <Star
+                        key={s}
+                        className={`w-2.5 h-2.5 ${
+                          s <= (reviewItem.rating || 5)
+                            ? 'fill-amber-500 text-amber-500'
+                            : 'fill-slate-200 text-slate-200'
+                        }`}
+                      />
+                    ))}
+                  </div>
+                </div>
 
-            {/* Comment snippet */}
-            <p className="text-[10px] text-slate-600 font-medium line-clamp-2 leading-relaxed italic">
-              "{currentReview.comment || 'Ứng dụng quản lý sổ Mẫu II rất thuận tiện và chính xác.'}"
-            </p>
+                {/* Comment snippet */}
+                <p className="text-[10px] text-slate-600 font-medium line-clamp-2 leading-relaxed italic">
+                  "{reviewItem.comment || 'Ứng dụng quản lý sổ Mẫu II rất thuận tiện và chính xác.'}"
+                </p>
+              </div>
+            ))}
           </div>
         ) : (
           <div className="py-4 text-center text-[10px] text-slate-400 font-medium bg-slate-50/50 rounded-xl border border-dashed border-slate-200">
