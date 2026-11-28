@@ -514,16 +514,19 @@ export default function AnalyticsView({ facilitiesList = [] }) {
     });
 
     const totalDec = sold + death + transfer + other || 1;
+    const soldAndTransfer = sold + transfer;
 
     return {
       sold,
       death,
       transfer,
+      soldAndTransfer,
       other,
       totalDec,
       soldPct: Math.round((sold / totalDec) * 100),
       deathPct: Math.round((death / totalDec) * 100),
       transferPct: Math.round((transfer / totalDec) * 100),
+      soldAndTransferPct: Math.round((soldAndTransfer / totalDec) * 100),
     };
   }, [filteredFacilities]);
 
@@ -1355,28 +1358,22 @@ export default function AnalyticsView({ facilitiesList = [] }) {
                   <span>Phân tích lý do giảm đàn trong kỳ</span>
                 </h3>
                 <p className="text-[11px] text-slate-500 font-medium">
-                  Tỷ lệ giữa xuất bán thương mại, chuyển nhượng và rủi ro bệnh/chết
+                  Tỷ lệ giữa xuất bán / chuyển nhượng và rủi ro bệnh/chết
                 </p>
               </div>
             </div>
 
-            <div className="grid grid-cols-3 gap-2.5 text-center text-xs pt-1">
+            <div className="grid grid-cols-2 gap-3 text-center text-xs pt-1">
               <div className="bg-emerald-50/60 border border-emerald-200/70 rounded-xl p-3 space-y-1">
-                <span className="text-[11px] font-semibold text-emerald-800 block">Xuất bán</span>
-                <span className="text-lg font-bold text-emerald-900 font-mono block">{decreaseReasons.sold} con</span>
-                <span className="text-[11px] text-emerald-700 block font-medium">{decreaseReasons.soldPct}%</span>
+                <span className="text-[11px] font-semibold text-emerald-800 block">Xuất bán / Chuyển nhượng</span>
+                <span className="text-lg font-bold text-emerald-900 font-mono block">{decreaseReasons.soldAndTransfer} con</span>
+                <span className="text-[11px] text-emerald-700 block font-medium">{decreaseReasons.soldAndTransferPct}%</span>
               </div>
 
               <div className="bg-rose-50/60 border border-rose-200/70 rounded-xl p-3 space-y-1">
                 <span className="text-[11px] font-semibold text-rose-800 block">Rủi ro / Chết</span>
                 <span className="text-lg font-bold text-rose-900 font-mono block">{decreaseReasons.death} con</span>
                 <span className="text-[11px] text-rose-700 block font-medium">{decreaseReasons.deathPct}%</span>
-              </div>
-
-              <div className="bg-sky-50/60 border border-sky-200/70 rounded-xl p-3 space-y-1">
-                <span className="text-[11px] font-semibold text-sky-800 block">Chuyển nhượng</span>
-                <span className="text-lg font-bold text-sky-900 font-mono block">{decreaseReasons.transfer} con</span>
-                <span className="text-[11px] text-sky-700 block font-medium">{decreaseReasons.transferPct}%</span>
               </div>
             </div>
           </div>
