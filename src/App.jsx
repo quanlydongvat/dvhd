@@ -1775,9 +1775,9 @@ export default function App() {
 
             {/* Main Content Area */}
             <main className="flex-1 max-w-[1720px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-5">
-              {/* Show Animated Video Banner ONLY on Home view (220px mobile / 276px tablet / 304px desktop) */}
+              {/* Show Animated Video Banner ONLY on Home view (120px mobile / 180px tablet / 250px desktop) */}
               {currentView === 'HOME' && (
-                <div className="mb-4 animate-in fade-in slide-in-from-top-4 duration-500 rounded-2xl overflow-hidden border border-emerald-500/30 shadow-lg bg-slate-900 h-[220px] sm:h-[276px] lg:h-[304px] relative">
+                <div className="mb-4 animate-in fade-in slide-in-from-top-4 duration-500 rounded-2xl overflow-hidden border border-emerald-500/30 shadow-lg bg-slate-900 h-[120px] sm:h-[180px] lg:h-[250px] relative">
                   {/* Full-width Animated Video Banner (spanning 100% width) */}
                   <video
                     autoPlay
