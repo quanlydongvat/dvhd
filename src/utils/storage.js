@@ -3746,6 +3746,234 @@ export const REAL_FACILITIES_DATA = [
       }
     ],
     "lng": 108.655302
+  },
+  {
+    "id": "fac_1795826000001",
+    "owner": "Dương Văn Lừ",
+    "ownerName": "Dương Văn Lừ",
+    "name": "Dương Văn Lừ",
+    "facilityName": "Dương Văn Lừ",
+    "commune": "xã Cư Pui",
+    "address": "Thôn Noh Prông",
+    "phone": "",
+    "registrationCode": "Chưa có mã số",
+    "registrationDate": "2026-01-01",
+    "purposeCode": "T",
+    "note": "",
+    "lat": "12.548200",
+    "lng": "108.458100",
+    "updatedAt": "2026-11-28T00:50:45.286Z",
+    "speciesList": [
+      {
+        "id": "sp_1795826000001_1",
+        "vietnameseName": "Dúi má đào",
+        "scientificName": "Rhizomys sumatrensis",
+        "group": "Động vật rừng thông thường",
+        "citesAppendix": "Khai báo kiểm lâm",
+        "purposeCode": "T",
+        "baseline": {
+          "date": "2026-01-01",
+          "father": 3,
+          "mother": 5,
+          "otherMale": 0,
+          "otherFemale": 0,
+          "otherUnknown": 0,
+          "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+          "note": "Hiện trạng đăng ký ban đầu"
+        },
+        "fluctuations": []
+      }
+    ]
+  },
+  {
+    "id": "fac_1795826000002",
+    "owner": "Lê Hùng",
+    "ownerName": "Lê Hùng",
+    "name": "Lê Hùng",
+    "facilityName": "Lê Hùng",
+    "commune": "Xã Krông Bông",
+    "address": "Thôn 5",
+    "phone": "",
+    "registrationCode": "Chưa có mã số",
+    "registrationDate": "2026-01-01",
+    "purposeCode": "T",
+    "note": "",
+    "lat": "12.529500",
+    "lng": "108.333800",
+    "updatedAt": "2026-11-28T00:50:45.287Z",
+    "speciesList": [
+      {
+        "id": "sp_1795826000002_1",
+        "vietnameseName": "Chim Chào mào",
+        "scientificName": "Pycnonotus jocosus",
+        "group": "Động vật rừng thông thường (Lớp Chim)",
+        "citesAppendix": "Khai báo kiểm lâm",
+        "purposeCode": "T",
+        "baseline": {
+          "date": "2026-01-01",
+          "father": 2,
+          "mother": 0,
+          "otherMale": 0,
+          "otherFemale": 0,
+          "otherUnknown": 0,
+          "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+          "note": "Hiện trạng đăng ký ban đầu"
+        },
+        "fluctuations": []
+      }
+    ]
+  },
+  {
+    "id": "fac_1795826000003",
+    "owner": "Nguyễn Quang",
+    "ownerName": "Nguyễn Quang",
+    "name": "Nguyễn Quang",
+    "facilityName": "Nguyễn Quang",
+    "commune": "Xã Krông Bông",
+    "address": "Thôn 6",
+    "phone": "",
+    "registrationCode": "Chưa có mã số",
+    "registrationDate": "2026-01-01",
+    "purposeCode": "T",
+    "note": "",
+    "lat": "12.530800",
+    "lng": "108.335200",
+    "updatedAt": "2026-11-28T00:50:45.287Z",
+    "speciesList": [
+      {
+        "id": "sp_1795826000003_1",
+        "vietnameseName": "Chim Chào mào",
+        "scientificName": "Pycnonotus jocosus",
+        "group": "Động vật rừng thông thường (Lớp Chim)",
+        "citesAppendix": "Khai báo kiểm lâm",
+        "purposeCode": "T",
+        "baseline": {
+          "date": "2026-01-01",
+          "father": 2,
+          "mother": 0,
+          "otherMale": 0,
+          "otherFemale": 0,
+          "otherUnknown": 0,
+          "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+          "note": "Hiện trạng đăng ký ban đầu"
+        },
+        "fluctuations": []
+      }
+    ]
+  },
+  {
+    "id": "fac_1795826000004",
+    "owner": "Nguyễn Trọng Hào",
+    "ownerName": "Nguyễn Trọng Hào",
+    "name": "Nguyễn Trọng Hào",
+    "facilityName": "Nguyễn Trọng Hào",
+    "commune": "Xã Krông Bông",
+    "address": "Thôn 7",
+    "phone": "",
+    "registrationCode": "Chưa có mã số",
+    "registrationDate": "2026-01-01",
+    "purposeCode": "T",
+    "note": "",
+    "lat": "12.531900",
+    "lng": "108.336400",
+    "updatedAt": "2026-11-28T00:50:45.287Z",
+    "speciesList": [
+      {
+        "id": "sp_1795826000004_1",
+        "vietnameseName": "Chim Chào mào",
+        "scientificName": "Pycnonotus jocosus",
+        "group": "Động vật rừng thông thường (Lớp Chim)",
+        "citesAppendix": "Khai báo kiểm lâm",
+        "purposeCode": "T",
+        "baseline": {
+          "date": "2026-01-01",
+          "father": 2,
+          "mother": 0,
+          "otherMale": 0,
+          "otherFemale": 0,
+          "otherUnknown": 0,
+          "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+          "note": "Hiện trạng đăng ký ban đầu"
+        },
+        "fluctuations": []
+      }
+    ]
+  },
+  {
+    "id": "fac_1795826000005",
+    "owner": "Mai Văn Tiên",
+    "ownerName": "Mai Văn Tiên",
+    "name": "Mai Văn Tiên",
+    "facilityName": "Mai Văn Tiên",
+    "commune": "Xã Krông Bông",
+    "address": "Thôn 7",
+    "phone": "",
+    "registrationCode": "Chưa có mã số",
+    "registrationDate": "2026-01-01",
+    "purposeCode": "T",
+    "note": "",
+    "lat": "12.532600",
+    "lng": "108.337100",
+    "updatedAt": "2026-11-28T00:50:45.287Z",
+    "speciesList": [
+      {
+        "id": "sp_1795826000005_1",
+        "vietnameseName": "Chim Chào mào",
+        "scientificName": "Pycnonotus jocosus",
+        "group": "Động vật rừng thông thường (Lớp Chim)",
+        "citesAppendix": "Khai báo kiểm lâm",
+        "purposeCode": "T",
+        "baseline": {
+          "date": "2026-01-01",
+          "father": 1,
+          "mother": 0,
+          "otherMale": 0,
+          "otherFemale": 0,
+          "otherUnknown": 0,
+          "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+          "note": "Hiện trạng đăng ký ban đầu"
+        },
+        "fluctuations": []
+      }
+    ]
+  },
+  {
+    "id": "fac_1795826000006",
+    "owner": "Nguyễn Văn Duy",
+    "ownerName": "Nguyễn Văn Duy",
+    "name": "Nguyễn Văn Duy",
+    "facilityName": "Nguyễn Văn Duy",
+    "commune": "Xã Dang Kang",
+    "address": "Thôn 9",
+    "phone": "",
+    "registrationCode": "Chưa có mã số",
+    "registrationDate": "2026-01-01",
+    "purposeCode": "T",
+    "note": "",
+    "lat": "12.559800",
+    "lng": "108.323100",
+    "updatedAt": "2026-11-28T00:50:45.287Z",
+    "speciesList": [
+      {
+        "id": "sp_1795826000006_1",
+        "vietnameseName": "Chim Chào mào",
+        "scientificName": "Pycnonotus jocosus",
+        "group": "Động vật rừng thông thường (Lớp Chim)",
+        "citesAppendix": "Khai báo kiểm lâm",
+        "purposeCode": "T",
+        "baseline": {
+          "date": "2026-01-01",
+          "father": 2,
+          "mother": 0,
+          "otherMale": 0,
+          "otherFemale": 0,
+          "otherUnknown": 0,
+          "verifier": "Hạt Kiểm lâm Huyện Krông Bông",
+          "note": "Hiện trạng đăng ký ban đầu"
+        },
+        "fluctuations": []
+      }
+    ]
   }
 ];
 
