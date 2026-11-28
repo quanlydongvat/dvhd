@@ -5,7 +5,6 @@
 const STORAGE_KEY = 'wildlife_manager_data_v6';
 
 // Permanent blacklist of deleted/zombie facilities to prevent them from resurrecting from local cache or backups
-export const BLACKLISTED_DELETED_FACILITY_IDS = ['fac_1786163777938', 'fac_1788916180780'];
 export const BLACKLISTED_DELETED_FACILITY_IDS = ['fac_1786163777938', 'fac_1788916180780', 'fac_22', 'fac_1794453722654'];
 
 export async function forceClearAllCache() {

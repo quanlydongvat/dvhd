@@ -1778,18 +1778,18 @@ export default function App() {
               {/* Show Animated Video Banner ONLY on Home view (192px mobile / 240px tablet / 264px desktop) */}
               {currentView === 'HOME' && (
                 <div className="mb-4 animate-in fade-in slide-in-from-top-4 duration-500 rounded-2xl overflow-hidden border border-emerald-500/30 shadow-lg bg-slate-900 h-[192px] sm:h-[240px] lg:h-[264px] relative">
-                  {/* Full-width Animated Video Banner (spanning 100% width, animals occupy 3/4 to full banner) */}
+                  {/* Full-width Animated Video Banner (spanning 100% width) */}
                   <video
                     autoPlay
                     loop
                     muted
                     playsInline
-                    preload="metadata"
+                    preload="auto"
                     poster="./images/banner.jpg"
                     className="w-full h-full object-cover object-center block"
                   >
+                    <source src="./video.banner.mp4" type="video/mp4" />
                     <source src="./banner.mp4" type="video/mp4" />
-                    <source src="./images/banner.mp4" type="video/mp4" />
                     <img
                       src="./images/banner.jpg"
                       alt="Hạt Kiểm lâm khu vực Krông Bông - Banner Quản lý cơ sở nuôi động vật hoang dã"
