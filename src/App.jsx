@@ -1788,7 +1788,7 @@ export default function App() {
                     poster="./images/banner.jpg"
                     className="w-full h-full object-cover object-center block"
                   >
-                    <source src="./video.banner.mp4" type="video/mp4" />
+                    <source src="./video.banner.mp4?v=2" type="video/mp4" />
                     <source src="./banner.mp4" type="video/mp4" />
                     <img
                       src="./images/banner.jpg"
