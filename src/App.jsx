@@ -7,6 +7,7 @@ import DesktopAppHeader from './components/DesktopAppHeader';
 import MobileBottomNav from './components/MobileBottomNav';
 import PWAInstallPrompt from './components/PWAInstallPrompt';
 import OfflineSyncManager from './components/OfflineSyncManager';
+import WildlifeRoamingOverlay from './components/WildlifeRoamingOverlay';
 import { computeLogbookTable } from './utils/calculations';
 import {
   loadAppData,
@@ -2249,6 +2250,9 @@ export default function App() {
 
       {/* PWA Installation Floating Banner */}
       <PWAInstallPrompt />
+
+      {/* Roaming Wildlife Overlay (every 2-3 mins) */}
+      <WildlifeRoamingOverlay />
     </div>
   );
 }
